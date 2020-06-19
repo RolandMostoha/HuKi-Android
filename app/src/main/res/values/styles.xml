@@ -1,0 +1,10 @@
+<resources>
+
+    <style name="DefaultShapeAppearance.Rounded" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">15dp</item>
+    </style>
+
+    <style name="DefaultTextAppearance.SearchBar.InnerHint" parent="TextAppearance.MaterialComponents.Subtitle1"/>
+
+</resources>

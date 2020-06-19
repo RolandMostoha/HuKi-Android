@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">HikingRoutesHungary</string>
+
+    <string name="home_search_bar_title">Search hiking route, place</string>
+    <string name="home_menu_button_map">Map</string>
+    <string name="home_menu_button_hiking_signs">Hiking Signs</string>
+    <string name="home_menu_button_settings">Settings</string>
+
+</resources>

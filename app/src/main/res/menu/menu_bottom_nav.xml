@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuMap"
+        android:enabled="true"
+        android:icon="@drawable/ic_map_marker"
+        android:title="@string/home_menu_button_map" />
+    <item
+        android:id="@+id/menuHikingSigns"
+        android:enabled="true"
+        android:icon="@drawable/ic_triangle"
+        android:title="@string/home_menu_button_hiking_signs" />
+    <item
+        android:id="@+id/menuSettings"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/home_menu_button_settings" />
+</menu>

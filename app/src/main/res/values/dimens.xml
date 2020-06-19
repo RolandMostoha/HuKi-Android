@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="space_small">5dp</dimen>
+    <dimen name="space_medium">10dp</dimen>
+    <dimen name="space_large">15dp</dimen>
+    <dimen name="space_extra_large">20dp</dimen>
+
+    <dimen name="default_elevation_strong">5dp</dimen>
+
+    <dimen name="home_search_bar_height">58dp</dimen>
+    <dimen name="home_search_bar_stroke_width">1dp</dimen>
+
+</resources>
