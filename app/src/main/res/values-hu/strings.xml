@@ -2,6 +2,8 @@
 
     <string name="app_name">TuristaUtakAndroid</string>
 
+    <string name="default_error_message_unknown">Ismeretlen hiba!</string>
+
     <string name="home_search_bar_title">Túraútvonal, hely keresése</string>
     <string name="home_menu_button_map">Térkép</string>
     <string name="home_menu_button_hiking_signs">Túrajelzések</string>

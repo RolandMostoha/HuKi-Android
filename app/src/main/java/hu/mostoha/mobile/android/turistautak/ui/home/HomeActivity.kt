@@ -2,9 +2,12 @@ package hu.mostoha.mobile.android.turistautak.ui.home
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.configuration.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.extensions.*
 import kotlinx.android.synthetic.main.activity_home.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
@@ -15,18 +18,20 @@ import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import java.io.File
 
+@AndroidEntryPoint
+class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
-class HomeActivity : AppCompatActivity() {
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_home)
-
         initWindow()
         initMap()
         initViews()
+        initObservers()
     }
 
     private fun initWindow() {
@@ -41,10 +46,6 @@ class HomeActivity : AppCompatActivity() {
             setTileSource(TileSourceFactory.MAPNIK)
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
-        }
-
-        if (OsmConfiguration.isHikingLayerFileExist(applicationContext)) {
-            initOfflineLayer()
         }
 
         initMyLocation()
@@ -65,10 +66,10 @@ class HomeActivity : AppCompatActivity() {
         homeMapView.invalidate()
     }
 
-    private fun initOfflineLayer() {
+    private fun initOfflineLayer(file: File) {
         val offlineProvider = OfflineTileProvider(
             SimpleRegisterReceiver(this),
-            arrayOf(OsmConfiguration.getHikingLayerFile(applicationContext))
+            arrayOf(file)
         )
 
         val overlay = TilesOverlay(offlineProvider, this)
@@ -90,8 +91,26 @@ class HomeActivity : AppCompatActivity() {
         mapController.setCenter(GeoPoint(47.4979, 19.0402))
     }
 
+    private fun initObservers() {
+        viewModel.hikingLayerLoadingEvent.observe(this, Observer { isLoadingInProgress ->
+            homeLayerFab.setInProgress(isLoadingInProgress)
+        })
+        viewModel.hikingLayer.observe(this, Observer { file ->
+            if (file != null) {
+                initOfflineLayer(file)
+            } else {
+                // TODO
+            }
+        })
+        viewModel.errorEvent.observe(this, Observer {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        })
+    }
+
     override fun onResume() {
         super.onResume()
+
+        viewModel.checkForHikingLayer()
 
         homeMapView.onResume()
     }

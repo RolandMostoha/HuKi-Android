@@ -2,9 +2,12 @@ package hu.mostoha.mobile.android.turistautak
 
 import android.app.Application
 import android.content.Context
+import dagger.hilt.android.HiltAndroidApp
 import hu.mostoha.mobile.android.turistautak.configuration.OsmConfiguration
 import org.osmdroid.config.Configuration
+import timber.log.Timber
 
+@HiltAndroidApp
 class HikingRoutesApplication : Application() {
 
     companion object {
@@ -15,6 +18,7 @@ class HikingRoutesApplication : Application() {
         super.onCreate()
 
         initOsmDroid()
+        initTimber()
     }
 
     private fun initOsmDroid() {
@@ -36,6 +40,12 @@ class HikingRoutesApplication : Application() {
                     Context.MODE_PRIVATE
                 )
             )
+        }
+    }
+
+    private fun initTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
         }
     }
 

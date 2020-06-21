@@ -2,6 +2,8 @@
 
     <string name="app_name">HikingRoutesHungary</string>
 
+    <string name="default_error_message_unknown">Unknown error!</string>
+
     <string name="home_search_bar_title">Search hiking route, place</string>
     <string name="home_menu_button_map">Map</string>
     <string name="home_menu_button_hiking_signs">Hiking Signs</string>
