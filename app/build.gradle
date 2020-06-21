@@ -50,6 +50,8 @@ dependencies {
 
     // Tools
     implementation 'org.osmdroid:osmdroid-android:6.1.6'
+    implementation 'com.github.hadilq.liveevent:liveevent:1.2.0'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Unit tests
     testImplementation 'junit:junit:4.13'

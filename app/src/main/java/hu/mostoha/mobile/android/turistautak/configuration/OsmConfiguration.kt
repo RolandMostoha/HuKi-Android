@@ -1,9 +1,8 @@
 package hu.mostoha.mobile.android.turistautak.configuration
 
 import android.content.Context
-import android.util.Log
-import hu.mostoha.mobile.android.turistautak.extensions.TAG
 import org.osmdroid.tileprovider.util.StorageUtils
+import timber.log.Timber
 import java.io.File
 
 object OsmConfiguration {
@@ -19,15 +18,15 @@ object OsmConfiguration {
         return if (osmDroidBasePath == null) {
             val storage = StorageUtils.getStorage(context)
             val path = storage.path
-            Log.d(this.TAG, "Trying to use storage: $path")
+            Timber.d("Trying to use storage: $path")
 
             val file = File(path, DIRECTORY_NAME_OSMDROID)
             if (!file.exists()) {
                 val success = file.mkdirs()
-                Log.d(this.TAG, "Created storage ${file.path} : $success")
+                Timber.d("Created storage ${file.path} : $success")
             }
 
-            Log.d(this.TAG, "Using storage ${file.path}")
+            Timber.d("Using storage ${file.path}")
             file
         } else {
             osmDroidBasePath
@@ -39,10 +38,10 @@ object OsmConfiguration {
             val file = File(getOsmDroidBasePath(context), DIRECTORY_NAME_TILES_ARCHIVE)
             if (!file.exists()) {
                 val success = file.mkdirs()
-                Log.d(this.TAG, "Created cache storage ${file.path} : $success")
+                Timber.d("Created cache storage ${file.path} : $success")
             }
 
-            Log.d(this.TAG, "Using cache storage ${file.path}")
+            Timber.d("Using cache storage ${file.path}")
             file
         } else {
             osmDroidCachePath
