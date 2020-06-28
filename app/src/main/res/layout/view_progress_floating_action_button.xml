@@ -18,7 +18,7 @@
         android:layout_width="@dimen/progress_fab_progress_bar_size_mini"
         android:layout_height="@dimen/progress_fab_progress_bar_size_mini"
         android:layout_gravity="center"
-        android:elevation="6dp"
+        android:elevation="10dp"
         app:foregroundStrokeColor="@color/colorPrimary"
         app:foregroundStrokeWidth="@dimen/progress_fab_stroke_width"
         app:indeterminate="true"
