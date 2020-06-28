@@ -6,7 +6,12 @@
     <dimen name="space_large">15dp</dimen>
     <dimen name="space_extra_large">20dp</dimen>
 
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+
     <dimen name="default_elevation_strong">5dp</dimen>
+    <dimen name="default_text_size">@dimen/text_size_medium</dimen>
 
     <dimen name="home_search_bar_height">58dp</dimen>
     <dimen name="home_search_bar_stroke_width">1dp</dimen>

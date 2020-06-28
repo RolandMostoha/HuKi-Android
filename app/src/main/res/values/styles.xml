@@ -1,10 +1,41 @@
 <resources>
 
-    <style name="DefaultShapeAppearance.Rounded" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+    <style name="DefaultShapeAppearance">
         <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="DefaultShapeAppearance.Surface">
+        <item name="cornerSize">10dp</item>
+    </style>
+
+    <style name="DefaultShapeAppearance.InputField">
         <item name="cornerSize">15dp</item>
     </style>
 
-    <style name="DefaultTextAppearance.SearchBar.InnerHint" parent="TextAppearance.MaterialComponents.Subtitle1"/>
+    <style name="DefaultMaterialDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="alertDialogStyle">@style/DefaultMaterialAlertDialog</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/DefaultTextAppearance.SemiBold.Large
+        </item>
+        <item name="materialAlertDialogBodyTextStyle">@style/DefaultTextAppearance.Regular.Medium
+        </item>
+        <item name="buttonBarPositiveButtonStyle">@style/DefaultDialogButton.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DefaultDialogButton.Negative</item>
+    </style>
+
+    <style name="DefaultMaterialAlertDialog" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="shapeAppearance">@style/DefaultShapeAppearance.Surface</item>
+    </style>
+
+    <style name="DefaultDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textAppearance">@style/DefaultTextAppearance.SemiBold.Medium</item>
+    </style>
+
+    <style name="DefaultDialogButton.Positive"></style>
+
+    <style name="DefaultDialogButton.Negative">
+        <item name="android:textColor">@color/colorSecondaryText</item>
+    </style>
 
 </resources>

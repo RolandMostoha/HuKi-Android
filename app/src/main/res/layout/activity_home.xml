@@ -14,7 +14,7 @@
         android:layout_marginTop="@dimen/space_small"
         android:layout_marginStart="@dimen/space_large"
         android:layout_marginEnd="@dimen/space_large"
-        app:shapeAppearance="@style/DefaultShapeAppearance.Rounded"
+        app:shapeAppearance="@style/DefaultShapeAppearance.InputField"
         app:strokeWidth="@dimen/home_search_bar_stroke_width"
         app:strokeColor="@color/colorStroke"
         app:cardElevation="@dimen/default_elevation_strong"
@@ -48,7 +48,7 @@
                     android:id="@+id/homeSearchBarInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/DefaultTextAppearance.SearchBar.InnerHint" />
+                    android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -92,8 +92,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_bottom_navigation_shadow"
         app:menu="@menu/menu_bottom_nav"
+        app:itemTextAppearanceActive="@style/DefaultTextAppearance.SemiBold.Small"
+        app:itemTextAppearanceInactive="@style/DefaultTextAppearance.SemiBold.Small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
