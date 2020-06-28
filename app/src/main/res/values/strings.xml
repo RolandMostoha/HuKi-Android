@@ -9,4 +9,9 @@
     <string name="home_menu_button_hiking_signs">Hiking Signs</string>
     <string name="home_menu_button_settings">Settings</string>
 
+    <string name="download_layer_dialog_title">Download Hiking Layer</string>
+    <string name="download_layer_dialog_message">We recommend to download the layer file for offline usage.</string>
+    <string name="download_layer_dialog_positive_button">Download</string>
+    <string name="download_layer_dialog_negative_button">Later</string>
+
 </resources>

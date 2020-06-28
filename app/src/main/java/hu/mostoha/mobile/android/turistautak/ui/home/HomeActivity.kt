@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.extensions.*
@@ -92,14 +93,23 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initObservers() {
-        viewModel.hikingLayerLoadingEvent.observe(this, Observer { isLoadingInProgress ->
+        viewModel.layerLoadingEvent.observe(this, Observer { isLoadingInProgress ->
             homeLayerFab.setInProgress(isLoadingInProgress)
         })
-        viewModel.hikingLayer.observe(this, Observer { file ->
+        viewModel.hikingLayerFile.observe(this, Observer { file ->
             if (file != null) {
                 initOfflineLayer(file)
             } else {
-                // TODO
+                MaterialAlertDialogBuilder(this, R.style.DefaultMaterialDialog)
+                    .setTitle(R.string.download_layer_dialog_title)
+                    .setMessage(R.string.download_layer_dialog_message)
+                    .setPositiveButton(R.string.download_layer_dialog_positive_button) { _, _ ->
+                        viewModel.downloadHikingLayer()
+                    }
+                    .setNegativeButton(R.string.download_layer_dialog_negative_button) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
             }
         })
         viewModel.errorEvent.observe(this, Observer {

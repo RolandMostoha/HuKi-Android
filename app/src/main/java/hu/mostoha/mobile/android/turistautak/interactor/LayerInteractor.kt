@@ -21,12 +21,16 @@ class LayerInteractor @Inject constructor(
                 Timber.w(exception)
                 onResult(
                     TaskResult.Error(
-                        DomainException(
-                            R.string.default_error_message_unknown
-                        )
+                        DomainException(R.string.default_error_message_unknown, exception)
                     )
                 )
             }
+        }
+    }
+
+    fun requestDownloadHikingLayer(viewModelScope: CoroutineScope) {
+        viewModelScope.launch {
+
         }
     }
 

@@ -15,24 +15,30 @@ class HomeViewModel @ViewModelInject constructor(
 
     val errorEvent = LiveEvent<Int>()
 
-    val hikingLayerLoadingEvent = LiveEvent<Boolean>()
-    val hikingLayer = MutableLiveData<File?>()
+    val layerLoadingEvent = LiveEvent<Boolean>()
+    val hikingLayerFile = MutableLiveData<File?>()
 
     fun checkForHikingLayer() {
-        hikingLayerLoadingEvent.value = true
+        layerLoadingEvent.value = true
 
         layerInteractor.requestHikingLayer(viewModelScope) { result ->
-            hikingLayerLoadingEvent.value = false
+            layerLoadingEvent.value = false
 
             when (result) {
                 is TaskResult.Success -> {
-                    hikingLayer.value = result.data
+                    hikingLayerFile.value = result.data
                 }
                 is TaskResult.Error -> {
                     errorEvent.value = result.domainException.messageRes
                 }
             }
         }
+    }
+
+    fun downloadHikingLayer() {
+        layerLoadingEvent.value = true
+
+        layerInteractor.requestDownloadHikingLayer(viewModelScope)
     }
 
 }
