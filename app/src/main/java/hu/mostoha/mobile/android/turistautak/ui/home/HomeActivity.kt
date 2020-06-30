@@ -10,6 +10,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.extensions.*
+import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import kotlinx.android.synthetic.main.activity_home.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -93,8 +94,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initObservers() {
-        viewModel.layerLoadingEvent.observe(this, Observer { isLoadingInProgress ->
-            homeLayerFab.setInProgress(isLoadingInProgress)
+        viewModel.liveEvents.observe(this, Observer {
+            when (it) {
+                is ErrorEvent -> {
+                    Toast.makeText(this, it.messageRes, Toast.LENGTH_LONG).show()
+                }
+                is LayerLoadingEvent -> {
+                    homeLayerFab.inProgress = it.isInProgress
+                }
+                is LayerDownloadingEvent -> {
+                    // TODO
+                }
+            }
         })
         viewModel.hikingLayerFile.observe(this, Observer { file ->
             if (file != null) {
@@ -111,9 +122,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     }
                     .show()
             }
-        })
-        viewModel.errorEvent.observe(this, Observer {
-            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         })
     }
 

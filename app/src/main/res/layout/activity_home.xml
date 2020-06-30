@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_bottom_navigation_shadow"
         app:menu="@menu/menu_bottom_nav"
-        app:itemTextAppearanceActive="@style/DefaultTextAppearance.SemiBold.Small"
+        app:itemTextAppearanceActive="@style/DefaultTextAppearance.Bold.Small"
         app:itemTextAppearanceInactive="@style/DefaultTextAppearance.SemiBold.Small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

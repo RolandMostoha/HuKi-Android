@@ -7,8 +7,9 @@ import java.io.File
 
 object OsmConfiguration {
 
-    const val FILE_PATH_HIKING_LAYER = "/layers/TuraReteg.mbtiles"
+    const val URL_HIKING_LAYER_FILE = "https://data2.openstreetmap.hu/TuraReteg.sqlitedb"
 
+    private const val FILE_PATH_HIKING_LAYER = "/layers/TuraReteg.mbtiles"
     private const val DIRECTORY_NAME_OSMDROID = "osmdroid"
     private const val DIRECTORY_NAME_TILES_ARCHIVE = "tiles"
 
@@ -47,6 +48,10 @@ object OsmConfiguration {
         } else {
             osmDroidCachePath
         }
+    }
+
+    fun getOsmDroidLayerPath(context: Context): File {
+        return File(getOsmDroidBasePath(context).path + FILE_PATH_HIKING_LAYER)
     }
 
 }

@@ -14,6 +14,10 @@
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
+    <style name="DefaultTextAppearance.Regular.Large">
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
     <style name="DefaultTextAppearance.SemiBold" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textSize">@dimen/default_text_size</item>
         <item name="fontFamily">@font/opensans_semibold</item>
@@ -29,6 +33,15 @@
 
     <style name="DefaultTextAppearance.SemiBold.Large">
         <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
+    <style name="DefaultTextAppearance.Bold" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="fontFamily">@font/opensans_bold</item>
+    </style>
+
+    <style name="DefaultTextAppearance.Bold.Small">
+        <item name="android:textSize">@dimen/text_size_small</item>
     </style>
 
 </resources>

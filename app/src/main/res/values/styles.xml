@@ -32,7 +32,7 @@
         <item name="android:textAppearance">@style/DefaultTextAppearance.SemiBold.Medium</item>
     </style>
 
-    <style name="DefaultDialogButton.Positive"></style>
+    <style name="DefaultDialogButton.Positive" />
 
     <style name="DefaultDialogButton.Negative">
         <item name="android:textColor">@color/colorSecondaryText</item>

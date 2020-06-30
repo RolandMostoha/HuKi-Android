@@ -4,4 +4,5 @@ import java.io.File
 
 interface LayerRepository {
     fun getHikingLayerFile(): File?
+    fun downloadHikingLayerFile(): Long
 }

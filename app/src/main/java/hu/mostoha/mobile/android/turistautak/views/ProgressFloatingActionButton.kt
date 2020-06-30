@@ -14,6 +14,16 @@ class ProgressFloatingActionButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    var inProgress: Boolean = false
+        set(value) {
+            if (value) {
+                progressBar.visible()
+            } else {
+                progressBar.gone()
+            }
+            field = value
+        }
+
     init {
         LayoutInflater
             .from(context)
@@ -44,11 +54,4 @@ class ProgressFloatingActionButton @JvmOverloads constructor(
         }
     }
 
-    fun setInProgress(inProgress: Boolean) {
-        if (inProgress) {
-            progressBar.visible()
-        } else {
-            progressBar.gone()
-        }
-    }
 }
