@@ -1,10 +1,5 @@
 package hu.mostoha.mobile.android.turistautak.home
 
-import androidx.test.core.app.launchActivity
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import dagger.hilt.android.testing.BindValue
@@ -15,7 +10,9 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.repository.LayerRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
-import hu.mostoha.mobile.android.turistautak.util.EspressoAssertions.checkDisplayed
+import hu.mostoha.mobile.android.turistautak.util.EspressoAssertions.checkTextDisplayed
+import hu.mostoha.mobile.android.turistautak.util.EspressoAssertions.checkViewDisplayed
+import hu.mostoha.mobile.android.turistautak.util.launch
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Before
@@ -43,8 +40,8 @@ class HomeActivityTest {
 
     @Test
     fun whenScreenStarts_thenMapShouldShown() {
-        launchHome {
-            onView(withId(R.id.homeMapView)).check(matches(isDisplayed()))
+        launch<HomeActivity> {
+            checkViewDisplayed(R.id.homeMapView)
         }
     }
 
@@ -52,17 +49,9 @@ class HomeActivityTest {
     fun givenMissingHikingLayerFile_whenHomeOpens_thenDownloadDialogDisplays() {
         every { layerRepository.getHikingLayerFile() } returns null
 
-        launchHome {
-            checkDisplayed(R.string.download_layer_dialog_title)
+        launch<HomeActivity> {
+            checkTextDisplayed(R.string.download_layer_dialog_title)
         }
-    }
-
-    private fun launchHome(then: () -> Unit) {
-        val scenario = launchActivity<HomeActivity>()
-
-        then.invoke()
-
-        scenario.close()
     }
 
 }
