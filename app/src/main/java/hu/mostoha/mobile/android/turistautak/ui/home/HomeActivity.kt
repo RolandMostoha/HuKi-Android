@@ -1,8 +1,10 @@
 package hu.mostoha.mobile.android.turistautak.ui.home
 
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -10,7 +12,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.extensions.*
-import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
+import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.ErrorOccurred
+import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.LayerLoading
 import kotlinx.android.synthetic.main.activity_home.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -27,6 +30,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private val viewModel: HomeViewModel by viewModels()
 
+    private lateinit var layerDownloadReceiver: BroadcastReceiver
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,6 +39,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initMap()
         initViews()
         initObservers()
+        initReceivers()
     }
 
     private fun initWindow() {
@@ -96,14 +102,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initObservers() {
         viewModel.liveEvents.observe(this, Observer {
             when (it) {
-                is ErrorEvent -> {
-                    Toast.makeText(this, it.messageRes, Toast.LENGTH_LONG).show()
+                is ErrorOccurred -> {
+                    showToast(it.messageRes)
                 }
-                is LayerLoadingEvent -> {
-                    homeLayerFab.inProgress = it.isInProgress
-                }
-                is LayerDownloadingEvent -> {
-                    // TODO
+                is LayerLoading -> {
+                    homeLayerFab.inProgress = it.inProgress
                 }
             }
         })
@@ -125,10 +128,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         })
     }
 
+    private fun initReceivers() {
+        val intentFilter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        layerDownloadReceiver = registerReceiver(intentFilter) { intent ->
+            val downloadId = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) ?: -1
+            viewModel.handleFileDownloaded(downloadId)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
 
-        viewModel.checkForHikingLayer()
+        viewModel.checkHikingLayer()
 
         homeMapView.onResume()
     }
@@ -137,6 +148,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         super.onPause()
 
         homeMapView.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        unregisterReceiver(layerDownloadReceiver)
     }
 
 }

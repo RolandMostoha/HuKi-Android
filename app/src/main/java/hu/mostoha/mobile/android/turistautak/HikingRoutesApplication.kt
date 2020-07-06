@@ -30,8 +30,8 @@ class HikingRoutesApplication : Application() {
                 isDebugMapTileDownloader = true
             }
 
-            osmdroidBasePath = OsmConfiguration.getOsmDroidBasePath(applicationContext)
-            osmdroidTileCache = OsmConfiguration.getOsmDroidCachePath(applicationContext)
+            osmdroidBasePath = OsmConfiguration.getOsmDroidBaseDirectory(applicationContext)
+            osmdroidTileCache = OsmConfiguration.getOsmDroidCacheDirectory(applicationContext)
 
             load(
                 applicationContext,
