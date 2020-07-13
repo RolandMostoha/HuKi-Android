@@ -110,7 +110,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             }
         })
-        viewModel.hikingLayerFile.observe(this, Observer { file ->
+        viewModel.viewState.observe(this, Observer {
+            val file = it.hikingLayerFile
             if (file != null) {
                 initOfflineLayer(file)
             } else {

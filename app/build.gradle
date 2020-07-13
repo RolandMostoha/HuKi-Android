@@ -41,6 +41,7 @@ android {
 
 ext {
     jetpackHiltVersion = '1.0.0-alpha01'
+    mockKVersion = '1.10.0'
 }
 
 dependencies {
@@ -72,6 +73,8 @@ dependencies {
 
     // Unit tests
     testImplementation 'junit:junit:4.13'
+    testImplementation "io.mockk:mockk:$mockKVersion"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 
     // Instrumentation tests
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -79,7 +82,7 @@ dependencies {
     androidTestImplementation 'androidx.test:core-ktx:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    androidTestImplementation "io.mockk:mockk-android:1.10.0"
+    androidTestImplementation "io.mockk:mockk-android:$mockKVersion"
 
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltVersion"
