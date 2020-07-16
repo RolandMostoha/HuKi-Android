@@ -18,6 +18,6 @@
 
     <dimen name="progress_fab_progress_bar_size_mini">45dp</dimen>
     <dimen name="progress_fab_progress_bar_size_normal">64dp</dimen>
-    <dimen name="progress_fab_stroke_width">2dp</dimen>
+    <dimen name="progress_fab_stroke_width">3dp</dimen>
 
 </resources>
