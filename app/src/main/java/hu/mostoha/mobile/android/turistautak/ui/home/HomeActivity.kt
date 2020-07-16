@@ -95,7 +95,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
 
         val mapController = homeMapView.controller
-        mapController.setZoom(10.0)
+        mapController.setZoom(11.0)
         mapController.setCenter(GeoPoint(47.4979, 19.0402))
     }
 

@@ -4,8 +4,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 
 object EspressoAssertions {
 
@@ -13,8 +12,8 @@ object EspressoAssertions {
         onView(withText(res)).check(matches(isDisplayed()))
     }
 
-    fun checkViewDisplayed(@IdRes res: Int) {
-        onView(withText(res)).check(matches(isDisplayed()))
+    fun checkViewDisplayed(@IdRes id: Int) {
+        onView(withId(id)).check(matches(isDisplayed()))
     }
 
 }

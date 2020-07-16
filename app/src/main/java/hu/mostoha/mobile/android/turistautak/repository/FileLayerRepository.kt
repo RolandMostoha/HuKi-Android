@@ -5,7 +5,7 @@ import android.content.Context
 import android.net.Uri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.configuration.OsmConfiguration
+import hu.mostoha.mobile.android.turistautak.configuration.OsmConfiguration.getOsmDroidLayerDirectory
 import hu.mostoha.mobile.android.turistautak.extensions.requireSystemService
 import timber.log.Timber
 import java.io.File
@@ -17,16 +17,24 @@ class FileLayerRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) : LayerRepository {
 
-    override fun getHikingLayerFile(): File? {
-        val file = OsmConfiguration.getHikingLayerFile(context)
+    companion object {
+        // First 1000 row of tt.mbtiles ~ 3 MB
+        // https://drive.google.com/u/0/uc?id=17JRuL5ambcl3qeJ7XV8A4BpCVdHsAlMJ&export=download
+        private const val URL_HIKING_LAYER_FILE = "https://data2.openstreetmap.hu/tt.mbtiles"
+
+        private const val FILE_NAME_HIKING_LAYER = "TuraReteg.mbtiles"
+    }
+
+    override suspend fun getHikingLayerFile(): File? {
+        val file = File(getOsmDroidLayerDirectory(context), FILE_NAME_HIKING_LAYER)
         if (file.exists()) {
             return file
         }
         return null
     }
 
-    override fun downloadHikingLayerFile(): Long {
-        val request = DownloadManager.Request(Uri.parse(OsmConfiguration.URL_HIKING_LAYER_FILE))
+    override suspend fun downloadHikingLayerFile(): Long {
+        val request = DownloadManager.Request(Uri.parse(URL_HIKING_LAYER_FILE))
             .setTitle(context.getString(R.string.download_layer_notification_title))
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
             .setAllowedOverMetered(true)
@@ -39,7 +47,7 @@ class FileLayerRepository @Inject constructor(
         return requestId
     }
 
-    override fun saveHikingLayerFile(downloadId: Long) {
+    override suspend fun saveHikingLayerFile(downloadId: Long) {
         val downloadManager = context.requireSystemService<DownloadManager>()
         val downloadManagerUri = downloadManager.getUriForDownloadedFile(downloadId)
         if (downloadManagerUri == null) {
@@ -53,7 +61,7 @@ class FileLayerRepository @Inject constructor(
             throw FileNotFoundException()
         }
 
-        val destinationFile = OsmConfiguration.getHikingLayerFile(context)
+        val destinationFile = File(getOsmDroidLayerDirectory(context), FILE_NAME_HIKING_LAYER)
         inputStream.use { input ->
             destinationFile.outputStream().use { output ->
                 input.copyTo(output, DEFAULT_BUFFER_SIZE)
