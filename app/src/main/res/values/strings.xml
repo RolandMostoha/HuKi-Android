@@ -16,4 +16,9 @@
     <string name="download_layer_notification_title">Hiking Layer Download</string>
     <string name="download_layer_missing_downloaded_file">The downloaded layer file cannot be found!</string>
 
+    <string name="my_location_rationale_title">Location permission</string>
+    <string name="my_location_rationale_message">Device\'s location is needed for current location!</string>
+    <string name="my_location_rationale_positive_button">Allow</string>
+    <string name="my_location_rationale_negative_button">Cancel</string>
+
 </resources>

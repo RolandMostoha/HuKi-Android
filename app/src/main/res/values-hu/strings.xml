@@ -16,4 +16,9 @@
     <string name="download_layer_notification_title">Túra réteg letöltése</string>
     <string name="download_layer_missing_downloaded_file">A letöltött túraréteg fájl nem található!</string>
 
+    <string name="my_location_rationale_title">Helyadatok engedélyezése</string>
+    <string name="my_location_rationale_message">Az aktuális pozíció megjelenítéséhez szükséges az engedély!</string>
+    <string name="my_location_rationale_positive_button">Engedélyezés</string>
+    <string name="my_location_rationale_negative_button">Mégsem</string>
+
 </resources>

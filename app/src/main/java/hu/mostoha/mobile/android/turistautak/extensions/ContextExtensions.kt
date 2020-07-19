@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 
@@ -27,3 +28,5 @@ inline fun <reified T : Any> Context.requireSystemService(): T {
 }
 
 fun Context.showToast(@StringRes res: Int) = Toast.makeText(this, res, Toast.LENGTH_LONG).show()
+
+fun Context.colorStateList(@ColorRes res: Int) = ContextCompat.getColorStateList(this, res)

@@ -11,24 +11,27 @@ import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
+import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.turistautak.extensions.*
+import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.ErrorOccurred
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.LayerLoading
 import kotlinx.android.synthetic.main.activity_home.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
-import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import java.io.File
+
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private val viewModel: HomeViewModel by viewModels()
+
+    private var myLocationOverlay: MyLocationOverlay? = null
 
     private lateinit var layerDownloadReceiver: BroadcastReceiver
 
@@ -36,10 +39,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         super.onCreate(savedInstanceState)
 
         initWindow()
-        initMap()
         initViews()
         initObservers()
         initReceivers()
+
+        homeMapView.post {
+            homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX, false)
+        }
     }
 
     private fun initWindow() {
@@ -48,27 +54,24 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         searchBarContainer.applyTopMarginForStatusBar(this)
     }
 
-    private fun initMap() {
-        homeMapView.apply {
-            tilesScaleFactor = 1.5f
-            setTileSource(TileSourceFactory.MAPNIK)
-            zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
-            setMultiTouchControls(true)
+    private fun showMyLocation() {
+        homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimary)
+        if (myLocationOverlay == null) {
+            myLocationOverlay = MyLocationOverlay(GpsMyLocationProvider(applicationContext), homeMapView).apply {
+                setPersonIcon(R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity))
+                setDirectionArrow(
+                    R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity),
+                    R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity)
+                )
+                onFollowLocationDisabled = {
+                    homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimaryIcon)
+                }
+            }
         }
-
-        initMyLocation()
-    }
-
-    private fun initMyLocation() {
-        val provider = GpsMyLocationProvider(applicationContext)
-        val myLocationOverlay = MyLocationNewOverlay(provider, homeMapView)
-        myLocationOverlay.apply {
-            setPersonIcon(R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity))
-            setDirectionArrow(
-                R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity),
-                R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity)
-            )
+        myLocationOverlay?.apply {
             enableMyLocation()
+            enableFollowLocation()
+            enableAutoStop = true
         }
         homeMapView.overlays.add(myLocationOverlay)
         homeMapView.invalidate()
@@ -89,14 +92,36 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initViews() {
+        homeMapView.apply {
+            tilesScaleFactor = 1.5f
+            setTileSource(TileSourceFactory.MAPNIK)
+            zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
+            setMultiTouchControls(true)
+        }
+
         homeSearchBarInputLayout.setEndIconOnClickListener {
             homeSearchBarInput.text?.clear()
             homeSearchBarInput.clearFocusAndHideKeyboard()
         }
 
-        val mapController = homeMapView.controller
-        mapController.setZoom(11.0)
-        mapController.setCenter(GeoPoint(47.4979, 19.0402))
+        homeMyLocationButton.setOnClickListener {
+            checkLocationPermissions(
+                onPermissionsChecked = {
+                    showMyLocation()
+                },
+                onPermissionRationaleShouldBeShown = {
+                    MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
+                        .setTitle(R.string.my_location_rationale_title)
+                        .setMessage(R.string.my_location_rationale_message)
+                        .setNegativeButton(R.string.my_location_rationale_negative_button) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .setPositiveButton(R.string.my_location_rationale_positive_button) { _, _ ->
+                            it.continuePermissionRequest()
+                        }
+                        .show()
+                })
+        }
     }
 
     private fun initObservers() {
@@ -142,12 +167,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         viewModel.checkHikingLayer()
 
+        myLocationOverlay?.enableMyLocation()
         homeMapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
 
+        myLocationOverlay?.disableMyLocation()
         homeMapView.onPause()
     }
 

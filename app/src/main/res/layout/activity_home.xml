@@ -76,6 +76,7 @@
         app:layout_constraintTop_toBottomOf="@id/searchBarContainer" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/homeMyLocationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_action_my_location"

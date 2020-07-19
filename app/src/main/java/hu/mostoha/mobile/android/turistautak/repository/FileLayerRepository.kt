@@ -42,7 +42,7 @@ class FileLayerRepository @Inject constructor(
         val downloadManager = context.requireSystemService<DownloadManager>()
         val requestId = downloadManager.enqueue(request)
 
-        Timber.i("Download requested requestId: $requestId")
+        Timber.i("Download requested with requestId: $requestId")
 
         return requestId
     }

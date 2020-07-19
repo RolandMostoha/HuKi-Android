@@ -75,6 +75,9 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.6'
     implementation 'com.github.hadilq.liveevent:liveevent:1.2.0'
 
+    // Permissions
+    implementation 'com.karumi:dexter:6.2.1'
+
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
