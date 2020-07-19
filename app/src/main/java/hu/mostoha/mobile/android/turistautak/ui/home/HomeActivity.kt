@@ -12,6 +12,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
+import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
+import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.turistautak.extensions.*
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.ErrorOccurred
@@ -57,11 +59,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun showMyLocation() {
         homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimary)
         if (myLocationOverlay == null) {
-            myLocationOverlay = MyLocationOverlay(GpsMyLocationProvider(applicationContext), homeMapView).apply {
-                setPersonIcon(R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity))
+            val provider = GpsMyLocationProvider(applicationContext).apply {
+                locationUpdateMinTime = MY_LOCATION_MIN_TIME_MS
+                locationUpdateMinDistance = MY_LOCATION_MIN_DISTANCE_METER
+            }
+            myLocationOverlay = MyLocationOverlay(provider, homeMapView).apply {
                 setDirectionArrow(
                     R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity),
-                    R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity)
+                    R.drawable.ic_marker_my_location_compass.toBitmap(this@HomeActivity)
                 )
                 onFollowLocationDisabled = {
                     homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimaryIcon)
@@ -175,6 +180,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         super.onPause()
 
         myLocationOverlay?.disableMyLocation()
+        myLocationOverlay?.disableFollowLocation()
         homeMapView.onPause()
     }
 

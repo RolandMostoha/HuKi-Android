@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.turistautak.osmdroid
 
 import android.location.Location
 import android.view.MotionEvent
-import hu.mostoha.mobile.android.turistautak.constants.DEFAULT_ZOOM_FOR_MY_LOCATION
+import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_DEFAULT_ZOOM
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
@@ -15,8 +15,8 @@ class MyLocationOverlay(
     var onFollowLocationDisabled: (() -> Unit)? = null
 
     override fun setLocation(location: Location) {
-        if (mIsFollowing && mMapView.zoomLevelDouble != DEFAULT_ZOOM_FOR_MY_LOCATION) {
-            mMapView.controller.zoomTo(DEFAULT_ZOOM_FOR_MY_LOCATION)
+        if (mIsFollowing && mMapView.zoomLevelDouble != MY_LOCATION_DEFAULT_ZOOM) {
+            mMapView.controller.zoomTo(MY_LOCATION_DEFAULT_ZOOM)
             mMapView.postInvalidate()
         }
 

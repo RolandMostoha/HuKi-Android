@@ -18,5 +18,6 @@
     <color name="colorStroke">#BFBFBF</color>
 
     <color name="white">#ffffff</color>
+    <color name="transparent">@android:color/transparent</color>
 
 </resources>
