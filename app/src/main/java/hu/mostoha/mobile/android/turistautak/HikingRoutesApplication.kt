@@ -1,46 +1,23 @@
 package hu.mostoha.mobile.android.turistautak
 
 import android.app.Application
-import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
-import hu.mostoha.mobile.android.turistautak.configuration.OsmConfiguration
-import org.osmdroid.config.Configuration
+import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import timber.log.Timber
+import javax.inject.Inject
 
 @HiltAndroidApp
 class HikingRoutesApplication : Application() {
 
-    companion object {
-        const val KEY_GLOBAL_SHARED_PREFERENCES = "KEY_GLOBAL_SHARED_PREFERENCES"
-    }
+    @Inject
+    lateinit var osmConfiguration: OsmConfiguration
 
     override fun onCreate() {
         super.onCreate()
 
-        initOsmDroid()
+        osmConfiguration.init()
+
         initTimber()
-    }
-
-    private fun initOsmDroid() {
-        Configuration.getInstance().apply {
-            if (BuildConfig.DEBUG) {
-                isDebugMapView = true
-                isDebugMode = true
-                isDebugTileProviders = true
-                isDebugMapTileDownloader = true
-            }
-
-            osmdroidBasePath = OsmConfiguration.getOsmDroidBaseDirectory(applicationContext)
-            osmdroidTileCache = OsmConfiguration.getOsmDroidCacheDirectory(applicationContext)
-
-            load(
-                applicationContext,
-                applicationContext.getSharedPreferences(
-                    KEY_GLOBAL_SHARED_PREFERENCES,
-                    Context.MODE_PRIVATE
-                )
-            )
-        }
     }
 
     private fun initTimber() {
