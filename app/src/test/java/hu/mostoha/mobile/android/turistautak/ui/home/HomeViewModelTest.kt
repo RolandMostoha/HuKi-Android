@@ -5,7 +5,12 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.executor.TestTaskExecutor
 import hu.mostoha.mobile.android.turistautak.interactor.DomainException
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
+import hu.mostoha.mobile.android.turistautak.interactor.OverpassInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
+import hu.mostoha.mobile.android.turistautak.network.model.Element
+import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
+import hu.mostoha.mobile.android.turistautak.network.model.Tags
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarUiModelGenerator
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.mockk
@@ -24,13 +29,16 @@ class HomeViewModelTest {
     private lateinit var homeViewModel: HomeViewModel
 
     private val layerInteractor = mockk<LayerInteractor>()
+    private val overpassInteractor = mockk<OverpassInteractor>()
+    private val generator =
+        SearchBarUiModelGenerator()
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
-        homeViewModel = spyk(HomeViewModel(TestTaskExecutor(), layerInteractor))
+        homeViewModel = spyk(HomeViewModel(TestTaskExecutor(), layerInteractor, overpassInteractor, generator))
     }
 
     @Test
@@ -104,6 +112,44 @@ class HomeViewModelTest {
             layerInteractor.requestSaveHikingLayer(downloadId, any())
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
             homeViewModel.postState(HomeViewState(file))
+        }
+    }
+
+    @Test
+    fun `Given Success TaskResult, when searchHikingRelationsBy, then SearchResult posted`() {
+        val searchText = "Mecs"
+
+        val overpassQueryResult = OverpassQueryResult(
+            listOf(
+                Element(type = "route", id = 1, tags = Tags("Mecseki Kéktúra", jel = "k")),
+                Element(type = "route", id = 2, tags = Tags("Mecseknádasdi Piroska", jel = "p"))
+            )
+        )
+        coEvery { overpassInteractor.requestSearchHikingRelationsBy(searchText, any()) } returns TaskResult.Success(
+            overpassQueryResult
+        )
+
+        homeViewModel.searchHikingRelationsBy(searchText)
+
+        coVerifyOrder {
+            overpassInteractor.requestSearchHikingRelationsBy(searchText, any())
+            val uiResults = generator.generate(overpassQueryResult.elements)
+            homeViewModel.postEvent(HomeLiveEvents.SearchResult(uiResults))
+        }
+    }
+
+    @Test
+    fun `Given Error TaskResult, when searchHikingRelationsBy, then ErrorOccurred posted`() {
+        val errorRes = R.string.default_error_message_unknown
+        coEvery { overpassInteractor.requestSearchHikingRelationsBy(any(), any()) } returns TaskResult.Error(
+            DomainException(errorRes)
+        )
+
+        homeViewModel.searchHikingRelationsBy("")
+
+        coVerifyOrder {
+            overpassInteractor.requestSearchHikingRelationsBy(any(), any())
+            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
         }
     }
 

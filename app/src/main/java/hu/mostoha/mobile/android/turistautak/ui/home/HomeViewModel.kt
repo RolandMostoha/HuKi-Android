@@ -8,14 +8,18 @@ import hu.mostoha.mobile.android.turistautak.architecture.LiveEvents
 import hu.mostoha.mobile.android.turistautak.architecture.ViewState
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
+import hu.mostoha.mobile.android.turistautak.interactor.OverpassInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
-import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.ErrorOccurred
-import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.LayerLoading
+import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarUiModelGenerator
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchResultItem
 import java.io.File
 
 class HomeViewModel @ViewModelInject constructor(
     taskExecutor: TaskExecutor,
-    private val layerInteractor: LayerInteractor
+    private val layerInteractor: LayerInteractor,
+    private val overpassInteractor: OverpassInteractor,
+    private val generator: SearchBarUiModelGenerator
 ) : BaseViewModel<HomeLiveEvents, HomeViewState>(taskExecutor) {
 
     fun checkHikingLayer() = launch {
@@ -57,7 +61,18 @@ class HomeViewModel @ViewModelInject constructor(
                 postEvent(ErrorOccurred(result.domainException.messageRes))
             }
         }
+    }
 
+    fun searchHikingRelationsBy(searchText: String) = launch {
+        when (val result = overpassInteractor.requestSearchHikingRelationsBy(searchText, viewModelScope)) {
+            is TaskResult.Success -> {
+                val searchResults = generator.generate(result.data.elements)
+                postEvent(SearchResult(searchResults))
+            }
+            is TaskResult.Error -> {
+                postEvent(ErrorOccurred(result.domainException.messageRes))
+            }
+        }
     }
 
 }
@@ -67,4 +82,5 @@ data class HomeViewState(val hikingLayerFile: File?) : ViewState
 sealed class HomeLiveEvents : LiveEvents {
     data class ErrorOccurred(@StringRes val messageRes: Int) : HomeLiveEvents()
     data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
+    data class SearchResult(val results: List<SearchResultItem>) : HomeLiveEvents()
 }

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,10 +15,11 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
+import hu.mostoha.mobile.android.turistautak.domain.model.toMapBoundingBox
 import hu.mostoha.mobile.android.turistautak.extensions.*
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
-import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.ErrorOccurred
-import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.LayerLoading
+import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter
 import kotlinx.android.synthetic.main.activity_home.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -31,11 +33,18 @@ import java.io.File
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
+    companion object {
+        private const val TILES_SCALE_FACTOR = 1.25f
+        private const val SEARCH_BAR_MIN_TRIGGER_LENGTH = 3
+    }
+
     private val viewModel: HomeViewModel by viewModels()
 
-    private var myLocationOverlay: MyLocationOverlay? = null
-
     private lateinit var layerDownloadReceiver: BroadcastReceiver
+
+    private lateinit var searchBarAdapter: SearchBarAdapter
+
+    private var myLocationOverlay: MyLocationOverlay? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +55,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initReceivers()
 
         homeMapView.post {
-            homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX, false)
+            homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false)
         }
     }
 
@@ -98,7 +107,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initViews() {
         homeMapView.apply {
-            tilesScaleFactor = 1.5f
+            tilesScaleFactor = TILES_SCALE_FACTOR
             setTileSource(TileSourceFactory.MAPNIK)
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
@@ -127,6 +136,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         .show()
                 })
         }
+        searchBarAdapter =
+            SearchBarAdapter(this)
+        homeSearchBarInput.setAdapter(searchBarAdapter)
+        homeSearchBarInput.addTextChangedListener {
+            val text = it.toString()
+            if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
+                viewModel.searchHikingRelationsBy(text)
+            }
+        }
     }
 
     private fun initObservers() {
@@ -137,6 +155,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
                 is LayerLoading -> {
                     homeLayerFab.inProgress = it.inProgress
+                }
+                is SearchResult -> {
+                    searchBarAdapter.clear()
+                    searchBarAdapter.addAll(it.results)
+                    homeSearchBarInput.refreshAutoCompleteResults()
                 }
             }
         })

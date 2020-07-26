@@ -13,7 +13,7 @@ import java.io.FileNotFoundException
 import javax.inject.Inject
 
 
-class FileLayerRepository @Inject constructor(
+class LayerRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val osmConfiguration: OsmConfiguration
 ) : LayerRepository {

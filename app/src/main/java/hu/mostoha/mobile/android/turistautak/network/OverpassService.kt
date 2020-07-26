@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.turistautak.network
 
+import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
 import retrofit2.http.GET
 import retrofit2.http.Query
 

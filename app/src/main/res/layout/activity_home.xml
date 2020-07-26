@@ -36,15 +36,16 @@
                 android:src="@drawable/ic_hiking"/>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:id="@+id/homeSearchBarInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/home_search_bar_title"
                 android:layout_marginStart="@dimen/space_small"
                 app:boxBackgroundColor="@android:color/white"
                 app:endIconMode="clear_text">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:id="@+id/homeSearchBarInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

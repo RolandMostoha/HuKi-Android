@@ -5,6 +5,7 @@ import androidx.test.filters.MediumTest
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.fixQueryErrors
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
@@ -14,8 +15,8 @@ import hu.supercluster.overpasser.library.output.OutputOrder
 import hu.supercluster.overpasser.library.output.OutputVerbosity
 import hu.supercluster.overpasser.library.query.OverpassQuery
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,24 +38,12 @@ class OverpassServiceTest {
     }
 
     @Inject
-    lateinit var overpassService: OverpassService
+    lateinit var service: OverpassService
 
     @Test
-    fun givenExampleQuery_whenFixQueryErrors_thenQuotesRemovedFromSettingPart() {
-        val query = OverpassQuery()
-            .format(OutputFormat.JSON)
-            .timeout(10)
-            .filterQuery()
-            .node()
-            .amenity("parking")
-            .tagNot("access", "private")
-            .boundingBox(
-                47.48047027491862, 19.039797484874725,
-                47.51331674014172, 19.07404761761427
-            )
-            .end()
-            .output(OutputVerbosity.BODY, OutputModificator.CENTER, OutputOrder.QT, 100)
-            .build()
+    fun givenExampleQuery_whenFixQueryErrors_thenQuotesRemovedFromSettingsPart() {
+        val query =
+            "[\"out\":\"json\"][\"timeout\":\"10\"]; (node[\"amenity\"=\"parking\"][\"access\"!=\"private\"](47.48047027491862,19.039797484874725,47.51331674014172,19.07404761761427);<;); out body center qt 100;"
 
         val result = query.fixQueryErrors()
 
@@ -74,8 +63,10 @@ class OverpassServiceTest {
             .amenity("parking")
             .tagNot("access", "private")
             .boundingBox(
-                47.48047027491862, 19.039797484874725,
-                47.51331674014172, 19.07404761761427
+                HUNGARY_BOUNDING_BOX.south,
+                HUNGARY_BOUNDING_BOX.west,
+                HUNGARY_BOUNDING_BOX.north,
+                HUNGARY_BOUNDING_BOX.east
             )
             .end()
             .output(OutputVerbosity.BODY, OutputModificator.CENTER, OutputOrder.QT, 100)
@@ -83,9 +74,9 @@ class OverpassServiceTest {
             .fixQueryErrors()
 
         runBlocking {
-            val result = overpassService.interpreter(query)
+            val result = service.interpreter(query)
 
-            Assert.assertNotNull(result)
+            assertNotNull(result)
         }
     }
 

@@ -12,15 +12,14 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
+import hu.mostoha.mobile.android.turistautak.network.model.Element
+import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
+import hu.mostoha.mobile.android.turistautak.network.model.Tags
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.LayerRepository
+import hu.mostoha.mobile.android.turistautak.repository.OverpassRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
-import hu.mostoha.mobile.android.turistautak.util.EspressoAssertions.checkTextDisplayed
-import hu.mostoha.mobile.android.turistautak.util.EspressoAssertions.checkViewDisplayed
-import hu.mostoha.mobile.android.turistautak.util.EspressoAssertions.clickViewWithId
-import hu.mostoha.mobile.android.turistautak.util.EspressoAssertions.clickViewWithText
-import hu.mostoha.mobile.android.turistautak.util.launch
-import hu.mostoha.mobile.android.turistautak.util.testContext
+import hu.mostoha.mobile.android.turistautak.util.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Before
@@ -51,6 +50,10 @@ class HomeActivityTest {
     @JvmField
     val layerRepository: LayerRepository = mockk()
 
+    @BindValue
+    @JvmField
+    val overpassRepository: OverpassRepository = mockk()
+
     @Before
     fun init() {
         hiltRule.inject()
@@ -62,7 +65,7 @@ class HomeActivityTest {
         coEvery { layerRepository.getHikingLayerFile() } returns null
 
         launch<HomeActivity> {
-            checkTextDisplayed(R.string.download_layer_dialog_title)
+            R.string.download_layer_dialog_title.isTextDisplayed()
         }
     }
 
@@ -71,9 +74,9 @@ class HomeActivityTest {
         coEvery { layerRepository.getHikingLayerFile() } returns null
 
         launch<HomeActivity> {
-            clickViewWithText(R.string.download_layer_dialog_negative_button)
+            R.string.download_layer_dialog_negative_button.clickWithText()
 
-            checkViewDisplayed(R.id.homeMapView)
+            R.id.homeMapView.isDisplayed()
         }
     }
 
@@ -82,8 +85,8 @@ class HomeActivityTest {
         coEvery { layerRepository.getHikingLayerFile() } returns null
 
         launch<HomeActivity> {
-            clickViewWithText(R.string.download_layer_dialog_negative_button)
-            clickViewWithId(R.id.homeMyLocationButton)
+            R.string.download_layer_dialog_negative_button.clickWithText()
+            R.id.homeMyLocationButton.click()
 
             // TODO: Check overlay displays
         }
@@ -91,15 +94,41 @@ class HomeActivityTest {
 
     @Test
     fun givenTuraReteg1000_whenHomeOpens_thenLayerDisplays() {
+        answerTestLayer()
+
+        launch<HomeActivity> {
+            // TODO: Check overlay displays
+        }
+    }
+
+    @Test
+    fun givenSearchText_whenTyping_thenHikingRelationsDisplay() {
+        answerTestLayer()
+
+        val overpassQueryResult = OverpassQueryResult(
+            listOf(
+                Element(type = "route", id = 1, tags = Tags("Mecseki Kéktúra", jel = "k")),
+                Element(type = "route", id = 2, tags = Tags("Mecseknádasdi Piroska", jel = "p"))
+            )
+        )
+        coEvery { overpassRepository.searchHikingRelationsBy(any()) } returns overpassQueryResult
+
+        launch<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            "Mecseki Kéktúra".isPopupTextDisplayed()
+            "Mecseknádasdi Piroska".isPopupTextDisplayed()
+        }
+    }
+
+    private fun answerTestLayer() {
         val fileName = "TuraReteg_1000.mbtiles"
         val file = osmConfiguration.getHikingLayerFile().also {
             it.copyFrom(testContext.assets.open(fileName))
         }
         coEvery { layerRepository.getHikingLayerFile() } returns file
-
-        launch<HomeActivity> {
-            // TODO: Check overlay displays
-        }
     }
 
 }

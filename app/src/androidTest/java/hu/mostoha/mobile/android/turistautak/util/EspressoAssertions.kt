@@ -3,26 +3,39 @@ package hu.mostoha.mobile.android.turistautak.util
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 
-object EspressoAssertions {
+fun @receiver:IdRes Int.isDisplayed() {
+    onView(withId(this)).check(matches(ViewMatchers.isDisplayed()))
+}
 
-    fun checkTextDisplayed(@StringRes res: Int) {
-        onView(withText(res)).check(matches(isDisplayed()))
-    }
+fun @receiver:IdRes Int.click() {
+    onView(withId(this)).perform(ViewActions.click())
+}
 
-    fun checkViewDisplayed(@IdRes id: Int) {
-        onView(withId(id)).check(matches(isDisplayed()))
-    }
+fun @receiver:IdRes Int.typeText(text: String) {
+    onView(withId(this)).perform(ViewActions.typeText(text))
+}
 
-    fun clickViewWithId(@IdRes id: Int) {
-        onView(withId(id)).perform(click())
-    }
+fun @receiver:StringRes Int.isTextDisplayed() {
+    onView(withText(this)).check(matches(ViewMatchers.isDisplayed()))
+}
 
-    fun clickViewWithText(@StringRes res: Int) {
-        onView(withText(res)).perform(click())
-    }
+fun @receiver:StringRes Int.clickWithText() {
+    onView(withText(this)).perform(ViewActions.click())
+}
 
+fun String.isTextDisplayed() {
+    onView(withText(this)).check(matches(ViewMatchers.isDisplayed()))
+}
+
+fun String.isPopupTextDisplayed() {
+    onView(withText(this))
+        .inRoot(RootMatchers.isPlatformPopup())
+        .check(matches(ViewMatchers.isDisplayed()))
 }
