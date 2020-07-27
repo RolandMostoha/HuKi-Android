@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/homeSearchBarContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/homeSearchBarText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/space_medium"
-        android:maxLines="2"
+        android:lines="2"
+        android:gravity="center_vertical"
         android:ellipsize="end"
         android:drawablePadding="@dimen/space_medium"
         android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
 
-</LinearLayout>
+</FrameLayout>

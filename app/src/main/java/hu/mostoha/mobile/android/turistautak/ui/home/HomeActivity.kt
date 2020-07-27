@@ -136,8 +136,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         .show()
                 })
         }
-        searchBarAdapter =
-            SearchBarAdapter(this)
+        searchBarAdapter = SearchBarAdapter(this)
+        homeSearchBarInput.setDropDownBackgroundResource(R.color.home_autocomplete_dropdown_color)
         homeSearchBarInput.setAdapter(searchBarAdapter)
         homeSearchBarInput.addTextChangedListener {
             val text = it.toString()

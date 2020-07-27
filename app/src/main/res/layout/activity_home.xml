@@ -45,7 +45,7 @@
                 app:boxBackgroundColor="@android:color/white"
                 app:endIconMode="clear_text">
 
-                <AutoCompleteTextView
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/homeSearchBarInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
