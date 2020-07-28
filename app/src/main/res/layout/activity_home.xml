@@ -22,28 +22,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/home_search_bar_height"
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/space_large"
-            android:layout_marginEnd="@dimen/space_large">
+            android:layout_marginStart="@dimen/space_large">
 
             <ImageView
+                android:id="@+id/homeAppIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_hiking"/>
+                android:src="@drawable/ic_hiking"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:id="@+id/homeSearchBarInputLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/home_search_bar_title"
                 android:layout_marginStart="@dimen/space_small"
+                android:layout_marginEnd="@dimen/space_small"
                 app:boxBackgroundColor="@android:color/white"
-                app:endIconMode="clear_text">
+                app:endIconMode="clear_text"
+                app:endIconDrawable="@drawable/ic_clear"
+                app:layout_constraintStart_toEndOf="@id/homeAppIcon"
+                app:layout_constraintEnd_toStartOf="@id/homeSearchBarProgress"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/homeSearchBarInput"
@@ -53,7 +61,18 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
+            <com.budiyev.android.circularprogressbar.CircularProgressBar
+                style="@style/DefaultCircularProgressBar"
+                android:id="@+id/homeSearchBarProgress"
+                android:layout_width="@dimen/home_search_bar_progress_size"
+                android:layout_height="@dimen/home_search_bar_progress_size"
+                android:layout_marginEnd="@dimen/space_large"
+                android:visibility="invisible"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 

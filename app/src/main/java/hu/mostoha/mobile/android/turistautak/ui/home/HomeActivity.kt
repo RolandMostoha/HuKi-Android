@@ -113,11 +113,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             setMultiTouchControls(true)
         }
 
-        homeSearchBarInputLayout.setEndIconOnClickListener {
-            homeSearchBarInput.text?.clear()
-            homeSearchBarInput.clearFocusAndHideKeyboard()
-        }
-
         homeMyLocationButton.setOnClickListener {
             checkLocationPermissions(
                 onPermissionsChecked = {
@@ -136,13 +131,25 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         .show()
                 })
         }
+
+        homeSearchBarInputLayout.setEndIconOnClickListener {
+            homeSearchBarInput.text?.clear()
+            homeSearchBarInput.clearFocusAndHideKeyboard()
+            // TODO: cancel current search job and hide loading
+        }
         searchBarAdapter = SearchBarAdapter(this)
         homeSearchBarInput.setDropDownBackgroundResource(R.color.home_autocomplete_dropdown_color)
         homeSearchBarInput.setAdapter(searchBarAdapter)
         homeSearchBarInput.addTextChangedListener {
-            val text = it.toString()
-            if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
-                viewModel.searchHikingRelationsBy(text)
+            if (!homeSearchBarInput.isPerformingCompletion) {
+                val text = it.toString()
+                if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
+                    viewModel.searchHikingRelationsBy(text)
+                }
+            } else {
+                homeSearchBarInput.text?.clear()
+                homeSearchBarInput.clearFocusAndHideKeyboard()
+                // TODO: show result in map
             }
         }
     }
@@ -155,6 +162,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
                 is LayerLoading -> {
                     homeLayerFab.inProgress = it.inProgress
+                }
+                is SearchBarLoading -> {
+                    homeSearchBarProgress.visibleOrInvisible(it.inProgress)
                 }
                 is SearchResult -> {
                     searchBarAdapter.clear()

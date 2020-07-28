@@ -2,9 +2,9 @@ package hu.mostoha.mobile.android.turistautak.repository
 
 import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.turistautak.extensions.fixQueryErrors
+import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
 import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
-import hu.supercluster.overpasser.library.output.OutputFormat
 import hu.supercluster.overpasser.library.output.OutputModificator
 import hu.supercluster.overpasser.library.output.OutputOrder
 import hu.supercluster.overpasser.library.output.OutputVerbosity
@@ -17,8 +17,8 @@ class OverpassRepositoryImpl @Inject constructor(
 
     override suspend fun searchHikingRelationsBy(searchText: String): OverpassQueryResult {
         val query = OverpassQuery()
-            .format(OutputFormat.JSON)
-            .timeout(10)
+            .format(NetworkConfig.OUTPUT_FORMAT_OVERPASS)
+            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
             .filterQuery()
             .rel()
             .tag("route", "hiking")

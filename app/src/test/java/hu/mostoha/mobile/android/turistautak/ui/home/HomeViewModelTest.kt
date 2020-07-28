@@ -132,9 +132,10 @@ class HomeViewModelTest {
         homeViewModel.searchHikingRelationsBy(searchText)
 
         coVerifyOrder {
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             overpassInteractor.requestSearchHikingRelationsBy(searchText, any())
-            val uiResults = generator.generate(overpassQueryResult.elements)
-            homeViewModel.postEvent(HomeLiveEvents.SearchResult(uiResults))
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
+            homeViewModel.postEvent(HomeLiveEvents.SearchResult(generator.generate(overpassQueryResult.elements)))
         }
     }
 
@@ -148,7 +149,9 @@ class HomeViewModelTest {
         homeViewModel.searchHikingRelationsBy("")
 
         coVerifyOrder {
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             overpassInteractor.requestSearchHikingRelationsBy(any(), any())
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
         }
     }

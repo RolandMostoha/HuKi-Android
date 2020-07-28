@@ -27,8 +27,8 @@ class MyLocationOverlay(
         if (event.action == MotionEvent.ACTION_DOWN && enableAutoStop) {
             onFollowLocationDisabled?.invoke()
         }
-        return super.onTouchEvent(event, mapView)
 
+        return super.onTouchEvent(event, mapView)
     }
 
 }

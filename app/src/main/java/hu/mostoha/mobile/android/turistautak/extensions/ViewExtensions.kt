@@ -16,3 +16,11 @@ fun View.visible() {
 fun View.invisible() {
     this.isInvisible = true
 }
+
+fun View.visibleOrGone(visible: Boolean) {
+    if (visible) visible() else gone()
+}
+
+fun View.visibleOrInvisible(visible: Boolean) {
+    if (visible) visible() else invisible()
+}

@@ -64,12 +64,16 @@ class HomeViewModel @ViewModelInject constructor(
     }
 
     fun searchHikingRelationsBy(searchText: String) = launch {
+        postEvent(SearchBarLoading(true))
+
         when (val result = overpassInteractor.requestSearchHikingRelationsBy(searchText, viewModelScope)) {
             is TaskResult.Success -> {
+                postEvent(SearchBarLoading(false))
                 val searchResults = generator.generate(result.data.elements)
                 postEvent(SearchResult(searchResults))
             }
             is TaskResult.Error -> {
+                postEvent(SearchBarLoading(false))
                 postEvent(ErrorOccurred(result.domainException.messageRes))
             }
         }
@@ -82,5 +86,6 @@ data class HomeViewState(val hikingLayerFile: File?) : ViewState
 sealed class HomeLiveEvents : LiveEvents {
     data class ErrorOccurred(@StringRes val messageRes: Int) : HomeLiveEvents()
     data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
+    data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class SearchResult(val results: List<SearchResultItem>) : HomeLiveEvents()
 }
