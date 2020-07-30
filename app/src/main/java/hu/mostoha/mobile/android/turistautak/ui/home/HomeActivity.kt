@@ -164,7 +164,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeLayerFab.inProgress = it.inProgress
                 }
                 is SearchBarLoading -> {
-                    homeSearchBarProgress.visibleOrInvisible(it.inProgress)
+                    homeSearchBarProgress.visibleOrGone(it.inProgress)
                 }
                 is SearchResult -> {
                     searchBarAdapter.clear()

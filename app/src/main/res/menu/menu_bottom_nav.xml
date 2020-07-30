@@ -3,16 +3,16 @@
     <item
         android:id="@+id/menuMap"
         android:enabled="true"
-        android:icon="@drawable/ic_map_marker"
+        android:icon="@drawable/ic_home_menu_map"
         android:title="@string/home_menu_button_map" />
     <item
         android:id="@+id/menuHikingSigns"
         android:enabled="true"
-        android:icon="@drawable/ic_triangle"
+        android:icon="@drawable/ic_home_menu_symbols"
         android:title="@string/home_menu_button_hiking_signs" />
     <item
         android:id="@+id/menuSettings"
         android:enabled="true"
-        android:icon="@drawable/ic_settings"
+        android:icon="@drawable/ic_home_menu_settings"
         android:title="@string/home_menu_button_settings" />
 </menu>

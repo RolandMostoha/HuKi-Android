@@ -25,7 +25,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/home_search_bar_height"
-            android:layout_marginStart="@dimen/space_large">
+            android:layout_marginStart="@dimen/space_large"
+            android:animateLayoutChanges="true">
 
             <ImageView
                 android:id="@+id/homeAppIcon"
@@ -67,9 +68,10 @@
                 android:layout_width="@dimen/home_search_bar_progress_size"
                 android:layout_height="@dimen/home_search_bar_progress_size"
                 android:layout_marginEnd="@dimen/space_large"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/homeSearchBarInputLayout"
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
