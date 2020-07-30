@@ -43,13 +43,13 @@ class HomeViewModelTest {
 
     @Test
     fun `Given null TaskResult, when checkHikingLayer, then Loading and null layer file posted`() {
-        coEvery { layerInteractor.requestGetHikingLayer(any()) } returns TaskResult.Success(null)
+        coEvery { layerInteractor.requestGetHikingLayer() } returns TaskResult.Success(null)
 
         homeViewModel.checkHikingLayer()
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
-            layerInteractor.requestGetHikingLayer(any())
+            layerInteractor.requestGetHikingLayer()
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
             homeViewModel.postState(HomeViewState(null))
         }
@@ -58,13 +58,13 @@ class HomeViewModelTest {
     @Test
     fun `Given Error TaskResult, when checkHikingLayer, then Loading and ErrorOccurred posted`() {
         val errorRes = R.string.default_error_message_unknown
-        coEvery { layerInteractor.requestGetHikingLayer(any()) } returns TaskResult.Error(DomainException(errorRes))
+        coEvery { layerInteractor.requestGetHikingLayer() } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.checkHikingLayer()
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
-            layerInteractor.requestGetHikingLayer(any())
+            layerInteractor.requestGetHikingLayer()
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
         }
@@ -103,7 +103,7 @@ class HomeViewModelTest {
         val downloadId: Long = 12345
         val file = File("path")
         coEvery { layerInteractor.requestSaveHikingLayer(downloadId, any()) } returns TaskResult.Success(Unit)
-        coEvery { layerInteractor.requestGetHikingLayer(any()) } returns TaskResult.Success(file)
+        coEvery { layerInteractor.requestGetHikingLayer() } returns TaskResult.Success(file)
 
         homeViewModel.handleFileDownloaded(downloadId)
 
@@ -125,7 +125,7 @@ class HomeViewModelTest {
                 Element(type = "route", id = 2, tags = Tags("Mecseknádasdi Piroska", jel = "p"))
             )
         )
-        coEvery { overpassInteractor.requestSearchHikingRelationsBy(searchText, any()) } returns TaskResult.Success(
+        coEvery { overpassInteractor.requestSearchHikingRelationsBy(searchText) } returns TaskResult.Success(
             overpassQueryResult
         )
 
@@ -133,7 +133,7 @@ class HomeViewModelTest {
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            overpassInteractor.requestSearchHikingRelationsBy(searchText, any())
+            overpassInteractor.requestSearchHikingRelationsBy(searchText)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.SearchResult(generator.generate(overpassQueryResult.elements)))
         }
@@ -142,7 +142,7 @@ class HomeViewModelTest {
     @Test
     fun `Given Error TaskResult, when searchHikingRelationsBy, then ErrorOccurred posted`() {
         val errorRes = R.string.default_error_message_unknown
-        coEvery { overpassInteractor.requestSearchHikingRelationsBy(any(), any()) } returns TaskResult.Error(
+        coEvery { overpassInteractor.requestSearchHikingRelationsBy(any()) } returns TaskResult.Error(
             DomainException(errorRes)
         )
 
@@ -150,7 +150,7 @@ class HomeViewModelTest {
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            overpassInteractor.requestSearchHikingRelationsBy(any(), any())
+            overpassInteractor.requestSearchHikingRelationsBy(any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
         }

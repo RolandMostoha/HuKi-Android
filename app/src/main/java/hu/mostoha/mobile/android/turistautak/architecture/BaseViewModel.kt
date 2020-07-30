@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hadilq.liveevent.LiveEvent
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
+import kotlinx.coroutines.Job
 
 open class BaseViewModel<E : LiveEvents, VS : ViewState>(
     private val taskExecutor: TaskExecutor
@@ -23,7 +24,11 @@ open class BaseViewModel<E : LiveEvents, VS : ViewState>(
     }
 
     fun launch(block: suspend () -> Unit) {
-        taskExecutor.runOnMain(viewModelScope, block)
+        taskExecutor.runOnUi(viewModelScope, block)
+    }
+
+    fun launchCancellable(block: suspend () -> Unit): Job {
+        return taskExecutor.runOnUiCancellable(viewModelScope, block)
     }
 
 }

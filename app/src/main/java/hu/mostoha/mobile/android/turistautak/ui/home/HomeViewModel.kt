@@ -13,6 +13,8 @@ import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarUiModelGenerator
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchResultItem
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import java.io.File
 
 class HomeViewModel @ViewModelInject constructor(
@@ -22,13 +24,18 @@ class HomeViewModel @ViewModelInject constructor(
     private val generator: SearchBarUiModelGenerator
 ) : BaseViewModel<HomeLiveEvents, HomeViewState>(taskExecutor) {
 
+    companion object {
+        const val SEARCH_QUERY_DELAY_MS = 500L
+    }
+
+    private var searchJob: Job? = null
+
     fun checkHikingLayer() = launch {
         postEvent(LayerLoading(true))
 
-        val result = layerInteractor.requestGetHikingLayer(viewModelScope)
+        val result = layerInteractor.requestGetHikingLayer()
 
         postEvent(LayerLoading(false))
-
         when (result) {
             is TaskResult.Success -> {
                 postState(HomeViewState(result.data))
@@ -63,18 +70,28 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
-    fun searchHikingRelationsBy(searchText: String) = launch {
-        postEvent(SearchBarLoading(true))
-
-        when (val result = overpassInteractor.requestSearchHikingRelationsBy(searchText, viewModelScope)) {
-            is TaskResult.Success -> {
+    fun searchHikingRelationsBy(searchText: String) {
+        searchJob?.let { job ->
+            if (job.isActive) {
+                job.cancel()
                 postEvent(SearchBarLoading(false))
-                val searchResults = generator.generate(result.data.elements)
-                postEvent(SearchResult(searchResults))
             }
-            is TaskResult.Error -> {
-                postEvent(SearchBarLoading(false))
-                postEvent(ErrorOccurred(result.domainException.messageRes))
+        }
+        searchJob = launchCancellable {
+            delay(SEARCH_QUERY_DELAY_MS)
+
+            postEvent(SearchBarLoading(true))
+
+            when (val result = overpassInteractor.requestSearchHikingRelationsBy(searchText)) {
+                is TaskResult.Success -> {
+                    postEvent(SearchBarLoading(false))
+                    val searchResults = generator.generate(result.data.elements)
+                    postEvent(SearchResult(searchResults))
+                }
+                is TaskResult.Error -> {
+                    postEvent(SearchBarLoading(false))
+                    postEvent(ErrorOccurred(result.domainException.messageRes))
+                }
             }
         }
     }

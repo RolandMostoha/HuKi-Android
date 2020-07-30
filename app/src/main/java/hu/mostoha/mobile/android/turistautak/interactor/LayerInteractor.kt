@@ -14,8 +14,8 @@ class LayerInteractor @Inject constructor(
     private val layerRepository: LayerRepository
 ) {
 
-    suspend fun requestGetHikingLayer(coroutineScope: CoroutineScope): TaskResult<File?> {
-        return taskExecutor.runOnBackground(coroutineScope) {
+    suspend fun requestGetHikingLayer(): TaskResult<File?> {
+        return taskExecutor.runOnBackground {
             try {
                 val file = layerRepository.getHikingLayerFile()
 
@@ -29,7 +29,7 @@ class LayerInteractor @Inject constructor(
     }
 
     suspend fun requestDownloadHikingLayer(coroutineScope: CoroutineScope): TaskResult<Long> {
-        return taskExecutor.runOnBackground(coroutineScope) {
+        return taskExecutor.runOnBackground {
             try {
                 val requestId = layerRepository.downloadHikingLayerFile()
 
@@ -43,7 +43,7 @@ class LayerInteractor @Inject constructor(
     }
 
     suspend fun requestSaveHikingLayer(downloadId: Long, coroutineScope: CoroutineScope): TaskResult<Unit> {
-        return taskExecutor.runOnBackground(coroutineScope) {
+        return taskExecutor.runOnBackground {
             try {
                 layerRepository.saveHikingLayerFile(downloadId)
 
