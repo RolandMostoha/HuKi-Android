@@ -12,7 +12,7 @@
 
     <dimen name="icon_size_small">22dp</dimen>
     <dimen name="icon_size_medium">24dp</dimen>
-    <dimen name="icon_size_large">28dp</dimen>
+    <dimen name="icon_size_large">26dp</dimen>
 
     <dimen name="default_elevation_strong">5dp</dimen>
     <dimen name="default_text_size">@dimen/text_size_medium</dimen>

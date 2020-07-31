@@ -102,6 +102,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_action_my_location"
+        android:elevation="@dimen/default_elevation_strong"
         android:layout_marginEnd="@dimen/space_extra_large"
         android:layout_marginBottom="@dimen/space_large"
         app:layout_constraintEnd_toEndOf="parent"

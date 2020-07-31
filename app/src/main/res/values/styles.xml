@@ -9,7 +9,7 @@
     </style>
 
     <style name="DefaultShapeAppearance.InputField">
-        <item name="cornerSize">15dp</item>
+        <item name="cornerSize">20dp</item>
     </style>
 
     <style name="DefaultMaterialDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
