@@ -9,7 +9,7 @@
         android:id="@+id/menuHikingSigns"
         android:enabled="true"
         android:icon="@drawable/ic_home_menu_symbols"
-        android:title="@string/home_menu_button_hiking_signs" />
+        android:title="@string/home_menu_button_hiking_symbols" />
     <item
         android:id="@+id/menuSettings"
         android:enabled="true"

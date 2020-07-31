@@ -31,15 +31,15 @@ class OsmConfiguration @Inject constructor(@ApplicationContext private val conte
 
     fun init() {
         Configuration.getInstance().apply {
-            if (BuildConfig.DEBUG) {
-                isDebugMapView = true
-                isDebugMode = true
-                isDebugTileProviders = true
-                isDebugMapTileDownloader = true
-            }
+            val isDebug = false
+            isDebugMapView = isDebug
+            isDebugMode = isDebug
+            isDebugTileProviders = isDebug
+            isDebugMapTileDownloader = isDebug
 
             osmdroidBasePath = getOsmDroidBaseDirectory()
             osmdroidTileCache = getOsmDroidCacheDirectory()
+            userAgentValue = BuildConfig.APPLICATION_ID
 
             load(context, context.getSharedPreferences(KEY_GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE))
         }

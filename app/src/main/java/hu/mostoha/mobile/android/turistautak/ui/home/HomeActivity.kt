@@ -53,10 +53,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initViews()
         initObservers()
         initReceivers()
-
-        homeMapView.post {
-            homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false)
-        }
     }
 
     private fun initWindow() {
@@ -65,52 +61,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         searchBarContainer.applyTopMarginForStatusBar(this)
     }
 
-    private fun showMyLocation() {
-        homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimary)
-        if (myLocationOverlay == null) {
-            val provider = GpsMyLocationProvider(applicationContext).apply {
-                locationUpdateMinTime = MY_LOCATION_MIN_TIME_MS
-                locationUpdateMinDistance = MY_LOCATION_MIN_DISTANCE_METER
-            }
-            myLocationOverlay = MyLocationOverlay(provider, homeMapView).apply {
-                setDirectionArrow(
-                    R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity),
-                    R.drawable.ic_marker_my_location_compass.toBitmap(this@HomeActivity)
-                )
-                onFollowLocationDisabled = {
-                    homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimaryIcon)
-                }
-            }
-        }
-        myLocationOverlay?.apply {
-            enableMyLocation()
-            enableFollowLocation()
-            enableAutoStop = true
-        }
-        homeMapView.overlays.add(myLocationOverlay)
-        homeMapView.invalidate()
-    }
-
-    private fun initOfflineLayer(file: File) {
-        val offlineProvider = OfflineTileProvider(
-            SimpleRegisterReceiver(this),
-            arrayOf(file)
-        )
-
-        val overlay = TilesOverlay(offlineProvider, this)
-        overlay.loadingBackgroundColor = Color.TRANSPARENT
-        overlay.loadingLineColor = Color.TRANSPARENT
-
-        homeMapView.overlays.add(overlay)
-        homeMapView.invalidate()
-    }
-
     private fun initViews() {
         homeMapView.apply {
             tilesScaleFactor = TILES_SCALE_FACTOR
             setTileSource(TileSourceFactory.MAPNIK)
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
+            addOnFirstLayoutListener { _, _, _, _, _ ->
+                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false)
+            }
         }
 
         homeMyLocationButton.setOnClickListener {
@@ -152,6 +111,46 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 // TODO: show result in map
             }
         }
+    }
+
+    private fun showMyLocation() {
+        homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimary)
+        if (myLocationOverlay == null) {
+            val provider = GpsMyLocationProvider(applicationContext).apply {
+                locationUpdateMinTime = MY_LOCATION_MIN_TIME_MS
+                locationUpdateMinDistance = MY_LOCATION_MIN_DISTANCE_METER
+            }
+            myLocationOverlay = MyLocationOverlay(provider, homeMapView).apply {
+                setDirectionArrow(
+                    R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity),
+                    R.drawable.ic_marker_my_location_compass.toBitmap(this@HomeActivity)
+                )
+                onFollowLocationDisabled = {
+                    homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimaryIcon)
+                }
+            }
+        }
+        myLocationOverlay?.apply {
+            enableMyLocation()
+            enableFollowLocation()
+            enableAutoStop = true
+        }
+        homeMapView.overlays.add(myLocationOverlay)
+        homeMapView.invalidate()
+    }
+
+    private fun initOfflineLayer(file: File) {
+        val offlineProvider = OfflineTileProvider(
+            SimpleRegisterReceiver(this),
+            arrayOf(file)
+        )
+
+        val overlay = TilesOverlay(offlineProvider, this)
+        overlay.loadingBackgroundColor = Color.TRANSPARENT
+        overlay.loadingLineColor = Color.TRANSPARENT
+
+        homeMapView.overlays.add(overlay)
+        homeMapView.invalidate()
     }
 
     private fun initObservers() {
@@ -224,6 +223,3 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
 }
-
-
-
