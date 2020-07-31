@@ -5,7 +5,7 @@
     </style>
 
     <style name="DefaultShapeAppearance.Surface">
-        <item name="cornerSize">10dp</item>
+        <item name="cornerSize">@dimen/default_surface_corner_size</item>
     </style>
 
     <style name="DefaultShapeAppearance.InputField">

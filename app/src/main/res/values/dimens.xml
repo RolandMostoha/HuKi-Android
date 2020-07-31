@@ -16,6 +16,7 @@
 
     <dimen name="default_elevation_strong">5dp</dimen>
     <dimen name="default_text_size">@dimen/text_size_medium</dimen>
+    <dimen name="default_surface_corner_size">10dp</dimen>
 
     <dimen name="home_search_bar_height">60dp</dimen>
     <dimen name="home_search_bar_stroke_width">1dp</dimen>

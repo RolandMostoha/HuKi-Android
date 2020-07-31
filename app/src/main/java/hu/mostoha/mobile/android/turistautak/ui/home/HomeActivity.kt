@@ -97,7 +97,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             // TODO: cancel current search job and hide loading
         }
         searchBarAdapter = SearchBarAdapter(this)
-        homeSearchBarInput.setDropDownBackgroundResource(R.color.home_autocomplete_dropdown_color)
+        homeSearchBarInput.setDropDownBackgroundResource(R.drawable.background_home_search_bar_dropdown)
         homeSearchBarInput.setAdapter(searchBarAdapter)
         homeSearchBarInput.addTextChangedListener {
             if (!homeSearchBarInput.isPerformingCompletion) {

@@ -8,11 +8,14 @@
         android:id="@+id/homeSearchBarText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/space_medium"
+        android:paddingTop="@dimen/space_medium"
+        android:paddingBottom="@dimen/space_medium"
+        android:paddingStart="@dimen/space_large"
+        android:paddingEnd="@dimen/space_large"
         android:lines="2"
         android:gravity="center_vertical"
         android:ellipsize="end"
-        android:drawablePadding="@dimen/space_medium"
+        android:drawablePadding="12dp"
         android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
 
 </FrameLayout>
