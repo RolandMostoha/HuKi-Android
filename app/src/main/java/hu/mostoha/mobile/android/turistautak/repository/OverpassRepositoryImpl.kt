@@ -21,8 +21,8 @@ class OverpassRepositoryImpl @Inject constructor(
             .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
             .filterQuery()
             .rel()
+            .tag("type", "route")
             .tag("route", "hiking")
-            .tag("jel")
             .tagRegex("name", searchText)
             .boundingBox(
                 HUNGARY_BOUNDING_BOX.south,

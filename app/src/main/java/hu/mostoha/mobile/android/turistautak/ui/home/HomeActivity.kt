@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
+import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX_MAP
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.turistautak.domain.model.toMapBoundingBox
@@ -68,7 +68,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
             addOnFirstLayoutListener { _, _, _, _, _ ->
-                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false)
+                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX_MAP.toMapBoundingBox(), false)
             }
         }
 
