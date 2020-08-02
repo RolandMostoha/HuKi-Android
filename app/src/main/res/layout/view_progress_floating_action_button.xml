@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:elevation="@dimen/default_elevation_strong"
+        android:elevation="@dimen/default_elevation"
         tools:src="@drawable/ic_hiking" />
 
     <com.budiyev.android.circularprogressbar.CircularProgressBar

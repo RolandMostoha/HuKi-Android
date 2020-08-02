@@ -3,7 +3,6 @@ package hu.mostoha.mobile.android.turistautak.interactor
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
 import hu.mostoha.mobile.android.turistautak.repository.LayerRepository
-import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
@@ -28,7 +27,7 @@ class LayerInteractor @Inject constructor(
         }
     }
 
-    suspend fun requestDownloadHikingLayer(coroutineScope: CoroutineScope): TaskResult<Long> {
+    suspend fun requestDownloadHikingLayer(): TaskResult<Long> {
         return taskExecutor.runOnBackground {
             try {
                 val requestId = layerRepository.downloadHikingLayerFile()
@@ -42,7 +41,7 @@ class LayerInteractor @Inject constructor(
         }
     }
 
-    suspend fun requestSaveHikingLayer(downloadId: Long, coroutineScope: CoroutineScope): TaskResult<Unit> {
+    suspend fun requestSaveHikingLayer(downloadId: Long): TaskResult<Unit> {
         return taskExecutor.runOnBackground {
             try {
                 layerRepository.saveHikingLayerFile(downloadId)

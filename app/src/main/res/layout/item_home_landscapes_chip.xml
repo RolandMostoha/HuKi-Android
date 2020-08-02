@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/landscapesChip"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="@dimen/default_elevation"
+    android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+    android:textColor="@color/colorSecondaryText"
+    app:chipMinHeight="35dp"
+    app:chipBackgroundColor="@color/white"
+    app:chipIconSize="@dimen/home_landscapes_icon_size"
+    app:iconStartPadding="@dimen/space_small" />

@@ -14,7 +14,7 @@
     <dimen name="icon_size_medium">24dp</dimen>
     <dimen name="icon_size_large">26dp</dimen>
 
-    <dimen name="default_elevation_strong">5dp</dimen>
+    <dimen name="default_elevation">5dp</dimen>
     <dimen name="default_text_size">@dimen/text_size_medium</dimen>
     <dimen name="default_surface_corner_size">10dp</dimen>
 
@@ -26,5 +26,6 @@
     <dimen name="progress_fab_stroke_width">3dp</dimen>
 
     <dimen name="home_search_bar_progress_size">22dp</dimen>
+    <dimen name="home_landscapes_icon_size">18dp</dimen>
 
 </resources>

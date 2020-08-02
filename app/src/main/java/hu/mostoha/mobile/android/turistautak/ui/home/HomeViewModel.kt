@@ -2,14 +2,15 @@ package hu.mostoha.mobile.android.turistautak.ui.home
 
 import androidx.annotation.StringRes
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.viewModelScope
 import hu.mostoha.mobile.android.turistautak.architecture.BaseViewModel
 import hu.mostoha.mobile.android.turistautak.architecture.LiveEvents
 import hu.mostoha.mobile.android.turistautak.architecture.ViewState
+import hu.mostoha.mobile.android.turistautak.domain.model.Landscape
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.OverpassInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
+import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarUiModelGenerator
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchResultItem
@@ -21,6 +22,7 @@ class HomeViewModel @ViewModelInject constructor(
     taskExecutor: TaskExecutor,
     private val layerInteractor: LayerInteractor,
     private val overpassInteractor: OverpassInteractor,
+    private val landscapeRepository: LandscapeRepository,
     private val generator: SearchBarUiModelGenerator
 ) : BaseViewModel<HomeLiveEvents, HomeViewState>(taskExecutor) {
 
@@ -49,7 +51,7 @@ class HomeViewModel @ViewModelInject constructor(
     fun downloadHikingLayer() = launch {
         postEvent(LayerLoading(true))
 
-        when (val result = layerInteractor.requestDownloadHikingLayer(viewModelScope)) {
+        when (val result = layerInteractor.requestDownloadHikingLayer()) {
             is TaskResult.Error -> {
                 postEvent(LayerLoading(false))
                 postEvent(ErrorOccurred(result.domainException.messageRes))
@@ -60,7 +62,7 @@ class HomeViewModel @ViewModelInject constructor(
     fun handleFileDownloaded(downloadId: Long) = launch {
         postEvent(LayerLoading(true))
 
-        when (val result = layerInteractor.requestSaveHikingLayer(downloadId, viewModelScope)) {
+        when (val result = layerInteractor.requestSaveHikingLayer(downloadId)) {
             is TaskResult.Success -> {
                 checkHikingLayer()
             }
@@ -96,6 +98,10 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
+    fun initLandscapes() {
+        postEvent(LandscapesResult(landscapeRepository.getLandscapes()))
+    }
+
 }
 
 data class HomeViewState(val hikingLayerFile: File?) : ViewState
@@ -105,4 +111,5 @@ sealed class HomeLiveEvents : LiveEvents {
     data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class SearchResult(val results: List<SearchResultItem>) : HomeLiveEvents()
+    data class LandscapesResult(val landscapes: List<Landscape>) : HomeLiveEvents()
 }

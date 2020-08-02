@@ -21,6 +21,7 @@ import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
@@ -53,12 +54,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initViews()
         initObservers()
         initReceivers()
+
+        viewModel.initLandscapes()
     }
 
     private fun initWindow() {
         setStatusBarColor(android.R.color.transparent)
         setFullScreenAndLightSystemBars()
-        searchBarContainer.applyTopMarginForStatusBar(this)
+        homeSearchBarContainer.applyTopMarginForStatusBar(this)
     }
 
     private fun initViews() {
@@ -169,6 +172,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     searchBarAdapter.clear()
                     searchBarAdapter.addAll(it.results)
                     homeSearchBarInput.refreshAutoCompleteResults()
+                }
+                is LandscapesResult -> {
+                    it.landscapes.forEach { landscape ->
+                        val view = inflateLayout(R.layout.item_home_landscapes_chip, homeLandscapeChipGroup)
+                        view.landscapesChip.text = landscape.name
+                        view.landscapesChip.setChipIconResource(landscape.icon)
+                        homeLandscapeChipGroup.addView(view)
+                    }
                 }
             }
         })
