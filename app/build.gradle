@@ -71,7 +71,6 @@ dependencies {
 
     // OSM
     implementation 'org.osmdroid:osmdroid-android:6.1.6'
-    implementation 'hu.supercluster:overpasser:0.2.2'
 
     // Network
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

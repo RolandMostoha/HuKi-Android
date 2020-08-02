@@ -35,7 +35,14 @@ class OverpassRepositoryTest {
 
     @Test
     fun getHikingRelationsBy() = runBlocking {
-        val result = repository.searchHikingRelationsBy("Mecsek")
+        val result = repository.getHikingRelationsBy("Mecsek")
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun getNodesByRelationId() = runBlocking {
+        val result = repository.getNodesByRelationId("4640869")
 
         assertNotNull(result)
     }

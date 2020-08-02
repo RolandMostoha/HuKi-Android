@@ -22,7 +22,6 @@ data class Element(
 
     @field:Json(name = "lon")
     var lon: Double? = null
-
 )
 
 data class Tags(
@@ -49,5 +48,4 @@ data class Tags(
 
     @field:Json(name = "website")
     var website: String? = null
-
 )

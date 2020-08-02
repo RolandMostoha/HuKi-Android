@@ -111,7 +111,7 @@ class HomeActivityTest {
                 Element(type = "route", id = 2, tags = Tags("Mecseknádasdi Piroska", jel = "p"))
             )
         )
-        coEvery { overpassRepository.searchHikingRelationsBy(any()) } returns overpassQueryResult
+        coEvery { overpassRepository.getHikingRelationsBy(any()) } returns overpassQueryResult
 
         launch<HomeActivity> {
             val searchText = "Mecsek"

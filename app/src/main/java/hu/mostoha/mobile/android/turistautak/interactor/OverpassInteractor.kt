@@ -15,7 +15,7 @@ class OverpassInteractor @Inject constructor(
     suspend fun requestSearchHikingRelationsBy(searchText: String): TaskResult<OverpassQueryResult> {
         return taskExecutor.runOnBackground {
             try {
-                val file = overpassRepository.searchHikingRelationsBy(searchText)
+                val file = overpassRepository.getHikingRelationsBy(searchText)
 
                 TaskResult.Success(file)
             } catch (exception: Exception) {
