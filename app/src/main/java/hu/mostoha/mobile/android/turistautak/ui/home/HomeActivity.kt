@@ -4,15 +4,17 @@ import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX_MAP
+import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.turistautak.domain.model.toMapBoundingBox
@@ -25,9 +27,14 @@ import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions
+import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme
 import java.io.File
 
 
@@ -47,6 +54,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private var myLocationOverlay: MyLocationOverlay? = null
 
+    private val boundingBoxOffsetPx by lazy { resources.getDimensionPixelSize(R.dimen.home_bounding_box_offset) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -55,7 +64,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initObservers()
         initReceivers()
 
-        viewModel.initLandscapes()
+        viewModel.loadLandscapes()
     }
 
     private fun initWindow() {
@@ -71,7 +80,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
             addOnFirstLayoutListener { _, _, _, _, _ ->
-                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX_MAP.toMapBoundingBox(), false)
+                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false, boundingBoxOffsetPx)
             }
         }
 
@@ -97,7 +106,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeSearchBarInputLayout.setEndIconOnClickListener {
             homeSearchBarInput.text?.clear()
             homeSearchBarInput.clearFocusAndHideKeyboard()
-            // TODO: cancel current search job and hide loading
+            viewModel.cancelSearch()
         }
         searchBarAdapter = SearchBarAdapter(this)
         homeSearchBarInput.setDropDownBackgroundResource(R.drawable.background_home_search_bar_dropdown)
@@ -106,12 +115,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             if (!homeSearchBarInput.isPerformingCompletion) {
                 val text = it.toString()
                 if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
-                    viewModel.searchHikingRelationsBy(text)
+                    viewModel.loadHikingRelationsBy(text)
                 }
             } else {
                 homeSearchBarInput.text?.clear()
                 homeSearchBarInput.clearFocusAndHideKeyboard()
-                // TODO: show result in map
+            }
+        }
+        homeSearchBarInput.setOnItemClickListener { _, _, position, _ ->
+            val resultItem = searchBarAdapter.getItem(position)
+            if (resultItem != null) {
+                viewModel.loadRelation(resultItem.relationId)
             }
         }
     }
@@ -181,6 +195,24 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         homeLandscapeChipGroup.addView(view)
                     }
                 }
+                is NodesResult -> {
+                    val points = it.nodes.map { node -> LabelledGeoPoint(node.geoPoint) }
+                    val pointStyle = Paint().apply {
+                        style = Paint.Style.FILL
+                        color = ContextCompat.getColor(this@HomeActivity, R.color.colorPrimary)
+                    }
+                    val options = SimpleFastPointOverlayOptions.getDefaultStyle()
+                        .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.NO_OPTIMIZATION)
+                        .setSymbol(SimpleFastPointOverlayOptions.Shape.CIRCLE)
+                        .setPointStyle(pointStyle)
+                        .setRadius(7f)
+                        .setIsClickable(false)
+                    val simpleFastPointOverlay = SimpleFastPointOverlay(SimplePointTheme(points, true), options)
+
+                    homeMapView.overlays.add(simpleFastPointOverlay)
+                    homeMapView.zoomToBoundingBox(BoundingBox.fromGeoPoints(points), true, boundingBoxOffsetPx)
+                    homeMapView.invalidate()
+                }
             }
         })
         viewModel.viewState.observe(this, Observer {
@@ -206,14 +238,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         val intentFilter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         layerDownloadReceiver = registerReceiver(intentFilter) { intent ->
             val downloadId = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) ?: -1
-            viewModel.handleFileDownloaded(downloadId)
+            viewModel.loadDownloadedFile(downloadId)
         }
     }
 
     override fun onResume() {
         super.onResume()
 
-        viewModel.checkHikingLayer()
+        viewModel.loadHikingLayer()
 
         myLocationOverlay?.enableMyLocation()
         homeMapView.onResume()

@@ -113,7 +113,7 @@ public class OverpassQuery extends AbstractOverpassQuery {
                 verbosity.toString().toLowerCase(),
                 modificator == null ? "" : modificator.toString().toLowerCase(),
                 order == null ? "" : order.toString().toLowerCase(),
-                limit
+                limit < 0 ? "" : limit
                 )
         );
 

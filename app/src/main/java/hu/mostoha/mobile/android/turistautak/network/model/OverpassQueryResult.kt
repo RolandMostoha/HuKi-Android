@@ -15,7 +15,7 @@ data class Element(
     var id: Long,
 
     @field:Json(name = "tags")
-    var tags: Tags,
+    var tags: Tags? = null,
 
     @field:Json(name = "lat")
     var lat: Double? = null,

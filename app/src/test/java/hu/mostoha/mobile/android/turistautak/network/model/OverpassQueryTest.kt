@@ -12,7 +12,7 @@ import org.junit.Test
 class OverpassQueryTest {
 
     @Test
-    fun givenBasicQuery_whenBuild_thenQuotesAreRemovedFromSettings() {
+    fun `Given empty query, when build then quotes are removed from settings part`() {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
             .timeout(30)
@@ -23,7 +23,7 @@ class OverpassQueryTest {
     }
 
     @Test
-    fun givenRelByQuery_whenBuild_thenRelationIdIsInBrackets() {
+    fun `Given relBy query, when build, then relation id is in brackets`() {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
             .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
@@ -37,7 +37,7 @@ class OverpassQueryTest {
     }
 
     @Test
-    fun givenCaseInsensitiveQuery_whenBuild_thenIisAppended() {
+    fun `Given case insensitive query, when build, then 'i' is appended`() {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
             .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)

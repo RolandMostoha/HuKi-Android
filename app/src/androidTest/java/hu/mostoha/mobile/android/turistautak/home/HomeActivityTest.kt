@@ -94,7 +94,7 @@ class HomeActivityTest {
 
     @Test
     fun givenTuraReteg1000_whenHomeOpens_thenLayerDisplays() {
-        answerTestLayer()
+        answerTestHikingLayer()
 
         launch<HomeActivity> {
             // TODO: Check overlay displays
@@ -103,15 +103,8 @@ class HomeActivityTest {
 
     @Test
     fun givenSearchText_whenTyping_thenHikingRelationsDisplay() {
-        answerTestLayer()
-
-        val overpassQueryResult = OverpassQueryResult(
-            listOf(
-                Element(type = "route", id = 1, tags = Tags("Mecseki Kéktúra", jel = "k")),
-                Element(type = "route", id = 2, tags = Tags("Mecseknádasdi Piroska", jel = "p"))
-            )
-        )
-        coEvery { overpassRepository.getHikingRelationsBy(any()) } returns overpassQueryResult
+        answerTestHikingLayer()
+        answerTestSearchResult()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
@@ -123,10 +116,41 @@ class HomeActivityTest {
         }
     }
 
-    private fun answerTestLayer() {
-        val fileName = "TuraReteg_1000.mbtiles"
+    @Test
+    fun givenRelation_whenClick_thenLocationsDisplay() {
+        answerTestHikingLayer()
+        answerTestSearchResult()
+
+        coEvery { overpassRepository.getNodesByRelationId(any()) } returns OverpassQueryResult(
+            listOf(
+                Element(type = "node", id = 25287545, lat = 46.1314556, lon = 18.2565377),
+                Element(type = "node", id = 25287546, lat = 46.1264344, lon = 18.2650645),
+                Element(type = "node", id = 25287547, lat = 46.1360740, lon = 18.2532182)
+            )
+        )
+
+        launch<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            "Mecseki Kéktúra".clickWithTextInPopup()
+
+            // TODO: Check overlay displays
+        }
+    }
+
+    private fun answerTestSearchResult() {
+        coEvery { overpassRepository.getHikingRelationsBy(any()) } returns OverpassQueryResult(
+            listOf(
+                Element(type = "route", id = 1, tags = Tags("Mecseki Kéktúra", jel = "k")),
+                Element(type = "route", id = 2, tags = Tags("Mecseknádasdi Piroska", jel = "p"))
+            )
+        )
+    }
+
+    private fun answerTestHikingLayer() {
         val file = osmConfiguration.getHikingLayerFile().also {
-            it.copyFrom(testContext.assets.open(fileName))
+            it.copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
         }
         coEvery { layerRepository.getHikingLayerFile() } returns file
     }

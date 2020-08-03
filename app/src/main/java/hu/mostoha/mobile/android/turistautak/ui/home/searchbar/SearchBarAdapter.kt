@@ -11,7 +11,7 @@ import hu.mostoha.mobile.android.turistautak.extensions.inflateLayout
 import hu.mostoha.mobile.android.turistautak.extensions.setDrawableStart
 import kotlinx.android.synthetic.main.item_home_search_bar.view.*
 
-class SearchBarAdapter(context: Context) : ArrayAdapter<SearchResultItem>(context, 0) {
+class SearchBarAdapter(context: Context) : ArrayAdapter<SearchResultUiModel>(context, 0) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
@@ -40,7 +40,7 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchResultItem>(contex
 
 }
 
-data class SearchResultItem(val name: String, @DrawableRes val symbolRes: Int) {
+data class SearchResultUiModel(val relationId: Long, val name: String, @DrawableRes val symbolRes: Int) {
     override fun toString(): String {
         return name
     }

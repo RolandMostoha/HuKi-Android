@@ -10,7 +10,8 @@ import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
 import hu.mostoha.mobile.android.turistautak.network.model.Element
 import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
 import hu.mostoha.mobile.android.turistautak.network.model.Tags
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarUiModelGenerator
+import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.HomeUiModelGenerator
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.mockk
@@ -30,22 +31,30 @@ class HomeViewModelTest {
 
     private val layerInteractor = mockk<LayerInteractor>()
     private val overpassInteractor = mockk<OverpassInteractor>()
-    private val generator =
-        SearchBarUiModelGenerator()
+    private val landscapeRepository = LandscapeRepository()
+    private val generator = HomeUiModelGenerator()
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
-        homeViewModel = spyk(HomeViewModel(TestTaskExecutor(), layerInteractor, overpassInteractor, generator))
+        homeViewModel = spyk(
+            HomeViewModel(
+                TestTaskExecutor(),
+                layerInteractor,
+                overpassInteractor,
+                landscapeRepository,
+                generator
+            )
+        )
     }
 
     @Test
-    fun `Given null TaskResult, when checkHikingLayer, then Loading and null layer file posted`() {
+    fun `Given null TaskResult, when loadHikingLayer, then Loading and null layer file posted`() {
         coEvery { layerInteractor.requestGetHikingLayer() } returns TaskResult.Success(null)
 
-        homeViewModel.checkHikingLayer()
+        homeViewModel.loadHikingLayer()
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
@@ -56,11 +65,11 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Given Error TaskResult, when checkHikingLayer, then Loading and ErrorOccurred posted`() {
+    fun `Given Error TaskResult, when loadHikingLayer, then Loading and ErrorOccurred posted`() {
         val errorRes = R.string.default_error_message_unknown
         coEvery { layerInteractor.requestGetHikingLayer() } returns TaskResult.Error(DomainException(errorRes))
 
-        homeViewModel.checkHikingLayer()
+        homeViewModel.loadHikingLayer()
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
@@ -73,50 +82,50 @@ class HomeViewModelTest {
     @Test
     fun `Given Success TaskResult, when downloadHikingLayer, then Loading posted`() {
         val requestId: Long = 12345
-        coEvery { layerInteractor.requestDownloadHikingLayer(any()) } returns TaskResult.Success(requestId)
+        coEvery { layerInteractor.requestDownloadHikingLayer() } returns TaskResult.Success(requestId)
 
         homeViewModel.downloadHikingLayer()
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
-            layerInteractor.requestDownloadHikingLayer(any())
+            layerInteractor.requestDownloadHikingLayer()
         }
     }
 
     @Test
     fun `Given Error TaskResult, when downloadHikingLayer, then ErrorOccurred posted`() {
         val errorRes = R.string.default_error_message_unknown
-        coEvery { layerInteractor.requestDownloadHikingLayer(any()) } returns TaskResult.Error(DomainException(errorRes))
+        coEvery { layerInteractor.requestDownloadHikingLayer() } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.downloadHikingLayer()
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
-            layerInteractor.requestDownloadHikingLayer(any())
+            layerInteractor.requestDownloadHikingLayer()
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
         }
     }
 
     @Test
-    fun `Given Success TaskResult, when handleFileDownloaded, then Loading and layer file posted`() {
+    fun `Given Success TaskResult, when loadDownloadedFile, then Loading and layer file posted`() {
         val downloadId: Long = 12345
         val file = File("path")
-        coEvery { layerInteractor.requestSaveHikingLayer(downloadId, any()) } returns TaskResult.Success(Unit)
+        coEvery { layerInteractor.requestSaveHikingLayer(downloadId) } returns TaskResult.Success(Unit)
         coEvery { layerInteractor.requestGetHikingLayer() } returns TaskResult.Success(file)
 
-        homeViewModel.handleFileDownloaded(downloadId)
+        homeViewModel.loadDownloadedFile(downloadId)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
-            layerInteractor.requestSaveHikingLayer(downloadId, any())
+            layerInteractor.requestSaveHikingLayer(downloadId)
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
             homeViewModel.postState(HomeViewState(file))
         }
     }
 
     @Test
-    fun `Given Success TaskResult, when searchHikingRelationsBy, then SearchResult posted`() {
+    fun `Given Success TaskResult, when loadHikingRelationsBy, then SearchResult posted`() {
         val searchText = "Mecs"
 
         val overpassQueryResult = OverpassQueryResult(
@@ -129,28 +138,70 @@ class HomeViewModelTest {
             overpassQueryResult
         )
 
-        homeViewModel.searchHikingRelationsBy(searchText)
+        homeViewModel.loadHikingRelationsBy(searchText)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             overpassInteractor.requestSearchHikingRelationsBy(searchText)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.SearchResult(generator.generate(overpassQueryResult.elements)))
+            homeViewModel.postEvent(HomeLiveEvents.SearchResult(generator.generateSearchResult(overpassQueryResult.elements)))
         }
     }
 
     @Test
-    fun `Given Error TaskResult, when searchHikingRelationsBy, then ErrorOccurred posted`() {
+    fun `Given Error TaskResult, when loadHikingRelationsBy, then ErrorOccurred posted`() {
         val errorRes = R.string.default_error_message_unknown
         coEvery { overpassInteractor.requestSearchHikingRelationsBy(any()) } returns TaskResult.Error(
             DomainException(errorRes)
         )
 
-        homeViewModel.searchHikingRelationsBy("")
+        homeViewModel.loadHikingRelationsBy("")
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             overpassInteractor.requestSearchHikingRelationsBy(any())
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
+            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
+        }
+    }
+
+    @Test
+    fun `Given Success TaskResult, when loadRelation, then NodesResult posted`() {
+        val id = 123456L
+
+        val overpassQueryResult = OverpassQueryResult(
+            listOf(
+                Element(type = "node", id = 25287545, lat = 46.1314556, lon = 18.2565377),
+                Element(type = "node", id = 25287546, lat = 46.1264344, lon = 18.2650645),
+                Element(type = "node", id = 25287547, lat = 46.1360740, lon = 18.2532182)
+            )
+        )
+        coEvery { overpassInteractor.requestGetNodesByRelationId(id) } returns TaskResult.Success(
+            overpassQueryResult
+        )
+
+        homeViewModel.loadRelation(id)
+
+        coVerifyOrder {
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
+            overpassInteractor.requestGetNodesByRelationId(id)
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
+            homeViewModel.postEvent(HomeLiveEvents.NodesResult(generator.generateNodes(overpassQueryResult.elements)))
+        }
+    }
+
+    @Test
+    fun `Given Error TaskResult, when loadRelation, then ErrorOccurred posted`() {
+        val errorRes = R.string.default_error_message_unknown
+        coEvery { overpassInteractor.requestGetNodesByRelationId(any()) } returns TaskResult.Error(
+            DomainException(errorRes)
+        )
+
+        homeViewModel.loadRelation(123456L)
+
+        coVerifyOrder {
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
+            overpassInteractor.requestGetNodesByRelationId(any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
         }

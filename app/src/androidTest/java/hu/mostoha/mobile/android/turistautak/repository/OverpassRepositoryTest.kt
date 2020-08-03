@@ -42,7 +42,7 @@ class OverpassRepositoryTest {
 
     @Test
     fun getNodesByRelationId() = runBlocking {
-        val result = repository.getNodesByRelationId("4640869")
+        val result = repository.getNodesByRelationId(4640869L)
 
         assertNotNull(result)
     }

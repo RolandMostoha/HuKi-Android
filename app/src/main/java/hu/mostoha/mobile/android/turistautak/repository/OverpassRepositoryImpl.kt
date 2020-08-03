@@ -5,6 +5,7 @@ import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
 import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputFormat
+import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputOrder
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputVerbosity
 import hu.mostoha.mobile.android.turistautak.network.overpasser.query.OverpassQuery
 import javax.inject.Inject
@@ -35,16 +36,16 @@ class OverpassRepositoryImpl @Inject constructor(
         return overpassService.interpreter(query)
     }
 
-    override suspend fun getNodesByRelationId(id: String): OverpassQueryResult {
+    override suspend fun getNodesByRelationId(relationId: Long): OverpassQueryResult {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
             .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
             .filterQuery()
-            .relBy(id)
+            .relBy(relationId.toString())
             .wayBy("r")
             .nodeBy("w")
             .end()
-            .output(OutputVerbosity.SKEL, null, null, 1000)
+            .output(OutputVerbosity.SKEL, null, OutputOrder.QT, -1)
             .build()
 
         return overpassService.interpreter(query)

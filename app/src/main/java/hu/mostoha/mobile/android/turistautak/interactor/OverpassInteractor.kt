@@ -26,4 +26,18 @@ class OverpassInteractor @Inject constructor(
         }
     }
 
+    suspend fun requestGetNodesByRelationId(relationId: Long): TaskResult<OverpassQueryResult> {
+        return taskExecutor.runOnBackground {
+            try {
+                val nodes = overpassRepository.getNodesByRelationId(relationId)
+
+                TaskResult.Success(nodes)
+            } catch (exception: Exception) {
+                Timber.w(exception)
+
+                TaskResult.Error(DomainException(R.string.default_error_message_unknown, exception))
+            }
+        }
+    }
+
 }

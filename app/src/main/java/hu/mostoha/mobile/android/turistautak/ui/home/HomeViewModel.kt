@@ -12,8 +12,9 @@ import hu.mostoha.mobile.android.turistautak.interactor.OverpassInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarUiModelGenerator
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchResultItem
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.HomeUiModelGenerator
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.NodeUiModel
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchResultUiModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import java.io.File
@@ -23,7 +24,7 @@ class HomeViewModel @ViewModelInject constructor(
     private val layerInteractor: LayerInteractor,
     private val overpassInteractor: OverpassInteractor,
     private val landscapeRepository: LandscapeRepository,
-    private val generator: SearchBarUiModelGenerator
+    private val generator: HomeUiModelGenerator
 ) : BaseViewModel<HomeLiveEvents, HomeViewState>(taskExecutor) {
 
     companion object {
@@ -32,7 +33,7 @@ class HomeViewModel @ViewModelInject constructor(
 
     private var searchJob: Job? = null
 
-    fun checkHikingLayer() = launch {
+    fun loadHikingLayer() = launch {
         postEvent(LayerLoading(true))
 
         val result = layerInteractor.requestGetHikingLayer()
@@ -59,12 +60,12 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
-    fun handleFileDownloaded(downloadId: Long) = launch {
+    fun loadDownloadedFile(downloadId: Long) = launch {
         postEvent(LayerLoading(true))
 
         when (val result = layerInteractor.requestSaveHikingLayer(downloadId)) {
             is TaskResult.Success -> {
-                checkHikingLayer()
+                loadHikingLayer()
             }
             is TaskResult.Error -> {
                 postEvent(ErrorOccurred(result.domainException.messageRes))
@@ -72,7 +73,7 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
-    fun searchHikingRelationsBy(searchText: String) {
+    fun loadHikingRelationsBy(searchText: String) {
         searchJob?.let { job ->
             if (job.isActive) {
                 job.cancel()
@@ -87,7 +88,7 @@ class HomeViewModel @ViewModelInject constructor(
             when (val result = overpassInteractor.requestSearchHikingRelationsBy(searchText)) {
                 is TaskResult.Success -> {
                     postEvent(SearchBarLoading(false))
-                    val searchResults = generator.generate(result.data.elements)
+                    val searchResults = generator.generateSearchResult(result.data.elements)
                     postEvent(SearchResult(searchResults))
                 }
                 is TaskResult.Error -> {
@@ -98,8 +99,34 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
-    fun initLandscapes() {
+    fun cancelSearch() {
+        postEvent(SearchBarLoading(false))
+
+        searchJob?.let { job ->
+            if (job.isActive) {
+                job.cancel()
+            }
+        }
+    }
+
+    fun loadLandscapes() {
         postEvent(LandscapesResult(landscapeRepository.getLandscapes()))
+    }
+
+    fun loadRelation(relationId: Long) = launch {
+        postEvent(SearchBarLoading(true))
+
+        when (val result = overpassInteractor.requestGetNodesByRelationId(relationId)) {
+            is TaskResult.Success -> {
+                postEvent(SearchBarLoading(false))
+                val nodes = generator.generateNodes(result.data.elements)
+                postEvent(NodesResult(nodes))
+            }
+            is TaskResult.Error -> {
+                postEvent(SearchBarLoading(false))
+                postEvent(ErrorOccurred(result.domainException.messageRes))
+            }
+        }
     }
 
 }
@@ -110,6 +137,7 @@ sealed class HomeLiveEvents : LiveEvents {
     data class ErrorOccurred(@StringRes val messageRes: Int) : HomeLiveEvents()
     data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
-    data class SearchResult(val results: List<SearchResultItem>) : HomeLiveEvents()
+    data class SearchResult(val results: List<SearchResultUiModel>) : HomeLiveEvents()
     data class LandscapesResult(val landscapes: List<Landscape>) : HomeLiveEvents()
+    data class NodesResult(val nodes: List<NodeUiModel>) : HomeLiveEvents()
 }

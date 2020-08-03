@@ -27,5 +27,6 @@
 
     <dimen name="home_search_bar_progress_size">22dp</dimen>
     <dimen name="home_landscapes_icon_size">18dp</dimen>
+    <dimen name="home_bounding_box_offset">@dimen/space_extra_large</dimen>
 
 </resources>

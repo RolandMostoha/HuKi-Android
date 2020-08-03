@@ -14,20 +14,12 @@ fun @receiver:IdRes Int.isDisplayed() {
     onView(withId(this)).check(matches(ViewMatchers.isDisplayed()))
 }
 
-fun @receiver:IdRes Int.click() {
-    onView(withId(this)).perform(ViewActions.click())
-}
-
 fun @receiver:IdRes Int.typeText(text: String) {
     onView(withId(this)).perform(ViewActions.typeText(text))
 }
 
 fun @receiver:StringRes Int.isTextDisplayed() {
     onView(withText(this)).check(matches(ViewMatchers.isDisplayed()))
-}
-
-fun @receiver:StringRes Int.clickWithText() {
-    onView(withText(this)).perform(ViewActions.click())
 }
 
 fun String.isTextDisplayed() {
@@ -38,4 +30,22 @@ fun String.isPopupTextDisplayed() {
     onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
         .check(matches(ViewMatchers.isDisplayed()))
+}
+
+fun @receiver:IdRes Int.click() {
+    onView(withId(this)).perform(ViewActions.click())
+}
+
+fun @receiver:StringRes Int.clickWithText() {
+    onView(withText(this)).perform(ViewActions.click())
+}
+
+fun String.clickWithText() {
+    onView(withText(this)).perform(ViewActions.click())
+}
+
+fun String.clickWithTextInPopup() {
+    onView(withText(this))
+        .inRoot(RootMatchers.isPlatformPopup())
+        .perform(ViewActions.click())
 }
