@@ -8,6 +8,6 @@
     android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
     android:textColor="@color/colorSecondaryText"
     app:chipMinHeight="35dp"
-    app:chipBackgroundColor="@color/white"
+    app:chipBackgroundColor="@color/colorBackground"
     app:chipIconSize="@dimen/home_landscapes_icon_size"
     app:iconStartPadding="@dimen/space_small" />

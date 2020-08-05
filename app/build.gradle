@@ -47,7 +47,7 @@ android {
 }
 
 ext {
-    jetpackHiltVersion = '1.0.0-alpha01'
+    jetpackHiltVersion = '1.0.0-alpha02'
     mockKVersion = '1.10.0'
 }
 
@@ -63,7 +63,7 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$jetpackHiltVersion"
 
     // KTX
-    implementation 'androidx.core:core-ktx:1.3.0'
+    implementation 'androidx.core:core-ktx:1.3.1'
     implementation "androidx.activity:activity-ktx:1.1.0"
 
     // Architecture
@@ -79,7 +79,7 @@ dependencies {
 
     // Design
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.android.material:material:1.2.0-rc01'
+    implementation 'com.google.android.material:material:1.2.0'
     implementation 'com.budiyev.android:circular-progress-bar:1.2.2'
 
     // Permissions
