@@ -5,6 +5,7 @@
     <dimen name="space_medium">10dp</dimen>
     <dimen name="space_large">15dp</dimen>
     <dimen name="space_extra_large">20dp</dimen>
+    <dimen name="space_extra_extra_large">25dp</dimen>
 
     <dimen name="text_size_small">13sp</dimen>
     <dimen name="text_size_medium">14sp</dimen>
