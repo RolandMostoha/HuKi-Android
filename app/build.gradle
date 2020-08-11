@@ -16,9 +16,18 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "hu.mostoha.mobile.android.turistautak.HiltTestRunner"
+
+        def keys = new Properties()
+        file("../keys.properties").withInputStream {
+            stream -> keys.load(stream)
+        }
+        buildConfigField "String", "GOOGLE_CLOUD_API_KEY", keys.GOOGLE_CLOUD_API_KEY
     }
 
     buildTypes {
+        debug {
+
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -54,7 +63,7 @@ ext {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
 
     // DI
     implementation "com.google.dagger:hilt-android:$hiltVersion"
@@ -71,6 +80,10 @@ dependencies {
 
     // OSM
     implementation 'org.osmdroid:osmdroid-android:6.1.6'
+
+    // Places SDK
+    implementation 'com.google.android.libraries.places:places:2.3.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.3'
 
     // Network
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

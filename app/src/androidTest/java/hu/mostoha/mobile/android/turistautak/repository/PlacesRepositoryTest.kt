@@ -20,7 +20,7 @@ import javax.inject.Inject
 @MediumTest
 @HiltAndroidTest
 @UninstallModules(ServiceModule::class)
-class OverpassRepositoryTest {
+class PlacesRepositoryTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -31,18 +31,18 @@ class OverpassRepositoryTest {
     }
 
     @Inject
-    lateinit var repository: OverpassRepository
+    lateinit var repository: PlacesRepository
 
     @Test
-    fun getHikingRelationsBy() = runBlocking {
-        val result = repository.getHikingRelationsBy("Mecsek")
+    fun getPlacesBy() = runBlocking {
+        val result = repository.getPlacesBy("Dobogókő")
 
         assertNotNull(result)
     }
 
     @Test
-    fun getNodesByRelationId() = runBlocking {
-        val result = repository.getNodesByRelationId(4640869L)
+    fun getPlaceDetails() = runBlocking {
+        val result = repository.getPlaceDetails("ChIJg6-_p3F8akcRsON1hSvEAAo")
 
         assertNotNull(result)
     }

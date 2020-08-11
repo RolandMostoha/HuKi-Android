@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.turistautak.interactor
 
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
-import hu.mostoha.mobile.android.turistautak.repository.LayerRepository
+import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class LayerInteractor @Inject constructor(
     private val taskExecutor: TaskExecutor,
-    private val layerRepository: LayerRepository
+    private val layerRepository: HikingLayerRepository
 ) {
 
     suspend fun requestGetHikingLayer(): TaskResult<File?> {

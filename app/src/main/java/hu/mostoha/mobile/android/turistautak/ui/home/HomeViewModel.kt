@@ -73,7 +73,7 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
-    fun loadHikingRelationsBy(searchText: String) {
+    fun loadPlacesBy(searchText: String) {
         searchJob?.let { job ->
             if (job.isActive) {
                 job.cancel()

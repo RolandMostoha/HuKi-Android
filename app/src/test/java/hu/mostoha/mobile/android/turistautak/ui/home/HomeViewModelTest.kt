@@ -138,7 +138,7 @@ class HomeViewModelTest {
             overpassQueryResult
         )
 
-        homeViewModel.loadHikingRelationsBy(searchText)
+        homeViewModel.loadPlacesBy(searchText)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
@@ -155,7 +155,7 @@ class HomeViewModelTest {
             DomainException(errorRes)
         )
 
-        homeViewModel.loadHikingRelationsBy("")
+        homeViewModel.loadPlacesBy("")
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))

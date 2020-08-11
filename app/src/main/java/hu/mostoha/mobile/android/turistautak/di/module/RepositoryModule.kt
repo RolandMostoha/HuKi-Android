@@ -4,10 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
-import hu.mostoha.mobile.android.turistautak.repository.LayerRepository
-import hu.mostoha.mobile.android.turistautak.repository.LayerRepositoryImpl
-import hu.mostoha.mobile.android.turistautak.repository.OverpassRepository
-import hu.mostoha.mobile.android.turistautak.repository.OverpassRepositoryImpl
+import hu.mostoha.mobile.android.turistautak.repository.*
 import javax.inject.Singleton
 
 @Module
@@ -16,10 +13,14 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindLayerRepository(fileLayerRepository: LayerRepositoryImpl): LayerRepository
+    abstract fun bindLayerRepository(layerRepository: HikingLayerRepositoryImpl): HikingLayerRepository
 
     @Singleton
     @Binds
     abstract fun bindOverpassRepository(overpassRepositoryImpl: OverpassRepositoryImpl): OverpassRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindPlacesRepository(placesRepositoryImpl: PlacesRepositoryImpl): PlacesRepository
 
 }

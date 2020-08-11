@@ -13,10 +13,10 @@ import java.io.FileNotFoundException
 import javax.inject.Inject
 
 
-class LayerRepositoryImpl @Inject constructor(
+class HikingLayerRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val osmConfiguration: OsmConfiguration
-) : LayerRepository {
+) : HikingLayerRepository {
 
     override suspend fun getHikingLayerFile(): File? {
         val file = osmConfiguration.getHikingLayerFile()

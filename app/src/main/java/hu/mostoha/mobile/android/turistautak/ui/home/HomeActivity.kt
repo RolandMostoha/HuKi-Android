@@ -115,7 +115,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             if (!homeSearchBarInput.isPerformingCompletion) {
                 val text = it.toString()
                 if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
-                    viewModel.loadHikingRelationsBy(text)
+                    viewModel.loadPlacesBy(text)
                 }
             } else {
                 homeSearchBarInput.text?.clear()
