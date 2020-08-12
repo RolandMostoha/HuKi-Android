@@ -1,17 +1,18 @@
 package hu.mostoha.mobile.android.turistautak.ui.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.model.AutocompletePrediction
+import com.google.android.libraries.places.api.model.Place
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.executor.TestTaskExecutor
 import hu.mostoha.mobile.android.turistautak.interactor.DomainException
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
-import hu.mostoha.mobile.android.turistautak.interactor.OverpassInteractor
+import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
-import hu.mostoha.mobile.android.turistautak.network.model.Element
-import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
-import hu.mostoha.mobile.android.turistautak.network.model.Tags
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.HomeUiModelGenerator
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.PlaceDetailsUiModel
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.mockk
@@ -21,6 +22,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
+import org.osmdroid.util.GeoPoint
 import java.io.File
 
 
@@ -30,9 +32,9 @@ class HomeViewModelTest {
     private lateinit var homeViewModel: HomeViewModel
 
     private val layerInteractor = mockk<LayerInteractor>()
-    private val overpassInteractor = mockk<OverpassInteractor>()
+    private val placesInteractor = mockk<PlacesInteractor>()
+    private val generator = mockk<HomeUiModelGenerator>()
     private val landscapeRepository = LandscapeRepository()
-    private val generator = HomeUiModelGenerator()
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
@@ -43,7 +45,7 @@ class HomeViewModelTest {
             HomeViewModel(
                 TestTaskExecutor(),
                 layerInteractor,
-                overpassInteractor,
+                placesInteractor,
                 landscapeRepository,
                 generator
             )
@@ -127,39 +129,31 @@ class HomeViewModelTest {
     @Test
     fun `Given Success TaskResult, when loadHikingRelationsBy, then SearchResult posted`() {
         val searchText = "Mecs"
+        val predictions = listOf("Mecsek".toPrediction(), "Mecsek utca".toPrediction())
 
-        val overpassQueryResult = OverpassQueryResult(
-            listOf(
-                Element(type = "route", id = 1, tags = Tags("Mecseki Kéktúra", jel = "k")),
-                Element(type = "route", id = 2, tags = Tags("Mecseknádasdi Piroska", jel = "p"))
-            )
-        )
-        coEvery { overpassInteractor.requestSearchHikingRelationsBy(searchText) } returns TaskResult.Success(
-            overpassQueryResult
-        )
+        coEvery { placesInteractor.requestGetPlacesBy(searchText) } returns TaskResult.Success(predictions)
+        coEvery { generator.generatePlacesResult(predictions) } returns emptyList()
 
         homeViewModel.loadPlacesBy(searchText)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            overpassInteractor.requestSearchHikingRelationsBy(searchText)
+            placesInteractor.requestGetPlacesBy(searchText)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.SearchResult(generator.generateSearchResult(overpassQueryResult.elements)))
+            homeViewModel.postEvent(HomeLiveEvents.PlacesResult(emptyList()))
         }
     }
 
     @Test
     fun `Given Error TaskResult, when loadHikingRelationsBy, then ErrorOccurred posted`() {
         val errorRes = R.string.default_error_message_unknown
-        coEvery { overpassInteractor.requestSearchHikingRelationsBy(any()) } returns TaskResult.Error(
-            DomainException(errorRes)
-        )
+        coEvery { placesInteractor.requestGetPlacesBy(any()) } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.loadPlacesBy("")
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            overpassInteractor.requestSearchHikingRelationsBy(any())
+            placesInteractor.requestGetPlacesBy(any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
         }
@@ -167,45 +161,48 @@ class HomeViewModelTest {
 
     @Test
     fun `Given Success TaskResult, when loadRelation, then NodesResult posted`() {
-        val id = 123456L
+        val id = "123456L"
+        val place = Place.builder()
+            .setId(id)
+            .setLatLng(LatLng(47.123, 19.123))
+            .build()
+        val placeDetailsUiModel = PlaceDetailsUiModel(id, GeoPoint(47.123, 19.123))
+        coEvery { placesInteractor.requestGetGetPlaceDetails(id) } returns TaskResult.Success(place)
+        coEvery { generator.generatePlaceDetails(place) } returns placeDetailsUiModel
 
-        val overpassQueryResult = OverpassQueryResult(
-            listOf(
-                Element(type = "node", id = 25287545, lat = 46.1314556, lon = 18.2565377),
-                Element(type = "node", id = 25287546, lat = 46.1264344, lon = 18.2650645),
-                Element(type = "node", id = 25287547, lat = 46.1360740, lon = 18.2532182)
-            )
-        )
-        coEvery { overpassInteractor.requestGetNodesByRelationId(id) } returns TaskResult.Success(
-            overpassQueryResult
-        )
-
-        homeViewModel.loadRelation(id)
+        homeViewModel.loadPlaceDetails(id)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            overpassInteractor.requestGetNodesByRelationId(id)
+            placesInteractor.requestGetGetPlaceDetails(id)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.NodesResult(generator.generateNodes(overpassQueryResult.elements)))
+            homeViewModel.postEvent(HomeLiveEvents.PlaceDetailsResult(placeDetailsUiModel))
         }
     }
 
     @Test
     fun `Given Error TaskResult, when loadRelation, then ErrorOccurred posted`() {
         val errorRes = R.string.default_error_message_unknown
-        coEvery { overpassInteractor.requestGetNodesByRelationId(any()) } returns TaskResult.Error(
+        coEvery { placesInteractor.requestGetGetPlaceDetails(any()) } returns TaskResult.Error(
             DomainException(errorRes)
         )
 
-        homeViewModel.loadRelation(123456L)
+        homeViewModel.loadPlaceDetails("123456L")
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            overpassInteractor.requestGetNodesByRelationId(any())
+            placesInteractor.requestGetGetPlaceDetails(any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
         }
     }
 
 }
+
+private fun String.toPrediction(): AutocompletePrediction {
+    return AutocompletePrediction.builder(this)
+        .setPrimaryText(this)
+        .build()
+}
+
 

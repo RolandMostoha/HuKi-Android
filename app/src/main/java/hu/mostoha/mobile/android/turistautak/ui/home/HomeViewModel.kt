@@ -8,13 +8,13 @@ import hu.mostoha.mobile.android.turistautak.architecture.ViewState
 import hu.mostoha.mobile.android.turistautak.domain.model.Landscape
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
-import hu.mostoha.mobile.android.turistautak.interactor.OverpassInteractor
+import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.HomeUiModelGenerator
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.NodeUiModel
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchResultUiModel
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.PlaceDetailsUiModel
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.PlacesResultUiModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import java.io.File
@@ -22,7 +22,7 @@ import java.io.File
 class HomeViewModel @ViewModelInject constructor(
     taskExecutor: TaskExecutor,
     private val layerInteractor: LayerInteractor,
-    private val overpassInteractor: OverpassInteractor,
+    private val placesInteractor: PlacesInteractor,
     private val landscapeRepository: LandscapeRepository,
     private val generator: HomeUiModelGenerator
 ) : BaseViewModel<HomeLiveEvents, HomeViewState>(taskExecutor) {
@@ -85,11 +85,11 @@ class HomeViewModel @ViewModelInject constructor(
 
             postEvent(SearchBarLoading(true))
 
-            when (val result = overpassInteractor.requestSearchHikingRelationsBy(searchText)) {
+            when (val result = placesInteractor.requestGetPlacesBy(searchText)) {
                 is TaskResult.Success -> {
                     postEvent(SearchBarLoading(false))
-                    val searchResults = generator.generateSearchResult(result.data.elements)
-                    postEvent(SearchResult(searchResults))
+                    val searchResults = generator.generatePlacesResult(result.data)
+                    postEvent(PlacesResult(searchResults))
                 }
                 is TaskResult.Error -> {
                     postEvent(SearchBarLoading(false))
@@ -113,14 +113,14 @@ class HomeViewModel @ViewModelInject constructor(
         postEvent(LandscapesResult(landscapeRepository.getLandscapes()))
     }
 
-    fun loadRelation(relationId: Long) = launch {
+    fun loadPlaceDetails(relationId: String) = launch {
         postEvent(SearchBarLoading(true))
 
-        when (val result = overpassInteractor.requestGetNodesByRelationId(relationId)) {
+        when (val result = placesInteractor.requestGetGetPlaceDetails(relationId)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
-                val nodes = generator.generateNodes(result.data.elements)
-                postEvent(NodesResult(nodes))
+                val placeDetails = generator.generatePlaceDetails(result.data)
+                postEvent(PlaceDetailsResult(placeDetails))
             }
             is TaskResult.Error -> {
                 postEvent(SearchBarLoading(false))
@@ -137,7 +137,7 @@ sealed class HomeLiveEvents : LiveEvents {
     data class ErrorOccurred(@StringRes val messageRes: Int) : HomeLiveEvents()
     data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
-    data class SearchResult(val results: List<SearchResultUiModel>) : HomeLiveEvents()
+    data class PlacesResult(val results: List<PlacesResultUiModel>) : HomeLiveEvents()
+    data class PlaceDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
     data class LandscapesResult(val landscapes: List<Landscape>) : HomeLiveEvents()
-    data class NodesResult(val nodes: List<NodeUiModel>) : HomeLiveEvents()
 }

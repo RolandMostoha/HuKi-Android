@@ -4,7 +4,6 @@ import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -27,14 +26,10 @@ import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
-import org.osmdroid.util.BoundingBox
 import org.osmdroid.views.CustomZoomButtonsController
+import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
-import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint
-import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay
-import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions
-import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme
 import java.io.File
 
 
@@ -42,7 +37,8 @@ import java.io.File
 class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     companion object {
-        private const val TILES_SCALE_FACTOR = 1.25f
+        private const val DEFAULT_ZOOM_LEVEL = 15
+        private const val TILES_SCALE_FACTOR = 1.5f
         private const val SEARCH_BAR_MIN_TRIGGER_LENGTH = 3
     }
 
@@ -125,7 +121,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeSearchBarInput.setOnItemClickListener { _, _, position, _ ->
             val resultItem = searchBarAdapter.getItem(position)
             if (resultItem != null) {
-                viewModel.loadRelation(resultItem.relationId)
+                viewModel.loadPlaceDetails(resultItem.placeId)
             }
         }
     }
@@ -182,7 +178,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 is SearchBarLoading -> {
                     homeSearchBarProgress.visibleOrGone(it.inProgress)
                 }
-                is SearchResult -> {
+                is PlacesResult -> {
                     searchBarAdapter.clear()
                     searchBarAdapter.addAll(it.results)
                     homeSearchBarInput.refreshAutoCompleteResults()
@@ -195,22 +191,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         homeLandscapeChipGroup.addView(view)
                     }
                 }
-                is NodesResult -> {
-                    val points = it.nodes.map { node -> LabelledGeoPoint(node.geoPoint) }
-                    val pointStyle = Paint().apply {
-                        style = Paint.Style.FILL
-                        color = ContextCompat.getColor(this@HomeActivity, R.color.colorPrimary)
+                is PlaceDetailsResult -> {
+                    val marker = Marker(homeMapView).apply {
+                        position = it.placeDetails.geoPoint
+                        icon = ContextCompat.getDrawable(this@HomeActivity, R.drawable.ic_marker_poi)
                     }
-                    val options = SimpleFastPointOverlayOptions.getDefaultStyle()
-                        .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.NO_OPTIMIZATION)
-                        .setSymbol(SimpleFastPointOverlayOptions.Shape.CIRCLE)
-                        .setPointStyle(pointStyle)
-                        .setRadius(7f)
-                        .setIsClickable(false)
-                    val simpleFastPointOverlay = SimpleFastPointOverlay(SimplePointTheme(points, true), options)
 
-                    homeMapView.overlays.add(simpleFastPointOverlay)
-                    homeMapView.zoomToBoundingBox(BoundingBox.fromGeoPoints(points), true, boundingBoxOffsetPx)
+                    homeMapView.overlays.add(marker)
+                    homeMapView.centerAndZoom(it.placeDetails.geoPoint, DEFAULT_ZOOM_LEVEL)
                     homeMapView.invalidate()
                 }
             }

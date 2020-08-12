@@ -4,14 +4,14 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.extensions.inflateLayout
-import hu.mostoha.mobile.android.turistautak.extensions.setDrawableStart
 import kotlinx.android.synthetic.main.item_home_search_bar.view.*
 
-class SearchBarAdapter(context: Context) : ArrayAdapter<SearchResultUiModel>(context, 0) {
+class SearchBarAdapter(context: Context) : ArrayAdapter<PlacesResultUiModel>(context, 0) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
@@ -19,7 +19,9 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchResultUiModel>(con
         if (convertView == null) {
             view = parent.context.inflateLayout(R.layout.item_home_search_bar, parent, false)
             holder = ViewHolder()
-            holder.searchResultText = view.homeSearchBarText
+            holder.primaryText = view.searchBarResultPrimaryText
+            holder.secondaryText = view.searchBarResultSecondaryText
+            holder.iconImage = view.homeSearchBarResultIcon
             view.tag = holder
         } else {
             view = convertView
@@ -28,20 +30,28 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchResultUiModel>(con
 
         val searchResultItem = getItem(position)!!
 
-        holder.searchResultText.text = searchResultItem.name
-        holder.searchResultText.setDrawableStart(searchResultItem.symbolRes)
+        holder.primaryText.text = searchResultItem.primaryText
+        holder.secondaryText.text = searchResultItem.secondaryText
+        holder.iconImage.setImageResource(searchResultItem.iconRes)
 
         return view
     }
 
     inner class ViewHolder {
-        lateinit var searchResultText: TextView
+        lateinit var primaryText: TextView
+        lateinit var secondaryText: TextView
+        lateinit var iconImage: ImageView
     }
 
 }
 
-data class SearchResultUiModel(val relationId: Long, val name: String, @DrawableRes val symbolRes: Int) {
+data class PlacesResultUiModel(
+    val placeId: String,
+    val primaryText: String,
+    val secondaryText: String,
+    @DrawableRes val iconRes: Int
+) {
     override fun toString(): String {
-        return name
+        return primaryText
     }
 }

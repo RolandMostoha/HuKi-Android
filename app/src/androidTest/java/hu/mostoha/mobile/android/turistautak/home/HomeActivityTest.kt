@@ -18,6 +18,7 @@ import hu.mostoha.mobile.android.turistautak.network.model.Tags
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.turistautak.repository.OverpassRepository
+import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
 import hu.mostoha.mobile.android.turistautak.util.*
 import io.mockk.coEvery
@@ -53,6 +54,10 @@ class HomeActivityTest {
     @BindValue
     @JvmField
     val overpassRepository: OverpassRepository = mockk()
+
+    @BindValue
+    @JvmField
+    val placeRepository: PlacesRepository = mockk()
 
     @Before
     fun init() {

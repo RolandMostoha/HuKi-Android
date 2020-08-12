@@ -36,7 +36,12 @@ class PlacesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPlaceDetails(placeId: String): Place {
-        val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS)
+        val placeFields = listOf(
+            Place.Field.ID,
+            Place.Field.NAME,
+            Place.Field.LAT_LNG,
+            Place.Field.PHOTO_METADATAS
+        )
         val request = FetchPlaceRequest.newInstance(placeId, placeFields)
 
         val task = placesClient.fetchPlace(request)
