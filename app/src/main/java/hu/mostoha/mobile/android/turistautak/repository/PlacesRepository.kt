@@ -1,9 +1,9 @@
 package hu.mostoha.mobile.android.turistautak.repository
 
-import com.google.android.libraries.places.api.model.AutocompletePrediction
-import com.google.android.libraries.places.api.model.Place
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
+import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
 
 interface PlacesRepository {
-    suspend fun getPlacesBy(searchText: String): List<AutocompletePrediction>
-    suspend fun getPlaceDetails(placeId: String): Place
+    suspend fun getPlacesBy(searchText: String): List<PlacePrediction>
+    suspend fun getPlaceDetails(placeId: String): PlaceDetails
 }

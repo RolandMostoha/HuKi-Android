@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.turistautak.network.model
+package hu.mostoha.mobile.android.turistautak.model.network
 
 import com.squareup.moshi.Json
 

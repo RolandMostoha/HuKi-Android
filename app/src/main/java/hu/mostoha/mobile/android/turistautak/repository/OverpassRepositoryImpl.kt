@@ -1,9 +1,9 @@
 package hu.mostoha.mobile.android.turistautak.repository
 
 import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
+import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResult
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
-import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputFormat
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputOrder
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputVerbosity

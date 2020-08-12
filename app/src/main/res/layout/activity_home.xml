@@ -146,7 +146,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:layout_behavior=".ui.home.behavior.BottomNavigationAwareSnackbarBehavior"
+        app:layout_behavior=".ui.utils.behavior.BottomNavigationAwareSnackbarBehavior"
         app:menu="@menu/menu_bottom_nav"
         app:itemTextAppearanceActive="@style/DefaultTextAppearance.Bold.Small"
         app:itemTextAppearanceInactive="@style/DefaultTextAppearance.SemiBold.Small"

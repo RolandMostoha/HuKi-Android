@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.turistautak.ui.home.behavior
+package hu.mostoha.mobile.android.turistautak.ui.utils.behavior
 
 import android.content.Context
 import android.util.AttributeSet

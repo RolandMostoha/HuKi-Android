@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.turistautak.domain.model
+package hu.mostoha.mobile.android.turistautak.model.domain
 
 import androidx.annotation.DrawableRes
 

@@ -5,16 +5,15 @@ import androidx.hilt.lifecycle.ViewModelInject
 import hu.mostoha.mobile.android.turistautak.architecture.BaseViewModel
 import hu.mostoha.mobile.android.turistautak.architecture.LiveEvents
 import hu.mostoha.mobile.android.turistautak.architecture.ViewState
-import hu.mostoha.mobile.android.turistautak.domain.model.Landscape
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
+import hu.mostoha.mobile.android.turistautak.model.domain.Landscape
+import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
+import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.HomeUiModelGenerator
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.PlaceDetailsUiModel
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.PlacesResultUiModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import java.io.File
@@ -137,7 +136,7 @@ sealed class HomeLiveEvents : LiveEvents {
     data class ErrorOccurred(@StringRes val messageRes: Int) : HomeLiveEvents()
     data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
-    data class PlacesResult(val results: List<PlacesResultUiModel>) : HomeLiveEvents()
+    data class PlacesResult(val results: List<PlacePredictionUiModel>) : HomeLiveEvents()
     data class PlaceDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
     data class LandscapesResult(val landscapes: List<Landscape>) : HomeLiveEvents()
 }

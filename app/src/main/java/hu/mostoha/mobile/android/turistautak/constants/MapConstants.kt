@@ -1,6 +1,6 @@
 package hu.mostoha.mobile.android.turistautak.constants
 
-import hu.mostoha.mobile.android.turistautak.domain.model.BoundingBox
+import hu.mostoha.mobile.android.turistautak.model.domain.BoundingBox
 
 const val MY_LOCATION_DEFAULT_ZOOM = 12.0
 const val MY_LOCATION_MIN_TIME_MS = 3000L

@@ -12,12 +12,11 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
-import hu.mostoha.mobile.android.turistautak.network.model.Element
-import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
-import hu.mostoha.mobile.android.turistautak.network.model.Tags
+import hu.mostoha.mobile.android.turistautak.model.domain.Coordinates
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
+import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
-import hu.mostoha.mobile.android.turistautak.repository.OverpassRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
 import hu.mostoha.mobile.android.turistautak.util.*
@@ -27,6 +26,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -50,10 +50,6 @@ class HomeActivityTest {
     @BindValue
     @JvmField
     val layerRepository: HikingLayerRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val overpassRepository: OverpassRepository = mockk()
 
     @BindValue
     @JvmField
@@ -107,9 +103,9 @@ class HomeActivityTest {
     }
 
     @Test
-    fun givenSearchText_whenTyping_thenHikingRelationsDisplay() {
+    fun givenSearchText_whenTyping_thenPlacePredictionsDisplay() {
         answerTestHikingLayer()
-        answerTestSearchResult()
+        answerTestPlacePredictions()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
@@ -122,17 +118,10 @@ class HomeActivityTest {
     }
 
     @Test
-    fun givenRelation_whenClick_thenLocationsDisplay() {
+    fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplay() {
         answerTestHikingLayer()
-        answerTestSearchResult()
-
-        coEvery { overpassRepository.getNodesByRelationId(any()) } returns OverpassQueryResult(
-            listOf(
-                Element(type = "node", id = 25287545, lat = 46.1314556, lon = 18.2565377),
-                Element(type = "node", id = 25287546, lat = 46.1264344, lon = 18.2650645),
-                Element(type = "node", id = 25287547, lat = 46.1360740, lon = 18.2532182)
-            )
-        )
+        answerTestPlacePredictions()
+        answerTestPlaceDetails()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
@@ -144,12 +133,17 @@ class HomeActivityTest {
         }
     }
 
-    private fun answerTestSearchResult() {
-        coEvery { overpassRepository.getHikingRelationsBy(any()) } returns OverpassQueryResult(
-            listOf(
-                Element(type = "route", id = 1, tags = Tags("Mecseki Kéktúra", jel = "k")),
-                Element(type = "route", id = 2, tags = Tags("Mecseknádasdi Piroska", jel = "p"))
-            )
+    private fun answerTestPlacePredictions() {
+        coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
+            PlacePrediction(UUID.randomUUID().toString(), "Mecseki Kéktúra", null),
+            PlacePrediction(UUID.randomUUID().toString(), "Mecseknádasdi Piroska", "Mecseknádasd")
+        )
+    }
+
+    private fun answerTestPlaceDetails() {
+        coEvery { placeRepository.getPlaceDetails(any()) } returns PlaceDetails(
+            UUID.randomUUID().toString(),
+            Coordinates(47.123, 19.123)
         )
     }
 

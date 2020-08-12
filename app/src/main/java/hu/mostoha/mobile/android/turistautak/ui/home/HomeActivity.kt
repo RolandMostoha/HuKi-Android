@@ -16,8 +16,8 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
-import hu.mostoha.mobile.android.turistautak.domain.model.toMapBoundingBox
 import hu.mostoha.mobile.android.turistautak.extensions.*
+import hu.mostoha.mobile.android.turistautak.model.domain.toMapBoundingBox
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter

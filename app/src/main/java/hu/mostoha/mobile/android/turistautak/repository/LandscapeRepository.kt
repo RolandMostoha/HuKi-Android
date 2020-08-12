@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.turistautak.repository
 
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.domain.model.Landscape
+import hu.mostoha.mobile.android.turistautak.model.domain.Landscape
 import javax.inject.Inject
 
 class LandscapeRepository @Inject constructor() {

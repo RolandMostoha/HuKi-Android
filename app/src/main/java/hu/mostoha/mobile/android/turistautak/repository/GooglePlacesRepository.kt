@@ -2,17 +2,19 @@ package hu.mostoha.mobile.android.turistautak.repository
 
 import android.content.Context
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.turistautak.BuildConfig
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
+import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
+import hu.mostoha.mobile.android.turistautak.model.domain.toCoordinates
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class PlacesRepositoryImpl @Inject constructor(
+class GooglePlacesRepository @Inject constructor(
     @ApplicationContext context: Context
 ) : PlacesRepository {
 
@@ -24,7 +26,7 @@ class PlacesRepositoryImpl @Inject constructor(
 
     private var placesClient = Places.createClient(context)
 
-    override suspend fun getPlacesBy(searchText: String): List<AutocompletePrediction> {
+    override suspend fun getPlacesBy(searchText: String): List<PlacePrediction> {
         val request = FindAutocompletePredictionsRequest.builder()
             .setCountries("HU")
             .setSessionToken(AutocompleteSessionToken.newInstance())
@@ -32,10 +34,16 @@ class PlacesRepositoryImpl @Inject constructor(
             .build()
 
         val task = placesClient.findAutocompletePredictions(request)
-        return task.await().autocompletePredictions
+        return task.await().autocompletePredictions.map {
+            PlacePrediction(
+                it.placeId,
+                it.getPrimaryText(null).toString(),
+                it.getSecondaryText(null).toString()
+            )
+        }
     }
 
-    override suspend fun getPlaceDetails(placeId: String): Place {
+    override suspend fun getPlaceDetails(placeId: String): PlaceDetails {
         val placeFields = listOf(
             Place.Field.ID,
             Place.Field.NAME,
@@ -45,7 +53,8 @@ class PlacesRepositoryImpl @Inject constructor(
         val request = FetchPlaceRequest.newInstance(placeId, placeFields)
 
         val task = placesClient.fetchPlace(request)
-        return task.await().place
+        val place = task.await().place
+        return PlaceDetails(place.id!!, place.latLng!!.toCoordinates())
     }
 
 }

@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.turistautak.interactor
 
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
-import hu.mostoha.mobile.android.turistautak.network.model.OverpassQueryResult
+import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResult
 import hu.mostoha.mobile.android.turistautak.repository.OverpassRepository
 import timber.log.Timber
 import javax.inject.Inject

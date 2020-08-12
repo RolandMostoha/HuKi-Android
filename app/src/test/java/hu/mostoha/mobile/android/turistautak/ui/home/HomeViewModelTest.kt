@@ -1,18 +1,16 @@
 package hu.mostoha.mobile.android.turistautak.ui.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.model.AutocompletePrediction
-import com.google.android.libraries.places.api.model.Place
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.executor.TestTaskExecutor
 import hu.mostoha.mobile.android.turistautak.interactor.DomainException
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
+import hu.mostoha.mobile.android.turistautak.model.domain.Coordinates
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
+import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.HomeUiModelGenerator
-import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.PlaceDetailsUiModel
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.mockk
@@ -22,8 +20,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.osmdroid.util.GeoPoint
 import java.io.File
+import java.util.*
 
 
 @ExperimentalCoroutinesApi
@@ -33,7 +31,7 @@ class HomeViewModelTest {
 
     private val layerInteractor = mockk<LayerInteractor>()
     private val placesInteractor = mockk<PlacesInteractor>()
-    private val generator = mockk<HomeUiModelGenerator>()
+    private val generator = HomeUiModelGenerator()
     private val landscapeRepository = LandscapeRepository()
 
     @get:Rule
@@ -129,10 +127,9 @@ class HomeViewModelTest {
     @Test
     fun `Given Success TaskResult, when loadHikingRelationsBy, then SearchResult posted`() {
         val searchText = "Mecs"
-        val predictions = listOf("Mecsek".toPrediction(), "Mecsek utca".toPrediction())
+        val predictions = listOf("Mecsek".testPrediction(), "Mecsek utca".testPrediction())
 
         coEvery { placesInteractor.requestGetPlacesBy(searchText) } returns TaskResult.Success(predictions)
-        coEvery { generator.generatePlacesResult(predictions) } returns emptyList()
 
         homeViewModel.loadPlacesBy(searchText)
 
@@ -140,7 +137,7 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             placesInteractor.requestGetPlacesBy(searchText)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.PlacesResult(emptyList()))
+            homeViewModel.postEvent(HomeLiveEvents.PlacesResult(generator.generatePlacesResult(predictions)))
         }
     }
 
@@ -162,13 +159,9 @@ class HomeViewModelTest {
     @Test
     fun `Given Success TaskResult, when loadRelation, then NodesResult posted`() {
         val id = "123456L"
-        val place = Place.builder()
-            .setId(id)
-            .setLatLng(LatLng(47.123, 19.123))
-            .build()
-        val placeDetailsUiModel = PlaceDetailsUiModel(id, GeoPoint(47.123, 19.123))
-        coEvery { placesInteractor.requestGetGetPlaceDetails(id) } returns TaskResult.Success(place)
-        coEvery { generator.generatePlaceDetails(place) } returns placeDetailsUiModel
+        val placeDetails = PlaceDetails(id, Coordinates(47.123, 19.123))
+
+        coEvery { placesInteractor.requestGetGetPlaceDetails(id) } returns TaskResult.Success(placeDetails)
 
         homeViewModel.loadPlaceDetails(id)
 
@@ -176,7 +169,7 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             placesInteractor.requestGetGetPlaceDetails(id)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.PlaceDetailsResult(placeDetailsUiModel))
+            homeViewModel.postEvent(HomeLiveEvents.PlaceDetailsResult(generator.generatePlaceDetails(placeDetails)))
         }
     }
 
@@ -199,10 +192,8 @@ class HomeViewModelTest {
 
 }
 
-private fun String.toPrediction(): AutocompletePrediction {
-    return AutocompletePrediction.builder(this)
-        .setPrimaryText(this)
-        .build()
+private fun String.testPrediction(): PlacePrediction {
+    return PlacePrediction(UUID.randomUUID().toString(), this, null)
 }
 
 
