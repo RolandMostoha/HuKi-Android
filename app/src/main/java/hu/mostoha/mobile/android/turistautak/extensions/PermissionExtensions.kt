@@ -10,12 +10,12 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
-fun Context.isLocationPermissionsGranted(): Boolean {
-    return isGranted(Manifest.permission.ACCESS_COARSE_LOCATION) && isGranted(Manifest.permission.ACCESS_FINE_LOCATION)
-}
-
 private fun Context.isGranted(permission: String): Boolean {
     return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+}
+
+fun Context.isLocationPermissionsGranted(): Boolean {
+    return isGranted(Manifest.permission.ACCESS_COARSE_LOCATION) && isGranted(Manifest.permission.ACCESS_FINE_LOCATION)
 }
 
 fun Context.checkLocationPermissions(

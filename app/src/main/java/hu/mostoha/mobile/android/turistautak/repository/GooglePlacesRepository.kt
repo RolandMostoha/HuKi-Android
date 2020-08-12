@@ -10,7 +10,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.turistautak.BuildConfig
 import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
 import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
-import hu.mostoha.mobile.android.turistautak.model.domain.toCoordinates
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
+import hu.mostoha.mobile.android.turistautak.model.domain.toLocation
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -37,24 +38,25 @@ class GooglePlacesRepository @Inject constructor(
         return task.await().autocompletePredictions.map {
             PlacePrediction(
                 it.placeId,
+                PlaceType.NODE,
                 it.getPrimaryText(null).toString(),
                 it.getSecondaryText(null).toString()
             )
         }
     }
 
-    override suspend fun getPlaceDetails(placeId: String): PlaceDetails {
+    override suspend fun getPlaceDetails(id: String, placeType: PlaceType): PlaceDetails {
         val placeFields = listOf(
             Place.Field.ID,
             Place.Field.NAME,
             Place.Field.LAT_LNG,
             Place.Field.PHOTO_METADATAS
         )
-        val request = FetchPlaceRequest.newInstance(placeId, placeFields)
+        val request = FetchPlaceRequest.newInstance(id, placeFields)
 
         val task = placesClient.fetchPlace(request)
         val place = task.await().place
-        return PlaceDetails(place.id!!, place.latLng!!.toCoordinates())
+        return PlaceDetails(place.id!!, place.latLng!!.toLocation())
     }
 
 }

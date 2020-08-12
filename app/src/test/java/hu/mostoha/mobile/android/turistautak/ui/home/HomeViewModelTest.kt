@@ -7,9 +7,10 @@ import hu.mostoha.mobile.android.turistautak.interactor.DomainException
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
-import hu.mostoha.mobile.android.turistautak.model.domain.Coordinates
+import hu.mostoha.mobile.android.turistautak.model.domain.Location
 import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
 import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
@@ -159,15 +160,15 @@ class HomeViewModelTest {
     @Test
     fun `Given Success TaskResult, when loadRelation, then NodesResult posted`() {
         val id = "123456L"
-        val placeDetails = PlaceDetails(id, Coordinates(47.123, 19.123))
+        val placeDetails = PlaceDetails(id, Location(47.123, 19.123))
 
-        coEvery { placesInteractor.requestGetGetPlaceDetails(id) } returns TaskResult.Success(placeDetails)
+        coEvery { placesInteractor.requestGetGetPlaceDetails(id, any()) } returns TaskResult.Success(placeDetails)
 
-        homeViewModel.loadPlaceDetails(id)
+        homeViewModel.loadPlaceDetails(id, PlaceType.NODE)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            placesInteractor.requestGetGetPlaceDetails(id)
+            placesInteractor.requestGetGetPlaceDetails(id, any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.PlaceDetailsResult(generator.generatePlaceDetails(placeDetails)))
         }
@@ -176,15 +177,15 @@ class HomeViewModelTest {
     @Test
     fun `Given Error TaskResult, when loadRelation, then ErrorOccurred posted`() {
         val errorRes = R.string.default_error_message_unknown
-        coEvery { placesInteractor.requestGetGetPlaceDetails(any()) } returns TaskResult.Error(
+        coEvery { placesInteractor.requestGetGetPlaceDetails(any(), any()) } returns TaskResult.Error(
             DomainException(errorRes)
         )
 
-        homeViewModel.loadPlaceDetails("123456L")
+        homeViewModel.loadPlaceDetails("123456L", PlaceType.NODE)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            placesInteractor.requestGetGetPlaceDetails(any())
+            placesInteractor.requestGetGetPlaceDetails(any(), any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
         }
@@ -193,7 +194,7 @@ class HomeViewModelTest {
 }
 
 private fun String.testPrediction(): PlacePrediction {
-    return PlacePrediction(UUID.randomUUID().toString(), this, null)
+    return PlacePrediction(UUID.randomUUID().toString(), PlaceType.NODE, this, null)
 }
 
 

@@ -21,6 +21,6 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindPlacesRepository(placesRepositoryImpl: GooglePlacesRepository): PlacesRepository
+    abstract fun bindPlacesRepository(placesRepositoryImpl: OsmPlacesRepository): PlacesRepository
 
 }

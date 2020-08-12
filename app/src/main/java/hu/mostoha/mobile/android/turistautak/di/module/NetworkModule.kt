@@ -1,11 +1,14 @@
 package hu.mostoha.mobile.android.turistautak.di.module
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
+import hu.mostoha.mobile.android.turistautak.network.PhotonService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,13 +32,30 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideOverpassService(okHttpClient: OkHttpClient): OverpassService {
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
+
+    @Provides
+    fun provideOverpassService(okHttpClient: OkHttpClient, moshi: Moshi): OverpassService {
         return Retrofit.Builder()
             .baseUrl(NetworkConfig.BASE_URL_OVERPASS)
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(OverpassService::class.java)
+    }
+
+    @Provides
+    fun providePhotonService(okHttpClient: OkHttpClient, moshi: Moshi): PhotonService {
+        return Retrofit.Builder()
+            .baseUrl(NetworkConfig.BASE_URL_PHOTON)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(PhotonService::class.java)
     }
 
 }

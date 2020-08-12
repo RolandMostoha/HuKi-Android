@@ -13,18 +13,19 @@ class HomeUiModelGenerator @Inject constructor() {
     fun generatePlacesResult(predictions: List<PlacePrediction>): List<PlacePredictionUiModel> {
         return predictions.map {
             PlacePredictionUiModel(
-                it.id,
-                it.primaryText,
-                it.secondaryText,
-                R.drawable.ic_home_search_bar_poi
+                id = it.id,
+                placeType = it.placeType,
+                primaryText = it.primaryText,
+                secondaryText = it.secondaryText,
+                iconRes = R.drawable.ic_home_search_bar_type_node
             )
         }
     }
 
     fun generatePlaceDetails(place: PlaceDetails): PlaceDetailsUiModel {
         return PlaceDetailsUiModel(
-            place.id,
-            place.coordinates.toGeoPoint()
+            placeId = place.id,
+            geoPoint = place.location.toGeoPoint()
         )
     }
 

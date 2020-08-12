@@ -121,7 +121,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeSearchBarInput.setOnItemClickListener { _, _, position, _ ->
             val resultItem = searchBarAdapter.getItem(position)
             if (resultItem != null) {
-                viewModel.loadPlaceDetails(resultItem.placeId)
+                viewModel.loadPlaceDetails(resultItem.id, resultItem.placeType)
             }
         }
     }
@@ -196,7 +196,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         position = it.placeDetails.geoPoint
                         icon = ContextCompat.getDrawable(this@HomeActivity, R.drawable.ic_marker_poi)
                     }
-
                     homeMapView.overlays.add(marker)
                     homeMapView.centerAndZoom(it.placeDetails.geoPoint, DEFAULT_ZOOM_LEVEL)
                     homeMapView.invalidate()

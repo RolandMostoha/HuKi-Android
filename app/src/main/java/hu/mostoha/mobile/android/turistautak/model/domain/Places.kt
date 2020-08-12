@@ -5,20 +5,27 @@ import org.osmdroid.util.GeoPoint
 
 data class PlacePrediction(
     val id: String,
+    val placeType: PlaceType,
     val primaryText: String,
     val secondaryText: String?
 )
 
+enum class PlaceType {
+    NODE,
+    WAY,
+    RELATION
+}
+
 data class PlaceDetails(
     val id: String,
-    val coordinates: Coordinates
+    val location: Location
 )
 
-data class Coordinates(
+data class Location(
     val latitude: Double,
     val longitude: Double
 )
 
-fun Coordinates.toGeoPoint() = GeoPoint(latitude, longitude)
+fun Location.toGeoPoint() = GeoPoint(latitude, longitude)
 
-fun LatLng.toCoordinates() = Coordinates(latitude, longitude)
+fun LatLng.toLocation() = Location(latitude, longitude)

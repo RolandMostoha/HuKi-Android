@@ -12,9 +12,10 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
-import hu.mostoha.mobile.android.turistautak.model.domain.Coordinates
+import hu.mostoha.mobile.android.turistautak.model.domain.Location
 import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
 import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
@@ -135,15 +136,15 @@ class HomeActivityTest {
 
     private fun answerTestPlacePredictions() {
         coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
-            PlacePrediction(UUID.randomUUID().toString(), "Mecseki Kéktúra", null),
-            PlacePrediction(UUID.randomUUID().toString(), "Mecseknádasdi Piroska", "Mecseknádasd")
+            PlacePrediction(UUID.randomUUID().toString(), PlaceType.WAY, "Mecseki Kéktúra", null),
+            PlacePrediction(UUID.randomUUID().toString(), PlaceType.NODE, "Mecseknádasdi Piroska", "Mecseknádasd")
         )
     }
 
     private fun answerTestPlaceDetails() {
-        coEvery { placeRepository.getPlaceDetails(any()) } returns PlaceDetails(
+        coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
             UUID.randomUUID().toString(),
-            Coordinates(47.123, 19.123)
+            Location(47.123, 19.123)
         )
     }
 

@@ -10,6 +10,7 @@ import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
 import hu.mostoha.mobile.android.turistautak.model.domain.Landscape
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
@@ -112,10 +113,10 @@ class HomeViewModel @ViewModelInject constructor(
         postEvent(LandscapesResult(landscapeRepository.getLandscapes()))
     }
 
-    fun loadPlaceDetails(relationId: String) = launch {
+    fun loadPlaceDetails(id: String, placeType: PlaceType) = launch {
         postEvent(SearchBarLoading(true))
 
-        when (val result = placesInteractor.requestGetGetPlaceDetails(relationId)) {
+        when (val result = placesInteractor.requestGetGetPlaceDetails(id, placeType)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
                 val placeDetails = generator.generatePlaceDetails(result.data)

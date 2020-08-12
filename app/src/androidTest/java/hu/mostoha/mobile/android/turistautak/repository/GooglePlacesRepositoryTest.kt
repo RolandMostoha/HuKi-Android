@@ -6,6 +6,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
@@ -20,7 +21,7 @@ import javax.inject.Inject
 @MediumTest
 @HiltAndroidTest
 @UninstallModules(ServiceModule::class)
-class PlacesRepositoryTest {
+class GooglePlacesRepositoryTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -31,7 +32,7 @@ class PlacesRepositoryTest {
     }
 
     @Inject
-    lateinit var repository: PlacesRepository
+    lateinit var repository: GooglePlacesRepository
 
     @Test
     fun getPlacesBy() = runBlocking {
@@ -42,7 +43,7 @@ class PlacesRepositoryTest {
 
     @Test
     fun getPlaceDetails() = runBlocking {
-        val result = repository.getPlaceDetails("ChIJg6-_p3F8akcRsON1hSvEAAo")
+        val result = repository.getPlaceDetails("ChIJg6-_p3F8akcRsON1hSvEAAo", PlaceType.NODE)
 
         assertNotNull(result)
     }

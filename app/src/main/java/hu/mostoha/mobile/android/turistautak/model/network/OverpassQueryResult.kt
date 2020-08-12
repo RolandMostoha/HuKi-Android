@@ -9,7 +9,7 @@ data class OverpassQueryResult(
 
 data class Element(
     @field:Json(name = "type")
-    var type: String,
+    var type: ElementType,
 
     @field:Json(name = "id")
     var id: Long,
@@ -24,12 +24,21 @@ data class Element(
     var lon: Double? = null
 )
 
+enum class ElementType {
+    @Json(name = "relation")
+    RELATION,
+    @Json(name = "way")
+    WAY,
+    @Json(name = "node")
+    NODE
+}
+
 data class Tags(
     @field:Json(name = "name")
-    var name: String,
+    var name: String? = null,
 
     @field:Json(name = "jel")
-    var jel: String,
+    var jel: String? = null,
 
     @field:Json(name = "network")
     var network: String? = null,
