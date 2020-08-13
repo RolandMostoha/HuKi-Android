@@ -9,3 +9,11 @@ fun TextView.setDrawableStart(@DrawableRes drawableRes: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableRes)
     setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 }
+
+fun TextView.setTextOrGone(text: String?) {
+    if (text == null) {
+        gone()
+    } else {
+        this.text = text
+    }
+}

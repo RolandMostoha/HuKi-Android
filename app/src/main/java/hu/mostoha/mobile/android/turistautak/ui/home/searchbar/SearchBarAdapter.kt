@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.extensions.inflateLayout
+import hu.mostoha.mobile.android.turistautak.extensions.setTextOrGone
 import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
 import kotlinx.android.synthetic.main.item_home_search_bar.view.*
 
@@ -31,7 +32,7 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<PlacePredictionUiModel>(
         val searchResultItem = getItem(position)!!
 
         holder.primaryText.text = searchResultItem.primaryText
-        holder.secondaryText.text = searchResultItem.secondaryText
+        holder.secondaryText.setTextOrGone(searchResultItem.secondaryText)
         holder.iconImage.setImageResource(searchResultItem.iconRes)
 
         return view
