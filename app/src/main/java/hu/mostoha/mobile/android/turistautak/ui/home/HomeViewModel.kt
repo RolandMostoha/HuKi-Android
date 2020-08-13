@@ -28,7 +28,7 @@ class HomeViewModel @ViewModelInject constructor(
 ) : BaseViewModel<HomeLiveEvents, HomeViewState>(taskExecutor) {
 
     companion object {
-        const val SEARCH_QUERY_DELAY_MS = 500L
+        const val SEARCH_QUERY_DELAY_MS = 800L
     }
 
     private var searchJob: Job? = null
