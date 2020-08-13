@@ -35,4 +35,11 @@ public enum OutputVerbosity {
      * timestamp and the user data of the user that last touched the object.
      */
     META,
+
+    /**
+     * Add the full geometry to each object. This adds coordinates to each node,
+     * to each node member of a way or relation, and it adds a sequence of "nd" members
+     * with coordinates to all relations.
+     */
+    GEOM
 }

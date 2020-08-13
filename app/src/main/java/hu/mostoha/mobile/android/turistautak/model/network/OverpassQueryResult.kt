@@ -21,14 +21,19 @@ data class Element(
     var lat: Double? = null,
 
     @field:Json(name = "lon")
-    var lon: Double? = null
+    var lon: Double? = null,
+
+    @field:Json(name = "geometry")
+    var geometry: List<Geom>? = null
 )
 
 enum class ElementType {
     @Json(name = "relation")
     RELATION,
+
     @Json(name = "way")
     WAY,
+
     @Json(name = "node")
     NODE
 }
@@ -57,4 +62,12 @@ data class Tags(
 
     @field:Json(name = "website")
     var website: String? = null
+)
+
+data class Geom(
+    @field:Json(name = "lat")
+    var lat: Double? = null,
+
+    @field:Json(name = "lon")
+    var lon: Double? = null
 )

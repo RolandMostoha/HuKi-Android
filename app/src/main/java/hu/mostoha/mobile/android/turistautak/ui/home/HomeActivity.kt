@@ -201,14 +201,22 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         }
                         is UiPayLoad.Way -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
-                            homeMapView.addPolygon(geoPoints)
+                            homeMapView.addPolygon(
+                                geoPoints,
+                                ContextCompat.getColor(this, R.color.colorPrimary),
+                                ContextCompat.getColor(this, R.color.colorPrimaryTransparent)
+                            )
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
                             homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetPx)
                         }
                         is UiPayLoad.Relation -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
-                            homeMapView.addPolygon(geoPoints)
+                            homeMapView.addPolygon(
+                                geoPoints,
+                                ContextCompat.getColor(this, R.color.colorPrimary),
+                                ContextCompat.getColor(this, R.color.colorPrimaryTransparent)
+                            )
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
                             homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetPx)

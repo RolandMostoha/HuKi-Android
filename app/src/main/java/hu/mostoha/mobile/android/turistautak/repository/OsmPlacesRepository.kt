@@ -34,7 +34,7 @@ class OsmPlacesRepository @Inject constructor(
             PlaceType.WAY -> {
                 val queryResult = getNodesByWay(id)
                 val wayElement = queryResult.elements.firstOrNull { ElementType.WAY == it.type } ?: TODO()
-                val locations = queryResult.elements.extractLocations()
+                val locations = wayElement.extractLocations()
                 return PlaceDetails(
                     id = wayElement.id.toString(),
                     payLoad = PayLoad.Way(locations)
@@ -43,7 +43,7 @@ class OsmPlacesRepository @Inject constructor(
             PlaceType.RELATION -> {
                 val queryResult = getNodesByRelation(id)
                 val relElement = queryResult.elements.firstOrNull { ElementType.RELATION == it.type } ?: TODO()
-                val locations = queryResult.elements.extractLocations()
+                val locations = relElement.extractLocations()
                 return PlaceDetails(
                     id = relElement.id.toString(),
                     payLoad = PayLoad.Way(locations)
@@ -72,7 +72,7 @@ class OsmPlacesRepository @Inject constructor(
             .wayBy(id)
             .nodeBy("w")
             .end()
-            .output(OutputVerbosity.BODY, null, null, -1)
+            .output(OutputVerbosity.GEOM, null, null, -1)
             .build()
         return overpassService.interpreter(query)
     }
@@ -86,7 +86,7 @@ class OsmPlacesRepository @Inject constructor(
             .wayBy("r")
             .nodeBy("w")
             .end()
-            .output(OutputVerbosity.BODY, null, null, -1)
+            .output(OutputVerbosity.GEOM, null, null, -1)
             .build()
         return overpassService.interpreter(query)
     }
@@ -112,16 +112,16 @@ class OsmPlacesRepository @Inject constructor(
         }
     }
 
-    private fun List<Element>.extractLocations(): List<Location> {
-        return mapNotNull {
+    private fun Element.extractLocations(): List<Location> {
+        return geometry?.mapNotNull {
             val lat = it.lat
             val lon = it.lon
-            if (ElementType.NODE == it.type && lat != null && lon != null) {
+            if (lat != null && lon != null) {
                 Location(lat, lon)
             } else {
                 null
             }
-        }
+        } ?: emptyList()
     }
 
 }

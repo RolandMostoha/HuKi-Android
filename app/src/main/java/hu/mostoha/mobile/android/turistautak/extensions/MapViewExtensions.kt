@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.turistautak.extensions
 
-import android.graphics.Color
 import android.graphics.drawable.Drawable
+import androidx.annotation.ColorInt
 import kotlinx.android.synthetic.main.activity_home.view.*
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -17,9 +17,11 @@ fun MapView.addMarker(geoPoint: GeoPoint, icon: Drawable) {
     homeMapView.invalidate()
 }
 
-fun MapView.addPolygon(geoPoints: List<GeoPoint>) {
+fun MapView.addPolygon(geoPoints: List<GeoPoint>, @ColorInt strokeColor: Int, @ColorInt fillColor: Int) {
     val polygon = Polygon().apply {
-        fillPaint.color = Color.parseColor("#1EFFE70E")
+        outlinePaint.color = strokeColor
+        outlinePaint.strokeWidth = 5f
+        fillPaint.color = fillColor
         points = geoPoints
     }
     homeMapView.overlays.add(polygon)
