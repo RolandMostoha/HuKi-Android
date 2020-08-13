@@ -18,6 +18,7 @@ import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.turistautak.extensions.*
 import hu.mostoha.mobile.android.turistautak.model.domain.toMapBoundingBox
+import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter
@@ -26,8 +27,8 @@ import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.views.CustomZoomButtonsController
-import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import java.io.File
@@ -50,7 +51,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private var myLocationOverlay: MyLocationOverlay? = null
 
-    private val boundingBoxOffsetPx by lazy { resources.getDimensionPixelSize(R.dimen.home_bounding_box_offset) }
+    private val boundsOffsetPx by lazy { resources.getDimensionPixelSize(R.dimen.home_bounding_box_offset) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +77,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
             addOnFirstLayoutListener { _, _, _, _, _ ->
-                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false, boundingBoxOffsetPx)
+                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false, boundsOffsetPx)
             }
         }
 
@@ -192,13 +193,27 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     }
                 }
                 is PlaceDetailsResult -> {
-                    val marker = Marker(homeMapView).apply {
-                        position = it.placeDetails.geoPoint
-                        icon = ContextCompat.getDrawable(this@HomeActivity, R.drawable.ic_marker_poi)
+                    when (it.placeDetails.payLoad) {
+                        is UiPayLoad.Node -> {
+                            val geoPoint = it.placeDetails.payLoad.geoPoint
+                            homeMapView.addMarker(geoPoint, ContextCompat.getDrawable(this, R.drawable.ic_marker_poi)!!)
+                            homeMapView.centerAndZoom(geoPoint, DEFAULT_ZOOM_LEVEL)
+                        }
+                        is UiPayLoad.Way -> {
+                            val geoPoints = it.placeDetails.payLoad.geoPoints
+                            homeMapView.addPolygon(geoPoints)
+
+                            val bounds = BoundingBox.fromGeoPoints(geoPoints)
+                            homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetPx)
+                        }
+                        is UiPayLoad.Relation -> {
+                            val geoPoints = it.placeDetails.payLoad.geoPoints
+                            homeMapView.addPolygon(geoPoints)
+
+                            val bounds = BoundingBox.fromGeoPoints(geoPoints)
+                            homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetPx)
+                        }
                     }
-                    homeMapView.overlays.add(marker)
-                    homeMapView.centerAndZoom(it.placeDetails.geoPoint, DEFAULT_ZOOM_LEVEL)
-                    homeMapView.invalidate()
                 }
             }
         })

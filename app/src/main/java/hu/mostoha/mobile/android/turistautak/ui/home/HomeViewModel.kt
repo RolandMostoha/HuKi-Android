@@ -109,10 +109,6 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
-    fun loadLandscapes() {
-        postEvent(LandscapesResult(landscapeRepository.getLandscapes()))
-    }
-
     fun loadPlaceDetails(id: String, placeType: PlaceType) = launch {
         postEvent(SearchBarLoading(true))
 
@@ -127,6 +123,10 @@ class HomeViewModel @ViewModelInject constructor(
                 postEvent(ErrorOccurred(result.domainException.messageRes))
             }
         }
+    }
+
+    fun loadLandscapes() {
+        postEvent(LandscapesResult(landscapeRepository.getLandscapes()))
     }
 
 }

@@ -18,8 +18,14 @@ enum class PlaceType {
 
 data class PlaceDetails(
     val id: String,
-    val location: Location
+    val payLoad: PayLoad
 )
+
+sealed class PayLoad {
+    data class Node(val location: Location) : PayLoad()
+    data class Way(val locations: List<Location>) : PayLoad()
+    data class Relation(val locations: List<Location>) : PayLoad()
+}
 
 data class Location(
     val latitude: Double,

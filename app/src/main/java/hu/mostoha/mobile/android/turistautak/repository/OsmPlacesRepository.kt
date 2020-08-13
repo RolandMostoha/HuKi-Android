@@ -1,17 +1,11 @@
 package hu.mostoha.mobile.android.turistautak.repository
 
-import hu.mostoha.mobile.android.turistautak.model.domain.Location
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
-import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
-import hu.mostoha.mobile.android.turistautak.model.network.FeaturesItem
-import hu.mostoha.mobile.android.turistautak.model.network.OsmType
-import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResult
+import hu.mostoha.mobile.android.turistautak.model.domain.*
+import hu.mostoha.mobile.android.turistautak.model.network.*
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
 import hu.mostoha.mobile.android.turistautak.network.PhotonService
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputFormat
-import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputOrder
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputVerbosity
 import hu.mostoha.mobile.android.turistautak.network.overpasser.query.OverpassQuery
 import javax.inject.Inject
@@ -29,16 +23,33 @@ class OsmPlacesRepository @Inject constructor(
     }
 
     override suspend fun getPlaceDetails(id: String, placeType: PlaceType): PlaceDetails {
-        val response = when (placeType) {
-            PlaceType.NODE -> getNode(id)
-            PlaceType.WAY -> getNodesByWay(id)
-            PlaceType.RELATION -> TODO()
+        when (placeType) {
+            PlaceType.NODE -> {
+                val nodeElement = getNode(id).elements.first()
+                return PlaceDetails(
+                    id = nodeElement.id.toString(),
+                    payLoad = PayLoad.Node(Location(nodeElement.lat!!, nodeElement.lon!!))
+                )
+            }
+            PlaceType.WAY -> {
+                val queryResult = getNodesByWay(id)
+                val wayElement = queryResult.elements.firstOrNull { ElementType.WAY == it.type } ?: TODO()
+                val locations = queryResult.elements.extractLocations()
+                return PlaceDetails(
+                    id = wayElement.id.toString(),
+                    payLoad = PayLoad.Way(locations)
+                )
+            }
+            PlaceType.RELATION -> {
+                val queryResult = getNodesByRelation(id)
+                val relElement = queryResult.elements.firstOrNull { ElementType.RELATION == it.type } ?: TODO()
+                val locations = queryResult.elements.extractLocations()
+                return PlaceDetails(
+                    id = relElement.id.toString(),
+                    payLoad = PayLoad.Way(locations)
+                )
+            }
         }
-        val node = response.elements[0]
-        return PlaceDetails(
-            id = node.id.toString(),
-            location = Location(node.lat!!, node.lon!!)
-        )
     }
 
     private suspend fun getNode(id: String): OverpassQueryResult {
@@ -48,9 +59,8 @@ class OsmPlacesRepository @Inject constructor(
             .filterQuery()
             .nodeBy(id)
             .end()
-            .output(OutputVerbosity.BODY, null, OutputOrder.QT, 1)
+            .output(OutputVerbosity.BODY, null, null, 1)
             .build()
-
         return overpassService.interpreter(query)
     }
 
@@ -62,9 +72,22 @@ class OsmPlacesRepository @Inject constructor(
             .wayBy(id)
             .nodeBy("w")
             .end()
-            .output(OutputVerbosity.BODY, null, OutputOrder.QT, -1)
+            .output(OutputVerbosity.BODY, null, null, -1)
             .build()
+        return overpassService.interpreter(query)
+    }
 
+    private suspend fun getNodesByRelation(id: String): OverpassQueryResult {
+        val query = OverpassQuery()
+            .format(OutputFormat.JSON)
+            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
+            .filterQuery()
+            .relBy(id)
+            .wayBy("r")
+            .nodeBy("w")
+            .end()
+            .output(OutputVerbosity.BODY, null, null, -1)
+            .build()
         return overpassService.interpreter(query)
     }
 
@@ -86,6 +109,18 @@ class OsmPlacesRepository @Inject constructor(
             OsmType.RELATION -> PlaceType.RELATION
             OsmType.WAY -> PlaceType.WAY
             OsmType.NODE -> PlaceType.NODE
+        }
+    }
+
+    private fun List<Element>.extractLocations(): List<Location> {
+        return mapNotNull {
+            val lat = it.lat
+            val lon = it.lon
+            if (ElementType.NODE == it.type && lat != null && lon != null) {
+                Location(lat, lon)
+            } else {
+                null
+            }
         }
     }
 

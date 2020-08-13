@@ -1,12 +1,10 @@
 package hu.mostoha.mobile.android.turistautak.ui.home
 
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
-import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
-import hu.mostoha.mobile.android.turistautak.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.turistautak.model.domain.*
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
+import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
 import javax.inject.Inject
 
 class HomeUiModelGenerator @Inject constructor() {
@@ -29,8 +27,12 @@ class HomeUiModelGenerator @Inject constructor() {
 
     fun generatePlaceDetails(place: PlaceDetails): PlaceDetailsUiModel {
         return PlaceDetailsUiModel(
-            placeId = place.id,
-            geoPoint = place.location.toGeoPoint()
+            id = place.id,
+            payLoad = when (place.payLoad) {
+                is PayLoad.Node -> UiPayLoad.Node(place.payLoad.location.toGeoPoint())
+                is PayLoad.Way -> UiPayLoad.Way(place.payLoad.locations.map { it.toGeoPoint() })
+                is PayLoad.Relation -> UiPayLoad.Relation(place.payLoad.locations.map { it.toGeoPoint() })
+            }
         )
     }
 

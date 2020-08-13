@@ -8,10 +8,7 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.turistautak.BuildConfig
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
-import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
-import hu.mostoha.mobile.android.turistautak.model.domain.toLocation
+import hu.mostoha.mobile.android.turistautak.model.domain.*
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -56,7 +53,7 @@ class GooglePlacesRepository @Inject constructor(
 
         val task = placesClient.fetchPlace(request)
         val place = task.await().place
-        return PlaceDetails(place.id!!, place.latLng!!.toLocation())
+        return PlaceDetails(place.id!!, PayLoad.Node(place.latLng!!.toLocation()))
     }
 
 }

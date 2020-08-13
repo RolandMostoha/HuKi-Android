@@ -12,10 +12,7 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
-import hu.mostoha.mobile.android.turistautak.model.domain.Location
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
-import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
+import hu.mostoha.mobile.android.turistautak.model.domain.*
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
@@ -144,7 +141,7 @@ class HomeActivityTest {
     private fun answerTestPlaceDetails() {
         coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
             UUID.randomUUID().toString(),
-            Location(47.123, 19.123)
+            PayLoad.Node(Location(47.123, 19.123))
         )
     }
 

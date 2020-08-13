@@ -7,10 +7,7 @@ import hu.mostoha.mobile.android.turistautak.interactor.DomainException
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
-import hu.mostoha.mobile.android.turistautak.model.domain.Location
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
-import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
+import hu.mostoha.mobile.android.turistautak.model.domain.*
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
@@ -160,7 +157,7 @@ class HomeViewModelTest {
     @Test
     fun `Given Success TaskResult, when loadRelation, then NodesResult posted`() {
         val id = "123456L"
-        val placeDetails = PlaceDetails(id, Location(47.123, 19.123))
+        val placeDetails = PlaceDetails(id, PayLoad.Node(Location(47.123, 19.123)))
 
         coEvery { placesInteractor.requestGetGetPlaceDetails(id, any()) } returns TaskResult.Success(placeDetails)
 
