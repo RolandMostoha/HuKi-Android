@@ -171,7 +171,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         viewModel.liveEvents.observe(this, Observer {
             when (it) {
                 is ErrorOccurred -> {
-                    homeContainer.showSnackbar(Message.Res(it.messageRes))
+                    showToast(it.message)
                 }
                 is LayerLoading -> {
                     homeLayerFab.inProgress = it.inProgress

@@ -54,4 +54,8 @@ class ProgressFloatingActionButton @JvmOverloads constructor(
         }
     }
 
+    override fun setOnClickListener(listener: OnClickListener?) {
+        fab.setOnClickListener(listener)
+    }
+
 }

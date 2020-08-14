@@ -1,6 +1,5 @@
 package hu.mostoha.mobile.android.turistautak.ui.home
 
-import androidx.annotation.StringRes
 import androidx.hilt.lifecycle.ViewModelInject
 import hu.mostoha.mobile.android.turistautak.architecture.BaseViewModel
 import hu.mostoha.mobile.android.turistautak.architecture.LiveEvents
@@ -15,6 +14,8 @@ import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
+import hu.mostoha.mobile.android.turistautak.ui.utils.Message
+import hu.mostoha.mobile.android.turistautak.ui.utils.toMessage
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import java.io.File
@@ -44,7 +45,7 @@ class HomeViewModel @ViewModelInject constructor(
                 postState(HomeViewState(result.data))
             }
             is TaskResult.Error -> {
-                postEvent(ErrorOccurred(result.domainException.messageRes))
+                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
             }
         }
     }
@@ -55,7 +56,7 @@ class HomeViewModel @ViewModelInject constructor(
         when (val result = layerInteractor.requestDownloadHikingLayer()) {
             is TaskResult.Error -> {
                 postEvent(LayerLoading(false))
-                postEvent(ErrorOccurred(result.domainException.messageRes))
+                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
             }
         }
     }
@@ -68,7 +69,7 @@ class HomeViewModel @ViewModelInject constructor(
                 loadHikingLayer()
             }
             is TaskResult.Error -> {
-                postEvent(ErrorOccurred(result.domainException.messageRes))
+                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
             }
         }
     }
@@ -89,11 +90,15 @@ class HomeViewModel @ViewModelInject constructor(
                 is TaskResult.Success -> {
                     postEvent(SearchBarLoading(false))
                     val searchResults = generator.generatePlacesResult(result.data)
-                    postEvent(PlacesResult(searchResults))
+                    if (searchResults.isEmpty()) {
+                        // TODO
+                    } else {
+                        postEvent(PlacesResult(searchResults))
+                    }
                 }
                 is TaskResult.Error -> {
                     postEvent(SearchBarLoading(false))
-                    postEvent(ErrorOccurred(result.domainException.messageRes))
+                    postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
                 }
             }
         }
@@ -120,7 +125,7 @@ class HomeViewModel @ViewModelInject constructor(
             }
             is TaskResult.Error -> {
                 postEvent(SearchBarLoading(false))
-                postEvent(ErrorOccurred(result.domainException.messageRes))
+                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
             }
         }
     }
@@ -134,7 +139,7 @@ class HomeViewModel @ViewModelInject constructor(
 data class HomeViewState(val hikingLayerFile: File?) : ViewState
 
 sealed class HomeLiveEvents : LiveEvents {
-    data class ErrorOccurred(@StringRes val messageRes: Int) : HomeLiveEvents()
+    data class ErrorOccurred(val message: Message) : HomeLiveEvents()
     data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class PlacesResult(val results: List<PlacePredictionUiModel>) : HomeLiveEvents()
