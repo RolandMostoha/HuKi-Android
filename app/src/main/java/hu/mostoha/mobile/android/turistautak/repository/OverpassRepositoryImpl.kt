@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.turistautak.repository
 
 import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
-import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResult
+import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResponse
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputFormat
@@ -14,7 +14,7 @@ class OverpassRepositoryImpl @Inject constructor(
     private val overpassService: OverpassService
 ) : OverpassRepository {
 
-    override suspend fun getHikingRelationsBy(searchText: String): OverpassQueryResult {
+    override suspend fun getHikingRelationsBy(searchText: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
             .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
@@ -36,7 +36,7 @@ class OverpassRepositoryImpl @Inject constructor(
         return overpassService.interpreter(query)
     }
 
-    override suspend fun getNodesByRelationId(relationId: Long): OverpassQueryResult {
+    override suspend fun getNodesByRelationId(relationId: Long): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
             .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)

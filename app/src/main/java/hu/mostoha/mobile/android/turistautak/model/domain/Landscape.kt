@@ -1,5 +1,14 @@
 package hu.mostoha.mobile.android.turistautak.model.domain
 
-import androidx.annotation.DrawableRes
+data class Landscape(
+    val id: String,
+    val name: String,
+    val type: LandscapeType
+)
 
-data class Landscape(val name: String, @DrawableRes val icon: Int)
+enum class LandscapeType {
+    MOUNTAIN_RANGE_LOW,
+    MOUNTAIN_RANGE_HIGH,
+    PLATEAU_WITH_WATER,
+    CAVE_SYSTEM
+}

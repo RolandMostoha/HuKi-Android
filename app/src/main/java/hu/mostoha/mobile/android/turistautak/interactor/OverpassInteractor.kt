@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.turistautak.interactor
 
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
-import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResult
+import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResponse
 import hu.mostoha.mobile.android.turistautak.repository.OverpassRepository
 import timber.log.Timber
 import javax.inject.Inject
@@ -12,7 +12,7 @@ class OverpassInteractor @Inject constructor(
     private val overpassRepository: OverpassRepository
 ) {
 
-    suspend fun requestSearchHikingRelationsBy(searchText: String): TaskResult<OverpassQueryResult> {
+    suspend fun requestSearchHikingRelationsBy(searchText: String): TaskResult<OverpassQueryResponse> {
         return taskExecutor.runOnBackground {
             try {
                 val file = overpassRepository.getHikingRelationsBy(searchText)
@@ -26,7 +26,7 @@ class OverpassInteractor @Inject constructor(
         }
     }
 
-    suspend fun requestGetNodesByRelationId(relationId: Long): TaskResult<OverpassQueryResult> {
+    suspend fun requestGetNodesByRelationId(relationId: Long): TaskResult<OverpassQueryResponse> {
         return taskExecutor.runOnBackground {
             try {
                 val nodes = overpassRepository.getNodesByRelationId(relationId)

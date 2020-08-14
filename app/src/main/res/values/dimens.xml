@@ -35,6 +35,7 @@
     <dimen name="home_search_bar_progress_size">22dp</dimen>
     <dimen name="home_landscapes_icon_size">18dp</dimen>
     <dimen name="home_bounding_box_offset">@dimen/space_extra_large</dimen>
+    <dimen name="home_bounding_box_offset_routes">50dp</dimen>
     <dimen name="home_marker_size_poi">42dp</dimen>
 
     <dimen name="home_bottom_sheet_image_size">45dp</dimen>

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -19,6 +20,7 @@ import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.turistautak.extensions.*
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.model.domain.toMapBoundingBox
 import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
@@ -55,7 +57,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private var myLocationOverlay: MyLocationOverlay? = null
 
-    private val boundsOffsetPx by lazy { resources.getDimensionPixelSize(R.dimen.home_bounding_box_offset) }
+    private val boundsOffsetHu by lazy { resources.getDimensionPixelSize(R.dimen.home_bounding_box_offset) }
+    private val boundsOffsetRoutes by lazy { resources.getDimensionPixelSize(R.dimen.home_bounding_box_offset_routes) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +84,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
             addOnFirstLayoutListener { _, _, _, _, _ ->
-                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false, boundsOffsetPx)
+                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false, boundsOffsetHu)
             }
         }
 
@@ -126,9 +129,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeSearchBarInput.setOnItemClickListener { _, _, position, _ ->
             val resultItem = searchBarAdapter.getItem(position)
             if (resultItem != null) {
-                homeBottomSheetImage.setImageResource(resultItem.iconRes)
-                homeBottomSheetPrimaryText.text = resultItem.primaryText
-                homeBottomSheetSecondaryText.setTextOrGone(resultItem.secondaryText)
+                fillBottomSheet(resultItem.primaryText, resultItem.secondaryText, resultItem.iconRes)
 
                 viewModel.loadPlaceDetails(resultItem.id, resultItem.placeType)
             }
@@ -196,10 +197,20 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
                 is LandscapesResult -> {
                     it.landscapes.forEach { landscape ->
-                        val view = inflateLayout(R.layout.item_home_landscapes_chip, homeLandscapeChipGroup)
-                        view.landscapesChip.text = landscape.name
-                        view.landscapesChip.setChipIconResource(landscape.icon)
-                        homeLandscapeChipGroup.addView(view)
+                        with(inflateLayout(R.layout.item_home_landscapes_chip, homeLandscapeChipGroup)) {
+                            landscapesChip.text = landscape.name
+                            landscapesChip.setChipIconResource(landscape.icon)
+                            landscapesChip.setOnClickListener {
+                                fillBottomSheet(
+                                    landscape.name,
+                                    getString(R.string.home_bottom_sheet_landscape_secondary),
+                                    landscape.icon
+                                )
+
+                                viewModel.loadPlaceDetails(landscape.id, PlaceType.WAY)
+                            }
+                            homeLandscapeChipGroup.addView(this)
+                        }
                     }
                 }
                 is PlaceDetailsResult -> {
@@ -221,7 +232,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             )
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
-                            homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetPx)
+                            homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
                         }
                         is UiPayLoad.Relation -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
@@ -233,7 +244,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             )
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
-                            homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetPx)
+                            homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
                         }
                     }
                 }
@@ -256,6 +267,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     .show()
             }
         })
+    }
+
+    private fun fillBottomSheet(primaryText: String, secondaryText: String?, @DrawableRes iconRes: Int) {
+        homeBottomSheetPrimaryText.text = primaryText
+        homeBottomSheetSecondaryText.setTextOrGone(secondaryText)
+        homeBottomSheetImage.setImageResource(iconRes)
     }
 
     private fun initReceivers() {

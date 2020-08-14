@@ -5,14 +5,15 @@ import hu.mostoha.mobile.android.turistautak.architecture.BaseViewModel
 import hu.mostoha.mobile.android.turistautak.architecture.LiveEvents
 import hu.mostoha.mobile.android.turistautak.architecture.ViewState
 import hu.mostoha.mobile.android.turistautak.executor.TaskExecutor
+import hu.mostoha.mobile.android.turistautak.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
-import hu.mostoha.mobile.android.turistautak.model.domain.Landscape
 import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
+import hu.mostoha.mobile.android.turistautak.model.generator.HomeUiModelGenerator
+import hu.mostoha.mobile.android.turistautak.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
-import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.utils.Message
 import hu.mostoha.mobile.android.turistautak.ui.utils.toMessage
@@ -24,7 +25,7 @@ class HomeViewModel @ViewModelInject constructor(
     taskExecutor: TaskExecutor,
     private val layerInteractor: LayerInteractor,
     private val placesInteractor: PlacesInteractor,
-    private val landscapeRepository: LandscapeRepository,
+    private val landscapeInteractor: LandscapeInteractor,
     private val generator: HomeUiModelGenerator
 ) : BaseViewModel<HomeLiveEvents, HomeViewState>(taskExecutor) {
 
@@ -130,8 +131,20 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
-    fun loadLandscapes() {
-        postEvent(LandscapesResult(landscapeRepository.getLandscapes()))
+    fun loadLandscapes() = launch {
+        postEvent(SearchBarLoading(true))
+
+        when (val result = landscapeInteractor.requestGetLandscapes()) {
+            is TaskResult.Success -> {
+                postEvent(SearchBarLoading(false))
+                val landscapes = generator.generateLandscapes(result.data)
+                postEvent(LandscapesResult(landscapes))
+            }
+            is TaskResult.Error -> {
+                postEvent(SearchBarLoading(false))
+                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+            }
+        }
     }
 
 }
@@ -144,5 +157,5 @@ sealed class HomeLiveEvents : LiveEvents {
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class PlacesResult(val results: List<PlacePredictionUiModel>) : HomeLiveEvents()
     data class PlaceDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
-    data class LandscapesResult(val landscapes: List<Landscape>) : HomeLiveEvents()
+    data class LandscapesResult(val landscapes: List<LandscapeUiModel>) : HomeLiveEvents()
 }

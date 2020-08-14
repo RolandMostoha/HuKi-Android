@@ -52,7 +52,7 @@ class OsmPlacesRepository @Inject constructor(
         }
     }
 
-    private suspend fun getNode(id: String): OverpassQueryResult {
+    private suspend fun getNode(id: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
             .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
@@ -64,7 +64,7 @@ class OsmPlacesRepository @Inject constructor(
         return overpassService.interpreter(query)
     }
 
-    private suspend fun getNodesByWay(id: String): OverpassQueryResult {
+    private suspend fun getNodesByWay(id: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
             .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
@@ -77,7 +77,7 @@ class OsmPlacesRepository @Inject constructor(
         return overpassService.interpreter(query)
     }
 
-    private suspend fun getNodesByRelation(id: String): OverpassQueryResult {
+    private suspend fun getNodesByRelation(id: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
             .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)

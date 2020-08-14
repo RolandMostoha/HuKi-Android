@@ -23,4 +23,8 @@ abstract class RepositoryModule {
     @Binds
     abstract fun bindPlacesRepository(placesRepositoryImpl: OsmPlacesRepository): PlacesRepository
 
+    @Singleton
+    @Binds
+    abstract fun bindLandscapeRepository(landscapeRepository: OverpassLandscapeRepository): LandscapeRepository
+
 }

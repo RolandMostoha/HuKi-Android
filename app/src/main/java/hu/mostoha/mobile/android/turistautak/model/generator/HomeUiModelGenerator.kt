@@ -1,7 +1,8 @@
-package hu.mostoha.mobile.android.turistautak.ui.home
+package hu.mostoha.mobile.android.turistautak.model.generator
 
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.model.domain.*
+import hu.mostoha.mobile.android.turistautak.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
@@ -34,6 +35,12 @@ class HomeUiModelGenerator @Inject constructor() {
                 is PayLoad.Relation -> UiPayLoad.Relation(place.payLoad.locations.map { it.toGeoPoint() })
             }
         )
+    }
+
+    fun generateLandscapes(landscapes: List<Landscape>): List<LandscapeUiModel> {
+        return landscapes.map {
+            LandscapeUiModel(it.id, it.name, R.drawable.ic_landscapes_mountain)
+        }
     }
 
 }

@@ -1,12 +1,15 @@
 package hu.mostoha.mobile.android.turistautak.model.network
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
-data class OverpassQueryResult(
+@JsonClass(generateAdapter = true)
+data class OverpassQueryResponse(
     @field:Json(name = "elements")
     var elements: List<Element>
 )
 
+@JsonClass(generateAdapter = true)
 data class Element(
     @field:Json(name = "type")
     var type: ElementType,
@@ -38,9 +41,16 @@ enum class ElementType {
     NODE
 }
 
+@JsonClass(generateAdapter = true)
 data class Tags(
     @field:Json(name = "name")
     var name: String? = null,
+
+    @field:Json(name = "name:hu")
+    var nameHungarian: String? = null,
+
+    @field:Json(name = "region:type")
+    var regionType: String? = null,
 
     @field:Json(name = "jel")
     var jel: String? = null,
@@ -64,6 +74,7 @@ data class Tags(
     var website: String? = null
 )
 
+@JsonClass(generateAdapter = true)
 data class Geom(
     @field:Json(name = "lat")
     var lat: Double? = null,

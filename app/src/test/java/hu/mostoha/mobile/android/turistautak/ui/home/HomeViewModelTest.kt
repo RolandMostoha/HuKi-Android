@@ -3,12 +3,10 @@ package hu.mostoha.mobile.android.turistautak.ui.home
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.executor.TestTaskExecutor
-import hu.mostoha.mobile.android.turistautak.interactor.DomainException
-import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
-import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
-import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
+import hu.mostoha.mobile.android.turistautak.interactor.*
 import hu.mostoha.mobile.android.turistautak.model.domain.*
-import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
+import hu.mostoha.mobile.android.turistautak.model.generator.HomeUiModelGenerator
+import hu.mostoha.mobile.android.turistautak.ui.utils.toMessage
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.mockk
@@ -29,8 +27,9 @@ class HomeViewModelTest {
 
     private val layerInteractor = mockk<LayerInteractor>()
     private val placesInteractor = mockk<PlacesInteractor>()
-    private val generator = HomeUiModelGenerator()
-    private val landscapeRepository = LandscapeRepository()
+    private val landscapeInteractor = mockk<LandscapeInteractor>()
+    private val generator =
+        HomeUiModelGenerator()
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
@@ -42,7 +41,7 @@ class HomeViewModelTest {
                 TestTaskExecutor(),
                 layerInteractor,
                 placesInteractor,
-                landscapeRepository,
+                landscapeInteractor,
                 generator
             )
         )
@@ -73,7 +72,7 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
             layerInteractor.requestGetHikingLayer()
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
+            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes.toMessage()))
         }
     }
 
@@ -101,7 +100,7 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
             layerInteractor.requestDownloadHikingLayer()
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
+            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes.toMessage()))
         }
     }
 
@@ -150,7 +149,7 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             placesInteractor.requestGetPlacesBy(any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
+            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes.toMessage()))
         }
     }
 
@@ -184,7 +183,40 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             placesInteractor.requestGetGetPlaceDetails(any(), any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes))
+            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes.toMessage()))
+        }
+    }
+
+    @Test
+    fun `Given Success TaskResult, when loadLandscapes, then LandscapesResult posted`() {
+        val landscapes = emptyList<Landscape>()
+
+        coEvery { landscapeInteractor.requestGetLandscapes() } returns TaskResult.Success(landscapes)
+
+        homeViewModel.loadLandscapes()
+
+        coVerifyOrder {
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
+            landscapeInteractor.requestGetLandscapes()
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
+            homeViewModel.postEvent(HomeLiveEvents.LandscapesResult(generator.generateLandscapes(landscapes)))
+        }
+    }
+
+    @Test
+    fun `Given Error TaskResult, when loadLandscapes, then ErrorOccurred posted`() {
+        val errorRes = R.string.default_error_message_unknown
+        coEvery { landscapeInteractor.requestGetLandscapes() } returns TaskResult.Error(
+            DomainException(errorRes)
+        )
+
+        homeViewModel.loadLandscapes()
+
+        coVerifyOrder {
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
+            landscapeInteractor.requestGetLandscapes()
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
+            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes.toMessage()))
         }
     }
 

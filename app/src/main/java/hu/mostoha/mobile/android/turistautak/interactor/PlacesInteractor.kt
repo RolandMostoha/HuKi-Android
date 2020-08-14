@@ -28,10 +28,10 @@ class PlacesInteractor @Inject constructor(
         }
     }
 
-    suspend fun requestGetGetPlaceDetails(placeId: String, placeType: PlaceType): TaskResult<PlaceDetails> {
+    suspend fun requestGetGetPlaceDetails(id: String, placeType: PlaceType): TaskResult<PlaceDetails> {
         return taskExecutor.runOnBackground {
             try {
-                val response = placesRepository.getPlaceDetails(placeId, placeType)
+                val response = placesRepository.getPlaceDetails(id, placeType)
 
                 TaskResult.Success(response)
             } catch (exception: Exception) {

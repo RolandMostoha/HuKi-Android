@@ -1,7 +1,9 @@
 package hu.mostoha.mobile.android.turistautak.model.network
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class PhotonQueryResponse(
     @Json(name = "features")
     val features: List<FeaturesItem>,
@@ -9,6 +11,7 @@ data class PhotonQueryResponse(
     val type: String
 )
 
+@JsonClass(generateAdapter = true)
 data class FeaturesItem(
     @Json(name = "geometry")
     val geometry: Geometry,
@@ -20,6 +23,7 @@ data class FeaturesItem(
     val properties: Properties
 )
 
+@JsonClass(generateAdapter = true)
 data class Geometry(
     @Json(name = "coordinates")
     val coordinates: List<Double>,
@@ -28,6 +32,7 @@ data class Geometry(
     val type: String
 )
 
+@JsonClass(generateAdapter = true)
 data class Properties(
     @Json(name = "name")
     val name: String? = null,

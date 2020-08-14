@@ -15,6 +15,7 @@ import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
 import hu.mostoha.mobile.android.turistautak.model.domain.*
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
+import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
 import hu.mostoha.mobile.android.turistautak.util.*
@@ -52,6 +53,10 @@ class HomeActivityTest {
     @BindValue
     @JvmField
     val placeRepository: PlacesRepository = mockk()
+
+    @BindValue
+    @JvmField
+    val landscapeRepository: LandscapeRepository = mockk()
 
     @Before
     fun init() {
@@ -147,6 +152,25 @@ class HomeActivityTest {
             "Mecseki Kéktúra".clickWithTextInPopup()
 
             // TODO: Check overlay displays
+        }
+    }
+
+    @Test
+    fun givenLandscape_whenClick_thenPlaceDetailsDisplayOnBottomSheet() {
+        answerTestHikingLayer()
+        answerTestPlaceDetails()
+        coEvery { landscapeRepository.getLandscapes() } returns listOf(
+            Landscape("123456", "Balaton-felvidék", LandscapeType.PLATEAU_WITH_WATER),
+            Landscape("123457", "Bükk", LandscapeType.MOUNTAIN_RANGE_HIGH)
+        )
+
+        launch<HomeActivity> {
+            R.id.homeBottomSheetContainer.isNotDisplayed()
+            R.id.homeLandscapeChipGroup.isDisplayed()
+
+            "Balaton-felvidék".clickWithText()
+
+            R.id.homeBottomSheetContainer.isDisplayed()
         }
     }
 
