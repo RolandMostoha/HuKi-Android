@@ -25,6 +25,6 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindLandscapeRepository(landscapeRepository: OverpassLandscapeRepository): LandscapeRepository
+    abstract fun bindLandscapeRepository(landscapeRepository: LocalLandscapeRepository): LandscapeRepository
 
 }

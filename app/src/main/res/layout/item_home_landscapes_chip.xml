@@ -7,7 +7,8 @@
     android:elevation="@dimen/default_elevation"
     android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
     android:textColor="@color/colorSecondaryText"
-    app:chipMinHeight="35dp"
+    app:chipMinHeight="@dimen/home_landscapes_chip_min_height"
     app:chipBackgroundColor="@color/colorBackground"
     app:chipIconSize="@dimen/home_landscapes_icon_size"
+    app:textStartPadding="@dimen/space_small"
     app:iconStartPadding="@dimen/space_small" />

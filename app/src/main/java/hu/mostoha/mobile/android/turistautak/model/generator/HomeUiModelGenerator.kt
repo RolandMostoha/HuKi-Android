@@ -39,7 +39,16 @@ class HomeUiModelGenerator @Inject constructor() {
 
     fun generateLandscapes(landscapes: List<Landscape>): List<LandscapeUiModel> {
         return landscapes.map {
-            LandscapeUiModel(it.id, it.name, R.drawable.ic_landscapes_mountain)
+            LandscapeUiModel(
+                id = it.id,
+                name = it.name,
+                icon = when(it.type) {
+                    LandscapeType.MOUNTAIN_RANGE_LOW -> R.drawable.ic_landscapes_mountain
+                    LandscapeType.MOUNTAIN_RANGE_HIGH -> R.drawable.ic_landscapes_mountain
+                    LandscapeType.PLATEAU_WITH_WATER -> R.drawable.ic_landscapes_water
+                    LandscapeType.CAVE_SYSTEM -> R.drawable.ic_landscapes_cave
+                }
+            )
         }
     }
 
