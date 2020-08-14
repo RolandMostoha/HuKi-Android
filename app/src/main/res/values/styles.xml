@@ -5,11 +5,36 @@
     </style>
 
     <style name="DefaultShapeAppearance.Surface">
-        <item name="cornerSize">@dimen/default_surface_corner_size</item>
+        <item name="cornerSize">@dimen/default_corner_size_surface</item>
     </style>
 
     <style name="DefaultShapeAppearance.InputField">
-        <item name="cornerSize">20dp</item>
+        <item name="cornerSize">@dimen/default_corner_size_input</item>
+    </style>
+
+    <style name="DefaultShapeAppearance.Button">
+        <item name="cornerSize">@dimen/default_corner_size_input</item>
+    </style>
+
+    <style name="DefaultShapeAppearance.BottomSheet">
+        <item name="cornerSizeTopLeft">@dimen/default_corner_size_input</item>
+        <item name="cornerSizeTopRight">@dimen/default_corner_size_input</item>
+    </style>
+
+    <style name="DefaultButton">
+        <item name="android:textAppearance">@style/DefaultTextAppearance.SemiBold.Medium</item>
+        <item name="shapeAppearance">@style/DefaultShapeAppearance.Button</item>
+        <item name="iconPadding">@dimen/space_small</item>
+    </style>
+
+    <style name="DefaultButton.Contained" />
+
+    <style name="DefaultButton.IconOnly" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="iconPadding">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="android:minWidth">@dimen/default_icon_only_button_size</item>
+        <item name="android:minHeight">@dimen/default_icon_only_button_size</item>
+        <item name="iconTint">@color/colorPrimaryIcon</item>
     </style>
 
     <style name="DefaultMaterialDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
@@ -42,6 +67,10 @@
         <item name="foregroundStrokeColor">@color/colorPrimary</item>
         <item name="indeterminate">true</item>
         <item name="foregroundStrokeWidth">2dp</item>
+    </style>
+
+    <style name="DefaultBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/DefaultShapeAppearance.BottomSheet</item>
     </style>
 
 </resources>

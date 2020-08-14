@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="space_extra_small">2dp</dimen>
     <dimen name="space_small">5dp</dimen>
     <dimen name="space_medium">10dp</dimen>
     <dimen name="space_large">15dp</dimen>
@@ -11,6 +12,7 @@
     <dimen name="text_size_medium">14sp</dimen>
     <dimen name="text_size_large">16sp</dimen>
 
+    <dimen name="icon_size_extra_small">20dp</dimen>
     <dimen name="icon_size_small">22dp</dimen>
     <dimen name="icon_size_medium">24dp</dimen>
     <dimen name="icon_size_large">26dp</dimen>
@@ -18,7 +20,10 @@
 
     <dimen name="default_elevation">5dp</dimen>
     <dimen name="default_text_size">@dimen/text_size_medium</dimen>
-    <dimen name="default_surface_corner_size">10dp</dimen>
+    <dimen name="default_corner_size_surface">10dp</dimen>
+    <dimen name="default_corner_size_input">20dp</dimen>
+    <dimen name="default_icon_only_button_size">48dp</dimen>
+    <dimen name="default_polyline_stroke_width">3dp</dimen>
 
     <dimen name="home_search_bar_height">60dp</dimen>
     <dimen name="home_search_bar_stroke_width">1dp</dimen>
@@ -31,5 +36,8 @@
     <dimen name="home_landscapes_icon_size">18dp</dimen>
     <dimen name="home_bounding_box_offset">@dimen/space_extra_large</dimen>
     <dimen name="home_marker_size_poi">42dp</dimen>
+
+    <dimen name="home_bottom_sheet_image_size">45dp</dimen>
+    <dimen name="home_bottom_sheet_elevation">10dp</dimen>
 
 </resources>

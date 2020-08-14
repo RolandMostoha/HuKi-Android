@@ -1,15 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/homeSearchResultBottomSheet"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/DefaultBottomSheet"
+    android:id="@+id/homeBottomSheetContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/space_large"
+    android:paddingBottom="@dimen/space_extra_large"
+    android:elevation="10dp"
+    app:layout_insetEdge="bottom"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="90dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <!--  TODO  -->
+    <ImageView
+        android:id="@+id/homeBottomSheetImage"
+        android:layout_width="@dimen/home_bottom_sheet_image_size"
+        android:layout_height="@dimen/home_bottom_sheet_image_size"
+        android:layout_gravity="center_vertical"
+        android:padding="@dimen/space_extra_small"
+        android:layout_marginTop="@dimen/space_extra_large"
+        android:layout_marginStart="@dimen/space_extra_large"
+        android:layout_marginBottom="@dimen/space_small"
+        android:layout_marginEnd="@dimen/space_medium"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/homeBottomSheetTextContainer"
+        tools:src="@drawable/ic_home_search_bar_type_relation" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/homeBottomSheetTextContainer"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="@id/homeBottomSheetImage"
+        app:layout_constraintBottom_toBottomOf="@id/homeBottomSheetImage"
+        app:layout_constraintStart_toEndOf="@id/homeBottomSheetImage"
+        app:layout_constraintEnd_toStartOf="@id/homeBottomSheetCloseButton">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/homeBottomSheetPrimaryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Dobogókő Szánkópálya" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/homeBottomSheetSecondaryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
+            android:layout_marginTop="@dimen/space_extra_small"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="2099 Pilisszentkereszt" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/homeBottomSheetCloseButton"
+        style="@style/DefaultButton.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
+        android:layout_marginEnd="@dimen/space_small"
+        app:icon="@drawable/ic_input_clear"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/DefaultButton.Contained"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginEnd="@dimen/space_extra_large"
+        android:text="@string/home_bottom_sheet_directions_button"
+        app:icon="@drawable/ic_home_bottom_sheet_directions"
+        app:layout_constraintTop_toBottomOf="@id/homeBottomSheetTextContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

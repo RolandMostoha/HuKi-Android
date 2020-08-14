@@ -9,6 +9,8 @@
     <string name="home_menu_button_hiking_symbols">Túrajelzések</string>
     <string name="home_menu_button_settings">Beállítások</string>
 
+    <string name="home_bottom_sheet_directions_button">Útvonalterv</string>
+
     <string name="download_layer_dialog_title">Túra réteg letöltése</string>
     <string name="download_layer_dialog_message">Az offline működéshez javasoljuk a túraréteg letöltését.</string>
     <string name="download_layer_dialog_positive_button">Letöltés</string>

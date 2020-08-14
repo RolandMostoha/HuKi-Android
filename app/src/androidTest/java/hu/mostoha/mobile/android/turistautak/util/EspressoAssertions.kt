@@ -9,9 +9,14 @@ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import org.hamcrest.CoreMatchers.not
 
 fun @receiver:IdRes Int.isDisplayed() {
     onView(withId(this)).check(matches(ViewMatchers.isDisplayed()))
+}
+
+fun @receiver:IdRes Int.isNotDisplayed() {
+    onView(withId(this)).check(matches(not(ViewMatchers.isDisplayed())))
 }
 
 fun @receiver:IdRes Int.typeText(text: String) {

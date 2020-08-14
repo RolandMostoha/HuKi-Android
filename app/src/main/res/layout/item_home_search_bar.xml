@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -10,7 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:padding="@dimen/space_medium" />
+        android:padding="@dimen/space_medium"
+        tools:src="@drawable/ic_home_search_bar_type_relation" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +28,8 @@
             android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            tools:text="Dobogókő Szánkópálya" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/searchBarResultSecondaryText"
@@ -35,7 +38,8 @@
             android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            tools:text="2099 Pilisszentkereszt" />
 
     </LinearLayout>
 

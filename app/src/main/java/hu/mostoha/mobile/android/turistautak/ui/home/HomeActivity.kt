@@ -5,11 +5,13 @@ import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
@@ -24,6 +26,7 @@ import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
+import kotlinx.android.synthetic.main.layout_home_bottom_sheet.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
@@ -47,6 +50,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private lateinit var layerDownloadReceiver: BroadcastReceiver
 
+    private lateinit var sheetBehavior: BottomSheetBehavior<View>
     private lateinit var searchBarAdapter: SearchBarAdapter
 
     private var myLocationOverlay: MyLocationOverlay? = null
@@ -122,9 +126,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeSearchBarInput.setOnItemClickListener { _, _, position, _ ->
             val resultItem = searchBarAdapter.getItem(position)
             if (resultItem != null) {
+                homeBottomSheetImage.setImageResource(resultItem.iconRes)
+                homeBottomSheetPrimaryText.text = resultItem.primaryText
+                homeBottomSheetSecondaryText.setTextOrGone(resultItem.secondaryText)
+
                 viewModel.loadPlaceDetails(resultItem.id, resultItem.placeType)
             }
         }
+        sheetBehavior = BottomSheetBehavior.from(homeBottomSheetContainer)
+        sheetBehavior.hide()
     }
 
     private fun showMyLocation() {
@@ -193,6 +203,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     }
                 }
                 is PlaceDetailsResult -> {
+                    sheetBehavior.collapse()
+
                     when (it.placeDetails.payLoad) {
                         is UiPayLoad.Node -> {
                             val geoPoint = it.placeDetails.payLoad.geoPoint
@@ -203,8 +215,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
                             homeMapView.addPolygon(
                                 geoPoints,
-                                ContextCompat.getColor(this, R.color.colorPrimary),
-                                ContextCompat.getColor(this, R.color.colorPrimaryTransparent)
+                                R.dimen.default_polyline_stroke_width,
+                                R.color.colorPrimary,
+                                R.color.colorPrimaryTransparent
                             )
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
@@ -214,8 +227,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
                             homeMapView.addPolygon(
                                 geoPoints,
-                                ContextCompat.getColor(this, R.color.colorPrimary),
-                                ContextCompat.getColor(this, R.color.colorPrimaryTransparent)
+                                R.dimen.default_polyline_stroke_width,
+                                R.color.colorPrimary,
+                                R.color.colorPrimaryTransparent
                             )
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)

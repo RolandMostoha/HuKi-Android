@@ -116,7 +116,26 @@ class HomeActivityTest {
     }
 
     @Test
-    fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplay() {
+    fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplayOnBottomSheet() {
+        answerTestHikingLayer()
+        answerTestPlacePredictions()
+        answerTestPlaceDetails()
+
+        launch<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            "Mecseki Kéktúra".clickWithTextInPopup()
+
+            R.id.homeBottomSheetContainer.isDisplayed()
+            "Mecseki Kéktúra".isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplayOnMap() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
         answerTestPlaceDetails()
