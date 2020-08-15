@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="DefaultTextAppearance.Regular" parent="TextAppearance.MaterialComponents.Body2">
+    <style name="DefaultTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
+    </style>
+
+    <style name="DefaultTextAppearance.Regular">
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
 
@@ -18,8 +22,7 @@
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>
 
-    <style name="DefaultTextAppearance.SemiBold" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textSize">@dimen/default_text_size</item>
+    <style name="DefaultTextAppearance.SemiBold">
         <item name="fontFamily">@font/opensans_semibold</item>
     </style>
 
@@ -35,8 +38,7 @@
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>
 
-    <style name="DefaultTextAppearance.Bold" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textSize">@dimen/default_text_size</item>
+    <style name="DefaultTextAppearance.Bold">
         <item name="fontFamily">@font/opensans_bold</item>
     </style>
 

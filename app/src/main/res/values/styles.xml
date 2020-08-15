@@ -29,6 +29,10 @@
 
     <style name="DefaultButton.Contained" />
 
+    <style name="DefaultButton.Contained.Shadowless">
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
     <style name="DefaultButton.IconOnly" parent="@style/Widget.MaterialComponents.Button.TextButton">
         <item name="iconPadding">0dp</item>
         <item name="iconGravity">textStart</item>
@@ -71,6 +75,11 @@
 
     <style name="DefaultBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/DefaultShapeAppearance.BottomSheet</item>
+    </style>
+
+    <style name="DefaultFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:elevation">@dimen/default_elevation</item>
+        <item name="tint">@color/colorPrimaryIcon</item>
     </style>
 
 </resources>

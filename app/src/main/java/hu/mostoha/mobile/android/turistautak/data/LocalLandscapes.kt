@@ -4,11 +4,11 @@ import hu.mostoha.mobile.android.turistautak.model.domain.Landscape
 import hu.mostoha.mobile.android.turistautak.model.domain.LandscapeType
 
 val localLandscapes = listOf(
-    Landscape(id="279583932", name= "Mátra",                    type = LandscapeType.MOUNTAIN_RANGE_HIGH       ),
+    Landscape(id="279573777", name= "Bükk",                     type = LandscapeType.MOUNTAIN_RANGE_HIGH       ),
     Landscape(id="279660398", name= "Aggteleki-karszt",         type = LandscapeType.CAVE_SYSTEM               ),
     Landscape(id="279665387", name= "Balaton-felvidék",         type = LandscapeType.PLATEAU_WITH_WATER        ),
-    Landscape(id="279573777", name= "Bükk",                     type = LandscapeType.MOUNTAIN_RANGE_HIGH       ),
     Landscape(id="279665961", name= "Mecsek",                   type = LandscapeType.MOUNTAIN_RANGE_LOW        ),
+    Landscape(id="279583932", name= "Mátra",                    type = LandscapeType.MOUNTAIN_RANGE_HIGH       ),
     Landscape(id="279561562", name= "Pilis-hegység",            type = LandscapeType.MOUNTAIN_RANGE_HIGH       ),
     Landscape(id="279561563", name= "Visegrádi-hegység",        type = LandscapeType.MOUNTAIN_RANGE_LOW        ),
     Landscape(id="279564162", name= "Börzsöny",                 type = LandscapeType.MOUNTAIN_RANGE_HIGH       ),

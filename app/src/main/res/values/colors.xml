@@ -2,17 +2,16 @@
 <resources>
 
     <color name="colorPrimary">#2e7d32</color>
-    <color name="colorPrimaryTransparent">#252e7d32</color>
+    <color name="colorPrimaryTransparent">#202e7d32</color>
     <color name="colorPrimaryLight">#60ad5e</color>
     <color name="colorPrimaryDark">#005005</color>
     <color name="colorPrimaryText">#ffffff</color>
-    <color name="colorPrimaryIcon">#595959</color>
-    <color name="colorPrimaryIconDark">#333333</color>
+    <color name="colorPrimaryIcon">#404040</color>
 
     <color name="colorSecondary">#fafafa</color>
     <color name="colorSecondaryLight">#ffffff</color>
     <color name="colorSecondaryDark">#c7c7c7</color>
-    <color name="colorSecondaryText">#595959</color>
+    <color name="colorSecondaryText">#262626</color>
 
     <color name="colorBackground">@color/white</color>
     <color name="colorError">#c62828</color>

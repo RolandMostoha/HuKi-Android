@@ -48,6 +48,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/home_search_bar_title"
+                    android:textColorHint="@color/colorSecondaryText"
                     android:layout_marginStart="@dimen/space_small"
                     android:layout_marginEnd="@dimen/space_small"
                     app:boxBackgroundColor="@color/colorBackground"
@@ -129,6 +130,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/DefaultFloatingActionButton"
         android:id="@+id/homeMyLocationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -136,7 +138,6 @@
         android:layout_marginEnd="@dimen/space_extra_large"
         android:layout_marginBottom="@dimen/space_extra_extra_large"
         android:layout_gravity="bottom|end"
-        android:elevation="@dimen/default_elevation"
         app:layout_behavior="@string/fab_transformation_sheet_behavior"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/homeBottomNavigation" />
@@ -148,6 +149,8 @@
         android:layout_gravity="bottom"
         app:layout_behavior=".ui.utils.behavior.BottomNavigationAwareSnackbarBehavior"
         app:menu="@menu/menu_bottom_nav"
+        app:itemIconTint="@drawable/selector_home_bottom_navigation_icon"
+        app:itemTextColor="@drawable/selector_home_bottom_navigation_text"
         app:itemTextAppearanceActive="@style/DefaultTextAppearance.Bold.Small"
         app:itemTextAppearanceInactive="@style/DefaultTextAppearance.SemiBold.Small"
         app:layout_insetEdge="bottom" />
