@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="AppTheme" parent="DefaultTheme">
 
-        <!-- Original AppCompat attributes -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="android:colorBackground">@color/colorBackground</item>
-        <item name="colorError">@color/colorError</item>
-
-        <!-- New MaterialComponents attributes -->
-        <item name="colorOnPrimary">@color/colorPrimaryText</item>
-        <item name="colorOnSecondary">@color/colorSecondaryText</item>
-        <item name="colorOnBackground">@color/colorPrimaryText</item>
-
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">@android:color/white</item>
-
-        <!-- v27 -->
         <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:navigationBarColor">@color/colorBackground</item>
 
     </style>
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#61B065</color>
+    <color name="colorPrimaryTransparent">#207BCA7F</color>
+    <color name="colorOnPrimary">#ffffff</color>
+    <color name="colorPrimaryIcon">#DEffffff</color>
+    <color name="colorPrimaryIconStrong">#ffffff</color>
+    <color name="colorPrimaryText">#DEffffff</color>
+    <color name="colorSecondaryText">#B3ffffff</color>
+    <color name="colorBackground">#2D2D2D</color>
+    <color name="colorError">#c62828</color>
+    <color name="colorStroke">#BFBFBF</color>
+    <color name="colorStrokeMarker">#B3ffffff</color>
+
+    <color name="transparent">@android:color/transparent</color>
+
+</resources>

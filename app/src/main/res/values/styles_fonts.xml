@@ -3,7 +3,7 @@
 
     <style name="DefaultTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textSize">@dimen/default_text_size</item>
-        <item name="android:textColor">@color/colorSecondaryText</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
     <style name="DefaultTextAppearance.Regular">

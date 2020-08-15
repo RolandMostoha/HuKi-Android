@@ -22,7 +22,7 @@
             android:name="circle"
             android:fillColor="@color/colorPrimary"
             android:strokeWidth="5"
-            android:strokeColor="@color/white"
+            android:strokeColor="@color/colorStrokeMarker"
             android:pathData="
             M 50, 77
             m -20, 0

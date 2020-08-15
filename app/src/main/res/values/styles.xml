@@ -64,7 +64,7 @@
     <style name="DefaultDialogButton.Positive" />
 
     <style name="DefaultDialogButton.Negative">
-        <item name="android:textColor">@color/colorSecondaryText</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
     <style name="DefaultCircularProgressBar">
@@ -79,7 +79,8 @@
 
     <style name="DefaultFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:elevation">@dimen/default_elevation</item>
-        <item name="tint">@color/colorPrimaryIcon</item>
+        <item name="backgroundTint">@color/colorBackground</item>
+        <item name="tint">@color/colorPrimaryIconStrong</item>
     </style>
 
 </resources>

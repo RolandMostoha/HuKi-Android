@@ -18,6 +18,7 @@
             android:layout_marginTop="@dimen/space_small"
             android:layout_marginStart="@dimen/space_large"
             android:layout_marginEnd="@dimen/space_large"
+            app:cardBackgroundColor="@color/colorBackground"
             app:shapeAppearance="@style/DefaultShapeAppearance.InputField"
             app:strokeWidth="@dimen/home_search_bar_stroke_width"
             app:strokeColor="@color/colorStroke"
@@ -54,6 +55,7 @@
                     app:boxBackgroundColor="@color/colorBackground"
                     app:endIconMode="clear_text"
                     app:endIconDrawable="@drawable/ic_input_clear"
+                    app:endIconTint="@color/colorPrimaryIcon"
                     app:layout_constraintStart_toEndOf="@id/homeAppIcon"
                     app:layout_constraintEnd_toStartOf="@id/homeSearchBarProgress"
                     app:layout_constraintTop_toTopOf="parent"
@@ -148,6 +150,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:layout_behavior=".ui.utils.behavior.BottomNavigationAwareSnackbarBehavior"
+        app:backgroundTint="@color/colorBackground"
         app:menu="@menu/menu_bottom_nav"
         app:itemIconTint="@drawable/selector_home_bottom_navigation_icon"
         app:itemTextColor="@drawable/selector_home_bottom_navigation_text"
@@ -155,7 +158,6 @@
         app:itemTextAppearanceInactive="@style/DefaultTextAppearance.SemiBold.Small"
         app:layout_insetEdge="bottom" />
 
-    <include
-        layout="@layout/layout_home_bottom_sheet" />
+    <include layout="@layout/layout_home_bottom_sheet" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
