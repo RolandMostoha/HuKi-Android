@@ -72,6 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/homeBottomSheetDirectionsButton"
         style="@style/DefaultButton.Contained.Shadowless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,6 +80,19 @@
         android:layout_marginEnd="@dimen/space_extra_large"
         android:text="@string/home_bottom_sheet_directions_button"
         app:icon="@drawable/ic_home_bottom_sheet_directions"
+        app:layout_constraintTop_toBottomOf="@id/homeBottomSheetTextContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/homeBottomSheetHikingTrailsButton"
+        style="@style/DefaultButton.Contained.Shadowless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginEnd="@dimen/space_extra_large"
+        android:text="@string/home_bottom_sheet_hiking_trails_button"
+        app:icon="@drawable/ic_home_bottom_sheet_hiking_trails"
         app:layout_constraintTop_toBottomOf="@id/homeBottomSheetTextContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

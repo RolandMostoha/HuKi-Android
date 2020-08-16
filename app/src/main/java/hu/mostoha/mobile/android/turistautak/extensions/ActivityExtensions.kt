@@ -1,5 +1,7 @@
 package hu.mostoha.mobile.android.turistautak.extensions
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import androidx.core.view.marginTop
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import hu.mostoha.mobile.android.turistautak.R
+import org.osmdroid.util.GeoPoint
 
 fun AppCompatActivity.setStatusBarColor(@ColorRes colorRes: Int) {
     window.apply {
@@ -38,4 +41,13 @@ fun View.applyTopMarginForStatusBar(appCompatActivity: AppCompatActivity) {
         }
         insets.consumeSystemWindowInsets()
     }
+}
+
+fun AppCompatActivity.startGoogleDirectionsTo(geoPoint: GeoPoint) {
+    val latLng = "${geoPoint.latitude},${geoPoint.longitude}"
+    val uri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$latLng")
+    val mapIntent = Intent(Intent.ACTION_VIEW, uri).apply {
+        setPackage("com.google.android.apps.maps")
+    }
+    startActivity(mapIntent)
 }

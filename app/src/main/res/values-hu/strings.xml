@@ -6,10 +6,11 @@
 
     <string name="home_search_bar_title">Túraútvonal, hely keresése</string>
     <string name="home_menu_button_map">Térkép</string>
-    <string name="home_menu_button_hiking_symbols">Túrajelzések</string>
+    <string name="home_menu_button_hiking_symbols">Túrajelek</string>
     <string name="home_menu_button_settings">Beállítások</string>
 
     <string name="home_bottom_sheet_directions_button">Útvonalterv</string>
+    <string name="home_bottom_sheet_hiking_trails_button">Túrautak</string>
     <string name="home_bottom_sheet_landscape_secondary">Hungarian Landscape</string>
 
     <string name="download_layer_dialog_title">Túra réteg letöltése</string>

@@ -24,3 +24,14 @@ fun View.visibleOrGone(visible: Boolean) {
 fun View.visibleOrInvisible(visible: Boolean) {
     if (visible) visible() else invisible()
 }
+
+fun List<View>.showOnly(vararg views: View) {
+    forEach {
+        it.gone()
+    }
+    views.forEach { targetView ->
+        if (!this.contains(targetView)) error("Exclusive view list not contains the target view!")
+
+        targetView.visible()
+    }
+}

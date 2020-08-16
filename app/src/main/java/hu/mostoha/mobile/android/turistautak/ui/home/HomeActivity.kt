@@ -55,6 +55,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var sheetBehavior: BottomSheetBehavior<View>
     private lateinit var searchBarAdapter: SearchBarAdapter
 
+    private val bottomSheetExclusiveButtons by lazy {
+        listOf(
+            homeBottomSheetDirectionsButton,
+            homeBottomSheetHikingTrailsButton
+        )
+    }
+
     private var myLocationOverlay: MyLocationOverlay? = null
 
     private val boundsOffsetHu by lazy { resources.getDimensionPixelSize(R.dimen.home_bounding_box_offset) }
@@ -220,7 +227,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         is UiPayLoad.Node -> {
                             val geoPoint = it.placeDetails.payLoad.geoPoint
                             homeMapView.addMarker(geoPoint, ContextCompat.getDrawable(this, R.drawable.ic_marker_poi)!!)
-                            homeMapView.centerAndZoom(geoPoint, DEFAULT_ZOOM_LEVEL)
+                            homeMapView.animateCenterAndZoom(geoPoint, DEFAULT_ZOOM_LEVEL)
+
+                            bottomSheetExclusiveButtons.showOnly(homeBottomSheetDirectionsButton)
+                            homeBottomSheetDirectionsButton.setOnClickListener {
+                                startGoogleDirectionsTo(geoPoint)
+                            }
                         }
                         is UiPayLoad.Way -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
@@ -233,6 +245,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
                             homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
+
+                            bottomSheetExclusiveButtons.showOnly(homeBottomSheetHikingTrailsButton)
                         }
                         is UiPayLoad.Relation -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
@@ -245,6 +259,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
                             homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
+
+                            bottomSheetExclusiveButtons.showOnly(homeBottomSheetHikingTrailsButton)
                         }
                     }
                 }

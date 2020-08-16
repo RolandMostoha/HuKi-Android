@@ -46,3 +46,7 @@ fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Int) {
     controller.setZoom(zoomLevel.toDouble())
     controller.setCenter(geoPoint)
 }
+
+fun MapView.animateCenterAndZoom(geoPoint: GeoPoint, zoomLevel: Int) {
+    controller.animateTo(geoPoint, zoomLevel.toDouble(), 1000)
+}
