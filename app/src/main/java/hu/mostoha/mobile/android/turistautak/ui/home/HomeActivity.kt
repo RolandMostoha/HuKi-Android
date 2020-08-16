@@ -227,8 +227,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             homeMapView.addPolygon(
                                 geoPoints,
                                 R.dimen.default_polyline_stroke_width,
-                                R.color.colorPrimary,
-                                R.color.colorPrimaryTransparent
+                                R.color.colorPolyline,
+                                R.color.colorPolylineFill
                             )
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
@@ -239,8 +239,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             homeMapView.addPolygon(
                                 geoPoints,
                                 R.dimen.default_polyline_stroke_width,
-                                R.color.colorPrimary,
-                                R.color.colorPrimaryTransparent
+                                R.color.colorPolyline,
+                                R.color.colorPolylineFill
                             )
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)

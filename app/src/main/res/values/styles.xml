@@ -21,10 +21,11 @@
         <item name="cornerSizeTopRight">@dimen/default_corner_size_input</item>
     </style>
 
-    <style name="DefaultButton">
+    <style name="DefaultButton" parent="Widget.MaterialComponents.Button">
         <item name="android:textAppearance">@style/DefaultTextAppearance.SemiBold.Medium</item>
         <item name="shapeAppearance">@style/DefaultShapeAppearance.Button</item>
         <item name="iconPadding">@dimen/space_small</item>
+        <item name="iconTint">@color/colorOnPrimary</item>
     </style>
 
     <style name="DefaultButton.Contained" />

@@ -2,16 +2,18 @@
 <resources>
 
     <color name="colorPrimary">#2e7d32</color>
-    <color name="colorPrimaryTransparent">#202e7d32</color>
     <color name="colorOnPrimary">#ffffff</color>
     <color name="colorPrimaryIcon">#DE404040</color>
     <color name="colorPrimaryIconStrong">#404040</color>
     <color name="colorPrimaryText">#262626</color>
-    <color name="colorSecondaryText">#DE262626</color>
+    <color name="colorSecondaryText">#B3262626</color>
     <color name="colorBackground">#ffffff</color>
     <color name="colorError">#c62828</color>
     <color name="colorStroke">#BFBFBF</color>
     <color name="colorStrokeMarker">#ffffff</color>
+    <color name="colorMarker">@color/colorPrimary</color>
+    <color name="colorPolyline">@color/colorPrimary</color>
+    <color name="colorPolylineFill">#202e7d32</color>
 
     <color name="transparent">@android:color/transparent</color>
 

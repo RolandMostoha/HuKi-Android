@@ -31,7 +31,7 @@
 
     <dimen name="home_bounding_box_offset">@dimen/space_extra_large</dimen>
     <dimen name="home_bounding_box_offset_routes">50dp</dimen>
-    <dimen name="home_marker_size_poi">42dp</dimen>
+    <dimen name="home_marker_size_poi">45dp</dimen>
 
     <dimen name="home_search_bar_height">60dp</dimen>
     <dimen name="home_search_bar_stroke_width">1dp</dimen>
