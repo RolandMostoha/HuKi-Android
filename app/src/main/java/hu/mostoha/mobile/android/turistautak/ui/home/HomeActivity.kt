@@ -124,6 +124,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         searchBarAdapter = SearchBarAdapter(this)
         homeSearchBarInput.setDropDownBackgroundResource(R.drawable.background_home_search_bar_dropdown)
         homeSearchBarInput.setAdapter(searchBarAdapter)
+        homeSearchBarInput.threshold = SEARCH_BAR_MIN_TRIGGER_LENGTH
         homeSearchBarInput.addTextChangedListener {
             if (!homeSearchBarInput.isPerformingCompletion) {
                 val text = it.toString()
@@ -200,8 +201,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeSearchBarProgress.visibleOrGone(it.inProgress)
                 }
                 is PlacesResult -> {
-                    searchBarAdapter.clear()
-                    searchBarAdapter.addAll(it.results)
+                    searchBarAdapter.submitList(it.results)
                     homeSearchBarInput.refreshAutoCompleteResults()
                 }
                 is LandscapesResult -> {

@@ -14,6 +14,8 @@ import kotlinx.android.synthetic.main.item_home_search_bar.view.*
 
 class SearchBarAdapter(context: Context) : ArrayAdapter<PlacePredictionUiModel>(context, 0) {
 
+    private lateinit var itemList: List<PlacePredictionUiModel>
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
         val view: View
@@ -36,6 +38,13 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<PlacePredictionUiModel>(
         holder.iconImage.setImageResource(searchResultItem.iconRes)
 
         return view
+    }
+
+    fun submitList(results: List<PlacePredictionUiModel>) {
+        itemList = results
+
+        clear()
+        addAll(itemList)
     }
 
     inner class ViewHolder {
