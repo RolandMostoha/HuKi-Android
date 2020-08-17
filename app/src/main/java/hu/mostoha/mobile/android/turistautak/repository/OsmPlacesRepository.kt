@@ -1,8 +1,10 @@
 package hu.mostoha.mobile.android.turistautak.repository
 
-import hu.mostoha.mobile.android.turistautak.model.domain.*
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
+import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.model.generator.PlacesDomainModelGenerator
-import hu.mostoha.mobile.android.turistautak.model.network.*
+import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResponse
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
 import hu.mostoha.mobile.android.turistautak.network.PhotonService
@@ -44,7 +46,7 @@ class OsmPlacesRepository @Inject constructor(
     private suspend fun getNode(id: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
             .filterQuery()
             .nodeBy(id)
             .end()
@@ -56,7 +58,7 @@ class OsmPlacesRepository @Inject constructor(
     private suspend fun getNodesByWay(id: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
             .filterQuery()
             .wayBy(id)
             .end()
@@ -68,7 +70,7 @@ class OsmPlacesRepository @Inject constructor(
     private suspend fun getNodesByRelation(id: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
             .filterQuery()
             .relBy(id)
             .end()

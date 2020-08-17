@@ -14,6 +14,7 @@ import hu.mostoha.mobile.android.turistautak.model.generator.HomeUiModelGenerato
 import hu.mostoha.mobile.android.turistautak.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
+import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.utils.Message
 import hu.mostoha.mobile.android.turistautak.ui.utils.toMessage
@@ -28,10 +29,6 @@ class HomeViewModel @ViewModelInject constructor(
     private val landscapeInteractor: LandscapeInteractor,
     private val generator: HomeUiModelGenerator
 ) : BaseViewModel<HomeLiveEvents, HomeViewState>(taskExecutor) {
-
-    companion object {
-        const val SEARCH_QUERY_DELAY_MS = 800L
-    }
 
     private var searchJob: Job? = null
 
@@ -83,7 +80,7 @@ class HomeViewModel @ViewModelInject constructor(
             }
         }
         searchJob = launchCancellable {
-            delay(SEARCH_QUERY_DELAY_MS)
+            delay(NetworkConfig.SEARCH_QUERY_DELAY_MS)
 
             postEvent(SearchBarLoading(true))
 

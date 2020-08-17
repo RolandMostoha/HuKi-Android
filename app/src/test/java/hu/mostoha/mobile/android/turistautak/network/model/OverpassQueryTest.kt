@@ -26,7 +26,7 @@ class OverpassQueryTest {
     fun `Given relBy query, when build, then relation id is in brackets`() {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
             .filterQuery()
             .relBy("4640869")
             .end()
@@ -40,7 +40,7 @@ class OverpassQueryTest {
     fun `Given case insensitive query, when build, then 'i' is appended`() {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
             .filterQuery()
             .rel()
             .tagRegex("name", "Mec", false)

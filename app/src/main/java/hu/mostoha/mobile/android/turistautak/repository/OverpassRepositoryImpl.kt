@@ -17,7 +17,7 @@ class OverpassRepositoryImpl @Inject constructor(
     override suspend fun getHikingRelationsBy(searchText: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
             .filterQuery()
             .rel()
             .tag("type", "route")
@@ -39,7 +39,7 @@ class OverpassRepositoryImpl @Inject constructor(
     override suspend fun getNodesByRelationId(relationId: Long): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
             .filterQuery()
             .relBy(relationId.toString())
             .wayBy("r")

@@ -91,6 +91,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
             addOnFirstLayoutListener { _, _, _, _, _ ->
+                viewModel.loadHikingLayer()
+
                 homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false, boundsOffsetHu)
             }
         }
@@ -172,15 +174,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initOfflineLayer(file: File) {
-        val offlineProvider = OfflineTileProvider(
-            SimpleRegisterReceiver(this),
-            arrayOf(file)
-        )
-
-        val overlay = TilesOverlay(offlineProvider, this)
-        overlay.loadingBackgroundColor = Color.TRANSPARENT
-        overlay.loadingLineColor = Color.TRANSPARENT
-
+        val offlineProvider = OfflineTileProvider(SimpleRegisterReceiver(this), arrayOf(file)).apply {
+            // Issue: https://github.com/osmdroid/osmdroid/issues/690
+            tileRequestCompleteHandlers.clear()
+            tileRequestCompleteHandlers.add(homeMapView.tileRequestCompleteHandler)
+        }
+        val overlay = TilesOverlay(offlineProvider, this).apply {
+            loadingBackgroundColor = Color.TRANSPARENT
+            loadingLineColor = Color.TRANSPARENT
+        }
         homeMapView.overlays.add(overlay)
         homeMapView.invalidate()
     }
@@ -301,8 +303,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     override fun onResume() {
         super.onResume()
-
-        viewModel.loadHikingLayer()
 
         myLocationOverlay?.enableMyLocation()
         homeMapView.onResume()

@@ -18,7 +18,7 @@ class OverpassLandscapeRepository @Inject constructor(
     override suspend fun getLandscapes(): List<Landscape> {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_IN_SECONDS)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
             .filterQuery()
             .way()
             .tag("natural", "mountain_range")

@@ -25,8 +25,8 @@ class NetworkModule {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
-            .readTimeout(NetworkConfig.TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
-            .connectTimeout(NetworkConfig.TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
+            .readTimeout(NetworkConfig.TIMEOUT_SEC.toLong(), TimeUnit.SECONDS)
+            .connectTimeout(NetworkConfig.TIMEOUT_SEC.toLong(), TimeUnit.SECONDS)
             .build()
     }
 
