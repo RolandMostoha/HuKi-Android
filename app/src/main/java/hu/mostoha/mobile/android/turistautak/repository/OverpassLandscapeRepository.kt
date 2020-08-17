@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class OverpassLandscapeRepository @Inject constructor(
     private val overpassService: OverpassService,
-    private val landscapeDomainModelGenerator: LandscapeDomainModelGenerator
+    private val modelGenerator: LandscapeDomainModelGenerator
 ) : LandscapeRepository {
 
     override suspend fun getLandscapes(): List<Landscape> {
@@ -32,7 +32,7 @@ class OverpassLandscapeRepository @Inject constructor(
             .output(OutputVerbosity.TAGS, null, null, -1)
             .build()
         val response = overpassService.interpreter(query)
-        return landscapeDomainModelGenerator.generateLandscapes(response)
+        return modelGenerator.generateLandscapes(response)
     }
 
 }
