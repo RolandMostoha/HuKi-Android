@@ -4,6 +4,7 @@ import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
 import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
 import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.model.generator.PlacesDomainModelGenerator
+import hu.mostoha.mobile.android.turistautak.model.network.OsmType
 import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResponse
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
@@ -21,7 +22,10 @@ class OsmPlacesRepository @Inject constructor(
 
     override suspend fun getPlacesBy(searchText: String): List<PlacePrediction> {
         val response = photonService.query(searchText, 10)
-        return modelGenerator.generatePlacePredictions(response)
+        val nodesAndWays = response.copy(
+            features = response.features.filter { it.properties.osmType != OsmType.RELATION }
+        )
+        return modelGenerator.generatePlacePredictions(nodesAndWays)
     }
 
     override suspend fun getPlaceDetails(id: String, placeType: PlaceType): PlaceDetails {

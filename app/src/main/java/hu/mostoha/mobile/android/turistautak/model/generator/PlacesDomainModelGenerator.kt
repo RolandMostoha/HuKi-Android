@@ -8,9 +8,6 @@ class PlacesDomainModelGenerator @Inject constructor() {
 
     fun generatePlacePredictions(response: PhotonQueryResponse): List<PlacePrediction> {
         return response.features.map {
-            val secondaryText = it.properties.city?.let { city ->
-                "${it.properties.postcode ?: ""} $city"
-            }
             PlacePrediction(
                 id = it.properties.osmId.toString(),
                 placeType = when (it.properties.osmType) {
@@ -19,7 +16,9 @@ class PlacesDomainModelGenerator @Inject constructor() {
                     OsmType.NODE -> PlaceType.NODE
                 },
                 primaryText = it.properties.name ?: it.properties.city ?: it.properties.osmId.toString(),
-                secondaryText = secondaryText
+                secondaryText = it.properties.city?.let { city ->
+                    "${it.properties.postcode ?: ""} $city"
+                }
             )
         }
     }
