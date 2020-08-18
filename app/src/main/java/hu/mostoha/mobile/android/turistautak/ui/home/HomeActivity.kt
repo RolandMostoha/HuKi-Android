@@ -7,9 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -20,8 +18,8 @@ import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.turistautak.extensions.*
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.model.domain.toMapBoundingBox
+import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
@@ -33,7 +31,10 @@ import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
 import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import java.io.File
@@ -116,32 +117,32 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 })
         }
 
+        searchBarAdapter = SearchBarAdapter(this)
         homeSearchBarInputLayout.setEndIconOnClickListener {
             homeSearchBarInput.text?.clear()
             homeSearchBarInput.clearFocusAndHideKeyboard()
             viewModel.cancelSearch()
         }
-        searchBarAdapter = SearchBarAdapter(this)
-        homeSearchBarInput.setDropDownBackgroundResource(R.drawable.background_home_search_bar_dropdown)
-        homeSearchBarInput.setAdapter(searchBarAdapter)
-        homeSearchBarInput.threshold = SEARCH_BAR_MIN_TRIGGER_LENGTH
-        homeSearchBarInput.addTextChangedListener {
-            if (!homeSearchBarInput.isPerformingCompletion) {
-                val text = it.toString()
-                if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
-                    viewModel.loadPlacesBy(text)
+        homeSearchBarInput.apply {
+            setDropDownBackgroundResource(R.drawable.background_home_search_bar_dropdown)
+            setAdapter(searchBarAdapter)
+            threshold = SEARCH_BAR_MIN_TRIGGER_LENGTH
+            addTextChangedListener {
+                if (!homeSearchBarInput.isPerformingCompletion) {
+                    val text = it.toString()
+                    if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
+                        viewModel.loadPlacesBy(text)
+                    }
+                } else {
+                    homeSearchBarInput.text?.clear()
+                    homeSearchBarInput.clearFocusAndHideKeyboard()
                 }
-            } else {
-                homeSearchBarInput.text?.clear()
-                homeSearchBarInput.clearFocusAndHideKeyboard()
             }
-        }
-        homeSearchBarInput.setOnItemClickListener { _, _, position, _ ->
-            val resultItem = searchBarAdapter.getItem(position)
-            if (resultItem != null) {
-                fillBottomSheet(resultItem.primaryText, resultItem.secondaryText, resultItem.iconRes)
-
-                viewModel.loadPlaceDetails(resultItem.id, resultItem.placeType)
+            setOnItemClickListener { _, _, position, _ ->
+                val place = searchBarAdapter.getItem(position)
+                if (place != null) {
+                    viewModel.loadPlaceDetails(place)
+                }
             }
         }
         sheetBehavior = BottomSheetBehavior.from(homeBottomSheetContainer)
@@ -207,62 +208,59 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 is LandscapesResult -> {
                     it.landscapes.forEach { landscape ->
                         with(inflateLayout(R.layout.item_home_landscapes_chip, homeLandscapeChipGroup)) {
-                            landscapesChip.text = landscape.name
-                            landscapesChip.setChipIconResource(landscape.icon)
+                            landscapesChip.text = landscape.primaryText
+                            landscapesChip.setChipIconResource(landscape.iconRes)
                             landscapesChip.setOnClickListener {
-                                fillBottomSheet(
-                                    landscape.name,
-                                    getString(R.string.home_bottom_sheet_landscape_secondary),
-                                    landscape.icon
-                                )
-
-                                viewModel.loadPlaceDetails(landscape.id, PlaceType.WAY)
+                                viewModel.loadPlaceDetails(landscape)
                             }
                             homeLandscapeChipGroup.addView(this)
                         }
                     }
                 }
                 is PlaceDetailsResult -> {
-                    sheetBehavior.collapse()
-
                     when (it.placeDetails.payLoad) {
                         is UiPayLoad.Node -> {
                             val geoPoint = it.placeDetails.payLoad.geoPoint
-                            homeMapView.addMarker(geoPoint, ContextCompat.getDrawable(this, R.drawable.ic_marker_poi)!!)
-                            homeMapView.animateCenterAndZoom(geoPoint, DEFAULT_ZOOM_LEVEL)
+                            val marker = homeMapView.addMarker(geoPoint, R.drawable.ic_marker_poi.toDrawable(this),
+                                onClick = { marker ->
+                                    initNodeBottomSheet(it.placeDetails.place, geoPoint, marker)
+                                    sheetBehavior.collapse()
 
-                            bottomSheetExclusiveButtons.showOnly(homeBottomSheetDirectionsButton)
-                            homeBottomSheetDirectionsButton.setOnClickListener {
-                                startGoogleDirectionsTo(geoPoint)
-                            }
+                                    homeMapView.controller.animateTo(geoPoint)
+                                }
+                            )
+                            initNodeBottomSheet(it.placeDetails.place, geoPoint, marker)
+                            sheetBehavior.collapse()
+
+                            homeMapView.animateCenterAndZoom(geoPoint, DEFAULT_ZOOM_LEVEL)
                         }
                         is UiPayLoad.Way -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
-                            homeMapView.addPolygon(
-                                geoPoints,
-                                R.dimen.default_polyline_stroke_width,
-                                R.color.colorPolyline,
-                                R.color.colorPolylineFill
-                            )
+                            val polygon = homeMapView.addPolygon(geoPoints, onClick = { polygon ->
+                                initWayBottomSheet(it.placeDetails.place, polygon)
+                                sheetBehavior.collapse()
+
+                                val bounds = BoundingBox.fromGeoPoints(geoPoints)
+                                homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
+                            })
+
+                            initWayBottomSheet(it.placeDetails.place, polygon)
+                            sheetBehavior.collapse()
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
                             homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
-
-                            bottomSheetExclusiveButtons.showOnly(homeBottomSheetHikingTrailsButton)
                         }
                         is UiPayLoad.Relation -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
-                            homeMapView.addPolygon(
-                                geoPoints,
-                                R.dimen.default_polyline_stroke_width,
-                                R.color.colorPolyline,
-                                R.color.colorPolylineFill
-                            )
+                            homeMapView.addPolygon(geoPoints, onClick = {
+
+                            })
 
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
                             homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
 
                             bottomSheetExclusiveButtons.showOnly(homeBottomSheetHikingTrailsButton)
+                            sheetBehavior.collapse()
                         }
                     }
                 }
@@ -287,10 +285,36 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         })
     }
 
-    private fun fillBottomSheet(primaryText: String, secondaryText: String?, @DrawableRes iconRes: Int) {
-        homeBottomSheetPrimaryText.text = primaryText
-        homeBottomSheetSecondaryText.setTextOrGone(secondaryText)
-        homeBottomSheetImage.setImageResource(iconRes)
+    private fun initNodeBottomSheet(place: PlaceUiModel, geoPoint: GeoPoint, marker: Marker) {
+        fillPlaceInfo(place)
+        bottomSheetExclusiveButtons.showOnly(homeBottomSheetDirectionsButton)
+        homeBottomSheetDirectionsButton.setOnClickListener {
+            startDirectionsTo(geoPoint)
+        }
+        homeBottomSheetCloseButton.setOnClickListener {
+            homeMapView.removeMarker(marker)
+            sheetBehavior.hide()
+        }
+    }
+
+    private fun initWayBottomSheet(place: PlaceUiModel, polygon: Polygon) {
+        fillPlaceInfo(place)
+        bottomSheetExclusiveButtons.showOnly(homeBottomSheetHikingTrailsButton)
+        homeBottomSheetHikingTrailsButton.setOnClickListener {
+            // TODO: Search for hiking trails
+        }
+        homeBottomSheetCloseButton.setOnClickListener {
+            homeMapView.removePolygon(polygon)
+            sheetBehavior.hide()
+        }
+    }
+
+    private fun fillPlaceInfo(placeUiModel: PlaceUiModel) {
+        with(placeUiModel) {
+            homeBottomSheetPrimaryText.text = primaryText
+            homeBottomSheetSecondaryText.setTextOrGone(secondaryText)
+            homeBottomSheetImage.setImageResource(iconRes)
+        }
     }
 
     private fun initReceivers() {

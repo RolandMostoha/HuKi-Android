@@ -9,11 +9,9 @@ import hu.mostoha.mobile.android.turistautak.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.model.generator.HomeUiModelGenerator
-import hu.mostoha.mobile.android.turistautak.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
-import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
+import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.utils.Message
@@ -112,13 +110,13 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
-    fun loadPlaceDetails(id: String, placeType: PlaceType) = launch {
+    fun loadPlaceDetails(place: PlaceUiModel) = launch {
         postEvent(SearchBarLoading(true))
 
-        when (val result = placesInteractor.requestGetGetPlaceDetails(id, placeType)) {
+        when (val result = placesInteractor.requestGetGetPlaceDetails(place.id, place.placeType)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
-                val placeDetails = generator.generatePlaceDetails(result.data)
+                val placeDetails = generator.generatePlaceDetails(place, result.data)
                 postEvent(PlaceDetailsResult(placeDetails))
             }
             is TaskResult.Error -> {
@@ -152,7 +150,7 @@ sealed class HomeLiveEvents : LiveEvents {
     data class ErrorOccurred(val message: Message) : HomeLiveEvents()
     data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
-    data class PlacesResult(val results: List<PlacePredictionUiModel>) : HomeLiveEvents()
+    data class PlacesResult(val results: List<PlaceUiModel>) : HomeLiveEvents()
     data class PlaceDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
-    data class LandscapesResult(val landscapes: List<LandscapeUiModel>) : HomeLiveEvents()
+    data class LandscapesResult(val landscapes: List<PlaceUiModel>) : HomeLiveEvents()
 }

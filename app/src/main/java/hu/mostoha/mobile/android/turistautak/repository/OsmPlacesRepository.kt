@@ -25,20 +25,21 @@ class OsmPlacesRepository @Inject constructor(
     }
 
     override suspend fun getPlaceDetails(id: String, placeType: PlaceType): PlaceDetails {
-        when (placeType) {
+        return when (placeType) {
             PlaceType.NODE -> {
                 val response = getNode(id)
 
-                return modelGenerator.generatePlaceDetailsByNode(response)
+                modelGenerator.generatePlaceDetailsByNode(response)
             }
             PlaceType.WAY -> {
                 val response = getNodesByWay(id)
-                return modelGenerator.generatePlaceDetailsByWay(response, id)
+
+                modelGenerator.generatePlaceDetailsByWay(response, id)
             }
             PlaceType.RELATION -> {
                 val response = getNodesByRelation(id)
 
-                return modelGenerator.generatePlaceDetailsByRel(response, id)
+                modelGenerator.generatePlaceDetailsByRel(response, id)
             }
         }
     }

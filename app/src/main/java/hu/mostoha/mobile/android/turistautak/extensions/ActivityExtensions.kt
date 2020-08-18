@@ -43,7 +43,7 @@ fun View.applyTopMarginForStatusBar(appCompatActivity: AppCompatActivity) {
     }
 }
 
-fun AppCompatActivity.startGoogleDirectionsTo(geoPoint: GeoPoint) {
+fun AppCompatActivity.startDirectionsTo(geoPoint: GeoPoint) {
     val latLng = "${geoPoint.latitude},${geoPoint.longitude}"
     val uri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$latLng")
     val mapIntent = Intent(Intent.ACTION_VIEW, uri).apply {

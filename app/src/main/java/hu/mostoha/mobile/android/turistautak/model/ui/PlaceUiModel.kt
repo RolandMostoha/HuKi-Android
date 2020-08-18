@@ -3,7 +3,7 @@ package hu.mostoha.mobile.android.turistautak.model.ui
 import androidx.annotation.DrawableRes
 import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 
-data class PlacePredictionUiModel(
+data class PlaceUiModel(
     val id: String,
     val placeType: PlaceType,
     val primaryText: String,

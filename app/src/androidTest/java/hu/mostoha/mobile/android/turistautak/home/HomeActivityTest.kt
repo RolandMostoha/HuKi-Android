@@ -151,7 +151,40 @@ class HomeActivityTest {
             R.id.homeSearchBarInput.typeText(searchText)
             "Mecseki Kéktúra".clickWithTextInPopup()
 
-            // TODO: Check overlay displays
+            // TODO: Check marker overlay displays
+        }
+    }
+
+    @Test
+    fun givenPlaceDetails_whenCloseClick_thenBottomSheetHidden() {
+        answerTestHikingLayer()
+        answerTestPlacePredictions()
+        answerTestPlaceDetails()
+
+        launch<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            "Mecseki Kéktúra".clickWithTextInPopup()
+            R.id.homeBottomSheetCloseButton.click()
+
+            R.id.homeBottomSheetContainer.isNotDisplayed()
+        }
+    }
+
+    @Test
+    fun givenPlaceDetails_whenCloseClick_thenMarkerRemoved() {
+        answerTestHikingLayer()
+        answerTestPlacePredictions()
+        answerTestPlaceDetails()
+
+        launch<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            "Mecseki Kéktúra".clickWithTextInPopup()
+
+            // TODO: Check marker overlay removed
         }
     }
 

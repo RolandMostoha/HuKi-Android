@@ -1,18 +1,21 @@
 package hu.mostoha.mobile.android.turistautak.model.generator
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.model.domain.*
-import hu.mostoha.mobile.android.turistautak.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
-import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
+import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
 import javax.inject.Inject
 
-class HomeUiModelGenerator @Inject constructor() {
+class HomeUiModelGenerator @Inject constructor(
+    @ApplicationContext val context: Context
+) {
 
-    fun generatePlacesResult(predictions: List<PlacePrediction>): List<PlacePredictionUiModel> {
+    fun generatePlacesResult(predictions: List<PlacePrediction>): List<PlaceUiModel> {
         return predictions.map {
-            PlacePredictionUiModel(
+            PlaceUiModel(
                 id = it.id,
                 placeType = it.placeType,
                 primaryText = it.primaryText,
@@ -26,9 +29,10 @@ class HomeUiModelGenerator @Inject constructor() {
         }
     }
 
-    fun generatePlaceDetails(place: PlaceDetails): PlaceDetailsUiModel {
+    fun generatePlaceDetails(placeUiModel: PlaceUiModel, place: PlaceDetails): PlaceDetailsUiModel {
         return PlaceDetailsUiModel(
             id = place.id,
+            place = placeUiModel,
             payLoad = when (place.payLoad) {
                 is PayLoad.Node -> UiPayLoad.Node(place.payLoad.location.toGeoPoint())
                 is PayLoad.Way -> UiPayLoad.Way(place.payLoad.locations.map { it.toGeoPoint() })
@@ -37,12 +41,14 @@ class HomeUiModelGenerator @Inject constructor() {
         )
     }
 
-    fun generateLandscapes(landscapes: List<Landscape>): List<LandscapeUiModel> {
+    fun generateLandscapes(landscapes: List<Landscape>): List<PlaceUiModel> {
         return landscapes.map {
-            LandscapeUiModel(
+            PlaceUiModel(
                 id = it.id,
-                name = it.name,
-                icon = when(it.type) {
+                placeType = PlaceType.WAY,
+                primaryText = it.name,
+                secondaryText = context.getString(R.string.home_bottom_sheet_landscape_secondary),
+                iconRes = when (it.type) {
                     LandscapeType.MOUNTAIN_RANGE_LOW -> R.drawable.ic_landscapes_mountain
                     LandscapeType.MOUNTAIN_RANGE_HIGH -> R.drawable.ic_landscapes_mountain
                     LandscapeType.PLATEAU_WITH_WATER -> R.drawable.ic_landscapes_water

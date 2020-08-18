@@ -11,7 +11,7 @@
 
     <string name="home_bottom_sheet_directions_button">Útvonalterv</string>
     <string name="home_bottom_sheet_hiking_trails_button">Túrautak</string>
-    <string name="home_bottom_sheet_landscape_secondary">Hungarian Landscape</string>
+    <string name="home_bottom_sheet_landscape_secondary">Tájegység</string>
 
     <string name="download_layer_dialog_title">Túra réteg letöltése</string>
     <string name="download_layer_dialog_message">Az offline működéshez javasoljuk a túraréteg letöltését.</string>

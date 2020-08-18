@@ -4,6 +4,7 @@ import org.osmdroid.util.GeoPoint
 
 data class PlaceDetailsUiModel(
     val id: String,
+    val place: PlaceUiModel,
     val payLoad: UiPayLoad
 )
 

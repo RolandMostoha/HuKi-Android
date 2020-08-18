@@ -9,12 +9,12 @@ import android.widget.TextView
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.extensions.inflateLayout
 import hu.mostoha.mobile.android.turistautak.extensions.setTextOrGone
-import hu.mostoha.mobile.android.turistautak.model.ui.PlacePredictionUiModel
+import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import kotlinx.android.synthetic.main.item_home_search_bar.view.*
 
-class SearchBarAdapter(context: Context) : ArrayAdapter<PlacePredictionUiModel>(context, 0) {
+class SearchBarAdapter(context: Context) : ArrayAdapter<PlaceUiModel>(context, 0) {
 
-    private lateinit var itemList: List<PlacePredictionUiModel>
+    private lateinit var itemList: List<PlaceUiModel>
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
@@ -40,7 +40,7 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<PlacePredictionUiModel>(
         return view
     }
 
-    fun submitList(results: List<PlacePredictionUiModel>) {
+    fun submitList(results: List<PlaceUiModel>) {
         itemList = results
 
         clear()
