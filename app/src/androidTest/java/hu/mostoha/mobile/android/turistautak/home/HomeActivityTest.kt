@@ -13,6 +13,7 @@ import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
 import hu.mostoha.mobile.android.turistautak.model.domain.*
+import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
@@ -25,6 +26,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.TilesOverlay
 import java.util.*
 import javax.inject.Inject
 
@@ -92,16 +95,16 @@ class HomeActivityTest {
             R.string.download_layer_dialog_negative_button.clickWithText()
             R.id.homeMyLocationButton.click()
 
-            // TODO: Check overlay displays
+            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(0)
         }
     }
 
     @Test
-    fun givenTuraReteg1000_whenHomeOpens_thenLayerDisplays() {
+    fun givenTuraReteg1000_whenHomeOpens_thenHikingLayerDisplays() {
         answerTestHikingLayer()
 
         launch<HomeActivity> {
-            // TODO: Check overlay displays
+            R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(0)
         }
     }
 
@@ -151,7 +154,7 @@ class HomeActivityTest {
             R.id.homeSearchBarInput.typeText(searchText)
             "Mecseki Kéktúra".clickWithTextInPopup()
 
-            // TODO: Check marker overlay displays
+            R.id.homeMapView.hasOverlayInPosition<Marker>(1)
         }
     }
 
@@ -184,7 +187,11 @@ class HomeActivityTest {
             R.id.homeSearchBarInput.typeText(searchText)
             "Mecseki Kéktúra".clickWithTextInPopup()
 
-            // TODO: Check marker overlay removed
+            R.id.homeMapView.hasOverlayInPosition<Marker>(1)
+
+            R.id.homeBottomSheetCloseButton.click()
+
+            R.id.homeMapView.hasNotOverlayInPosition<Marker>(1)
         }
     }
 
