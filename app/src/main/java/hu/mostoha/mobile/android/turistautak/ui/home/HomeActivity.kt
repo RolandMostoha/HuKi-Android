@@ -18,15 +18,18 @@ import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.turistautak.extensions.*
-import hu.mostoha.mobile.android.turistautak.model.domain.toMapBoundingBox
+import hu.mostoha.mobile.android.turistautak.model.domain.toDomainBoundingBox
+import hu.mostoha.mobile.android.turistautak.model.domain.toOsmBoundingBox
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
+import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesAdapter
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
-import kotlinx.android.synthetic.main.layout_home_bottom_sheet.*
+import kotlinx.android.synthetic.main.layout_bottom_sheet_hiking_routes.*
+import kotlinx.android.synthetic.main.layout_bottom_sheet_place_details.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
@@ -53,13 +56,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private lateinit var layerDownloadReceiver: BroadcastReceiver
 
-    private lateinit var sheetBehavior: BottomSheetBehavior<View>
     private lateinit var searchBarAdapter: SearchBarAdapter
+    private lateinit var placeDetailsSheet: BottomSheetBehavior<View>
+    private lateinit var hikingRoutesSheet: BottomSheetBehavior<View>
+    private val hikingRoutesAdapter by lazy { HikingRoutesAdapter() }
 
     private val bottomSheetExclusiveButtons by lazy {
         listOf(
-            homeBottomSheetDirectionsButton,
-            homeBottomSheetHikingTrailsButton
+            placeDetailsDirectionsButton,
+            placeDetailsHikingTrailsButton
         )
     }
 
@@ -94,7 +99,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             addOnFirstLayoutListener { _, _, _, _, _ ->
                 viewModel.loadHikingLayer()
 
-                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toMapBoundingBox(), false, boundsOffsetHu)
+                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toOsmBoundingBox(), false, boundsOffsetHu)
             }
         }
 
@@ -145,8 +150,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             }
         }
-        sheetBehavior = BottomSheetBehavior.from(homeBottomSheetContainer)
-        sheetBehavior.hide()
+
+        placeDetailsSheet = BottomSheetBehavior.from(placeDetailsContainer)
+        placeDetailsSheet.hide()
+
+        hikingRoutesSheet = BottomSheetBehavior.from(hikingRoutesContainer)
+        hikingRoutesSheet.hide()
     }
 
     private fun showMyLocation() {
@@ -224,31 +233,30 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             val marker = homeMapView.addMarker(geoPoint, R.drawable.ic_marker_poi.toDrawable(this),
                                 onClick = { marker ->
                                     initNodeBottomSheet(it.placeDetails.place, geoPoint, marker)
-                                    sheetBehavior.collapse()
+                                    placeDetailsSheet.collapse()
 
                                     homeMapView.controller.animateTo(geoPoint)
                                 }
                             )
                             initNodeBottomSheet(it.placeDetails.place, geoPoint, marker)
-                            sheetBehavior.collapse()
+                            placeDetailsSheet.collapse()
 
                             homeMapView.animateCenterAndZoom(geoPoint, DEFAULT_ZOOM_LEVEL)
                         }
                         is UiPayLoad.Way -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
+                            val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
                             val polygon = homeMapView.addPolygon(geoPoints, onClick = { polygon ->
-                                initWayBottomSheet(it.placeDetails.place, polygon)
-                                sheetBehavior.collapse()
+                                initWayBottomSheet(it.placeDetails.place, boundingBox, polygon)
+                                placeDetailsSheet.collapse()
 
-                                val bounds = BoundingBox.fromGeoPoints(geoPoints)
-                                homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
+                                homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
                             })
 
-                            initWayBottomSheet(it.placeDetails.place, polygon)
-                            sheetBehavior.collapse()
+                            initWayBottomSheet(it.placeDetails.place, boundingBox, polygon)
+                            placeDetailsSheet.collapse()
 
-                            val bounds = BoundingBox.fromGeoPoints(geoPoints)
-                            homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
+                            homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
                         }
                         is UiPayLoad.Relation -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
@@ -259,10 +267,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             val bounds = BoundingBox.fromGeoPoints(geoPoints)
                             homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
 
-                            bottomSheetExclusiveButtons.showOnly(homeBottomSheetHikingTrailsButton)
-                            sheetBehavior.collapse()
+                            bottomSheetExclusiveButtons.showOnly(placeDetailsHikingTrailsButton)
+                            placeDetailsSheet.collapse()
                         }
                     }
+                }
+                is HikingRoutesResult -> {
+                    hikingRoutesList.setHasFixedSize(true)
+                    hikingRoutesList.adapter = hikingRoutesAdapter
+                    hikingRoutesAdapter.submitList(it.hikingRoutes)
+                    hikingRoutesSheet.collapse()
                 }
             }
         })
@@ -287,33 +301,34 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initNodeBottomSheet(place: PlaceUiModel, geoPoint: GeoPoint, marker: Marker) {
         fillPlaceInfo(place)
-        bottomSheetExclusiveButtons.showOnly(homeBottomSheetDirectionsButton)
-        homeBottomSheetDirectionsButton.setOnClickListener {
+        bottomSheetExclusiveButtons.showOnly(placeDetailsDirectionsButton)
+        placeDetailsDirectionsButton.setOnClickListener {
             startDirectionsTo(geoPoint)
         }
-        homeBottomSheetCloseButton.setOnClickListener {
+        placeDetailsCloseButton.setOnClickListener {
             homeMapView.removeMarker(marker)
-            sheetBehavior.hide()
+            placeDetailsSheet.hide()
         }
     }
 
-    private fun initWayBottomSheet(place: PlaceUiModel, polygon: Polygon) {
+    private fun initWayBottomSheet(place: PlaceUiModel, boundingBox: BoundingBox, polygon: Polygon) {
         fillPlaceInfo(place)
-        bottomSheetExclusiveButtons.showOnly(homeBottomSheetHikingTrailsButton)
-        homeBottomSheetHikingTrailsButton.setOnClickListener {
-            // TODO: Search for hiking trails
+        bottomSheetExclusiveButtons.showOnly(placeDetailsHikingTrailsButton)
+        placeDetailsHikingTrailsButton.setOnClickListener {
+            placeDetailsSheet.hide()
+            viewModel.loadHikingRoutes(place.primaryText, boundingBox.toDomainBoundingBox())
         }
-        homeBottomSheetCloseButton.setOnClickListener {
+        placeDetailsCloseButton.setOnClickListener {
+            placeDetailsSheet.hide()
             homeMapView.removePolygon(polygon)
-            sheetBehavior.hide()
         }
     }
 
     private fun fillPlaceInfo(placeUiModel: PlaceUiModel) {
         with(placeUiModel) {
-            homeBottomSheetPrimaryText.text = primaryText
-            homeBottomSheetSecondaryText.setTextOrGone(secondaryText)
-            homeBottomSheetImage.setImageResource(iconRes)
+            placeDetailsPrimaryText.text = primaryText
+            placeDetailsSecondaryText.setTextOrGone(secondaryText)
+            placeDetailsImage.setImageResource(iconRes)
         }
     }
 

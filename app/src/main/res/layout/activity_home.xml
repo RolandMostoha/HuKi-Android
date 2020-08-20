@@ -158,6 +158,8 @@
         app:itemTextAppearanceInactive="@style/DefaultTextAppearance.SemiBold.Small"
         app:layout_insetEdge="bottom" />
 
-    <include layout="@layout/layout_home_bottom_sheet" />
+    <include layout="@layout/layout_bottom_sheet_place_details" />
+
+    <include layout="@layout/layout_bottom_sheet_hiking_routes" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

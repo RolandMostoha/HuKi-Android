@@ -1,8 +1,6 @@
 package hu.mostoha.mobile.android.turistautak.repository
 
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceDetails
-import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
-import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
+import hu.mostoha.mobile.android.turistautak.model.domain.*
 import hu.mostoha.mobile.android.turistautak.model.generator.PlacesDomainModelGenerator
 import hu.mostoha.mobile.android.turistautak.model.network.OsmType
 import hu.mostoha.mobile.android.turistautak.model.network.OverpassQueryResponse
@@ -32,20 +30,35 @@ class OsmPlacesRepository @Inject constructor(
         return when (placeType) {
             PlaceType.NODE -> {
                 val response = getNode(id)
-
                 modelGenerator.generatePlaceDetailsByNode(response)
             }
             PlaceType.WAY -> {
                 val response = getNodesByWay(id)
-
                 modelGenerator.generatePlaceDetailsByWay(response, id)
             }
             PlaceType.RELATION -> {
                 val response = getNodesByRelation(id)
-
                 modelGenerator.generatePlaceDetailsByRel(response, id)
             }
         }
+    }
+
+    override suspend fun getHikingRoutes(boundingBox: BoundingBox): List<HikingRoute> {
+        val query = OverpassQuery()
+            .format(OutputFormat.JSON)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
+            .filterQuery()
+            .rel()
+            .tag("type", "route")
+            .tag("route", "hiking")
+            .tag("jel")
+            .boundingBox(boundingBox.south, boundingBox.west, boundingBox.north, boundingBox.east)
+            .end()
+            .output(OutputVerbosity.TAGS, null, null, 50)
+            .build()
+
+        val response = overpassService.interpreter(query)
+        return modelGenerator.generateHikingRoutes(response)
     }
 
     private suspend fun getNode(id: String): OverpassQueryResponse {

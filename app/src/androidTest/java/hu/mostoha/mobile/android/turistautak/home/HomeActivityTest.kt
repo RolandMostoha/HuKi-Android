@@ -127,17 +127,17 @@ class HomeActivityTest {
     fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplayOnBottomSheet() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
-        answerTestPlaceDetails()
+        answerTestPlaceDetailsNode()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
 
-            R.id.homeBottomSheetContainer.isNotDisplayed()
+            R.id.placeDetailsContainer.isNotDisplayed()
 
             R.id.homeSearchBarInput.typeText(searchText)
             "Mecseki Kéktúra".clickWithTextInPopup()
 
-            R.id.homeBottomSheetContainer.isDisplayed()
+            R.id.placeDetailsContainer.isDisplayed()
             "Mecseki Kéktúra".isTextDisplayed()
         }
     }
@@ -146,7 +146,7 @@ class HomeActivityTest {
     fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplayOnMap() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
-        answerTestPlaceDetails()
+        answerTestPlaceDetailsNode()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
@@ -162,16 +162,16 @@ class HomeActivityTest {
     fun givenPlaceDetails_whenCloseClick_thenBottomSheetHidden() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
-        answerTestPlaceDetails()
+        answerTestPlaceDetailsNode()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
             "Mecseki Kéktúra".clickWithTextInPopup()
-            R.id.homeBottomSheetCloseButton.click()
+            R.id.placeDetailsCloseButton.click()
 
-            R.id.homeBottomSheetContainer.isNotDisplayed()
+            R.id.placeDetailsContainer.isNotDisplayed()
         }
     }
 
@@ -179,7 +179,7 @@ class HomeActivityTest {
     fun givenPlaceDetails_whenCloseClick_thenMarkerRemoved() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
-        answerTestPlaceDetails()
+        answerTestPlaceDetailsNode()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
@@ -189,7 +189,7 @@ class HomeActivityTest {
 
             R.id.homeMapView.hasOverlayInPosition<Marker>(1)
 
-            R.id.homeBottomSheetCloseButton.click()
+            R.id.placeDetailsCloseButton.click()
 
             R.id.homeMapView.hasNotOverlayInPosition<Marker>(1)
         }
@@ -198,19 +198,40 @@ class HomeActivityTest {
     @Test
     fun givenLandscape_whenClick_thenPlaceDetailsDisplayOnBottomSheet() {
         answerTestHikingLayer()
-        answerTestPlaceDetails()
+        answerTestPlaceDetailsNode()
         coEvery { landscapeRepository.getLandscapes() } returns listOf(
-            Landscape("123456", "Balaton-felvidék", LandscapeType.PLATEAU_WITH_WATER),
-            Landscape("123457", "Bükk", LandscapeType.MOUNTAIN_RANGE_HIGH)
+            Landscape("1", "Balaton-felvidék", LandscapeType.PLATEAU_WITH_WATER),
+            Landscape("2", "Bükk", LandscapeType.MOUNTAIN_RANGE_HIGH)
         )
 
         launch<HomeActivity> {
-            R.id.homeBottomSheetContainer.isNotDisplayed()
+            R.id.placeDetailsContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
             "Balaton-felvidék".clickWithText()
 
-            R.id.homeBottomSheetContainer.isDisplayed()
+            R.id.placeDetailsContainer.isDisplayed()
+        }
+    }
+
+    @Test
+    fun givenHikingRoutes_whenClickHikingTrails_thenHikingRoutesDisplayOnBottomSheet() {
+        answerTestHikingLayer()
+        answerTestPlaceDetailsWay()
+        answerTestLandscapes()
+        coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
+            HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
+            HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
+        )
+
+        launch<HomeActivity> {
+            R.id.placeDetailsContainer.isNotDisplayed()
+            R.id.homeLandscapeChipGroup.isDisplayed()
+
+            "Balaton-felvidék".clickWithText()
+            R.id.placeDetailsHikingTrailsButton.click()
+
+            R.id.hikingRoutesList.isDisplayed()
         }
     }
 
@@ -221,10 +242,30 @@ class HomeActivityTest {
         )
     }
 
-    private fun answerTestPlaceDetails() {
+    private fun answerTestPlaceDetailsNode() {
         coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
             UUID.randomUUID().toString(),
             PayLoad.Node(Location(47.123, 19.123))
+        )
+    }
+
+    private fun answerTestPlaceDetailsWay() {
+        coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
+            UUID.randomUUID().toString(),
+            PayLoad.Way(
+                listOf(
+                    Location(47.123, 19.123),
+                    Location(47.124, 19.124),
+                    Location(47.125, 19.125)
+                )
+            )
+        )
+    }
+
+    private fun answerTestLandscapes() {
+        coEvery { landscapeRepository.getLandscapes() } returns listOf(
+            Landscape("1", "Balaton-felvidék", LandscapeType.PLATEAU_WITH_WATER),
+            Landscape("2", "Bükk", LandscapeType.MOUNTAIN_RANGE_HIGH)
         )
     }
 

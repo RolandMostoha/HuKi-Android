@@ -9,11 +9,13 @@ import hu.mostoha.mobile.android.turistautak.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
+import hu.mostoha.mobile.android.turistautak.model.domain.BoundingBox
 import hu.mostoha.mobile.android.turistautak.model.generator.HomeUiModelGenerator
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
+import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.turistautak.ui.utils.Message
 import hu.mostoha.mobile.android.turistautak.ui.utils.toMessage
 import kotlinx.coroutines.Job
@@ -142,6 +144,22 @@ class HomeViewModel @ViewModelInject constructor(
         }
     }
 
+    fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = launch {
+        postEvent(SearchBarLoading(true))
+
+        when (val result = placesInteractor.requestGetGetHikingRoutes(boundingBox)) {
+            is TaskResult.Success -> {
+                postEvent(SearchBarLoading(false))
+                val hikingRoutes = generator.generateHikingRoutes(placeName, result.data)
+                postEvent(HikingRoutesResult(hikingRoutes))
+            }
+            is TaskResult.Error -> {
+                postEvent(SearchBarLoading(false))
+                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+            }
+        }
+    }
+
 }
 
 data class HomeViewState(val hikingLayerFile: File?) : ViewState
@@ -153,4 +171,5 @@ sealed class HomeLiveEvents : LiveEvents {
     data class PlacesResult(val results: List<PlaceUiModel>) : HomeLiveEvents()
     data class PlaceDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
     data class LandscapesResult(val landscapes: List<PlaceUiModel>) : HomeLiveEvents()
+    data class HikingRoutesResult(val hikingRoutes: List<HikingRoutesItem>) : HomeLiveEvents()
 }

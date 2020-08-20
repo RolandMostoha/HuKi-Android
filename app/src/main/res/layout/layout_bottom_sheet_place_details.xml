@@ -3,19 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/DefaultBottomSheet"
-    android:id="@+id/homeBottomSheetContainer"
+    android:id="@+id/placeDetailsContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/space_extra_large"
-    android:backgroundTint="@color/colorBackground"
-    app:layout_insetEdge="bottom"
     app:behavior_hideable="true"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    app:layout_insetEdge="bottom">
 
     <ImageView
-        android:id="@+id/homeBottomSheetImage"
-        android:layout_width="@dimen/home_bottom_sheet_image_size"
-        android:layout_height="@dimen/home_bottom_sheet_image_size"
+        android:id="@+id/placeDetailsImage"
+        android:layout_width="@dimen/place_details_bottom_sheet_image_size"
+        android:layout_height="@dimen/place_details_bottom_sheet_image_size"
         android:layout_gravity="center_vertical"
         android:padding="@dimen/space_extra_small"
         android:layout_marginTop="@dimen/space_extra_large"
@@ -24,21 +22,21 @@
         android:layout_marginEnd="@dimen/space_medium"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/homeBottomSheetTextContainer"
+        app:layout_constraintEnd_toStartOf="@id/placeDetailsTextContainer"
         tools:src="@drawable/ic_home_search_bar_type_relation" />
 
     <LinearLayout
-        android:id="@+id/homeBottomSheetTextContainer"
+        android:id="@+id/placeDetailsTextContainer"
         android:layout_height="wrap_content"
         android:layout_width="0dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="@id/homeBottomSheetImage"
-        app:layout_constraintBottom_toBottomOf="@id/homeBottomSheetImage"
-        app:layout_constraintStart_toEndOf="@id/homeBottomSheetImage"
-        app:layout_constraintEnd_toStartOf="@id/homeBottomSheetCloseButton">
+        app:layout_constraintTop_toTopOf="@id/placeDetailsImage"
+        app:layout_constraintBottom_toBottomOf="@id/placeDetailsImage"
+        app:layout_constraintStart_toEndOf="@id/placeDetailsImage"
+        app:layout_constraintEnd_toStartOf="@id/placeDetailsCloseButton">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/homeBottomSheetPrimaryText"
+            android:id="@+id/placeDetailsPrimaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
@@ -48,7 +46,7 @@
             tools:text="Dobogókő Szánkópálya" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/homeBottomSheetSecondaryText"
+            android:id="@+id/placeDetailsSecondaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
@@ -61,7 +59,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/homeBottomSheetCloseButton"
+        android:id="@+id/placeDetailsCloseButton"
         style="@style/DefaultButton.IconOnly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,7 +70,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/homeBottomSheetDirectionsButton"
+        android:id="@+id/placeDetailsDirectionsButton"
         style="@style/DefaultButton.Contained.Shadowless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,12 +78,12 @@
         android:layout_marginEnd="@dimen/space_extra_large"
         android:text="@string/home_bottom_sheet_directions_button"
         app:icon="@drawable/ic_home_bottom_sheet_directions"
-        app:layout_constraintTop_toBottomOf="@id/homeBottomSheetTextContainer"
+        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/homeBottomSheetHikingTrailsButton"
+        android:id="@+id/placeDetailsHikingTrailsButton"
         style="@style/DefaultButton.Contained.Shadowless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,7 +91,7 @@
         android:layout_marginEnd="@dimen/space_extra_large"
         android:text="@string/home_bottom_sheet_hiking_trails_button"
         app:icon="@drawable/ic_home_bottom_sheet_hiking_trails"
-        app:layout_constraintTop_toBottomOf="@id/homeBottomSheetTextContainer"
+        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

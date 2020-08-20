@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/DefaultBottomSheet"
+    android:id="@+id/hikingRoutesContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:behavior_peekHeight="@dimen/hiking_routes_bottom_sheet_peek_height"
+    app:behavior_hideable="true">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/hikingRoutesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_home_hiking_routes" />
+
+</FrameLayout>

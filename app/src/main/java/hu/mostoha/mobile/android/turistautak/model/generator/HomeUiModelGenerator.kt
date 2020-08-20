@@ -4,9 +4,11 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.model.domain.*
+import hu.mostoha.mobile.android.turistautak.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
+import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesItem
 import javax.inject.Inject
 
 class HomeUiModelGenerator @Inject constructor(
@@ -56,6 +58,25 @@ class HomeUiModelGenerator @Inject constructor(
                 }
             )
         }
+    }
+
+    fun generateHikingRoutes(placeName: String, hikingRoutes: List<HikingRoute>): List<HikingRoutesItem> {
+        return mutableListOf<HikingRoutesItem>()
+            .plus(HikingRoutesItem.Header(placeName))
+            .plus(hikingRoutes.map {
+                HikingRoutesItem.Item(
+                    HikingRouteUiModel(
+                        id = it.id,
+                        name = it.name,
+                        symbolIcon = listOf(
+                            R.drawable.ic_symbol_k,
+                            R.drawable.ic_symbol_p,
+                            R.drawable.ic_symbol_z,
+                            R.drawable.ic_symbol_s
+                        ).shuffled()[0]
+                    )
+                )
+            })
     }
 
 }

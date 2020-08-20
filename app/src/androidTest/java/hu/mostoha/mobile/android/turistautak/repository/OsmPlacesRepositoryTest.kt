@@ -6,6 +6,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
+import hu.mostoha.mobile.android.turistautak.model.domain.BoundingBox
 import hu.mostoha.mobile.android.turistautak.model.domain.Location
 import hu.mostoha.mobile.android.turistautak.model.domain.PayLoad
 import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
@@ -64,6 +65,13 @@ class OsmPlacesRepositoryTest {
     @Test
     fun givenRelationType_whenGetPlaceDetails_thenResultIsNotNull() = runBlocking {
         val result = repository.getPlaceDetails("382123", PlaceType.RELATION)
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun givenBoundingBox_whenGetHikingRoutes_thenResultIsNotNull() = runBlocking {
+        val result = repository.getHikingRoutes(BoundingBox(48.0058358, 20.2007937, 47.7747357, 19.6898570))
 
         assertNotNull(result)
     }

@@ -56,4 +56,8 @@ class GooglePlacesRepository @Inject constructor(
         return PlaceDetails(place.id!!, PayLoad.Node(place.latLng!!.toLocation()))
     }
 
+    override suspend fun getHikingRoutes(boundingBox: BoundingBox): List<HikingRoute> {
+        return emptyList()
+    }
+
 }

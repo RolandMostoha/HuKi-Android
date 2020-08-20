@@ -31,6 +31,17 @@ class PlacesDomainModelGenerator @Inject constructor() {
         )
     }
 
+    fun generatePlaceDetailsByWay(response: OverpassQueryResponse, id: String): PlaceDetails {
+        val wayElement = response.elements.firstOrNull {
+            it.type == ElementType.WAY && it.id.toString() == id
+        } ?: TODO()
+        val locations = wayElement.extractLocations()
+        return PlaceDetails(
+            id = wayElement.id.toString(),
+            payLoad = PayLoad.Way(locations)
+        )
+    }
+
     fun generatePlaceDetailsByRel(response: OverpassQueryResponse, id: String): PlaceDetails {
         val relElement = response.elements.firstOrNull {
             it.type == ElementType.RELATION && it.id.toString() == id
@@ -42,15 +53,14 @@ class PlacesDomainModelGenerator @Inject constructor() {
         )
     }
 
-    fun generatePlaceDetailsByWay(response: OverpassQueryResponse, id: String): PlaceDetails {
-        val wayElement = response.elements.firstOrNull {
-            it.type == ElementType.WAY && it.id.toString() == id
-        } ?: TODO()
-        val locations = wayElement.extractLocations()
-        return PlaceDetails(
-            id = wayElement.id.toString(),
-            payLoad = PayLoad.Way(locations)
-        )
+    fun generateHikingRoutes(response: OverpassQueryResponse): List<HikingRoute> {
+        return response.elements.mapNotNull {
+            HikingRoute(
+                id = it.id.toString(),
+                name = it.tags?.name ?: return@mapNotNull null,
+                symbolType = SymbolType.Z // TODO
+            )
+        }
     }
 
     private fun Element.extractLocations(): List<Location> {
