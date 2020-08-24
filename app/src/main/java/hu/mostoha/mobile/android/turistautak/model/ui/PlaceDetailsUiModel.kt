@@ -10,6 +10,5 @@ data class PlaceDetailsUiModel(
 
 sealed class UiPayLoad {
     data class Node(val geoPoint: GeoPoint) : UiPayLoad()
-    data class Way(val geoPoints: List<GeoPoint>) : UiPayLoad()
-    data class Relation(val geoPoints: List<GeoPoint>) : UiPayLoad()
+    data class Way(val geoPoints: List<GeoPoint>, val isClosed: Boolean) : UiPayLoad()
 }

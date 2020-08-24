@@ -12,7 +12,9 @@ import hu.mostoha.mobile.android.turistautak.model.ui.HikingRouteUiModel
 import kotlinx.android.synthetic.main.item_home_hiking_routes.view.*
 import kotlinx.android.synthetic.main.item_home_hiking_routes_header.view.*
 
-class HikingRoutesAdapter : ListAdapter<HikingRoutesItem, RecyclerView.ViewHolder>(HikingRoutesComparator) {
+class HikingRoutesAdapter(
+    val onClick: (HikingRouteUiModel) -> Unit
+) : ListAdapter<HikingRoutesItem, RecyclerView.ViewHolder>(HikingRoutesComparator) {
 
     companion object {
         private const val TYPE_HEADER = 0
@@ -56,12 +58,12 @@ class HikingRoutesAdapter : ListAdapter<HikingRoutesItem, RecyclerView.ViewHolde
         }
     }
 
-    class ViewHolderItem(val view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolderItem(val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(hikingRouteUiModel: HikingRouteUiModel) {
             view.hikingRoutesItemText.text = hikingRouteUiModel.name
             view.hikingRoutesItemText.setDrawableStart(hikingRouteUiModel.symbolIcon)
             view.hikingRoutesItemText.setOnClickListener {
-                // TODO
+                onClick.invoke(hikingRouteUiModel)
             }
         }
     }

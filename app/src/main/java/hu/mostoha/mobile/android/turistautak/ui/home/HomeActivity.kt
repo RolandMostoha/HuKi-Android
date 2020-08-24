@@ -37,7 +37,7 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.Polygon
+import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import java.io.File
@@ -59,7 +59,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var searchBarAdapter: SearchBarAdapter
     private lateinit var placeDetailsSheet: BottomSheetBehavior<View>
     private lateinit var hikingRoutesSheet: BottomSheetBehavior<View>
-    private val hikingRoutesAdapter by lazy { HikingRoutesAdapter() }
 
     private val bottomSheetExclusiveButtons by lazy {
         listOf(
@@ -246,37 +245,53 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         is UiPayLoad.Way -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints
                             val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
-                            val polygon = homeMapView.addPolygon(geoPoints, onClick = { polygon ->
-                                initWayBottomSheet(it.placeDetails.place, boundingBox, polygon)
-                                placeDetailsSheet.collapse()
+                            val polyOverlay = if (it.placeDetails.payLoad.isClosed) {
+                                homeMapView.addPolygon(geoPoints, onClick = { polygon ->
+                                    initWayBottomSheet(it.placeDetails.place, boundingBox, polygon)
+                                    placeDetailsSheet.collapse()
+                                    homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
+                                })
+                            } else {
+                                homeMapView.addPolyline(geoPoints, onClick = { polyline ->
+                                    initWayBottomSheet(it.placeDetails.place, boundingBox, polyline)
+                                    placeDetailsSheet.collapse()
+                                    homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
+                                })
+                            }
 
-                                homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
-                            })
-
-                            initWayBottomSheet(it.placeDetails.place, boundingBox, polygon)
+                            initWayBottomSheet(it.placeDetails.place, boundingBox, polyOverlay)
                             placeDetailsSheet.collapse()
 
                             homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
-                        }
-                        is UiPayLoad.Relation -> {
-                            val geoPoints = it.placeDetails.payLoad.geoPoints
-                            homeMapView.addPolygon(geoPoints, onClick = {
-
-                            })
-
-                            val bounds = BoundingBox.fromGeoPoints(geoPoints)
-                            homeMapView.zoomToBoundingBox(bounds, true, boundsOffsetRoutes)
-
-                            bottomSheetExclusiveButtons.showOnly(placeDetailsHikingTrailsButton)
-                            placeDetailsSheet.collapse()
                         }
                     }
                 }
                 is HikingRoutesResult -> {
                     hikingRoutesList.setHasFixedSize(true)
-                    hikingRoutesList.adapter = hikingRoutesAdapter
-                    hikingRoutesAdapter.submitList(it.hikingRoutes)
+                    hikingRoutesList.adapter = HikingRoutesAdapter(
+                        onClick = { hikingRoute ->
+                            hikingRoutesSheet.hide()
+                            viewModel.loadHikingRouteDetails(hikingRoute)
+                        }
+                    ).apply {
+                        submitList(it.hikingRoutes)
+                    }
                     hikingRoutesSheet.collapse()
+                }
+                is HikingRouteDetailsResult -> {
+                    val payLoad = it.placeDetails.payLoad as UiPayLoad.Way
+                    val geoPoints = payLoad.geoPoints
+                    val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
+                    val overlay = homeMapView.addPolyline(geoPoints, onClick = { overlay ->
+                        initWayBottomSheet(it.placeDetails.place, boundingBox, overlay)
+                        placeDetailsSheet.collapse()
+                        homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
+                    })
+
+                    initWayBottomSheet(it.placeDetails.place, boundingBox, overlay)
+                    placeDetailsSheet.collapse()
+
+                    homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
                 }
             }
         })
@@ -311,7 +326,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initWayBottomSheet(place: PlaceUiModel, boundingBox: BoundingBox, polygon: Polygon) {
+    private fun initWayBottomSheet(place: PlaceUiModel, boundingBox: BoundingBox, overlay: Overlay) {
         fillPlaceInfo(place)
         bottomSheetExclusiveButtons.showOnly(placeDetailsHikingTrailsButton)
         placeDetailsHikingTrailsButton.setOnClickListener {
@@ -320,7 +335,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         placeDetailsCloseButton.setOnClickListener {
             placeDetailsSheet.hide()
-            homeMapView.removePolygon(polygon)
+            homeMapView.removeOverlay(overlay)
         }
     }
 

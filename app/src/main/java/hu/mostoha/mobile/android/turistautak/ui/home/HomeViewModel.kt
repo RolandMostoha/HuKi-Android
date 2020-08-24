@@ -10,7 +10,9 @@ import hu.mostoha.mobile.android.turistautak.interactor.LayerInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
 import hu.mostoha.mobile.android.turistautak.model.domain.BoundingBox
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.model.generator.HomeUiModelGenerator
+import hu.mostoha.mobile.android.turistautak.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
@@ -115,7 +117,7 @@ class HomeViewModel @ViewModelInject constructor(
     fun loadPlaceDetails(place: PlaceUiModel) = launch {
         postEvent(SearchBarLoading(true))
 
-        when (val result = placesInteractor.requestGetGetPlaceDetails(place.id, place.placeType)) {
+        when (val result = placesInteractor.requestGetPlaceDetails(place.id, place.placeType)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
                 val placeDetails = generator.generatePlaceDetails(place, result.data)
@@ -147,11 +149,27 @@ class HomeViewModel @ViewModelInject constructor(
     fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = launch {
         postEvent(SearchBarLoading(true))
 
-        when (val result = placesInteractor.requestGetGetHikingRoutes(boundingBox)) {
+        when (val result = placesInteractor.requestGetHikingRoutes(boundingBox)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
                 val hikingRoutes = generator.generateHikingRoutes(placeName, result.data)
                 postEvent(HikingRoutesResult(hikingRoutes))
+            }
+            is TaskResult.Error -> {
+                postEvent(SearchBarLoading(false))
+                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+            }
+        }
+    }
+
+    fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = launch {
+        postEvent(SearchBarLoading(true))
+
+        when (val result = placesInteractor.requestGetPlaceDetails(hikingRoute.id, PlaceType.RELATION)) {
+            is TaskResult.Success -> {
+                postEvent(SearchBarLoading(false))
+                val placeDetails = generator.generateHikingRouteDetails(hikingRoute, result.data)
+                postEvent(HikingRouteDetailsResult(placeDetails))
             }
             is TaskResult.Error -> {
                 postEvent(SearchBarLoading(false))
@@ -172,4 +190,5 @@ sealed class HomeLiveEvents : LiveEvents {
     data class PlaceDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
     data class LandscapesResult(val landscapes: List<PlaceUiModel>) : HomeLiveEvents()
     data class HikingRoutesResult(val hikingRoutes: List<HikingRoutesItem>) : HomeLiveEvents()
+    data class HikingRouteDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
 }

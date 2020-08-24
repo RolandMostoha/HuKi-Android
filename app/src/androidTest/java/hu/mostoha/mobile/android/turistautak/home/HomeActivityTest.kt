@@ -27,6 +27,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polygon
+import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import java.util.*
 import javax.inject.Inject
@@ -196,6 +198,58 @@ class HomeActivityTest {
     }
 
     @Test
+    fun givenOpenWay_whenGetPlaceDetails_thenPolylineDisplays() {
+        answerTestHikingLayer()
+        coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
+            PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null)
+        )
+        coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
+            "1", PayLoad.Way(
+                listOf(
+                    Location(47.123, 19.124),
+                    Location(47.125, 19.126),
+                    Location(47.127, 19.128)
+                )
+            )
+        )
+
+        launch<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            "Mecseki Kéktúra".clickWithTextInPopup()
+
+            R.id.homeMapView.hasOverlayInPosition<Polyline>(1)
+        }
+    }
+
+    @Test
+    fun givenClosedWay_whenGetPlaceDetails_thenPolygonDisplays() {
+        answerTestHikingLayer()
+        coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
+            PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null)
+        )
+        coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
+            "1", PayLoad.Way(
+                listOf(
+                    Location(47.123, 19.123),
+                    Location(47.124, 19.124),
+                    Location(47.123, 19.123)
+                )
+            )
+        )
+
+        launch<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            "Mecseki Kéktúra".clickWithTextInPopup()
+
+            R.id.homeMapView.hasOverlayInPosition<Polygon>(1)
+        }
+    }
+
+    @Test
     fun givenLandscape_whenClick_thenPlaceDetailsDisplayOnBottomSheet() {
         answerTestHikingLayer()
         answerTestPlaceDetailsNode()
@@ -235,17 +289,37 @@ class HomeActivityTest {
         }
     }
 
+    @Test
+    fun givenHikingRoute_whenClick_thenHikingRouteDetailsDisplayOnBottomSheet() {
+        answerTestHikingLayer()
+        answerTestPlaceDetailsWay()
+        answerTestLandscapes()
+        coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
+            HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
+            HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
+        )
+
+        launch<HomeActivity> {
+            "Balaton-felvidék".clickWithText()
+            R.id.placeDetailsHikingTrailsButton.click()
+
+            "Írott-kő - Budapest - Hollóháza".clickWithText()
+
+            R.id.hikingRoutesList.isNotDisplayed()
+            R.id.placeDetailsContainer.isDisplayed()
+        }
+    }
+
     private fun answerTestPlacePredictions() {
         coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
-            PlacePrediction(UUID.randomUUID().toString(), PlaceType.WAY, "Mecseki Kéktúra", null),
-            PlacePrediction(UUID.randomUUID().toString(), PlaceType.NODE, "Mecseknádasdi Piroska", "Mecseknádasd")
+            PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null),
+            PlacePrediction("2", PlaceType.NODE, "Mecseknádasdi Piroska", "Mecseknádasd")
         )
     }
 
     private fun answerTestPlaceDetailsNode() {
         coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
-            UUID.randomUUID().toString(),
-            PayLoad.Node(Location(47.123, 19.123))
+            "1", PayLoad.Node(Location(47.123, 19.123))
         )
     }
 

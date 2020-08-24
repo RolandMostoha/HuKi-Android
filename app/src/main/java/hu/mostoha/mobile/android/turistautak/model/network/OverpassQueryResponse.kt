@@ -27,7 +27,10 @@ data class Element(
     var lon: Double? = null,
 
     @field:Json(name = "geometry")
-    var geometry: List<Geom>? = null
+    var geometry: List<Geom>? = null,
+
+    @field:Json(name = "members")
+    var members: List<Member>? = null
 )
 
 enum class ElementType {
@@ -81,4 +84,16 @@ data class Geom(
 
     @field:Json(name = "lon")
     var lon: Double? = null
+)
+
+@JsonClass(generateAdapter = true)
+data class Member(
+    @field:Json(name = "ref")
+    var ref: String? = null,
+
+    @field:Json(name = "type")
+    var type: ElementType? = null,
+
+    @field:Json(name = "geometry")
+    var geometry: List<Geom>? = null
 )

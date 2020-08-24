@@ -36,9 +36,16 @@ class HomeUiModelGenerator @Inject constructor(
             id = place.id,
             place = placeUiModel,
             payLoad = when (place.payLoad) {
-                is PayLoad.Node -> UiPayLoad.Node(place.payLoad.location.toGeoPoint())
-                is PayLoad.Way -> UiPayLoad.Way(place.payLoad.locations.map { it.toGeoPoint() })
-                is PayLoad.Relation -> UiPayLoad.Relation(place.payLoad.locations.map { it.toGeoPoint() })
+                is PayLoad.Node -> {
+                    UiPayLoad.Node(place.payLoad.location.toGeoPoint())
+                }
+                is PayLoad.Way -> {
+                    val locations = place.payLoad.locations
+                    UiPayLoad.Way(
+                        geoPoints = locations.map { it.toGeoPoint() },
+                        isClosed = locations.first() == locations.last()
+                    )
+                }
             }
         )
     }
@@ -51,8 +58,8 @@ class HomeUiModelGenerator @Inject constructor(
                 primaryText = it.name,
                 secondaryText = context.getString(R.string.home_bottom_sheet_landscape_secondary),
                 iconRes = when (it.type) {
-                    LandscapeType.MOUNTAIN_RANGE_LOW -> R.drawable.ic_landscapes_mountain
-                    LandscapeType.MOUNTAIN_RANGE_HIGH -> R.drawable.ic_landscapes_mountain
+                    LandscapeType.MOUNTAIN_RANGE_LOW -> R.drawable.ic_landscapes_mountain_low
+                    LandscapeType.MOUNTAIN_RANGE_HIGH -> R.drawable.ic_landscapes_mountain_high
                     LandscapeType.PLATEAU_WITH_WATER -> R.drawable.ic_landscapes_water
                     LandscapeType.CAVE_SYSTEM -> R.drawable.ic_landscapes_cave
                 }
@@ -77,6 +84,19 @@ class HomeUiModelGenerator @Inject constructor(
                     )
                 )
             })
+    }
+
+    fun generateHikingRouteDetails(hikingRoute: HikingRouteUiModel, placeDetails: PlaceDetails): PlaceDetailsUiModel {
+        return generatePlaceDetails(
+            placeUiModel = PlaceUiModel(
+                id = hikingRoute.id,
+                primaryText = hikingRoute.name,
+                secondaryText = null,
+                placeType = PlaceType.RELATION,
+                iconRes = hikingRoute.symbolIcon
+            ),
+            place = placeDetails
+        )
     }
 
 }

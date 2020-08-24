@@ -35,7 +35,7 @@ class PlacesDomainModelGenerator @Inject constructor() {
         val wayElement = response.elements.firstOrNull {
             it.type == ElementType.WAY && it.id.toString() == id
         } ?: TODO()
-        val locations = wayElement.extractLocations()
+        val locations = wayElement.geometry?.extractLocations() ?: emptyList()
         return PlaceDetails(
             id = wayElement.id.toString(),
             payLoad = PayLoad.Way(locations)
@@ -46,7 +46,14 @@ class PlacesDomainModelGenerator @Inject constructor() {
         val relElement = response.elements.firstOrNull {
             it.type == ElementType.RELATION && it.id.toString() == id
         } ?: TODO()
-        val locations = relElement.extractLocations()
+
+        val locations = mutableListOf<Location>()
+        relElement.members?.forEach {
+            val geometry = it.geometry
+            if (geometry != null) {
+                locations.addAll(geometry.extractLocations())
+            }
+        }
         return PlaceDetails(
             id = relElement.id.toString(),
             payLoad = PayLoad.Way(locations)
@@ -63,8 +70,8 @@ class PlacesDomainModelGenerator @Inject constructor() {
         }
     }
 
-    private fun Element.extractLocations(): List<Location> {
-        return geometry?.mapNotNull {
+    private fun List<Geom>.extractLocations(): List<Location> {
+        return mapNotNull {
             val lat = it.lat
             val lon = it.lon
             if (lat != null && lon != null) {
@@ -72,7 +79,7 @@ class PlacesDomainModelGenerator @Inject constructor() {
             } else {
                 null
             }
-        } ?: emptyList()
+        }
     }
 
 }

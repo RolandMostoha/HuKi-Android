@@ -26,7 +26,7 @@ class PlacesInteractor @Inject constructor(
         }
     }
 
-    suspend fun requestGetGetPlaceDetails(id: String, placeType: PlaceType): TaskResult<PlaceDetails> {
+    suspend fun requestGetPlaceDetails(id: String, placeType: PlaceType): TaskResult<PlaceDetails> {
         return taskExecutor.runOnBackground {
             try {
                 val response = placesRepository.getPlaceDetails(id, placeType)
@@ -40,7 +40,7 @@ class PlacesInteractor @Inject constructor(
         }
     }
 
-    suspend fun requestGetGetHikingRoutes(boundingBox: BoundingBox): TaskResult<List<HikingRoute>> {
+    suspend fun requestGetHikingRoutes(boundingBox: BoundingBox): TaskResult<List<HikingRoute>> {
         return taskExecutor.runOnBackground {
             try {
                 val response = placesRepository.getHikingRoutes(boundingBox)
