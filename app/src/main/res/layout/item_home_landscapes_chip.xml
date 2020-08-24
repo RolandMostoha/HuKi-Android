@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:elevation="@dimen/default_elevation"
     android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
-    android:textColor="@color/colorPrimaryText"
+    android:textColor="@color/colorSecondaryButtonText"
     app:chipMinHeight="@dimen/home_landscapes_chip_min_height"
     app:chipBackgroundColor="@color/colorBackground"
     app:chipIconSize="@dimen/home_landscapes_icon_size"
