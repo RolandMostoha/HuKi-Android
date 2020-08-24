@@ -42,8 +42,21 @@ class HomeUiModelGenerator @Inject constructor(
                 is PayLoad.Way -> {
                     val locations = place.payLoad.locations
                     UiPayLoad.Way(
+                        id = place.id,
                         geoPoints = locations.map { it.toGeoPoint() },
                         isClosed = locations.first() == locations.last()
+                    )
+                }
+                is PayLoad.Relation -> {
+                    UiPayLoad.Relation(
+                        ways = place.payLoad.ways.map { way ->
+                            val locations = way.locations
+                            UiPayLoad.Way(
+                                id = place.id,
+                                geoPoints = locations.map { it.toGeoPoint() },
+                                isClosed = locations.first() == locations.last()
+                            )
+                        }
                     )
                 }
             }

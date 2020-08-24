@@ -24,26 +24,37 @@ fun MapView.addMarker(geoPoint: GeoPoint, icon: Drawable, onClick: (Marker) -> U
             true
         }
     }
-    homeMapView.overlays.add(marker)
-    homeMapView.invalidate()
+    overlays.add(marker)
+    invalidate()
 
     return marker
 }
 
 fun MapView.removeMarker(marker: Marker) {
     marker.remove(homeMapView)
-    homeMapView.invalidate()
+    invalidate()
 }
 
-fun MapView.removeOverlay(overlay: Overlay) {
-    homeMapView.overlays.remove(overlay)
-    homeMapView.invalidate()
+fun MapView.removeOverlay(vararg overlay: Overlay) {
+    overlay.forEach {
+        overlays.remove(it)
+    }
+    invalidate()
+}
+
+fun MapView.removeOverlays() {
+    overlays
+        .takeLast(overlays.size - 1)
+        .forEach {
+            overlays.remove(it)
+        }
+    invalidate()
 }
 
 fun MapView.addPolygon(
     geoPoints: List<GeoPoint>,
     onClick: (PolyOverlayWithIW) -> Unit,
-    @DimenRes strokeWidth: Int = R.dimen.default_polyline_stroke_width,
+    @DimenRes strokeWidth: Int = R.dimen.default_polygon_stroke_width,
     @ColorRes strokeColor: Int = R.color.colorPolyline,
     @ColorRes fillColor: Int = R.color.colorPolylineFill
 ): PolyOverlayWithIW {

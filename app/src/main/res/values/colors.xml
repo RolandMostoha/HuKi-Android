@@ -13,7 +13,7 @@
     <color name="colorStroke">#BFBFBF</color>
     <color name="colorStrokeMarker">#ffffff</color>
     <color name="colorMarker">@color/colorPrimary</color>
-    <color name="colorPolyline">@color/colorPrimary</color>
+    <color name="colorPolyline">#D32e7d32</color>
     <color name="colorPolylineFill">#202e7d32</color>
 
     <color name="transparent">@android:color/transparent</color>

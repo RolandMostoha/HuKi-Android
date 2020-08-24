@@ -35,10 +35,11 @@ class PlacesDomainModelGenerator @Inject constructor() {
         val wayElement = response.elements.firstOrNull {
             it.type == ElementType.WAY && it.id.toString() == id
         } ?: TODO()
+        val wayId = wayElement.id.toString()
         val locations = wayElement.geometry?.extractLocations() ?: emptyList()
         return PlaceDetails(
-            id = wayElement.id.toString(),
-            payLoad = PayLoad.Way(locations)
+            id = wayId,
+            payLoad = PayLoad.Way(wayId, locations)
         )
     }
 
@@ -54,9 +55,19 @@ class PlacesDomainModelGenerator @Inject constructor() {
                 locations.addAll(geometry.extractLocations())
             }
         }
+
+        val ways = relElement.members?.mapNotNull {
+            val ref = it.ref
+            val geometry = it.geometry
+            if (ref != null && geometry != null) {
+                PayLoad.Way(ref, geometry.extractLocations())
+            } else {
+                null
+            }
+        } ?: emptyList()
         return PlaceDetails(
             id = relElement.id.toString(),
-            payLoad = PayLoad.Way(locations)
+            payLoad = PayLoad.Relation(ways)
         )
     }
 

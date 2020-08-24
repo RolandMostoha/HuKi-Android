@@ -272,6 +272,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         onClick = { hikingRoute ->
                             hikingRoutesSheet.hide()
                             viewModel.loadHikingRouteDetails(hikingRoute)
+                            homeMapView.removeOverlays()
                         }
                     ).apply {
                         submitList(it.hikingRoutes)
@@ -279,16 +280,22 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     hikingRoutesSheet.collapse()
                 }
                 is HikingRouteDetailsResult -> {
-                    val payLoad = it.placeDetails.payLoad as UiPayLoad.Way
-                    val geoPoints = payLoad.geoPoints
-                    val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
-                    val overlay = homeMapView.addPolyline(geoPoints, onClick = { overlay ->
-                        initWayBottomSheet(it.placeDetails.place, boundingBox, overlay)
-                        placeDetailsSheet.collapse()
-                        homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
-                    })
+                    val placeDetails = it.placeDetails
+                    val payLoad = placeDetails.payLoad as UiPayLoad.Relation
+                    val boundingBox = BoundingBox.fromGeoPoints(payLoad.ways.flatMap { way -> way.geoPoints })
+                    val overlays = mutableListOf<Overlay>()
+                    payLoad.ways.forEach { way ->
+                        val geoPoints = way.geoPoints
+                        val overlay = homeMapView.addPolyline(geoPoints, onClick = {
+                            initWayBottomSheet(placeDetails.place, boundingBox, *overlays.toTypedArray())
+                            placeDetailsSheet.collapse()
+                            homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
+                        })
 
-                    initWayBottomSheet(it.placeDetails.place, boundingBox, overlay)
+                        overlays.add(overlay)
+                    }
+
+                    initWayBottomSheet(placeDetails.place, boundingBox, *overlays.toTypedArray())
                     placeDetailsSheet.collapse()
 
                     homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
@@ -326,7 +333,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initWayBottomSheet(place: PlaceUiModel, boundingBox: BoundingBox, overlay: Overlay) {
+    private fun initWayBottomSheet(place: PlaceUiModel, boundingBox: BoundingBox, vararg overlays: Overlay) {
         fillPlaceInfo(place)
         bottomSheetExclusiveButtons.showOnly(placeDetailsHikingTrailsButton)
         placeDetailsHikingTrailsButton.setOnClickListener {
@@ -335,7 +342,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         placeDetailsCloseButton.setOnClickListener {
             placeDetailsSheet.hide()
-            homeMapView.removeOverlay(overlay)
+            homeMapView.removeOverlay(*overlays)
         }
     }
 

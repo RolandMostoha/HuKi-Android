@@ -14,6 +14,7 @@ fun TextView.setTextOrGone(text: String?) {
     if (text == null) {
         gone()
     } else {
+        visible()
         this.text = text
     }
 }
