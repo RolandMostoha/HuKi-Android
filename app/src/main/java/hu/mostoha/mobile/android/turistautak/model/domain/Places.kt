@@ -1,6 +1,5 @@
 package hu.mostoha.mobile.android.turistautak.model.domain
 
-import com.google.android.gms.maps.model.LatLng
 import org.osmdroid.util.GeoPoint
 
 data class PlacePrediction(
@@ -33,5 +32,3 @@ data class Location(
 )
 
 fun Location.toGeoPoint() = GeoPoint(latitude, longitude)
-
-fun LatLng.toLocation() = Location(latitude, longitude)
