@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.turistautak.model.generator
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.turistautak.R
+import hu.mostoha.mobile.android.turistautak.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.turistautak.model.domain.*
 import hu.mostoha.mobile.android.turistautak.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
@@ -12,7 +13,8 @@ import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesIt
 import javax.inject.Inject
 
 class HomeUiModelGenerator @Inject constructor(
-    @ApplicationContext val context: Context
+    @ApplicationContext val context: Context,
+    private val distanceFormatter: DistanceFormatter
 ) {
 
     fun generatePlacesResult(predictions: List<PlacePrediction>): List<PlaceUiModel> {
@@ -100,11 +102,13 @@ class HomeUiModelGenerator @Inject constructor(
     }
 
     fun generateHikingRouteDetails(hikingRoute: HikingRouteUiModel, placeDetails: PlaceDetails): PlaceDetailsUiModel {
+        val relation = placeDetails.payLoad as PayLoad.Relation
+        val totalDistance = relation.ways.sumBy { it.distance }
         return generatePlaceDetails(
             placeUiModel = PlaceUiModel(
                 id = hikingRoute.id,
                 primaryText = hikingRoute.name,
-                secondaryText = null,
+                secondaryText = distanceFormatter.format(totalDistance),
                 placeType = PlaceType.RELATION,
                 iconRes = hikingRoute.symbolIcon
             ),

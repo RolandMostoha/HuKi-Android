@@ -30,7 +30,6 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
-import java.util.*
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -204,12 +203,15 @@ class HomeActivityTest {
             PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null)
         )
         coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
-            "1", PayLoad.Way(
-                listOf(
+            id = "1",
+            payLoad = PayLoad.Way(
+                id = "1",
+                locations = listOf(
                     Location(47.123, 19.124),
                     Location(47.125, 19.126),
                     Location(47.127, 19.128)
-                )
+                ),
+                distance = 5000
             )
         )
 
@@ -230,12 +232,15 @@ class HomeActivityTest {
             PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null)
         )
         coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
-            "1", PayLoad.Way(
-                listOf(
-                    Location(47.123, 19.123),
-                    Location(47.124, 19.124),
-                    Location(47.123, 19.123)
-                )
+            id = "1",
+            payLoad = PayLoad.Way(
+                id = "1",
+                locations = listOf(
+                    Location(47.123, 19.124),
+                    Location(47.125, 19.126),
+                    Location(47.123, 19.124)
+                ),
+                distance = 5000
             )
         )
 
@@ -298,12 +303,26 @@ class HomeActivityTest {
             HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
             HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
         )
+        coEvery { placeRepository.getPlaceDetails("1", PlaceType.RELATION) } returns PlaceDetails(
+            id = "1",
+            payLoad = PayLoad.Relation(
+                ways = listOf(
+                    PayLoad.Way(
+                        id = "1",
+                        locations = listOf(Location(47.123, 19.124)),
+                        distance = 5000
+                    )
+                )
+            )
+        )
 
         launch<HomeActivity> {
             "Balaton-felvidék".clickWithText()
             R.id.placeDetailsHikingTrailsButton.click()
 
             "Írott-kő - Budapest - Hollóháza".clickWithText()
+
+            Thread.sleep(500)
 
             R.id.hikingRoutesList.isNotDisplayed()
             R.id.placeDetailsContainer.isDisplayed()
@@ -324,14 +343,12 @@ class HomeActivityTest {
     }
 
     private fun answerTestPlaceDetailsWay() {
-        coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
-            UUID.randomUUID().toString(),
-            PayLoad.Way(
-                listOf(
-                    Location(47.123, 19.123),
-                    Location(47.124, 19.124),
-                    Location(47.125, 19.125)
-                )
+        coEvery { placeRepository.getPlaceDetails("1", any()) } returns PlaceDetails(
+            id = "1",
+            payLoad = PayLoad.Way(
+                id = "1",
+                locations = listOf(Location(47.123, 19.124)),
+                distance = 5000
             )
         )
     }

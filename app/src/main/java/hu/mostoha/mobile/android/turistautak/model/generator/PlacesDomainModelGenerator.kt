@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.turistautak.model.generator
 
 import hu.mostoha.mobile.android.turistautak.model.domain.*
 import hu.mostoha.mobile.android.turistautak.model.network.*
+import hu.mostoha.mobile.android.turistautak.util.calculateDistance
 import javax.inject.Inject
 
 class PlacesDomainModelGenerator @Inject constructor() {
@@ -39,7 +40,11 @@ class PlacesDomainModelGenerator @Inject constructor() {
         val locations = wayElement.geometry?.extractLocations() ?: emptyList()
         return PlaceDetails(
             id = wayId,
-            payLoad = PayLoad.Way(wayId, locations)
+            payLoad = PayLoad.Way(
+                id = wayId,
+                locations = locations,
+                distance = locations.calculateDistance()
+            )
         )
     }
 
@@ -48,19 +53,16 @@ class PlacesDomainModelGenerator @Inject constructor() {
             it.type == ElementType.RELATION && it.id.toString() == id
         } ?: TODO()
 
-        val locations = mutableListOf<Location>()
-        relElement.members?.forEach {
-            val geometry = it.geometry
-            if (geometry != null) {
-                locations.addAll(geometry.extractLocations())
-            }
-        }
-
         val ways = relElement.members?.mapNotNull {
             val ref = it.ref
             val geometry = it.geometry
             if (ref != null && geometry != null) {
-                PayLoad.Way(ref, geometry.extractLocations())
+                val locations = geometry.extractLocations()
+                PayLoad.Way(
+                    id = ref,
+                    locations = locations,
+                    distance = locations.calculateDistance()
+                )
             } else {
                 null
             }

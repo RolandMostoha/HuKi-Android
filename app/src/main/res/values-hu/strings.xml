@@ -4,6 +4,9 @@
 
     <string name="default_error_message_unknown">Nem várt hiba történt!</string>
 
+    <string name="default_distance_template_m">%d m</string>
+    <string name="default_distance_template_km">%.2f km</string>
+
     <string name="home_search_bar_title">Túraútvonal, hely keresése</string>
     <string name="home_menu_button_map">Térkép</string>
     <string name="home_menu_button_hiking_symbols">Túrajelek</string>

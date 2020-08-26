@@ -4,6 +4,9 @@
 
     <string name="default_error_message_unknown">Unexpected error has occurred!</string>
 
+    <string name="default_distance_template_m">%d m</string>
+    <string name="default_distance_template_km">%.2f km</string>
+
     <string name="home_search_bar_title">Search hiking route, place</string>
     <string name="home_menu_button_map">Map</string>
     <string name="home_menu_button_hiking_symbols">Symbols</string>
@@ -24,5 +27,6 @@
     <string name="my_location_rationale_message">Device\'s location is needed for current location!</string>
     <string name="my_location_rationale_positive_button">Allow</string>
     <string name="my_location_rationale_negative_button">Cancel</string>
+
 
 </resources>
