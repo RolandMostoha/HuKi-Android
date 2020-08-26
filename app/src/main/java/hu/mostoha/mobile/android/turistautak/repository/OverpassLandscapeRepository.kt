@@ -1,6 +1,6 @@
 package hu.mostoha.mobile.android.turistautak.repository
 
-import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
+import hu.mostoha.mobile.android.turistautak.constants.HUNGARY
 import hu.mostoha.mobile.android.turistautak.model.domain.Landscape
 import hu.mostoha.mobile.android.turistautak.model.generator.LandscapeDomainModelGenerator
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
@@ -23,10 +23,10 @@ class OverpassLandscapeRepository @Inject constructor(
             .way()
             .tag("natural", "mountain_range")
             .boundingBox(
-                HUNGARY_BOUNDING_BOX.south,
-                HUNGARY_BOUNDING_BOX.west,
-                HUNGARY_BOUNDING_BOX.north,
-                HUNGARY_BOUNDING_BOX.east
+                HUNGARY.south,
+                HUNGARY.west,
+                HUNGARY.north,
+                HUNGARY.east
             )
             .end()
             .output(OutputVerbosity.TAGS, null, null, -1)

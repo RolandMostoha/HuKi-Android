@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.constants.HUNGARY_BOUNDING_BOX
+import hu.mostoha.mobile.android.turistautak.constants.HUNGARY
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
 import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.turistautak.extensions.*
@@ -69,9 +69,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private var myLocationOverlay: MyLocationOverlay? = null
 
-    private val boundsOffsetHu by lazy { resources.getDimensionPixelSize(R.dimen.home_bounding_box_offset) }
-    private val boundsOffsetRoutes by lazy { resources.getDimensionPixelSize(R.dimen.home_bounding_box_offset_routes) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -98,7 +95,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             addOnFirstLayoutListener { _, _, _, _, _ ->
                 viewModel.loadHikingLayer()
 
-                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toOsmBoundingBox(), false, boundsOffsetHu)
+                homeMapView.zoomToBoundingBox(HUNGARY.toOsmBoundingBox().withDefaultOffset(), false)
             }
         }
 
@@ -249,20 +246,20 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                                 homeMapView.addPolygon(geoPoints, onClick = { polygon ->
                                     initWayBottomSheet(it.placeDetails.place, boundingBox, polygon)
                                     placeDetailsSheet.collapse()
-                                    homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
+                                    homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
                                 })
                             } else {
                                 homeMapView.addPolyline(geoPoints, onClick = { polyline ->
                                     initWayBottomSheet(it.placeDetails.place, boundingBox, polyline)
                                     placeDetailsSheet.collapse()
-                                    homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
+                                    homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
                                 })
                             }
 
                             initWayBottomSheet(it.placeDetails.place, boundingBox, polyOverlay)
                             placeDetailsSheet.collapse()
 
-                            homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
+                            homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
                         }
                     }
                 }
@@ -282,14 +279,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 is HikingRouteDetailsResult -> {
                     val placeDetails = it.placeDetails
                     val payLoad = placeDetails.payLoad as UiPayLoad.Relation
-                    val boundingBox = BoundingBox.fromGeoPoints(payLoad.ways.flatMap { way -> way.geoPoints })
+                    val boundingBox = BoundingBox
+                        .fromGeoPoints(payLoad.ways.flatMap { way -> way.geoPoints })
+                        .withDefaultOffset()
                     val overlays = mutableListOf<Overlay>()
                     payLoad.ways.forEach { way ->
                         val geoPoints = way.geoPoints
                         val overlay = homeMapView.addPolyline(geoPoints, onClick = {
                             initWayBottomSheet(placeDetails.place, boundingBox, *overlays.toTypedArray())
                             placeDetailsSheet.collapse()
-                            homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
+                            homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
                         })
 
                         overlays.add(overlay)
@@ -298,7 +297,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     initWayBottomSheet(placeDetails.place, boundingBox, *overlays.toTypedArray())
                     placeDetailsSheet.collapse()
 
-                    homeMapView.zoomToBoundingBox(boundingBox, true, boundsOffsetRoutes)
+                    homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
                 }
             }
         })
@@ -381,6 +380,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         super.onStop()
 
         unregisterReceiver(layerDownloadReceiver)
+    }
+
+    private fun BoundingBox.withDefaultOffset(): BoundingBox {
+        return withOffset(
+            homeMapView,
+            R.dimen.home_map_view_top_offset,
+            R.dimen.home_map_view_bottom_offset,
+            R.dimen.home_map_view_start_offset,
+            R.dimen.home_map_view_end_offset
+        )
     }
 
 }
