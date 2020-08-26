@@ -24,7 +24,7 @@
     <dimen name="default_corner_size_input">20dp</dimen>
     <dimen name="default_icon_only_button_size">48dp</dimen>
     <dimen name="default_polygon_stroke_width">3dp</dimen>
-    <dimen name="default_polyline_stroke_width">6dp</dimen>
+    <dimen name="default_polyline_stroke_width">5dp</dimen>
 
     <dimen name="progress_fab_progress_bar_size_mini">45dp</dimen>
     <dimen name="progress_fab_progress_bar_size_normal">64dp</dimen>
