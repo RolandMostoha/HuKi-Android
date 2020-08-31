@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
+    android:width="@dimen/icon_size_medium"
+    android:height="@dimen/icon_size_medium"
     android:viewportHeight="100"
     android:viewportWidth="100">
     <path
         android:fillColor="#ffffff"
         android:pathData="M0.565,0.583h98.992v98.992h-98.992z"
-        android:strokeColor="#000000"
+        android:strokeColor="@color/colorSymbolStroke"
         android:strokeLineCap="butt"
         android:strokeLineJoin="miter"
         android:strokeWidth="1" />
     <path
-        android:fillColor="#2a932c"
+        android:fillColor="@color/colorSymbolYellow"
         android:pathData="M1,33h98v34h-98z" />
 </vector>

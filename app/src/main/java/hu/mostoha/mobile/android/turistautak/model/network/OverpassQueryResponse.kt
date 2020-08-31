@@ -56,7 +56,7 @@ data class Tags(
     var regionType: String? = null,
 
     @field:Json(name = "jel")
-    var jel: String? = null,
+    var jel: SymbolType? = null,
 
     @field:Json(name = "network")
     var network: String? = null,
@@ -97,3 +97,4 @@ data class Member(
     @field:Json(name = "geometry")
     var geometry: List<Geom>? = null
 )
+

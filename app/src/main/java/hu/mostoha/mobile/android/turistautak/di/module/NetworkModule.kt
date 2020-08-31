@@ -8,6 +8,7 @@ import dagger.hilt.android.components.ApplicationComponent
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
 import hu.mostoha.mobile.android.turistautak.network.OverpassService
 import hu.mostoha.mobile.android.turistautak.network.PhotonService
+import hu.mostoha.mobile.android.turistautak.network.adapter.SymbolTypeAdapter
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -32,7 +33,9 @@ class NetworkModule {
 
     @Provides
     fun provideMoshi(): Moshi {
-        return Moshi.Builder().build()
+        return Moshi.Builder()
+            .add(SymbolTypeAdapter)
+            .build()
     }
 
     @Provides

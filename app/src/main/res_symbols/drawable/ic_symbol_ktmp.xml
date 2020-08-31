@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/icon_size_medium"
+    android:height="@dimen/icon_size_medium"
+    android:viewportHeight="100"
+    android:viewportWidth="100">
+    <path
+        android:pathData="M0.565,0.583h98.992v98.992h-98.992z"
+        android:strokeLineJoin="miter"
+        android:strokeWidth="1"
+        android:fillColor="#ffffff"
+        android:strokeColor="@color/colorSymbolStroke"
+        android:strokeLineCap="butt" />
+    <path
+        android:pathData="M40,40h20v30h-20z"
+        android:fillColor="#ffffff"
+        android:strokeColor="#00000000" />
+    <path
+        android:pathData="m60,40c0,5.252 -4.477,9.509 -10,9.509 -5.523,0 -10,-4.257 -10,-9.509 0,-5.252 4.477,-9.509 10,-9.509 5.523,0 10,4.257 10,9.509z"
+        android:fillColor="#ffffff"
+        android:strokeColor="#00000000" />
+    <path
+        android:pathData="M10,70h5v15h-5z"
+        android:fillColor="#ffffff"
+        android:strokeColor="#00000000" />
+    <path
+        android:pathData="M85,70h5v15h-5z"
+        android:fillColor="#ffffff"
+        android:strokeColor="#00000000" />
+    <path
+        android:pathData="M85,85 L15,84.906 50.197,60 85,85z"
+        android:fillColor="@color/colorSymbolBlue"
+        android:strokeColor="#00000000" />
+    <path
+        android:pathData="M40,15h20v55h-20z"
+        android:fillColor="@color/colorSymbolBlue"
+        android:strokeColor="#00000000" />
+    <path
+        android:pathData="M25,30h50v18.275h-50z"
+        android:fillColor="@color/colorSymbolBlue"
+        android:strokeColor="#00000000" />
+</vector>

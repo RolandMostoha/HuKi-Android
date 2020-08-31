@@ -78,7 +78,7 @@ class PlacesDomainModelGenerator @Inject constructor() {
             HikingRoute(
                 id = it.id.toString(),
                 name = it.tags?.name ?: return@mapNotNull null,
-                symbolType = SymbolType.Z // TODO
+                symbolType = it.tags?.jel ?: return@mapNotNull null
             )
         }
     }

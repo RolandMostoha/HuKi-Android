@@ -90,12 +90,7 @@ class HomeUiModelGenerator @Inject constructor(
                     HikingRouteUiModel(
                         id = it.id,
                         name = it.name,
-                        symbolIcon = listOf(
-                            R.drawable.ic_symbol_k,
-                            R.drawable.ic_symbol_p,
-                            R.drawable.ic_symbol_z,
-                            R.drawable.ic_symbol_s
-                        ).shuffled()[0]
+                        symbolIcon = it.symbolType.getIconRes()
                     )
                 )
             })

@@ -16,6 +16,13 @@
     <color name="colorPolyline">#D32e7d32</color>
     <color name="colorPolylineFill">#202e7d32</color>
 
+    <color name="colorSymbolStroke">#000000</color>
+    <color name="colorSymbolBlue">#0000cc</color>
+    <color name="colorSymbolRed">#E60100</color>
+    <color name="colorSymbolGreen">#2A932C</color>
+    <color name="colorSymbolYellow">#F3D900</color>
+    <color name="colorSymbolPurple">#611a6a</color>
+
     <color name="transparent">@android:color/transparent</color>
 
 </resources>
