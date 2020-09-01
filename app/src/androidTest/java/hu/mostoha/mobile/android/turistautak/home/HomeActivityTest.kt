@@ -9,14 +9,17 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.turistautak.R
+import hu.mostoha.mobile.android.turistautak.data.landscapes
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
 import hu.mostoha.mobile.android.turistautak.model.domain.*
+import hu.mostoha.mobile.android.turistautak.model.network.SymbolType
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
+import hu.mostoha.mobile.android.turistautak.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
 import hu.mostoha.mobile.android.turistautak.util.*
@@ -60,7 +63,7 @@ class HomeActivityTest {
 
     @BindValue
     @JvmField
-    val landscapeRepository: LandscapeRepository = mockk()
+    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @Before
     fun init() {
@@ -255,19 +258,15 @@ class HomeActivityTest {
     }
 
     @Test
-    fun givenLandscape_whenClick_thenPlaceDetailsDisplayOnBottomSheet() {
+    fun whenClickOnLandscape_thenPlaceDetailsDisplayOnBottomSheet() {
         answerTestHikingLayer()
         answerTestPlaceDetailsNode()
-        coEvery { landscapeRepository.getLandscapes() } returns listOf(
-            Landscape("1", "Balaton-felvidék", LandscapeType.PLATEAU_WITH_WATER),
-            Landscape("2", "Bükk", LandscapeType.MOUNTAIN_RANGE_HIGH)
-        )
 
         launch<HomeActivity> {
             R.id.placeDetailsContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
-            "Balaton-felvidék".clickWithText()
+            landscapes.first().name.clickWithText()
 
             R.id.placeDetailsContainer.isDisplayed()
         }
@@ -276,8 +275,7 @@ class HomeActivityTest {
     @Test
     fun givenHikingRoutes_whenClickHikingTrails_thenHikingRoutesDisplayOnBottomSheet() {
         answerTestHikingLayer()
-        answerTestPlaceDetailsWay()
-        answerTestLandscapes()
+        answerTestPlaceDetailsWay(landscapes.first().id)
         coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
             HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
             HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
@@ -287,7 +285,7 @@ class HomeActivityTest {
             R.id.placeDetailsContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
-            "Balaton-felvidék".clickWithText()
+            landscapes.first().name.clickWithText()
             R.id.placeDetailsHikingTrailsButton.click()
 
             R.id.hikingRoutesList.isDisplayed()
@@ -297,8 +295,7 @@ class HomeActivityTest {
     @Test
     fun givenHikingRoute_whenClick_thenHikingRouteDetailsDisplayOnBottomSheet() {
         answerTestHikingLayer()
-        answerTestPlaceDetailsWay()
-        answerTestLandscapes()
+        answerTestPlaceDetailsWay(landscapes.first().id)
         coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
             HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
             HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
@@ -317,12 +314,10 @@ class HomeActivityTest {
         )
 
         launch<HomeActivity> {
-            "Balaton-felvidék".clickWithText()
+            landscapes.first().name.clickWithText()
             R.id.placeDetailsHikingTrailsButton.click()
 
             "Írott-kő - Budapest - Hollóháza".clickWithText()
-
-            Thread.sleep(500)
 
             R.id.hikingRoutesList.isNotDisplayed()
             R.id.placeDetailsContainer.isDisplayed()
@@ -342,21 +337,14 @@ class HomeActivityTest {
         )
     }
 
-    private fun answerTestPlaceDetailsWay() {
-        coEvery { placeRepository.getPlaceDetails("1", any()) } returns PlaceDetails(
-            id = "1",
+    private fun answerTestPlaceDetailsWay(id: String) {
+        coEvery { placeRepository.getPlaceDetails(id, any()) } returns PlaceDetails(
+            id = id,
             payLoad = PayLoad.Way(
-                id = "1",
+                id = id,
                 locations = listOf(Location(47.123, 19.124)),
                 distance = 5000
             )
-        )
-    }
-
-    private fun answerTestLandscapes() {
-        coEvery { landscapeRepository.getLandscapes() } returns listOf(
-            Landscape("1", "Balaton-felvidék", LandscapeType.PLATEAU_WITH_WATER),
-            Landscape("2", "Bükk", LandscapeType.MOUNTAIN_RANGE_HIGH)
         )
     }
 

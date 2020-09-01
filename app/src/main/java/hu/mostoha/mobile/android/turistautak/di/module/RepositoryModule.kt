@@ -17,10 +17,6 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindOverpassRepository(overpassRepositoryImpl: OverpassRepositoryImpl): OverpassRepository
-
-    @Singleton
-    @Binds
     abstract fun bindPlacesRepository(placesRepositoryImpl: OsmPlacesRepository): PlacesRepository
 
     @Singleton
