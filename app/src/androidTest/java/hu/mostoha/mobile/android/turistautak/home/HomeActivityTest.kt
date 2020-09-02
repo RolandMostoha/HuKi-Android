@@ -72,34 +72,15 @@ class HomeActivityTest {
     }
 
     @Test
-    fun givenNullLayerFile_whenHomeOpens_thenDownloadDialogDisplays() {
-        coEvery { layerRepository.getHikingLayerFile() } returns null
-
-        launch<HomeActivity> {
-            R.string.download_layer_dialog_title.isTextDisplayed()
-        }
-    }
-
-    @Test
     fun givenNullLayerFile_whenDialogCanceled_thenMapShouldShown() {
         coEvery { layerRepository.getHikingLayerFile() } returns null
 
         launch<HomeActivity> {
+            R.string.download_layer_dialog_title.isTextDisplayed()
+
             R.string.download_layer_dialog_negative_button.clickWithText()
 
             R.id.homeMapView.isDisplayed()
-        }
-    }
-
-    @Test
-    fun givenNullLayerFile_whenMyLocationClicked_thenMyLocationOverlayDisplays() {
-        coEvery { layerRepository.getHikingLayerFile() } returns null
-
-        launch<HomeActivity> {
-            R.string.download_layer_dialog_negative_button.clickWithText()
-            R.id.homeMyLocationButton.click()
-
-            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(0)
         }
     }
 
@@ -109,6 +90,17 @@ class HomeActivityTest {
 
         launch<HomeActivity> {
             R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(0)
+        }
+    }
+
+    @Test
+    fun whenMyLocationClicked_thenMyLocationOverlayDisplays() {
+        answerTestHikingLayer()
+
+        launch<HomeActivity> {
+            R.id.homeMyLocationButton.click()
+
+            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(1)
         }
     }
 
@@ -319,8 +311,8 @@ class HomeActivityTest {
 
             "Írott-kő - Budapest - Hollóháza".clickWithText()
 
-            R.id.hikingRoutesList.isNotDisplayed()
             R.id.placeDetailsContainer.isDisplayed()
+            R.id.hikingRoutesList.isNotDisplayed()
         }
     }
 
