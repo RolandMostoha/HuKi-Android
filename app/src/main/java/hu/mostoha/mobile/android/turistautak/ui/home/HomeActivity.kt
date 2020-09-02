@@ -301,7 +301,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             }
         })
-        viewModel.viewState.observe(this, Observer {
+        viewModel.viewState.observe(this, {
             val file = it.hikingLayerFile
             if (file != null) {
                 initOfflineLayer(file)
@@ -376,8 +376,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.onPause()
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
 
         unregisterReceiver(layerDownloadReceiver)
     }
