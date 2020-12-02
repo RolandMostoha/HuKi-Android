@@ -65,7 +65,7 @@
                         android:id="@+id/homeSearchBarInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large" />
+                        android:textAppearance="@style/DefaultTextAppearance.Regular.Large" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
