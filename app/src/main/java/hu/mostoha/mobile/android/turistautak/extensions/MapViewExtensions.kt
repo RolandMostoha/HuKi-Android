@@ -7,6 +7,9 @@ import androidx.annotation.DimenRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.turistautak.R
 import kotlinx.android.synthetic.main.activity_home.view.*
+import org.osmdroid.events.MapListener
+import org.osmdroid.events.ScrollEvent
+import org.osmdroid.events.ZoomEvent
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.*
@@ -141,6 +144,19 @@ fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Int) {
     controller.setCenter(geoPoint)
 }
 
-fun MapView.animateCenterAndZoom(geoPoint: GeoPoint, zoomLevel: Int) {
-    controller.animateTo(geoPoint, zoomLevel.toDouble(), 1000)
+fun MapView.animateCenterAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {
+    controller.animateTo(geoPoint, zoomLevel, 1000)
+}
+
+fun MapView.addZoomListener(onZoom: (event: ZoomEvent) -> Unit) {
+    addMapListener(object : MapListener {
+        override fun onScroll(event: ScrollEvent): Boolean {
+            return false
+        }
+
+        override fun onZoom(event: ZoomEvent): Boolean {
+            onZoom.invoke(event)
+            return true
+        }
+    })
 }

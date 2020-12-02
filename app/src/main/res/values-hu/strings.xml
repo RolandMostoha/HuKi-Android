@@ -16,6 +16,8 @@
     <string name="home_bottom_sheet_hiking_trails_button">Túrautak</string>
     <string name="home_bottom_sheet_landscape_secondary">Tájegység</string>
 
+    <string name="map_place_name_routes_nearby">Túraútvonalak a térképen</string>
+
     <string name="download_layer_dialog_title">Túra réteg letöltése</string>
     <string name="download_layer_dialog_message">Az offline működéshez javasoljuk a túraréteg letöltését.</string>
     <string name="download_layer_dialog_positive_button">Letöltés</string>

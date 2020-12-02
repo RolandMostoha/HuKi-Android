@@ -14,9 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.constants.HUNGARY
-import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_DISTANCE_METER
-import hu.mostoha.mobile.android.turistautak.constants.MY_LOCATION_MIN_TIME_MS
+import hu.mostoha.mobile.android.turistautak.constants.*
 import hu.mostoha.mobile.android.turistautak.extensions.*
 import hu.mostoha.mobile.android.turistautak.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.turistautak.model.domain.toOsmBoundingBox
@@ -47,8 +45,6 @@ import java.io.File
 class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     companion object {
-        private const val DEFAULT_ZOOM_LEVEL = 15
-        private const val TILES_SCALE_FACTOR = 1.5f
         private const val SEARCH_BAR_MIN_TRIGGER_LENGTH = 3
     }
 
@@ -88,7 +84,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initViews() {
         homeMapView.apply {
-            tilesScaleFactor = TILES_SCALE_FACTOR
+            tilesScaleFactor = MAP_TILES_SCALE_FACTOR
             setTileSource(TileSourceFactory.MAPNIK)
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
@@ -96,6 +92,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 viewModel.loadHikingLayer()
 
                 homeMapView.zoomToBoundingBox(HUNGARY.toOsmBoundingBox().withDefaultOffset(), false)
+            }
+            addZoomListener {
+                if (it.zoomLevel >= MAP_ZOOM_THRESHOLD_ROUTES_NEARBY) {
+                    homeRoutesNearbyFab.show()
+                } else {
+                    homeRoutesNearbyFab.hide()
+                }
             }
         }
 
@@ -145,6 +148,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     viewModel.loadPlaceDetails(place)
                 }
             }
+        }
+
+        homeLayerFab.setOnClickListener {
+            // TODO
+        }
+
+        homeRoutesNearbyFab.setOnClickListener {
+            viewModel.loadHikingRoutes(
+                getString(R.string.map_place_name_routes_nearby),
+                homeMapView.boundingBox.toDomainBoundingBox()
+            )
         }
 
         placeDetailsSheet = BottomSheetBehavior.from(placeDetailsContainer)
@@ -237,7 +251,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             initNodeBottomSheet(it.placeDetails.place, geoPoint, marker)
                             placeDetailsSheet.collapse()
 
-                            homeMapView.animateCenterAndZoom(geoPoint, DEFAULT_ZOOM_LEVEL)
+                            homeMapView.animateCenterAndZoom(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
                         }
                         is UiPayLoad.Way -> {
                             val geoPoints = it.placeDetails.payLoad.geoPoints

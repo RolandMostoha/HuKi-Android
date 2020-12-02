@@ -1,19 +1,15 @@
-package hu.mostoha.mobile.android.turistautak.util
+package hu.mostoha.mobile.android.turistautak.util.espresso
 
-import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Description
-import org.osmdroid.views.MapView
 
 fun @receiver:IdRes Int.isDisplayed() {
     onView(withId(this)).check(matches(ViewMatchers.isDisplayed()))
@@ -57,31 +53,6 @@ fun String.clickWithTextInPopup() {
     onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
         .perform(ViewActions.click())
-}
-
-inline fun <reified T> @receiver:IdRes Int.hasOverlayInPosition(position: Int) {
-    onView(withId(this)).check(matches(hasOverlayMatcher<T>(position)))
-}
-
-inline fun <reified T> @receiver:IdRes Int.hasNotOverlayInPosition(position: Int) {
-    onView(withId(this)).check(matches(not(hasOverlayMatcher<T>(position))))
-}
-
-inline fun <reified T> hasOverlayMatcher(position: Int): BoundedMatcher<View, MapView> {
-    return object : BoundedMatcher<View, MapView>(MapView::class.java) {
-
-        override fun matchesSafely(mapView: MapView?): Boolean {
-            if (mapView == null) return false
-
-            val overlay = mapView.overlays.getOrNull(position)
-
-            return overlay != null && overlay is T
-        }
-
-        override fun describeTo(description: Description) {
-            description.appendText("Has overlay with position $position")
-        }
-    }
 }
 
 fun @receiver:IdRes Int.swipeDown() {

@@ -86,4 +86,10 @@
         <item name="tint">@color/colorPrimaryIconStrong</item>
     </style>
 
+    <style name="DefaultFloatingActionButton.Primary">
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="tint">@color/colorOnPrimary</item>
+    </style>
+
+
 </resources>

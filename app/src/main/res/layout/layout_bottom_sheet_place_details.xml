@@ -90,7 +90,7 @@
         android:layout_marginTop="@dimen/space_medium"
         android:layout_marginEnd="@dimen/space_extra_large"
         android:text="@string/home_bottom_sheet_hiking_trails_button"
-        app:icon="@drawable/ic_home_bottom_sheet_hiking_trails"
+        app:icon="@drawable/ic_home_hiking_routes"
         app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

@@ -16,6 +16,8 @@
     <string name="home_bottom_sheet_hiking_trails_button">Hiking trails</string>
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>
 
+    <string name="map_place_name_routes_nearby">Hiking trails in map</string>
+
     <string name="download_layer_dialog_title">Download Hiking Layer</string>
     <string name="download_layer_dialog_message">We recommend to download the layer file for offline usage.</string>
     <string name="download_layer_dialog_positive_button">Download</string>
