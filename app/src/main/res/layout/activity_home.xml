@@ -120,20 +120,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeLandscapeContainer" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/DefaultFloatingActionButton"
-            android:id="@+id/homeRoutesNearbyFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_medium"
-            android:layout_marginStart="@dimen/space_large"
-            android:layout_marginEnd="@dimen/space_large"
-            android:elevation="@dimen/default_elevation"
-            android:src="@drawable/ic_home_hiking_routes"
-            app:fabSize="mini"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/homeLayerFab" />
-
         <org.osmdroid.views.MapView
             android:id="@+id/homeMapView"
             android:layout_width="match_parent"
@@ -145,18 +131,36 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        style="@style/DefaultFloatingActionButton"
-        android:id="@+id/homeMyLocationButton"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_my_location"
-        android:layout_marginEnd="@dimen/space_extra_large"
-        android:layout_marginBottom="@dimen/space_extra_extra_large"
+        android:orientation="vertical"
         android:layout_gravity="bottom|end"
-        app:layout_behavior="@string/fab_transformation_sheet_behavior"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/homeBottomNavigation" />
+        app:layout_behavior="@string/fab_transformation_sheet_behavior">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/DefaultFloatingActionButton"
+            android:id="@+id/homeRoutesNearbyFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginBottom="@dimen/space_medium"
+            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginEnd="@dimen/space_large"
+            android:src="@drawable/ic_home_hiking_routes" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/DefaultFloatingActionButton.Primary"
+            android:id="@+id/homeMyLocationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginBottom="@dimen/space_extra_extra_large"
+            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginEnd="@dimen/space_large"
+            android:src="@drawable/ic_action_my_location" />
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/homeBottomNavigation"
