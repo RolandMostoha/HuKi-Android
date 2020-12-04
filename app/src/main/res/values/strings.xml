@@ -8,9 +8,6 @@
     <string name="default_distance_template_km">%.2f km</string>
 
     <string name="home_search_bar_title">Search hiking route, place</string>
-    <string name="home_menu_button_map">Map</string>
-    <string name="home_menu_button_hiking_symbols">Symbols</string>
-    <string name="home_menu_button_settings">Settings</string>
 
     <string name="home_bottom_sheet_directions_button">Directions</string>
     <string name="home_bottom_sheet_hiking_trails_button">Hiking trails</string>

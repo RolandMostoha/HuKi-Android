@@ -147,7 +147,8 @@
             android:layout_marginBottom="@dimen/space_medium"
             android:layout_marginStart="@dimen/space_large"
             android:layout_marginEnd="@dimen/space_large"
-            android:src="@drawable/ic_home_hiking_routes" />
+            android:src="@drawable/ic_home_hiking_routes"
+            android:visibility="invisible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@style/DefaultFloatingActionButton.Primary"
@@ -155,26 +156,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_medium"
-            android:layout_marginBottom="@dimen/space_extra_extra_large"
+            android:layout_marginBottom="35dp"
             android:layout_marginStart="@dimen/space_large"
             android:layout_marginEnd="@dimen/space_large"
             android:src="@drawable/ic_action_my_location" />
 
     </LinearLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/homeBottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:layout_behavior=".ui.utils.behavior.BottomNavigationAwareSnackbarBehavior"
-        app:backgroundTint="@color/colorBackground"
-        app:menu="@menu/menu_bottom_nav"
-        app:itemIconTint="@drawable/selector_home_bottom_navigation_icon"
-        app:itemTextColor="@drawable/selector_home_bottom_navigation_text"
-        app:itemTextAppearanceActive="@style/DefaultTextAppearance.Bold.Small"
-        app:itemTextAppearanceInactive="@style/DefaultTextAppearance.SemiBold.Small"
-        app:layout_insetEdge="bottom" />
 
     <include layout="@layout/layout_bottom_sheet_place_details" />
 
