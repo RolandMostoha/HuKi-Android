@@ -10,7 +10,7 @@
     <color name="colorSecondaryButtonText">#404040</color>
     <color name="colorBackground">#ffffff</color>
     <color name="colorError">#c62828</color>
-    <color name="colorStroke">#BFBFBF</color>
+    <color name="colorStroke">#C4C4C4</color>
     <color name="colorStrokeMarker">#ffffff</color>
     <color name="colorMarker">@color/colorPrimary</color>
     <color name="colorPolyline">#D32e7d32</color>

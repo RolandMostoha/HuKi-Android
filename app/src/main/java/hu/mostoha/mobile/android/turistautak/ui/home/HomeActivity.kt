@@ -9,7 +9,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,7 +77,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initWindow() {
         setStatusBarColor(android.R.color.transparent)
-        setFullScreenAndLightSystemBars()
         homeSearchBarContainer.applyTopMarginForStatusBar(this)
     }
 
@@ -209,7 +207,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initObservers() {
-        viewModel.liveEvents.observe(this, Observer {
+        viewModel.liveEvents.observe(this, {
             when (it) {
                 is ErrorOccurred -> {
                     showToast(it.message)

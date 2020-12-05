@@ -5,6 +5,7 @@
 
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:navigationBarColor">@color/colorBackground</item>
+        <item name="android:navigationBarDividerColor">@color/colorStroke</item>
 
     </style>
 
