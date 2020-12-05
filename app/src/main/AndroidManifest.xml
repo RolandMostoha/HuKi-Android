@@ -14,7 +14,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/BaseTheme">
+        android:theme="@style/BaseTheme.HuKiTheme">
 
         <activity
             android:name=".ui.home.HomeActivity"
