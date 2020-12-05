@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="DefaultTheme">
+    <style name="BaseTheme.HuKiTheme">
 
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:navigationBarColor">@color/colorBackground</item>
