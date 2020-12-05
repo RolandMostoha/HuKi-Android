@@ -13,6 +13,7 @@ class MyLocationOverlay(
 ) : MyLocationNewOverlay(provider, mapView) {
 
     var onFollowLocationDisabled: (() -> Unit)? = null
+    var onLocationChanged: ((Location) -> Unit)? = null
 
     override fun setLocation(location: Location) {
         if (mIsFollowing && mMapView.zoomLevelDouble != MY_LOCATION_DEFAULT_ZOOM) {
@@ -29,6 +30,12 @@ class MyLocationOverlay(
         }
 
         return super.onTouchEvent(event, mapView)
+    }
+
+    override fun onLocationChanged(location: Location, source: IMyLocationProvider) {
+        super.onLocationChanged(location, source)
+
+        onLocationChanged?.invoke(location)
     }
 
 }

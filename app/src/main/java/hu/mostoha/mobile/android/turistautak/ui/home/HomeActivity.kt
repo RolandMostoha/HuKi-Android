@@ -90,6 +90,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 viewModel.loadHikingLayer()
 
                 homeMapView.zoomToBoundingBox(HUNGARY.toOsmBoundingBox().withDefaultOffset(), false)
+
+                if (isLocationPermissionsGranted()) {
+                    showMyLocation()
+                }
             }
             addZoomListener {
                 if (it.zoomLevel >= MAP_ZOOM_THRESHOLD_ROUTES_NEARBY) {
@@ -167,8 +171,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun showMyLocation() {
-        homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimary)
         if (myLocationOverlay == null) {
+            homeMyLocationButton.setImageResource(R.drawable.ic_anim_my_location_not_fixed)
+            homeMyLocationButton.startDrawableAnimation()
+
             val provider = GpsMyLocationProvider(applicationContext).apply {
                 locationUpdateMinTime = MY_LOCATION_MIN_TIME_MS
                 locationUpdateMinDistance = MY_LOCATION_MIN_DISTANCE_METER
@@ -178,18 +184,23 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity),
                     R.drawable.ic_marker_my_location_compass.toBitmap(this@HomeActivity)
                 )
+                runOnFirstFix {
+                    homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_fixed)
+                }
                 onFollowLocationDisabled = {
-                    homeMyLocationButton.imageTintList = colorStateList(R.color.colorPrimaryIcon)
+                    homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_not_fixed)
                 }
             }
+            homeMapView.overlays.add(myLocationOverlay)
+        } else {
+            homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_fixed)
         }
+
         myLocationOverlay?.apply {
             enableMyLocation()
             enableFollowLocation()
             enableAutoStop = true
         }
-        homeMapView.overlays.add(myLocationOverlay)
-        homeMapView.invalidate()
     }
 
     private fun initOfflineLayer(file: File) {
@@ -405,3 +416,4 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
 }
+

@@ -161,7 +161,7 @@
             android:layout_marginBottom="@dimen/home_fab_bottom_margin"
             android:layout_marginStart="@dimen/space_large"
             android:layout_marginEnd="@dimen/space_large"
-            android:src="@drawable/ic_action_my_location" />
+            android:src="@drawable/ic_anim_my_location_not_fixed" />
 
     </LinearLayout>
 
