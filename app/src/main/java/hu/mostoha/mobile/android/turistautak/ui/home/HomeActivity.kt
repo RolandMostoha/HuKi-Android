@@ -55,13 +55,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var placeDetailsSheet: BottomSheetBehavior<View>
     private lateinit var hikingRoutesSheet: BottomSheetBehavior<View>
 
-    private val bottomSheetExclusiveButtons by lazy {
-        listOf(
-            placeDetailsDirectionsButton,
-            placeDetailsHikingTrailsButton
-        )
-    }
-
     private var myLocationOverlay: MyLocationOverlay? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -345,9 +338,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initNodeBottomSheet(place: PlaceUiModel, geoPoint: GeoPoint, marker: Marker) {
         fillPlaceInfo(place)
-        bottomSheetExclusiveButtons.showOnly(placeDetailsDirectionsButton)
+        placeDetailsDirectionsButton.visible()
         placeDetailsDirectionsButton.setOnClickListener {
             startDirectionsTo(geoPoint)
+        }
+        placeDetailsHikingTrailsButton.setOnClickListener {
+            placeDetailsSheet.hide()
+            viewModel.loadHikingRoutes(
+                getString(R.string.map_place_name_node_routes_nearby, place.primaryText),
+                homeMapView.boundingBox.toDomainBoundingBox()
+            )
         }
         placeDetailsCloseButton.setOnClickListener {
             homeMapView.removeMarker(marker)
@@ -357,7 +357,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initWayBottomSheet(place: PlaceUiModel, boundingBox: BoundingBox, vararg overlays: Overlay) {
         fillPlaceInfo(place)
-        bottomSheetExclusiveButtons.showOnly(placeDetailsHikingTrailsButton)
+        placeDetailsDirectionsButton.gone()
         placeDetailsHikingTrailsButton.setOnClickListener {
             placeDetailsSheet.hide()
             viewModel.loadHikingRoutes(place.primaryText, boundingBox.toDomainBoundingBox())

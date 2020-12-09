@@ -23,7 +23,7 @@
             app:cardBackgroundColor="@color/colorBackground"
             app:shapeAppearance="@style/DefaultShapeAppearance.InputField"
             app:strokeWidth="@dimen/home_search_bar_stroke_width"
-            app:strokeColor="@color/colorStroke"
+            app:strokeColor="@color/colorStrokeOnMap"
             app:cardElevation="@dimen/default_elevation"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
