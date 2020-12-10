@@ -18,8 +18,7 @@ class MyLocationOverlay(
 
     override fun setLocation(location: Location) {
         if (mIsFollowing && mMapView.zoomLevelDouble != MY_LOCATION_DEFAULT_ZOOM) {
-            mMapView.controller.zoomTo(MY_LOCATION_DEFAULT_ZOOM)
-            mMapView.postInvalidate()
+            mapView.animateCenterAndZoom(GeoPoint(location), MY_LOCATION_DEFAULT_ZOOM)
         }
 
         super.setLocation(location)
