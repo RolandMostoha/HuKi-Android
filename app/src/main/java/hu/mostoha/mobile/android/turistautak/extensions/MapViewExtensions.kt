@@ -18,6 +18,31 @@ import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions
 import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme
 
+fun MapView.addOverlay(position: Int, overlay: Overlay) {
+    if (position > overlays.size - 1) {
+        overlays.add(overlay)
+    } else {
+        overlays.add(position, overlay)
+    }
+    invalidate()
+}
+
+fun MapView.removeOverlay(vararg overlay: Overlay) {
+    overlay.forEach {
+        overlays.remove(it)
+    }
+    invalidate()
+}
+
+fun MapView.removeOverlays() {
+    overlays
+        .takeLast(overlays.size - 1)
+        .forEach {
+            overlays.remove(it)
+        }
+    invalidate()
+}
+
 fun MapView.addMarker(geoPoint: GeoPoint, icon: Drawable, onClick: (Marker) -> Unit): Marker {
     val marker = Marker(this).apply {
         position = geoPoint
@@ -35,22 +60,6 @@ fun MapView.addMarker(geoPoint: GeoPoint, icon: Drawable, onClick: (Marker) -> U
 
 fun MapView.removeMarker(marker: Marker) {
     marker.remove(homeMapView)
-    invalidate()
-}
-
-fun MapView.removeOverlay(vararg overlay: Overlay) {
-    overlay.forEach {
-        overlays.remove(it)
-    }
-    invalidate()
-}
-
-fun MapView.removeOverlays() {
-    overlays
-        .takeLast(overlays.size - 1)
-        .forEach {
-            overlays.remove(it)
-        }
     invalidate()
 }
 
