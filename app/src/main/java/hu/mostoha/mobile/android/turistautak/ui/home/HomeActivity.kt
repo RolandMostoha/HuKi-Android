@@ -283,17 +283,22 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     }
                 }
                 is HikingRoutesResult -> {
-                    hikingRoutesList.setHasFixedSize(true)
-                    hikingRoutesList.adapter = HikingRoutesAdapter(
-                        onClick = { hikingRoute ->
+                    val hikingRoutesAdapter = HikingRoutesAdapter(
+                        onItemClick = { hikingRoute ->
                             hikingRoutesSheet.hide()
                             myLocationOverlay?.disableFollowLocation()
                             viewModel.loadHikingRouteDetails(hikingRoute)
                             homeMapView.removeOverlays()
+                        },
+                        onCloseClick = {
+                            hikingRoutesSheet.hide()
                         }
-                    ).apply {
-                        submitList(it.hikingRoutes)
-                    }
+                    )
+                    hikingRoutesList.setHasFixedSize(true)
+                    hikingRoutesList.adapter = hikingRoutesAdapter
+                    hikingRoutesAdapter.submitList(it.hikingRoutes)
+                    hikingRoutesEmptyView.visibleOrGone(it.hikingRoutes.size <= 1)
+
                     hikingRoutesSheet.collapse()
                 }
                 is HikingRouteDetailsResult -> {

@@ -28,4 +28,6 @@
     <string name="my_location_rationale_positive_button">Engedélyezés</string>
     <string name="my_location_rationale_negative_button">Mégsem</string>
 
+    <string name="hiking_routes_empty_text">Nincs találat</string>
+
 </resources>

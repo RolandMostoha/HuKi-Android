@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.item_home_hiking_routes.view.*
 import kotlinx.android.synthetic.main.item_home_hiking_routes_header.view.*
 
 class HikingRoutesAdapter(
-    val onClick: (HikingRouteUiModel) -> Unit
+    val onItemClick: (HikingRouteUiModel) -> Unit,
+    val onCloseClick: () -> Unit
 ) : ListAdapter<HikingRoutesItem, RecyclerView.ViewHolder>(HikingRoutesComparator) {
 
     companion object {
@@ -52,9 +53,12 @@ class HikingRoutesAdapter(
         }
     }
 
-    class ViewHolderHeader(val view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolderHeader(val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(text: String) {
             view.hikingRoutesHeaderText.text = text
+            view.hikingRoutesCloseButton.setOnClickListener {
+                onCloseClick.invoke()
+            }
         }
     }
 
@@ -63,7 +67,7 @@ class HikingRoutesAdapter(
             view.hikingRoutesItemText.text = hikingRouteUiModel.name
             view.hikingRoutesItemText.setDrawableStart(hikingRouteUiModel.symbolIcon)
             view.hikingRoutesItemText.setOnClickListener {
-                onClick.invoke(hikingRouteUiModel)
+                onItemClick.invoke(hikingRouteUiModel)
             }
         }
     }

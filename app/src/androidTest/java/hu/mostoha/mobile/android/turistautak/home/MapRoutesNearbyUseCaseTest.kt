@@ -99,6 +99,19 @@ class MapRoutesNearbyUseCaseTest {
         }
     }
 
+    @Test
+    fun givenEmptyHikingRoutes_whenClickRoutesNearby_thenEmptyViewDisplayOnBottomSheet() {
+        answerTestHikingLayer()
+        coEvery { placeRepository.getHikingRoutes(any()) } returns emptyList()
+
+        launch<HomeActivity> {
+            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
+            R.id.homeRoutesNearbyFab.click()
+
+            R.id.hikingRoutesEmptyView.isDisplayed()
+        }
+    }
+
     private fun answerTestHikingLayer() {
         coEvery { layerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
             copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))

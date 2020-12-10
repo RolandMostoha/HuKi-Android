@@ -101,5 +101,12 @@
         <item name="tint">@color/colorOnPrimary</item>
     </style>
 
+    <style name="InfoViewTextStyle">
+        <item name="android:textAppearance">@style/DefaultTextAppearance.Regular.Small</item>
+        <item name="android:drawablePadding">@dimen/space_small</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
 
 </resources>
