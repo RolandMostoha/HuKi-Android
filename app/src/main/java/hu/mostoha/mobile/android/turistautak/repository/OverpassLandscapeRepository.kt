@@ -1,6 +1,5 @@
 package hu.mostoha.mobile.android.turistautak.repository
 
-import hu.mostoha.mobile.android.turistautak.constants.HUNGARY
 import hu.mostoha.mobile.android.turistautak.model.domain.Landscape
 import hu.mostoha.mobile.android.turistautak.model.generator.LandscapeDomainModelGenerator
 import hu.mostoha.mobile.android.turistautak.network.NetworkConfig
@@ -8,6 +7,7 @@ import hu.mostoha.mobile.android.turistautak.network.OverpassService
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputFormat
 import hu.mostoha.mobile.android.turistautak.network.overpasser.output.OutputVerbosity
 import hu.mostoha.mobile.android.turistautak.network.overpasser.query.OverpassQuery
+import hu.mostoha.mobile.android.turistautak.util.HUNGARY
 import javax.inject.Inject
 
 class OverpassLandscapeRepository @Inject constructor(

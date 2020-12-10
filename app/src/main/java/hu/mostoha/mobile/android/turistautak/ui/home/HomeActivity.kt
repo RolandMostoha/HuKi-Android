@@ -13,7 +13,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.constants.*
 import hu.mostoha.mobile.android.turistautak.extensions.*
 import hu.mostoha.mobile.android.turistautak.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.turistautak.model.domain.toOsmBoundingBox
@@ -23,6 +22,7 @@ import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesAdapter
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter
+import hu.mostoha.mobile.android.turistautak.util.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
 import kotlinx.android.synthetic.main.layout_bottom_sheet_hiking_routes.*
@@ -140,6 +140,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             setOnItemClickListener { _, _, position, _ ->
                 val place = searchBarAdapter.getItem(position)
                 if (place != null) {
+                    myLocationOverlay?.disableFollowLocation()
                     viewModel.loadPlaceDetails(place)
                 }
             }
@@ -232,6 +233,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             landscapesChip.text = landscape.primaryText
                             landscapesChip.setChipIconResource(landscape.iconRes)
                             landscapesChip.setOnClickListener {
+                                myLocationOverlay?.disableFollowLocation()
                                 viewModel.loadPlaceDetails(landscape)
                             }
                             homeLandscapeChipGroup.addView(this)
@@ -284,6 +286,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     hikingRoutesList.adapter = HikingRoutesAdapter(
                         onClick = { hikingRoute ->
                             hikingRoutesSheet.hide()
+                            myLocationOverlay?.disableFollowLocation()
                             viewModel.loadHikingRouteDetails(hikingRoute)
                             homeMapView.removeOverlays()
                         }
@@ -340,7 +343,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         fillPlaceInfo(place)
         placeDetailsDirectionsButton.visible()
         placeDetailsDirectionsButton.setOnClickListener {
-            startDirectionsTo(geoPoint)
+            startGoogleDirections(geoPoint)
         }
         placeDetailsHikingTrailsButton.setOnClickListener {
             placeDetailsSheet.hide()

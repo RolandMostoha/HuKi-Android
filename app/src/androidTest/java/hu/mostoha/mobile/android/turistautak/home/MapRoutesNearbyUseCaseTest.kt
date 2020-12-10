@@ -9,7 +9,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.constants.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
@@ -21,6 +20,7 @@ import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
+import hu.mostoha.mobile.android.turistautak.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
 import hu.mostoha.mobile.android.turistautak.util.espresso.*
 import hu.mostoha.mobile.android.turistautak.util.launch
 import hu.mostoha.mobile.android.turistautak.util.testContext

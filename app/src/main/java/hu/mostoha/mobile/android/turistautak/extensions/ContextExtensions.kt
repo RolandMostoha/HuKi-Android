@@ -13,6 +13,16 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import hu.mostoha.mobile.android.turistautak.ui.utils.Message
 
+val Context.screenWidthPx: Int
+    get() {
+        return resources.displayMetrics.widthPixels
+    }
+
+val Context.screenHeightPx: Int
+    get() {
+        return resources.displayMetrics.heightPixels
+    }
+
 fun Context.showToast(message: Message) {
     val resolved = when (message) {
         is Message.Text -> message.text

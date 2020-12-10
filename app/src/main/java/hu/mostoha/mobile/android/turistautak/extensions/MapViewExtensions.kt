@@ -139,8 +139,8 @@ fun MapView.addFastOverlay(
     return fastOverlay
 }
 
-fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Int) {
-    controller.setZoom(zoomLevel.toDouble())
+fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {
+    controller.setZoom(zoomLevel)
     controller.setCenter(geoPoint)
 }
 
