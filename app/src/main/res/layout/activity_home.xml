@@ -46,7 +46,6 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:id="@+id/homeSearchBarInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -63,7 +62,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent">
 
-                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/homeSearchBarInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

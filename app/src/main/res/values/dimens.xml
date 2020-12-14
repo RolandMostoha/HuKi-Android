@@ -36,6 +36,7 @@
     <dimen name="home_search_bar_height">60dp</dimen>
     <dimen name="home_search_bar_stroke_width">1dp</dimen>
     <dimen name="home_search_bar_progress_size">22dp</dimen>
+    <dimen name="home_search_bar_popup_height">350dp</dimen>
 
     <dimen name="home_landscapes_icon_size">18dp</dimen>
     <dimen name="home_landscapes_chip_min_height">38dp</dimen>

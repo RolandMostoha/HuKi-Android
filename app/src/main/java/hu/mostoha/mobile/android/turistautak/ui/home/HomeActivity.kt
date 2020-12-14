@@ -6,8 +6,10 @@ import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.ListPopupWindow
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -53,6 +55,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private lateinit var layerDownloadReceiver: BroadcastReceiver
 
+    private lateinit var searchBarPopup: ListPopupWindow
     private lateinit var searchBarAdapter: SearchBarAdapter
     private lateinit var placeDetailsSheet: BottomSheetBehavior<View>
     private lateinit var hikingRoutesSheet: BottomSheetBehavior<View>
@@ -124,26 +127,34 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeSearchBarInput.clearFocusAndHideKeyboard()
             viewModel.cancelSearch()
         }
-        homeSearchBarInput.apply {
-            setDropDownBackgroundResource(R.drawable.background_home_search_bar_dropdown)
+        searchBarPopup = ListPopupWindow(this).apply {
+            anchorView = homeSearchBarInput
+            height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
+            setBackgroundDrawable(
+                ContextCompat.getDrawable(
+                    this@HomeActivity,
+                    R.drawable.background_home_search_bar_dropdown
+                )
+            )
             setAdapter(searchBarAdapter)
-            threshold = SEARCH_BAR_MIN_TRIGGER_LENGTH
-            addTextChangedListener {
-                if (!homeSearchBarInput.isPerformingCompletion) {
-                    val text = it.toString()
-                    if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
-                        viewModel.loadPlacesBy(text)
-                    }
-                } else {
-                    homeSearchBarInput.text?.clear()
-                    homeSearchBarInput.clearFocusAndHideKeyboard()
-                }
-            }
             setOnItemClickListener { _, _, position, _ ->
                 val place = searchBarAdapter.getItem(position)
                 if (place != null) {
                     myLocationOverlay?.disableFollowLocation()
+
+                    homeSearchBarInput.text?.clear()
+                    homeSearchBarInput.clearFocusAndHideKeyboard()
+                    searchBarPopup.dismiss()
+
                     viewModel.loadPlaceDetails(place)
+                }
+            }
+        }
+        homeSearchBarInput.apply {
+            addTextChangedListener {
+                val text = it.toString()
+                if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
+                    viewModel.loadPlacesBy(text)
                 }
             }
         }
@@ -226,7 +237,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
                 is PlacesResult -> {
                     searchBarAdapter.submitList(it.results)
-                    homeSearchBarInput.refreshAutoCompleteResults()
+                    searchBarPopup.width = homeSearchBarInputLayout.width
+                    searchBarPopup.show()
                 }
                 is LandscapesResult -> {
                     it.landscapes.forEach { landscape ->
