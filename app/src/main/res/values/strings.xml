@@ -30,4 +30,6 @@
 
     <string name="hiking_routes_empty_text">No results found</string>
 
+    <string name="search_bar_empty_message">No results found</string>
+
 </resources>

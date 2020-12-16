@@ -24,6 +24,7 @@ import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesAdapter
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter
+import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.turistautak.util.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
@@ -139,14 +140,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             setAdapter(searchBarAdapter)
             setOnItemClickListener { _, _, position, _ ->
                 val place = searchBarAdapter.getItem(position)
-                if (place != null) {
+                if (place != null && place is SearchBarItem.Place) {
                     myLocationOverlay?.disableFollowLocation()
 
                     homeSearchBarInput.text?.clear()
                     homeSearchBarInput.clearFocusAndHideKeyboard()
                     searchBarPopup.dismiss()
 
-                    viewModel.loadPlaceDetails(place)
+                    viewModel.loadPlaceDetails(place.placeUiModel)
                 }
             }
         }
@@ -236,8 +237,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeSearchBarProgress.visibleOrGone(it.inProgress)
                 }
                 is PlacesResult -> {
-                    searchBarAdapter.submitList(it.results)
+                    searchBarAdapter.submitList(it.results.map { placeUiModel -> SearchBarItem.Place(placeUiModel) })
                     searchBarPopup.width = homeSearchBarInputLayout.width
+                    searchBarPopup.height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
+                    searchBarPopup.show()
+                }
+                is PlacesErrorResult -> {
+                    searchBarAdapter.submitList(listOf(SearchBarItem.Info(it.messageRes, it.drawableRes)))
+                    searchBarPopup.width = homeSearchBarInputLayout.width
+                    searchBarPopup.height = ListPopupWindow.WRAP_CONTENT
                     searchBarPopup.show()
                 }
                 is LandscapesResult -> {

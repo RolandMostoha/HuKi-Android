@@ -1,6 +1,9 @@
 package hu.mostoha.mobile.android.turistautak.ui.home
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.hilt.lifecycle.ViewModelInject
+import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.architecture.BaseViewModel
 import hu.mostoha.mobile.android.turistautak.architecture.LiveEvents
 import hu.mostoha.mobile.android.turistautak.architecture.ViewState
@@ -91,14 +94,22 @@ class HomeViewModel @ViewModelInject constructor(
                     postEvent(SearchBarLoading(false))
                     val searchResults = generator.generatePlacesResult(result.data)
                     if (searchResults.isEmpty()) {
-                        // TODO
+                        postEvent(
+                            PlacesErrorResult(
+                                R.string.search_bar_empty_message, R.drawable.ic_search_bar_empty_result
+                            )
+                        )
                     } else {
                         postEvent(PlacesResult(searchResults))
                     }
                 }
                 is TaskResult.Error -> {
                     postEvent(SearchBarLoading(false))
-                    postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+                    postEvent(
+                        PlacesErrorResult(
+                            result.domainException.messageRes, R.drawable.ic_search_bar_error
+                        )
+                    )
                 }
             }
         }
@@ -187,6 +198,7 @@ sealed class HomeLiveEvents : LiveEvents {
     data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
     data class PlacesResult(val results: List<PlaceUiModel>) : HomeLiveEvents()
+    data class PlacesErrorResult(@StringRes val messageRes: Int, @DrawableRes val drawableRes: Int) : HomeLiveEvents()
     data class PlaceDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
     data class LandscapesResult(val landscapes: List<PlaceUiModel>) : HomeLiveEvents()
     data class HikingRoutesResult(val hikingRoutes: List<HikingRoutesItem>) : HomeLiveEvents()

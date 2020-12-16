@@ -22,11 +22,8 @@
         style="@style/InfoViewTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_large"
-        android:layout_marginBottom="@dimen/space_extra_large"
-        android:layout_marginStart="@dimen/space_large"
-        android:layout_marginEnd="@dimen/space_large"
-        android:drawableTop="@drawable/ic_home_hiking_routes"
+        android:padding="@dimen/space_extra_large"
+        android:drawableTop="@drawable/ic_hiking_routes_empty"
         android:text="@string/hiking_routes_empty_text" />
 
 </LinearLayout>

@@ -146,7 +146,31 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Given Error TaskResult, when loadPlacesBy, then ErrorOccurred posted`() {
+    fun `Given empty TaskResult, when loadPlacesBy, then PlacesResultError posted`() {
+        val searchText = "Mecs"
+        val predictions = emptyList<PlacePrediction>()
+        val placeUiModels = emptyList<PlaceUiModel>()
+
+        coEvery { placesInteractor.requestGetPlacesBy(searchText) } returns TaskResult.Success(predictions)
+        coEvery { generator.generatePlacesResult(any()) } returns placeUiModels
+
+        homeViewModel.loadPlacesBy(searchText)
+
+        coVerifyOrder {
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
+            placesInteractor.requestGetPlacesBy(searchText)
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
+            generator.generatePlacesResult(predictions)
+            homeViewModel.postEvent(
+                HomeLiveEvents.PlacesErrorResult(
+                    R.string.search_bar_empty_message, R.drawable.ic_search_bar_empty_result
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `Given Error TaskResult, when loadPlacesBy, then PlacesErrorResult posted`() {
         val errorRes = R.string.default_error_message_unknown
         coEvery { placesInteractor.requestGetPlacesBy(any()) } returns TaskResult.Error(DomainException(errorRes))
 
@@ -156,7 +180,11 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             placesInteractor.requestGetPlacesBy(any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes.toMessage()))
+            homeViewModel.postEvent(
+                HomeLiveEvents.PlacesErrorResult(
+                    R.string.default_error_message_unknown, R.drawable.ic_search_bar_error
+                )
+            )
         }
     }
 
