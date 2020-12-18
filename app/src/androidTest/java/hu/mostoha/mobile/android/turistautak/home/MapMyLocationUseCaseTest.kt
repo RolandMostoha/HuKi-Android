@@ -12,16 +12,15 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
-import hu.mostoha.mobile.android.turistautak.model.domain.HikingRoute
-import hu.mostoha.mobile.android.turistautak.model.network.SymbolType
+import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
-import hu.mostoha.mobile.android.turistautak.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
-import hu.mostoha.mobile.android.turistautak.util.espresso.*
+import hu.mostoha.mobile.android.turistautak.util.espresso.click
+import hu.mostoha.mobile.android.turistautak.util.espresso.hasOverlayInPosition
 import hu.mostoha.mobile.android.turistautak.util.launch
 import hu.mostoha.mobile.android.turistautak.util.testContext
 import io.mockk.coEvery
@@ -36,7 +35,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
-class MapRoutesNearbyUseCaseTest {
+class MapMyLocationUseCaseTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -69,61 +68,21 @@ class MapRoutesNearbyUseCaseTest {
     }
 
     @Test
-    fun givenZoomLevelInThreshold_whenZoomOut_thenRoutesNearbyNotVisible() {
+    fun whenMyLocationClicked_thenMyLocationOverlayDisplays() {
         answerTestHikingLayer()
 
         launch<HomeActivity> {
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY - 1)
-            waitForFabAnimation()
+            R.id.homeMyLocationButton.click()
 
-            R.id.homeRoutesNearbyFab.isDisplayed()
-
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY + 1)
-            waitForFabAnimation()
-
-            R.id.homeRoutesNearbyFab.isDisplayed()
-        }
-    }
-
-    @Test
-    fun givenHikingRoutes_whenClickRoutesNearby_thenHikingRoutesDisplayOnBottomSheet() {
-        answerTestHikingLayer()
-        coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
-            HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
-            HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
-        )
-
-        launch<HomeActivity> {
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
-            waitForFabAnimation()
-            R.id.homeRoutesNearbyFab.click()
-
-            "Írott-kő - Budapest - Hollóháza".isTextDisplayed()
-        }
-    }
-
-    @Test
-    fun givenEmptyHikingRoutes_whenClickRoutesNearby_thenEmptyViewDisplayOnBottomSheet() {
-        answerTestHikingLayer()
-        coEvery { placeRepository.getHikingRoutes(any()) } returns emptyList()
-
-        launch<HomeActivity> {
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
-            waitForFabAnimation()
-            R.id.homeRoutesNearbyFab.click()
-
-            R.id.hikingRoutesEmptyView.isDisplayed()
+            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(1)
         }
     }
 
     private fun answerTestHikingLayer() {
-        coEvery { layerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
-            copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
+        val file = osmConfiguration.getHikingLayerFile().also {
+            it.copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
         }
-    }
-
-    private fun waitForFabAnimation() {
-        waitFor(300)
+        coEvery { layerRepository.getHikingLayerFile() } returns file
     }
 
 }

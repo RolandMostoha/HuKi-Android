@@ -9,19 +9,17 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.data.landscapes
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
 import hu.mostoha.mobile.android.turistautak.model.domain.*
-import hu.mostoha.mobile.android.turistautak.model.network.SymbolType
-import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
+import hu.mostoha.mobile.android.turistautak.util.OverlayPositions
 import hu.mostoha.mobile.android.turistautak.util.espresso.*
 import hu.mostoha.mobile.android.turistautak.util.launch
 import hu.mostoha.mobile.android.turistautak.util.testContext
@@ -41,7 +39,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
-class HomeActivityTest {
+class MapBasicsUseCaseTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -91,33 +89,7 @@ class HomeActivityTest {
         answerTestHikingLayer()
 
         launch<HomeActivity> {
-            R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(0)
-        }
-    }
-
-    @Test
-    fun whenMyLocationClicked_thenMyLocationOverlayDisplays() {
-        answerTestHikingLayer()
-
-        launch<HomeActivity> {
-            R.id.homeMyLocationButton.click()
-
-            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(1)
-        }
-    }
-
-    @Test
-    fun givenSearchText_whenTyping_thenPlacePredictionsDisplay() {
-        answerTestHikingLayer()
-        answerTestPlacePredictions()
-
-        launch<HomeActivity> {
-            val searchText = "Mecsek"
-
-            R.id.homeSearchBarInput.typeText(searchText)
-
-            "Mecseki Kéktúra".isPopupTextDisplayed()
-            "Mecseknádasdi Piroska".isPopupTextDisplayed()
+            R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(OverlayPositions.HIKING_LAYER)
         }
     }
 
@@ -125,7 +97,7 @@ class HomeActivityTest {
     fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplayOnBottomSheet() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
-        answerTestPlaceDetailsNode()
+        answerTestPlaceDetails()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
@@ -133,10 +105,10 @@ class HomeActivityTest {
             R.id.placeDetailsContainer.isNotDisplayed()
 
             R.id.homeSearchBarInput.typeText(searchText)
-            "Mecseki Kéktúra".clickWithTextInPopup()
+            "Mecseki Way".clickWithTextInPopup()
 
             R.id.placeDetailsContainer.isDisplayed()
-            "Mecseki Kéktúra".isTextDisplayed()
+            "Mecseki Way".isTextDisplayed()
         }
     }
 
@@ -144,15 +116,15 @@ class HomeActivityTest {
     fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplayOnMap() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
-        answerTestPlaceDetailsNode()
+        answerTestPlaceDetails()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
-            "Mecseki Kéktúra".clickWithTextInPopup()
+            "Mecseki Node".clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Marker>(1)
+            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
         }
     }
 
@@ -160,13 +132,13 @@ class HomeActivityTest {
     fun givenPlaceDetails_whenCloseClick_thenBottomSheetHidden() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
-        answerTestPlaceDetailsNode()
+        answerTestPlaceDetails()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
-            "Mecseki Kéktúra".clickWithTextInPopup()
+            "Mecseki Way".clickWithTextInPopup()
             R.id.placeDetailsCloseButton.click()
 
             R.id.placeDetailsContainer.isNotDisplayed()
@@ -177,19 +149,19 @@ class HomeActivityTest {
     fun givenPlaceDetails_whenCloseClick_thenMarkerRemoved() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
-        answerTestPlaceDetailsNode()
+        answerTestPlaceDetails()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
-            "Mecseki Kéktúra".clickWithTextInPopup()
+            "Mecseki Way".clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Marker>(1)
+            R.id.homeMapView.hasOverlayInPosition<Polyline>(OverlayPositions.PLACE)
 
             R.id.placeDetailsCloseButton.click()
 
-            R.id.homeMapView.hasNotOverlayInPosition<Marker>(1)
+            R.id.homeMapView.hasNotOverlayInPosition<Polyline>(OverlayPositions.PLACE)
         }
     }
 
@@ -197,7 +169,7 @@ class HomeActivityTest {
     fun givenOpenWay_whenGetPlaceDetails_thenPolylineDisplays() {
         answerTestHikingLayer()
         coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
-            PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null)
+            PlacePrediction("1", PlaceType.WAY, "Mecseki Way", null)
         )
         coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
             id = "1",
@@ -216,9 +188,9 @@ class HomeActivityTest {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
-            "Mecseki Kéktúra".clickWithTextInPopup()
+            "Mecseki Way".clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Polyline>(1)
+            R.id.homeMapView.hasOverlayInPosition<Polyline>(OverlayPositions.PLACE)
         }
     }
 
@@ -226,7 +198,7 @@ class HomeActivityTest {
     fun givenClosedWay_whenGetPlaceDetails_thenPolygonDisplays() {
         answerTestHikingLayer()
         coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
-            PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null)
+            PlacePrediction("1", PlaceType.WAY, "Mecseki Way", null)
         )
         coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
             id = "1",
@@ -245,100 +217,30 @@ class HomeActivityTest {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
-            "Mecseki Kéktúra".clickWithTextInPopup()
+            "Mecseki Way".clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Polygon>(1)
-        }
-    }
-
-    @Test
-    fun whenClickOnLandscape_thenPlaceDetailsDisplayOnBottomSheet() {
-        answerTestHikingLayer()
-        answerTestPlaceDetailsNode()
-
-        launch<HomeActivity> {
-            R.id.placeDetailsContainer.isNotDisplayed()
-            R.id.homeLandscapeChipGroup.isDisplayed()
-
-            landscapes.first().name.clickWithText()
-
-            R.id.placeDetailsContainer.isDisplayed()
-        }
-    }
-
-    @Test
-    fun givenHikingRoutesInLandscape_whenClickHikingTrails_thenHikingRoutesDisplayOnBottomSheet() {
-        answerTestHikingLayer()
-        answerTestPlaceDetailsWay(landscapes.first().id)
-        coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
-            HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
-            HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
-        )
-
-        launch<HomeActivity> {
-            R.id.placeDetailsContainer.isNotDisplayed()
-            R.id.homeLandscapeChipGroup.isDisplayed()
-
-            landscapes.first().name.clickWithText()
-            R.id.placeDetailsHikingTrailsButton.click()
-
-            R.id.hikingRoutesList.isDisplayed()
-        }
-    }
-
-    @Test
-    fun givenHikingRoute_whenClick_thenHikingRouteDetailsDisplayOnBottomSheet() {
-        answerTestHikingLayer()
-        answerTestPlaceDetailsWay(landscapes.first().id)
-        coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
-            HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
-            HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
-        )
-        coEvery { placeRepository.getPlaceDetails("1", PlaceType.RELATION) } returns PlaceDetails(
-            id = "1",
-            payLoad = PayLoad.Relation(
-                ways = listOf(
-                    PayLoad.Way(
-                        id = "1",
-                        locations = listOf(Location(47.123, 19.124)),
-                        distance = 5000
-                    )
-                )
-            )
-        )
-
-        launch<HomeActivity> {
-            landscapes.first().name.clickWithText()
-            R.id.placeDetailsHikingTrailsButton.click()
-
-            "Írott-kő - Budapest - Hollóháza".clickWithText()
-
-            R.id.placeDetailsContainer.isDisplayed()
-            R.id.hikingRoutesList.isNotDisplayed()
+            R.id.homeMapView.hasOverlayInPosition<Polygon>(OverlayPositions.PLACE)
         }
     }
 
     private fun answerTestPlacePredictions() {
         coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
-            PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null),
-            PlacePrediction("2", PlaceType.NODE, "Mecseknádasdi Piroska", "Mecseknádasd")
+            PlacePrediction("1", PlaceType.WAY, "Mecseki Way", null),
+            PlacePrediction("2", PlaceType.NODE, "Mecseki Node", "Mecseknádasd")
         )
     }
 
-    private fun answerTestPlaceDetailsNode() {
-        coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
-            "1", PayLoad.Node(Location(47.123, 19.123))
-        )
-    }
-
-    private fun answerTestPlaceDetailsWay(id: String) {
-        coEvery { placeRepository.getPlaceDetails(id, any()) } returns PlaceDetails(
-            id = id,
-            payLoad = PayLoad.Way(
-                id = id,
-                locations = listOf(Location(47.123, 19.124)),
-                distance = 5000
+    private fun answerTestPlaceDetails() {
+        coEvery { placeRepository.getPlaceDetails("1", any()) } returns PlaceDetails(
+            "1", PayLoad.Way(
+                "1", listOf(
+                    Location(47.4979, 19.0402),
+                    Location(47.4566, 19.0640)
+                ), 100
             )
+        )
+        coEvery { placeRepository.getPlaceDetails("2", any()) } returns PlaceDetails(
+            "2", PayLoad.Node(Location(47.123, 19.123))
         )
     }
 

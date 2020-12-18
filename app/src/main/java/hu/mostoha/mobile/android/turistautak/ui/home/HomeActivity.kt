@@ -48,8 +48,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     companion object {
         private const val SEARCH_BAR_MIN_TRIGGER_LENGTH = 3
-        private const val OVERLAY_POSITION_HIKING_LAYER = 0
-        private const val OVERLAY_POSITION_MY_LOCATION = 1
     }
 
     private val viewModel: HomeViewModel by viewModels()
@@ -198,7 +196,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 onFollowLocationDisabled = {
                     homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_not_fixed)
                 }
-                homeMapView.addOverlay(OVERLAY_POSITION_MY_LOCATION, this)
+                homeMapView.addOverlay(OverlayPositions.MY_LOCATION, this)
             }
         } else {
             homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_fixed)
@@ -221,7 +219,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             loadingBackgroundColor = Color.TRANSPARENT
             loadingLineColor = Color.TRANSPARENT
         }
-        homeMapView.addOverlay(OVERLAY_POSITION_HIKING_LAYER, overlay)
+        homeMapView.addOverlay(OverlayPositions.HIKING_LAYER, overlay)
     }
 
     private fun initObservers() {

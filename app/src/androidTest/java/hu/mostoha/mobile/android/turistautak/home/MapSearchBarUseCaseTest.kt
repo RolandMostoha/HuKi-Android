@@ -1,9 +1,7 @@
 package hu.mostoha.mobile.android.turistautak.home
 
-import android.Manifest
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.GrantPermissionRule
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -12,16 +10,16 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.di.module.RepositoryModule
 import hu.mostoha.mobile.android.turistautak.di.module.ServiceModule
 import hu.mostoha.mobile.android.turistautak.extensions.copyFrom
-import hu.mostoha.mobile.android.turistautak.model.domain.HikingRoute
-import hu.mostoha.mobile.android.turistautak.model.network.SymbolType
+import hu.mostoha.mobile.android.turistautak.model.domain.PlacePrediction
+import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.turistautak.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
-import hu.mostoha.mobile.android.turistautak.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
-import hu.mostoha.mobile.android.turistautak.util.espresso.*
+import hu.mostoha.mobile.android.turistautak.util.espresso.isPopupTextDisplayed
+import hu.mostoha.mobile.android.turistautak.util.espresso.typeText
 import hu.mostoha.mobile.android.turistautak.util.launch
 import hu.mostoha.mobile.android.turistautak.util.testContext
 import io.mockk.coEvery
@@ -36,16 +34,10 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
-class MapRoutesNearbyUseCaseTest {
+class MapSearchBarUseCaseTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION
-    )
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
@@ -69,50 +61,48 @@ class MapRoutesNearbyUseCaseTest {
     }
 
     @Test
-    fun givenZoomLevelInThreshold_whenZoomOut_thenRoutesNearbyNotVisible() {
+    fun givenSearchText_whenTyping_thenPlacePredictionsDisplay() {
         answerTestHikingLayer()
-
-        launch<HomeActivity> {
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY - 1)
-            waitForFabAnimation()
-
-            R.id.homeRoutesNearbyFab.isDisplayed()
-
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY + 1)
-            waitForFabAnimation()
-
-            R.id.homeRoutesNearbyFab.isDisplayed()
-        }
-    }
-
-    @Test
-    fun givenHikingRoutes_whenClickRoutesNearby_thenHikingRoutesDisplayOnBottomSheet() {
-        answerTestHikingLayer()
-        coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
-            HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
-            HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
+        coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
+            PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null),
+            PlacePrediction("2", PlaceType.NODE, "Mecseknádasdi Piroska", "Mecseknádasd")
         )
 
         launch<HomeActivity> {
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
-            waitForFabAnimation()
-            R.id.homeRoutesNearbyFab.click()
+            val searchText = "Mecsek"
 
-            "Írott-kő - Budapest - Hollóháza".isTextDisplayed()
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            "Mecseki Kéktúra".isPopupTextDisplayed()
+            "Mecseknádasdi Piroska".isPopupTextDisplayed()
         }
     }
 
     @Test
-    fun givenEmptyHikingRoutes_whenClickRoutesNearby_thenEmptyViewDisplayOnBottomSheet() {
+    fun givenEmptyResult_whenTyping_thenEmptyViewDisplay() {
         answerTestHikingLayer()
-        coEvery { placeRepository.getHikingRoutes(any()) } returns emptyList()
+        coEvery { placeRepository.getPlacesBy(any()) } returns emptyList()
 
         launch<HomeActivity> {
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
-            waitForFabAnimation()
-            R.id.homeRoutesNearbyFab.click()
+            val searchText = "QWER"
 
-            R.id.hikingRoutesEmptyView.isDisplayed()
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            R.string.search_bar_empty_message.isPopupTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenErrorResult_whenTyping_thenErrorViewDisplay() {
+        answerTestHikingLayer()
+        coEvery { placeRepository.getPlacesBy(any()) } throws IllegalStateException()
+
+        launch<HomeActivity> {
+            val searchText = "QWER"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            R.string.default_error_message_unknown.isPopupTextDisplayed()
         }
     }
 
@@ -120,10 +110,6 @@ class MapRoutesNearbyUseCaseTest {
         coEvery { layerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
             copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
         }
-    }
-
-    private fun waitForFabAnimation() {
-        waitFor(300)
     }
 
 }
