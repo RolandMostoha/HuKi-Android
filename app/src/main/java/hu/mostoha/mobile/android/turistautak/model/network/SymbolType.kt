@@ -8,7 +8,7 @@ import hu.mostoha.mobile.android.turistautak.model.domain.IconEnum
 enum class SymbolType : IconEnum {
     UNHANDLED {
         @DrawableRes
-        override fun getIconRes(): Int = R.drawable.ic_input_clear
+        override fun getIconRes(): Int = R.drawable.ic_symbol_empty
     },
 
     @Json(name = "k")
