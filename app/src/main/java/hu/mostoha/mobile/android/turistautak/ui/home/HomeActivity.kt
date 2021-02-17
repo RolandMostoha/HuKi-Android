@@ -70,8 +70,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private var myLocationOverlay: MyLocationOverlay? = null
 
-    private var isLayersDialogDismissing = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -231,16 +229,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             isOutsideTouchable = true
             elevation = resources.getDimension(R.dimen.default_elevation)
         }
-        layersPopup.setOnDismissListener {
-            isLayersDialogDismissing = true
-        }
         layersAdapter.submitList(BaseLayer.values().toList())
         homeLayersFab.setOnClickListener {
-            if (!isLayersDialogDismissing) {
-                showLayersDialog()
-            } else {
-                isLayersDialogDismissing = false
-            }
+            showLayersDialog()
         }
     }
 
