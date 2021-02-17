@@ -54,6 +54,7 @@
                     android:layout_marginStart="@dimen/space_small"
                     android:layout_marginEnd="@dimen/space_small"
                     app:boxBackgroundColor="@color/colorBackground"
+                    app:boxStrokeColor="@color/selector_search_bar_box"
                     app:endIconMode="clear_text"
                     app:endIconDrawable="@drawable/ic_input_clear"
                     app:endIconTint="@color/colorPrimaryIcon"
