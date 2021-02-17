@@ -7,6 +7,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
@@ -32,6 +33,10 @@ fun @receiver:IdRes Int.typeText(text: String) {
 
 fun @receiver:StringRes Int.isTextDisplayed() {
     onView(withText(this)).check(matches(ViewMatchers.isDisplayed()))
+}
+
+fun @receiver:StringRes Int.isTextDoesNotExist() {
+    onView(withText(this)).check(doesNotExist())
 }
 
 fun String.isTextDisplayed() {

@@ -18,8 +18,10 @@ import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
+import hu.mostoha.mobile.android.turistautak.util.espresso.click
 import hu.mostoha.mobile.android.turistautak.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.turistautak.util.espresso.isPopupTextDisplayed
+import hu.mostoha.mobile.android.turistautak.util.espresso.isTextDoesNotExist
 import hu.mostoha.mobile.android.turistautak.util.launch
 import hu.mostoha.mobile.android.turistautak.util.testContext
 import io.mockk.coEvery
@@ -64,6 +66,21 @@ class MapLayersUseCaseTest {
     fun init() {
         hiltRule.inject()
         osmConfiguration.init()
+    }
+
+    @Test
+    fun givenOpenLayersDialog_whenClickOnLayersFab_thenLayersPopupNotDisplayed() {
+        answerTestHikingLayer()
+
+        launch<HomeActivity> {
+            R.id.homeLayersFab.click()
+
+            R.string.layers_base_layers_title.isPopupTextDisplayed()
+
+            R.id.homeLayersFab.click()
+
+            R.string.layers_base_layers_title.isTextDoesNotExist()
+        }
     }
 
     @Test
