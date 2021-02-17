@@ -53,18 +53,13 @@ android {
     }
 }
 
-ext {
-    jetpackHiltVersion = '1.0.0-alpha02'
-    mockKVersion = '1.10.0'
-    androidXTestVersion = '1.3.1-alpha02'
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
     // DI
+    def jetpackHiltVersion = '1.0.0-alpha03'
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
     kapt "androidx.hilt:hilt-compiler:$jetpackHiltVersion"
@@ -72,7 +67,7 @@ dependencies {
 
     // KTX
     implementation 'androidx.core:core-ktx:1.3.2'
-    implementation "androidx.activity:activity-ktx:1.1.0"
+    implementation "androidx.activity:activity-ktx:1.2.0"
 
     // Architecture
     implementation 'com.github.hadilq.liveevent:liveevent:1.2.0'
@@ -83,13 +78,13 @@ dependencies {
     // Network
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.3'
 
     // Design
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.budiyev.android:circular-progress-bar:1.2.2'
 
     // Permissions
@@ -99,18 +94,20 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Unit tests
-    testImplementation 'junit:junit:4.13'
+    def mockKVersion = '1.10.0'
+    testImplementation 'junit:junit:4.13.2'
     testImplementation "io.mockk:mockk:$mockKVersion"
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.7'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9'
 
     // Instrumentation tests
+    def androidXTestVersion = '1.4.0-alpha04'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation "androidx.test:core-ktx:$androidXTestVersion"
     androidTestImplementation "androidx.test:rules:$androidXTestVersion"
-    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.7'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9'
 
     androidTestImplementation "io.mockk:mockk-android:$mockKVersion"
 
