@@ -6,10 +6,7 @@ import hu.mostoha.mobile.android.turistautak.executor.TestTaskExecutor
 import hu.mostoha.mobile.android.turistautak.interactor.*
 import hu.mostoha.mobile.android.turistautak.model.domain.*
 import hu.mostoha.mobile.android.turistautak.model.generator.HomeUiModelGenerator
-import hu.mostoha.mobile.android.turistautak.model.ui.HikingRouteUiModel
-import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
-import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
-import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
+import hu.mostoha.mobile.android.turistautak.model.ui.*
 import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.turistautak.ui.utils.toMessage
 import io.mockk.coEvery
@@ -54,6 +51,7 @@ class HomeViewModelTest {
     @Test
     fun `Given null TaskResult, when loadHikingLayer, then Loading and null layer file posted`() {
         coEvery { layerInteractor.requestGetHikingLayer() } returns TaskResult.Success(null)
+        coEvery { generator.generateHikingLayerDetails(any()) } returns HikingLayerDetailsUiModel(false, null, null)
 
         homeViewModel.loadHikingLayer()
 
@@ -61,7 +59,7 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
             layerInteractor.requestGetHikingLayer()
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
-            homeViewModel.postState(HomeViewState(null))
+            homeViewModel.postState(HomeViewState(HikingLayerDetailsUiModel(false, null, null)))
         }
     }
 
@@ -114,6 +112,7 @@ class HomeViewModelTest {
         val file = File("path")
         coEvery { layerInteractor.requestSaveHikingLayer(downloadId) } returns TaskResult.Success(Unit)
         coEvery { layerInteractor.requestGetHikingLayer() } returns TaskResult.Success(file)
+        coEvery { generator.generateHikingLayerDetails(any()) } returns HikingLayerDetailsUiModel(false, null, null)
 
         homeViewModel.loadDownloadedFile(downloadId)
 
@@ -121,7 +120,7 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
             layerInteractor.requestSaveHikingLayer(downloadId)
             homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
-            homeViewModel.postState(HomeViewState(file))
+            homeViewModel.postState(HomeViewState(HikingLayerDetailsUiModel(false, null, null)))
         }
     }
 

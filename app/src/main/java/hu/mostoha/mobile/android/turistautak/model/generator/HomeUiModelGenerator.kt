@@ -3,13 +3,13 @@ package hu.mostoha.mobile.android.turistautak.model.generator
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.turistautak.R
+import hu.mostoha.mobile.android.turistautak.extensions.formatShortDate
+import hu.mostoha.mobile.android.turistautak.extensions.toLocalDateTime
 import hu.mostoha.mobile.android.turistautak.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.turistautak.model.domain.*
-import hu.mostoha.mobile.android.turistautak.model.ui.HikingRouteUiModel
-import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
-import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
-import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
+import hu.mostoha.mobile.android.turistautak.model.ui.*
 import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesItem
+import java.io.File
 import javax.inject.Inject
 
 class HomeUiModelGenerator @Inject constructor(
@@ -108,6 +108,18 @@ class HomeUiModelGenerator @Inject constructor(
                 iconRes = hikingRoute.symbolIcon
             ),
             place = placeDetails
+        )
+    }
+
+    fun generateHikingLayerDetails(hikingLayerFile: File?): HikingLayerDetailsUiModel {
+        return HikingLayerDetailsUiModel(
+            isHikingLayerFileDownloaded = hikingLayerFile != null,
+            hikingLayerFile = hikingLayerFile,
+            lastUpdatedText = if (hikingLayerFile?.lastModified() != null) {
+                hikingLayerFile.lastModified().toLocalDateTime().formatShortDate()
+            } else {
+                null
+            }
         )
     }
 

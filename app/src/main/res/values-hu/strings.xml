@@ -28,9 +28,10 @@
     <string name="hiking_routes_empty_text">Nincs találat</string>
 
     <string name="layers_base_layers_title">Alap rétegek</string>
+    <string name="layers_mapnik_name">Mapnik</string>
     <string name="layers_hiking_layers_title">Túra réteg</string>
     <string name="layers_hiking_hungarian_title">Magyar Túraréteg</string>
     <string name="layers_hiking_download_label">Letöltés (350MB)</string>
-    <string name="layers_mapnik_name">Mapnik</string>
+    <string name="layers_hiking_update_label">Frissítés (350MB)</string>
 
 </resources>

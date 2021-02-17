@@ -28,9 +28,10 @@
     <string name="hiking_routes_empty_text">No results found</string>
 
     <string name="layers_base_layers_title">Base Layers</string>
+    <string name="layers_mapnik_name">Mapnik</string>
     <string name="layers_hiking_layers_title">Hiking Layer</string>
     <string name="layers_hiking_hungarian_title">Hungarian Hiking Layer</string>
     <string name="layers_hiking_download_label">Download (350MB)</string>
-    <string name="layers_mapnik_name">Mapnik</string>
+    <string name="layers_hiking_update_label">Update (350MB)</string>
 
 </resources>

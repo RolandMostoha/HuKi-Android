@@ -12,7 +12,7 @@
         android:id="@+id/itemLayersImageCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_small"
         app:strokeColor="@color/colorStroke"
         app:strokeWidth="@dimen/layers_image_stroke_width">
 

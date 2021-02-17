@@ -21,6 +21,7 @@ import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.extensions.*
 import hu.mostoha.mobile.android.turistautak.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.turistautak.model.domain.toOsmBoundingBox
+import hu.mostoha.mobile.android.turistautak.model.ui.HikingLayerDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
@@ -90,7 +91,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initViews() {
         initMapView()
         initSearchBar()
-        initLayers()
 
         homeMyLocationButton.setOnClickListener {
             checkLocationPermissions(
@@ -190,13 +190,25 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initLayers() {
+    private fun initLayersDialog(hikingLayerDetails: HikingLayerDetailsUiModel) {
         val layersAdapter = LayersAdapter(onItemClick = {
-            // TODO Change overlay
+            // TODO If multiple base layer selection is ready
         })
         layersPopup = PopupWindow(this).apply {
             contentView = inflateLayout(R.layout.popup_layers).apply {
                 layersList.adapter = layersAdapter
+                if (hikingLayerDetails.isHikingLayerFileDownloaded) {
+                    itemLayersHikingCard.strokeColor = ContextCompat.getColor(context, R.color.colorPrimary)
+                    itemLayersSelectedImage.visible()
+                    itemLayersLastUpdatedText.setTextOrGone(hikingLayerDetails.lastUpdatedText)
+                    itemLayersHikingDownloadButton.setText(R.string.layers_hiking_update_label)
+                } else {
+                    itemLayersHikingCard.strokeColor = ContextCompat.getColor(context, R.color.colorStroke)
+                    itemLayersSelectedImage.gone()
+                    itemLayersLastUpdatedText.gone()
+                    itemLayersHikingDownloadButton.setText(R.string.layers_hiking_download_label)
+                }
+
                 itemLayersHikingCard.setOnClickListener {
                     // TODO Show/hide hiking overlay
                 }
@@ -405,9 +417,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
         })
         viewModel.viewState.observe(this, {
-            val file = it.hikingLayerFile
-            if (file != null) {
-                initOfflineLayer(file)
+            val hikingLayerDetails = it.hikingLayerDetails
+
+            initLayersDialog(hikingLayerDetails)
+
+            if (hikingLayerDetails.isHikingLayerFileDownloaded) {
+                initOfflineLayer(hikingLayerDetails.hikingLayerFile!!)
             } else {
                 showLayersDialog()
             }

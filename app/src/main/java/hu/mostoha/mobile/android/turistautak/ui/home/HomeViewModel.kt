@@ -15,6 +15,7 @@ import hu.mostoha.mobile.android.turistautak.interactor.TaskResult
 import hu.mostoha.mobile.android.turistautak.model.domain.BoundingBox
 import hu.mostoha.mobile.android.turistautak.model.domain.PlaceType
 import hu.mostoha.mobile.android.turistautak.model.generator.HomeUiModelGenerator
+import hu.mostoha.mobile.android.turistautak.model.ui.HikingLayerDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
@@ -25,7 +26,6 @@ import hu.mostoha.mobile.android.turistautak.ui.utils.Message
 import hu.mostoha.mobile.android.turistautak.ui.utils.toMessage
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import java.io.File
 
 class HomeViewModel @ViewModelInject constructor(
     taskExecutor: TaskExecutor,
@@ -45,7 +45,7 @@ class HomeViewModel @ViewModelInject constructor(
         postEvent(LayerLoading(false))
         when (result) {
             is TaskResult.Success -> {
-                postState(HomeViewState(result.data))
+                postState(HomeViewState(generator.generateHikingLayerDetails(result.data)))
             }
             is TaskResult.Error -> {
                 postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
@@ -191,7 +191,7 @@ class HomeViewModel @ViewModelInject constructor(
 
 }
 
-data class HomeViewState(val hikingLayerFile: File?) : ViewState
+data class HomeViewState(val hikingLayerDetails: HikingLayerDetailsUiModel) : ViewState
 
 sealed class HomeLiveEvents : LiveEvents {
     data class ErrorOccurred(val message: Message) : HomeLiveEvents()
