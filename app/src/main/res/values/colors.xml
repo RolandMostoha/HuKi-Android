@@ -7,7 +7,6 @@
     <color name="colorPrimaryIconStrong">#404040</color>
     <color name="colorPrimaryText">#262626</color>
     <color name="colorSecondaryText">#B3262626</color>
-    <color name="colorSecondaryButtonText">#404040</color>
     <color name="colorBackground">#ffffff</color>
     <color name="colorError">#c62828</color>
     <color name="colorStroke">#DEDEDE</color>

@@ -4,7 +4,7 @@
     android:id="@+id/landscapesChip"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:elevation="@dimen/default_elevation"
+    android:elevation="@dimen/default_elevation_on_map"
     android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
     android:textColor="@color/colorSecondaryButtonText"
     app:chipMinHeight="@dimen/home_landscapes_chip_min_height"

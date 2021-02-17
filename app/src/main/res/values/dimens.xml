@@ -19,6 +19,7 @@
     <dimen name="icon_size_extra_large">30dp</dimen>
 
     <dimen name="default_elevation">5dp</dimen>
+    <dimen name="default_elevation_on_map">5dp</dimen>
     <dimen name="default_text_size">@dimen/text_size_medium</dimen>
     <dimen name="default_corner_size_surface">10dp</dimen>
     <dimen name="default_corner_size_input">30dp</dimen>
@@ -38,8 +39,8 @@
     <dimen name="home_search_bar_progress_size">22dp</dimen>
     <dimen name="home_search_bar_popup_height">350dp</dimen>
 
-    <dimen name="home_landscapes_icon_size">18dp</dimen>
-    <dimen name="home_landscapes_chip_min_height">38dp</dimen>
+    <dimen name="home_landscapes_icon_size">19dp</dimen>
+    <dimen name="home_landscapes_chip_min_height">39dp</dimen>
 
     <dimen name="home_map_view_top_offset">100dp</dimen>
     <dimen name="home_map_view_bottom_offset">90dp</dimen>
