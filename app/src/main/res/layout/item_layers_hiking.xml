@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/space_medium"
+    android:gravity="center_horizontal">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/itemLayersHikingCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_medium"
+        app:strokeColor="@color/colorPrimary"
+        app:strokeWidth="@dimen/layers_image_stroke_width">
+
+        <ImageView
+            android:id="@+id/itemLayersImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_layers_hiking" />
+
+        <ImageView
+            android:id="@+id/itemLayersSelectedImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_layers_selected"
+            android:layout_marginEnd="@dimen/space_small"
+            android:layout_marginBottom="@dimen/space_small"
+            android:layout_gravity="bottom|end" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/itemLayersName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
+        android:gravity="center_vertical"
+        android:drawablePadding="@dimen/space_large"
+        android:text="@string/layers_hiking_hungarian_title" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/itemLayersHikingDownloadButton"
+        style="@style/DefaultButton.Contained.Shadowless.Secondary.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
+        android:text="@string/layers_hiking_download_label"
+        app:icon="@drawable/ic_layers_download" />
+
+</LinearLayout>

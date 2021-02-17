@@ -4,9 +4,12 @@ import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.graphics.Color
+import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ListPopupWindow
+import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -23,13 +26,17 @@ import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesAdapter
+import hu.mostoha.mobile.android.turistautak.ui.home.layers.BaseLayer
+import hu.mostoha.mobile.android.turistautak.ui.home.layers.LayersAdapter
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.turistautak.util.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
+import kotlinx.android.synthetic.main.item_layers_hiking.view.*
 import kotlinx.android.synthetic.main.layout_bottom_sheet_hiking_routes.*
 import kotlinx.android.synthetic.main.layout_bottom_sheet_place_details.*
+import kotlinx.android.synthetic.main.popup_layers.view.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
@@ -56,6 +63,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private lateinit var searchBarPopup: ListPopupWindow
     private lateinit var searchBarAdapter: SearchBarAdapter
+    private lateinit var layersPopup: PopupWindow
     private lateinit var placeDetailsSheet: BottomSheetBehavior<View>
     private lateinit var hikingRoutesSheet: BottomSheetBehavior<View>
 
@@ -78,6 +86,44 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initViews() {
+        initMapView()
+        initSearchBar()
+        initLayers()
+
+        homeMyLocationButton.setOnClickListener {
+            checkLocationPermissions(
+                onPermissionsChecked = {
+                    showMyLocation()
+                },
+                onPermissionRationaleShouldBeShown = {
+                    MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
+                        .setTitle(R.string.my_location_rationale_title)
+                        .setMessage(R.string.my_location_rationale_message)
+                        .setNegativeButton(R.string.my_location_rationale_negative_button) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .setPositiveButton(R.string.my_location_rationale_positive_button) { _, _ ->
+                            it.continuePermissionRequest()
+                        }
+                        .show()
+                })
+        }
+
+        homeRoutesNearbyFab.setOnClickListener {
+            viewModel.loadHikingRoutes(
+                getString(R.string.map_place_name_routes_nearby),
+                homeMapView.boundingBox.toDomainBoundingBox()
+            )
+        }
+
+        placeDetailsSheet = BottomSheetBehavior.from(placeDetailsContainer)
+        placeDetailsSheet.hide()
+
+        hikingRoutesSheet = BottomSheetBehavior.from(hikingRoutesContainer)
+        hikingRoutesSheet.hide()
+    }
+
+    private fun initMapView() {
         homeMapView.apply {
             tilesScaleFactor = MAP_TILES_SCALE_FACTOR
             setTileSource(TileSourceFactory.MAPNIK)
@@ -100,26 +146,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             }
         }
+    }
 
-        homeMyLocationButton.setOnClickListener {
-            checkLocationPermissions(
-                onPermissionsChecked = {
-                    showMyLocation()
-                },
-                onPermissionRationaleShouldBeShown = {
-                    MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
-                        .setTitle(R.string.my_location_rationale_title)
-                        .setMessage(R.string.my_location_rationale_message)
-                        .setNegativeButton(R.string.my_location_rationale_negative_button) { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .setPositiveButton(R.string.my_location_rationale_positive_button) { _, _ ->
-                            it.continuePermissionRequest()
-                        }
-                        .show()
-                })
-        }
-
+    private fun initSearchBar() {
         searchBarAdapter = SearchBarAdapter(this)
         homeSearchBarInputLayout.setEndIconOnClickListener {
             homeSearchBarInput.text?.clear()
@@ -157,23 +186,45 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             }
         }
+    }
 
-        homeLayerFab.setOnClickListener {
-            // TODO
-        }
-
-        homeRoutesNearbyFab.setOnClickListener {
-            viewModel.loadHikingRoutes(
-                getString(R.string.map_place_name_routes_nearby),
-                homeMapView.boundingBox.toDomainBoundingBox()
+    private fun initLayers() {
+        val layersAdapter = LayersAdapter(onItemClick = {
+            // TODO Change overlay
+        })
+        layersPopup = PopupWindow(this).apply {
+            contentView = inflateLayout(R.layout.popup_layers).apply {
+                layersList.adapter = layersAdapter
+                itemLayersHikingCard.setOnClickListener {
+                    // TODO Show/hide hiking overlay
+                }
+                itemLayersHikingDownloadButton.setOnClickListener {
+                    viewModel.downloadHikingLayer()
+                }
+            }
+            width = WRAP_CONTENT
+            height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
+            setBackgroundDrawable(
+                InsetDrawable(
+                    ContextCompat.getDrawable(
+                        this@HomeActivity,
+                        R.drawable.background_home_search_bar_dropdown
+                    ), 0, 0,
+                    resources.getDimensionPixelSize(R.dimen.space_medium),
+                    resources.getDimensionPixelSize(R.dimen.space_medium)
+                )
             )
+            isOutsideTouchable = true
+            elevation = resources.getDimension(R.dimen.default_elevation)
         }
+        layersAdapter.submitList(BaseLayer.values().toList())
+        homeLayersFab.setOnClickListener {
+            showLayersDialog()
+        }
+    }
 
-        placeDetailsSheet = BottomSheetBehavior.from(placeDetailsContainer)
-        placeDetailsSheet.hide()
-
-        hikingRoutesSheet = BottomSheetBehavior.from(hikingRoutesContainer)
-        hikingRoutesSheet.hide()
+    private fun showLayersDialog() {
+        layersPopup.showAsDropDown(homeLayersFab, 0, -1 * homeLayersFab.height)
     }
 
     private fun showMyLocation() {
@@ -229,7 +280,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     showToast(it.message)
                 }
                 is LayerLoading -> {
-                    homeLayerFab.inProgress = it.inProgress
+                    homeLayersFab.inProgress = it.inProgress
                 }
                 is SearchBarLoading -> {
                     homeSearchBarProgress.visibleOrGone(it.inProgress)
@@ -349,16 +400,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             if (file != null) {
                 initOfflineLayer(file)
             } else {
-                MaterialAlertDialogBuilder(this, R.style.DefaultMaterialDialog)
-                    .setTitle(R.string.download_layer_dialog_title)
-                    .setMessage(R.string.download_layer_dialog_message)
-                    .setPositiveButton(R.string.download_layer_dialog_positive_button) { _, _ ->
-                        viewModel.downloadHikingLayer()
-                    }
-                    .setNegativeButton(R.string.download_layer_dialog_negative_button) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
+                showLayersDialog()
             }
         })
     }

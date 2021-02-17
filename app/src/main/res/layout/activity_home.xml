@@ -49,7 +49,7 @@
                     android:id="@+id/homeSearchBarInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/home_search_bar_title"
+                    android:hint="@string/search_bar_hint"
                     android:textColorHint="@color/colorSecondaryText"
                     android:layout_marginStart="@dimen/space_small"
                     android:layout_marginEnd="@dimen/space_small"
@@ -109,7 +109,7 @@
         </HorizontalScrollView>
 
         <hu.mostoha.mobile.android.turistautak.views.ProgressFloatingActionButton
-            android:id="@+id/homeLayerFab"
+            android:id="@+id/homeLayersFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_medium"

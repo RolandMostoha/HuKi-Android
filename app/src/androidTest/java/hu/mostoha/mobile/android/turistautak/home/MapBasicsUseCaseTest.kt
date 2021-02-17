@@ -72,19 +72,6 @@ class MapBasicsUseCaseTest {
     }
 
     @Test
-    fun givenNullLayerFile_whenDialogCanceled_thenMapShouldShown() {
-        coEvery { layerRepository.getHikingLayerFile() } returns null
-
-        launch<HomeActivity> {
-            R.string.download_layer_dialog_title.isTextDisplayed()
-
-            R.string.download_layer_dialog_negative_button.clickWithText()
-
-            R.id.homeMapView.isDisplayed()
-        }
-    }
-
-    @Test
     fun givenTuraReteg1000_whenHomeOpens_thenHikingLayerDisplays() {
         answerTestHikingLayer()
 

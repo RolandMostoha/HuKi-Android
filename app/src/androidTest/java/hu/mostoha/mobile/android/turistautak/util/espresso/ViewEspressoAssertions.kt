@@ -50,6 +50,13 @@ fun @receiver:StringRes Int.isPopupTextDisplayed() {
         .check(matches(ViewMatchers.isDisplayed()))
 }
 
+fun @receiver:StringRes Int.isPopupTextNotDisplayed() {
+    onView(withText(this))
+        .inRoot(RootMatchers.isPlatformPopup())
+        .check(matches(not(ViewMatchers.isDisplayed())))
+}
+
+
 fun @receiver:IdRes Int.click() {
     onView(withId(this)).perform(ViewActions.click())
 }

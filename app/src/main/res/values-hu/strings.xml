@@ -7,7 +7,8 @@
     <string name="default_distance_template_m">%d m</string>
     <string name="default_distance_template_km">%.2f km</string>
 
-    <string name="home_search_bar_title">Túraútvonal, hely keresése</string>
+    <string name="search_bar_hint">Túraútvonal, hely keresése</string>
+    <string name="search_bar_empty_message">Nincs találat</string>
 
     <string name="home_bottom_sheet_directions_button">Navigáció</string>
     <string name="home_bottom_sheet_hiking_trails_button">Túrautak</string>
@@ -16,12 +17,8 @@
     <string name="map_place_name_routes_nearby">Túraútvonalak a térképen</string>
     <string name="map_place_name_node_routes_nearby">%s közelében</string>
 
-    <string name="download_layer_dialog_title">Túra réteg letöltése</string>
-    <string name="download_layer_dialog_message">Az offline működéshez javasoljuk a túraréteg letöltését.</string>
-    <string name="download_layer_dialog_positive_button">Letöltés</string>
-    <string name="download_layer_dialog_negative_button">Később</string>
     <string name="download_layer_notification_title">Túra réteg letöltése</string>
-    <string name="download_layer_missing_downloaded_file">A letöltött túraréteg fájl nem található!</string>
+    <string name="download_layer_missing_downloaded_file">Porbléma lépett fel a letöltött túraréteg fájl mentése közben!</string>
 
     <string name="my_location_rationale_title">Helyadatok engedélyezése</string>
     <string name="my_location_rationale_message">Az aktuális pozíció megjelenítéséhez szükséges az engedély!</string>
@@ -30,6 +27,10 @@
 
     <string name="hiking_routes_empty_text">Nincs találat</string>
 
-    <string name="search_bar_empty_message">Nincs találat</string>
+    <string name="layers_base_layers_title">Alap rétegek</string>
+    <string name="layers_hiking_layers_title">Túra réteg</string>
+    <string name="layers_hiking_hungarian_title">Magyar Túraréteg</string>
+    <string name="layers_hiking_download_label">Letöltés (350MB)</string>
+    <string name="layers_mapnik_name">Mapnik</string>
 
 </resources>

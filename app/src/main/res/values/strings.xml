@@ -7,7 +7,8 @@
     <string name="default_distance_template_m">%d m</string>
     <string name="default_distance_template_km">%.2f km</string>
 
-    <string name="home_search_bar_title">Search hiking route, place</string>
+    <string name="search_bar_empty_message">No results found</string>
+    <string name="search_bar_hint">Search hiking route, place</string>
 
     <string name="home_bottom_sheet_directions_button">Navigation</string>
     <string name="home_bottom_sheet_hiking_trails_button">Hiking trails</string>
@@ -16,12 +17,8 @@
     <string name="map_place_name_routes_nearby">Hiking trails in map</string>
     <string name="map_place_name_node_routes_nearby">Hiking trails near %s</string>
 
-    <string name="download_layer_dialog_title">Download Hiking Layer</string>
-    <string name="download_layer_dialog_message">We recommend to download the layer file for offline usage.</string>
-    <string name="download_layer_dialog_positive_button">Download</string>
-    <string name="download_layer_dialog_negative_button">Later</string>
     <string name="download_layer_notification_title">Hiking Layer Download</string>
-    <string name="download_layer_missing_downloaded_file">The downloaded layer file cannot be found!</string>
+    <string name="download_layer_missing_downloaded_file">There was a problem during saving the hiking layer!</string>
 
     <string name="my_location_rationale_title">Location permission</string>
     <string name="my_location_rationale_message">Device\'s location is needed for current location!</string>
@@ -30,6 +27,10 @@
 
     <string name="hiking_routes_empty_text">No results found</string>
 
-    <string name="search_bar_empty_message">No results found</string>
+    <string name="layers_base_layers_title">Base Layers</string>
+    <string name="layers_hiking_layers_title">Hiking Layer</string>
+    <string name="layers_hiking_hungarian_title">Hungarian Hiking Layer</string>
+    <string name="layers_hiking_download_label">Download (350MB)</string>
+    <string name="layers_mapnik_name">Mapnik</string>
 
 </resources>

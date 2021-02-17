@@ -51,4 +51,6 @@
 
     <dimen name="hiking_routes_bottom_sheet_peek_height">250dp</dimen>
 
+    <dimen name="layers_image_stroke_width">2dp</dimen>
+
 </resources>
