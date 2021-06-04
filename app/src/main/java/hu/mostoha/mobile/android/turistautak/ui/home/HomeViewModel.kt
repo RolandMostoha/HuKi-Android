@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.turistautak.ui.home
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.hilt.lifecycle.ViewModelInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.architecture.BaseViewModel
 import hu.mostoha.mobile.android.turistautak.architecture.LiveEvents
@@ -26,8 +26,10 @@ import hu.mostoha.mobile.android.turistautak.ui.utils.Message
 import hu.mostoha.mobile.android.turistautak.ui.utils.toMessage
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
-class HomeViewModel @ViewModelInject constructor(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     taskExecutor: TaskExecutor,
     private val layerInteractor: LayerInteractor,
     private val placesInteractor: PlacesInteractor,

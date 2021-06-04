@@ -6,7 +6,7 @@ apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "hu.mostoha.mobile.android.turistautak"
@@ -34,15 +34,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
@@ -59,15 +50,15 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
     // DI
-    def jetpackHiltVersion = '1.0.0-alpha03'
+    def jetpackHiltVersion = '1.0.0'
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
     kapt "androidx.hilt:hilt-compiler:$jetpackHiltVersion"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$jetpackHiltVersion"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
 
     // KTX
     implementation 'androidx.core:core-ktx:1.3.2'
-    implementation "androidx.activity:activity-ktx:1.2.0"
+    implementation "androidx.activity:activity-ktx:1.2.1"
 
     // Architecture
     implementation 'com.github.hadilq.liveevent:liveevent:1.2.0'
@@ -76,11 +67,12 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.6'
 
     // Network
+    def moshiVersion = '1.12.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
-    implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.3'
+    implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     // Design
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
@@ -94,14 +86,14 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Unit tests
-    def mockKVersion = '1.10.0'
+    def mockKVersion = '1.11.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation "io.mockk:mockk:$mockKVersion"
     testImplementation "androidx.arch.core:core-testing:2.1.0"
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9'
 
     // Instrumentation tests
-    def androidXTestVersion = '1.4.0-alpha04'
+    def androidXTestVersion = '1.4.0-alpha05'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

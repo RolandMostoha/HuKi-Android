@@ -6,7 +6,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.turistautak.R
-import kotlinx.android.synthetic.main.activity_home.view.*
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
@@ -59,7 +58,7 @@ fun MapView.addMarker(geoPoint: GeoPoint, icon: Drawable, onClick: (Marker) -> U
 }
 
 fun MapView.removeMarker(marker: Marker) {
-    marker.remove(homeMapView)
+    marker.remove(this)
     invalidate()
 }
 
