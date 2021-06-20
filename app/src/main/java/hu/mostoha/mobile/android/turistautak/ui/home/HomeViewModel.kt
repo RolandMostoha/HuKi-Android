@@ -39,10 +39,6 @@ class HomeViewModel @Inject constructor(
 
     private var searchJob: Job? = null
 
-    init {
-        loadLandscapes()
-    }
-
     fun loadHikingLayer() = launch {
         postEvent(LayerLoading(true))
 
@@ -147,7 +143,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadLandscapes() = launch {
+    fun loadLandscapes() = launch {
         postEvent(SearchBarLoading(true))
 
         when (val result = landscapeInteractor.requestGetLandscapes()) {

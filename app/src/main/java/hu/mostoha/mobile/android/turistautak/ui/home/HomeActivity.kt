@@ -77,6 +77,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initViews()
         initObservers()
         initReceivers()
+
+        viewModel.loadLandscapes()
     }
 
     private fun initWindow() {
