@@ -11,5 +11,5 @@ fun Long.toLocalDateTime(): LocalDateTime {
 }
 
 fun LocalDateTime.formatShortDate(): String {
-    return toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+    return toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 }

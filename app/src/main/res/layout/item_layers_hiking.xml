@@ -46,7 +46,7 @@
         android:id="@+id/itemLayersLastUpdatedText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Secondary.Small"
         android:layout_marginTop="@dimen/space_extra_small"
         android:gravity="center_vertical"
         android:drawablePadding="@dimen/space_large" />

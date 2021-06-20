@@ -22,6 +22,14 @@
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>
 
+    <style name="DefaultTextAppearance.Regular.Secondary">
+        <item name="android:textColor">@color/colorSecondaryText</item>
+    </style>
+
+    <style name="DefaultTextAppearance.Regular.Secondary.Small">
+        <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
     <style name="DefaultTextAppearance.SemiBold">
         <item name="fontFamily">@font/opensans_semibold</item>
     </style>
