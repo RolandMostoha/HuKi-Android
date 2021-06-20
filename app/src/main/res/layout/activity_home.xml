@@ -167,8 +167,12 @@
 
     </LinearLayout>
 
-    <include layout="@layout/layout_bottom_sheet_place_details" />
+    <include
+        android:id="@+id/homePlaceDetailsBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_place_details" />
 
-    <include layout="@layout/layout_bottom_sheet_hiking_routes" />
+    <include
+        android:id="@+id/homeHikingRoutesBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_hiking_routes" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

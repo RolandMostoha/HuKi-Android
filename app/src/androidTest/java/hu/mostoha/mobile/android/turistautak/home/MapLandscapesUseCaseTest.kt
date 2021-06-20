@@ -78,12 +78,12 @@ class MapLandscapesUseCaseTest {
         answerTestPlaceDetailsWay(landscape.id)
 
         launch<HomeActivity> {
-            R.id.placeDetailsContainer.isNotDisplayed()
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
             landscape.name.clickWithText()
 
-            R.id.placeDetailsContainer.isDisplayed()
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
         }
     }
 
@@ -98,7 +98,7 @@ class MapLandscapesUseCaseTest {
         )
 
         launch<HomeActivity> {
-            R.id.placeDetailsContainer.isNotDisplayed()
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
             landscape.name.clickWithText()
@@ -136,7 +136,7 @@ class MapLandscapesUseCaseTest {
 
             "Írott-kő - Budapest - Hollóháza".clickWithText()
 
-            R.id.placeDetailsContainer.isDisplayed()
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
             R.id.hikingRoutesList.isNotDisplayed()
         }
     }

@@ -6,12 +6,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import hu.mostoha.mobile.android.turistautak.ui.utils.Message
+
+val Context.inflater: LayoutInflater
+    get() = LayoutInflater.from(this)
 
 val Context.screenWidthPx: Int
     get() {
@@ -40,10 +42,6 @@ fun Context.showSnackbar(view: View, message: Message) {
 }
 
 fun Context.colorStateList(@ColorRes res: Int) = ContextCompat.getColorStateList(this, res)
-
-fun Context.inflateLayout(layoutId: Int, root: ViewGroup? = null, attachToRoot: Boolean = false): View {
-    return LayoutInflater.from(this).inflate(layoutId, root, attachToRoot)
-}
 
 fun Context.registerReceiver(
     intentFilter: IntentFilter,

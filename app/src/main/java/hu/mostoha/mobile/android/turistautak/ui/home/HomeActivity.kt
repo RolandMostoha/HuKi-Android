@@ -18,6 +18,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.turistautak.R
+import hu.mostoha.mobile.android.turistautak.databinding.ActivityHomeBinding
+import hu.mostoha.mobile.android.turistautak.databinding.ItemHomeLandscapesChipBinding
+import hu.mostoha.mobile.android.turistautak.databinding.PopupLayersBinding
 import hu.mostoha.mobile.android.turistautak.extensions.*
 import hu.mostoha.mobile.android.turistautak.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.turistautak.model.domain.toOsmBoundingBox
@@ -27,17 +30,9 @@ import hu.mostoha.mobile.android.turistautak.model.ui.UiPayLoad
 import hu.mostoha.mobile.android.turistautak.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes.HikingRoutesAdapter
-import hu.mostoha.mobile.android.turistautak.ui.home.layers.BaseLayer
-import hu.mostoha.mobile.android.turistautak.ui.home.layers.LayersAdapter
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarAdapter
 import hu.mostoha.mobile.android.turistautak.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.turistautak.util.*
-import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.item_home_landscapes_chip.view.*
-import kotlinx.android.synthetic.main.item_layers_hiking.view.*
-import kotlinx.android.synthetic.main.layout_bottom_sheet_hiking_routes.*
-import kotlinx.android.synthetic.main.layout_bottom_sheet_place_details.*
-import kotlinx.android.synthetic.main.popup_layers.view.*
 import org.osmdroid.tileprovider.modules.OfflineTileProvider
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
@@ -62,6 +57,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private lateinit var layerDownloadReceiver: BroadcastReceiver
 
+    private lateinit var binding: ActivityHomeBinding
+    private val homeMapView by lazy { binding.homeMapView }
+
     private lateinit var searchBarPopup: ListPopupWindow
     private lateinit var searchBarAdapter: SearchBarAdapter
     private lateinit var layersPopup: PopupWindow
@@ -73,6 +71,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         initWindow()
         initViews()
         initObservers()
@@ -83,44 +84,46 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initWindow() {
         setStatusBarColor(android.R.color.transparent)
-        homeSearchBarContainer.applyTopMarginForStatusBar(this)
+        binding.homeSearchBarContainer.applyTopMarginForStatusBar(this)
     }
 
     private fun initViews() {
         initMapView()
         initSearchBar()
 
-        homeMyLocationButton.setOnClickListener {
-            checkLocationPermissions(
-                onPermissionsChecked = {
-                    showMyLocation()
-                },
-                onPermissionRationaleShouldBeShown = {
-                    MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
-                        .setTitle(R.string.my_location_rationale_title)
-                        .setMessage(R.string.my_location_rationale_message)
-                        .setNegativeButton(R.string.my_location_rationale_negative_button) { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .setPositiveButton(R.string.my_location_rationale_positive_button) { _, _ ->
-                            it.continuePermissionRequest()
-                        }
-                        .show()
-                })
+        with(binding) {
+            homeMyLocationButton.setOnClickListener {
+                checkLocationPermissions(
+                    onPermissionsChecked = {
+                        showMyLocation()
+                    },
+                    onPermissionRationaleShouldBeShown = {
+                        MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
+                            .setTitle(R.string.my_location_rationale_title)
+                            .setMessage(R.string.my_location_rationale_message)
+                            .setNegativeButton(R.string.my_location_rationale_negative_button) { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .setPositiveButton(R.string.my_location_rationale_positive_button) { _, _ ->
+                                it.continuePermissionRequest()
+                            }
+                            .show()
+                    })
+            }
+
+            homeRoutesNearbyFab.setOnClickListener {
+                viewModel.loadHikingRoutes(
+                    getString(R.string.map_place_name_routes_nearby),
+                    homeMapView.boundingBox.toDomainBoundingBox()
+                )
+            }
+
+            placeDetailsSheet = BottomSheetBehavior.from(homePlaceDetailsBottomSheetContainer.root)
+            placeDetailsSheet.hide()
+
+            hikingRoutesSheet = BottomSheetBehavior.from(homeHikingRoutesBottomSheetContainer.root)
+            hikingRoutesSheet.hide()
         }
-
-        homeRoutesNearbyFab.setOnClickListener {
-            viewModel.loadHikingRoutes(
-                getString(R.string.map_place_name_routes_nearby),
-                homeMapView.boundingBox.toDomainBoundingBox()
-            )
-        }
-
-        placeDetailsSheet = BottomSheetBehavior.from(placeDetailsContainer)
-        placeDetailsSheet.hide()
-
-        hikingRoutesSheet = BottomSheetBehavior.from(hikingRoutesContainer)
-        hikingRoutesSheet.hide()
     }
 
     private fun initMapView() {
@@ -132,7 +135,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             addOnFirstLayoutListener { _, _, _, _, _ ->
                 viewModel.loadHikingLayer()
 
-                homeMapView.zoomToBoundingBox(HUNGARY.toOsmBoundingBox().withDefaultOffset(), false)
+                zoomToBoundingBox(HUNGARY.toOsmBoundingBox().withDefaultOffset(), false)
 
                 if (isLocationPermissionsGranted()) {
                     showMyLocation()
@@ -140,80 +143,64 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
             addZoomListener {
                 if (it.zoomLevel >= MAP_ZOOM_THRESHOLD_ROUTES_NEARBY) {
-                    homeRoutesNearbyFab.show()
+                    binding.homeRoutesNearbyFab.show()
                 } else {
-                    homeRoutesNearbyFab.hide()
+                    binding.homeRoutesNearbyFab.hide()
                 }
             }
         }
     }
 
     private fun initSearchBar() {
-        searchBarAdapter = SearchBarAdapter(this)
-        homeSearchBarInputLayout.setEndIconOnClickListener {
-            homeSearchBarInput.text?.clear()
-            homeSearchBarInput.clearFocusAndHideKeyboard()
-            viewModel.cancelSearch()
-        }
-        searchBarPopup = ListPopupWindow(this).apply {
-            anchorView = homeSearchBarInput
-            height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
-            setBackgroundDrawable(
-                ContextCompat.getDrawable(
-                    this@HomeActivity,
-                    R.drawable.background_home_search_bar_dropdown
+        with(binding) {
+            searchBarAdapter = SearchBarAdapter(root.context)
+            homeSearchBarInputLayout.setEndIconOnClickListener {
+                homeSearchBarInput.text?.clear()
+                homeSearchBarInput.clearFocusAndHideKeyboard()
+                viewModel.cancelSearch()
+            }
+            searchBarPopup = ListPopupWindow(root.context).apply {
+                anchorView = homeSearchBarInput
+                height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
+                setBackgroundDrawable(
+                    ContextCompat.getDrawable(
+                        this@HomeActivity,
+                        R.drawable.background_home_search_bar_dropdown
+                    )
                 )
-            )
-            setAdapter(searchBarAdapter)
-            setOnItemClickListener { _, _, position, _ ->
-                val place = searchBarAdapter.getItem(position)
-                if (place != null && place is SearchBarItem.Place) {
-                    myLocationOverlay?.disableFollowLocation()
+                setAdapter(searchBarAdapter)
+                setOnItemClickListener { _, _, position, _ ->
+                    val place = searchBarAdapter.getItem(position)
+                    if (place != null && place is SearchBarItem.Place) {
+                        myLocationOverlay?.disableFollowLocation()
 
-                    homeSearchBarInput.text?.clear()
-                    homeSearchBarInput.clearFocusAndHideKeyboard()
-                    searchBarPopup.dismiss()
+                        homeSearchBarInput.text?.clear()
+                        homeSearchBarInput.clearFocusAndHideKeyboard()
+                        searchBarPopup.dismiss()
 
-                    viewModel.loadPlaceDetails(place.placeUiModel)
+                        viewModel.loadPlaceDetails(place.placeUiModel)
+                    }
                 }
             }
-        }
-        homeSearchBarInput.apply {
-            addTextChangedListener {
-                val text = it.toString()
-                if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
-                    viewModel.loadPlacesBy(text)
+            homeSearchBarInput.apply {
+                addTextChangedListener {
+                    val text = it.toString()
+                    if (text.length >= SEARCH_BAR_MIN_TRIGGER_LENGTH) {
+                        viewModel.loadPlacesBy(text)
+                    }
                 }
             }
         }
     }
 
     private fun initLayersDialog(hikingLayerDetails: HikingLayerDetailsUiModel) {
-        val layersAdapter = LayersAdapter(onItemClick = {
-            // TODO If multiple base layer selection is ready
-        })
         layersPopup = PopupWindow(this).apply {
-            contentView = inflateLayout(R.layout.popup_layers).apply {
-                layersList.adapter = layersAdapter
-                if (hikingLayerDetails.isHikingLayerFileDownloaded) {
-                    itemLayersHikingCard.strokeColor = ContextCompat.getColor(context, R.color.colorPrimary)
-                    itemLayersSelectedImage.visible()
-                    itemLayersLastUpdatedText.setTextOrGone(hikingLayerDetails.lastUpdatedText)
-                    itemLayersHikingDownloadButton.setText(R.string.layers_hiking_update_label)
-                } else {
-                    itemLayersHikingCard.strokeColor = ContextCompat.getColor(context, R.color.colorStroke)
-                    itemLayersSelectedImage.gone()
-                    itemLayersLastUpdatedText.gone()
-                    itemLayersHikingDownloadButton.setText(R.string.layers_hiking_download_label)
-                }
-
-                itemLayersHikingCard.setOnClickListener {
-                    // TODO Show/hide hiking overlay
-                }
-                itemLayersHikingDownloadButton.setOnClickListener {
-                    viewModel.downloadHikingLayer()
-                }
-            }
+            val binding = PopupLayersBinding.inflate(layoutInflater, null, false)
+            binding.bindUiModel(
+                uiModel = hikingLayerDetails,
+                onDownloadButtonClick = { viewModel.downloadHikingLayer() }
+            )
+            contentView = binding.root
             width = WRAP_CONTENT
             height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
             setBackgroundDrawable(
@@ -229,40 +216,41 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             isOutsideTouchable = true
             elevation = resources.getDimension(R.dimen.default_elevation)
         }
-        layersAdapter.submitList(BaseLayer.values().toList())
-        homeLayersFab.setOnClickListener {
+        binding.homeLayersFab.setOnClickListener {
             showLayersDialog()
         }
     }
 
     private fun showLayersDialog() {
-        layersPopup.showAsDropDown(homeLayersFab, 0, resources.getDimensionPixelSize(R.dimen.space_small))
+        layersPopup.showAsDropDown(binding.homeLayersFab, 0, resources.getDimensionPixelSize(R.dimen.space_small))
     }
 
     private fun showMyLocation() {
-        if (myLocationOverlay == null) {
-            homeMyLocationButton.setImageResource(R.drawable.ic_anim_my_location_not_fixed)
-            homeMyLocationButton.startDrawableAnimation()
+        with(binding) {
+            if (myLocationOverlay == null) {
+                homeMyLocationButton.setImageResource(R.drawable.ic_anim_my_location_not_fixed)
+                homeMyLocationButton.startDrawableAnimation()
 
-            val provider = GpsMyLocationProvider(applicationContext).apply {
-                locationUpdateMinTime = MY_LOCATION_MIN_TIME_MS
-                locationUpdateMinDistance = MY_LOCATION_MIN_DISTANCE_METER
-            }
-            myLocationOverlay = MyLocationOverlay(provider, homeMapView).apply {
-                setDirectionArrow(
-                    R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity),
-                    R.drawable.ic_marker_my_location_compass.toBitmap(this@HomeActivity)
-                )
-                runOnFirstFix {
-                    homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_fixed)
+                val provider = GpsMyLocationProvider(applicationContext).apply {
+                    locationUpdateMinTime = MY_LOCATION_MIN_TIME_MS
+                    locationUpdateMinDistance = MY_LOCATION_MIN_DISTANCE_METER
                 }
-                onFollowLocationDisabled = {
-                    homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_not_fixed)
+                myLocationOverlay = MyLocationOverlay(provider, homeMapView).apply {
+                    setDirectionArrow(
+                        R.drawable.ic_marker_my_location.toBitmap(this@HomeActivity),
+                        R.drawable.ic_marker_my_location_compass.toBitmap(this@HomeActivity)
+                    )
+                    runOnFirstFix {
+                        homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_fixed)
+                    }
+                    onFollowLocationDisabled = {
+                        homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_not_fixed)
+                    }
+                    homeMapView.addOverlay(OverlayPositions.MY_LOCATION, this)
                 }
-                homeMapView.addOverlay(OverlayPositions.MY_LOCATION, this)
+            } else {
+                homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_fixed)
             }
-        } else {
-            homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_fixed)
         }
 
         myLocationOverlay?.apply {
@@ -273,16 +261,21 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initOfflineLayer(file: File) {
-        val offlineProvider = OfflineTileProvider(SimpleRegisterReceiver(this), arrayOf(file)).apply {
-            // Issue: https://github.com/osmdroid/osmdroid/issues/690
-            tileRequestCompleteHandlers.clear()
-            tileRequestCompleteHandlers.add(homeMapView.tileRequestCompleteHandler)
+        with(homeMapView) {
+            val offlineProvider = OfflineTileProvider(
+                SimpleRegisterReceiver(this@HomeActivity),
+                arrayOf(file)
+            ).apply {
+                // Issue: https://github.com/osmdroid/osmdroid/issues/690
+                tileRequestCompleteHandlers.clear()
+                tileRequestCompleteHandlers.add(tileRequestCompleteHandler)
+            }
+            val overlay = TilesOverlay(offlineProvider, applicationContext).apply {
+                loadingBackgroundColor = Color.TRANSPARENT
+                loadingLineColor = Color.TRANSPARENT
+            }
+            addOverlay(OverlayPositions.HIKING_LAYER, overlay)
         }
-        val overlay = TilesOverlay(offlineProvider, this).apply {
-            loadingBackgroundColor = Color.TRANSPARENT
-            loadingLineColor = Color.TRANSPARENT
-        }
-        homeMapView.addOverlay(OverlayPositions.HIKING_LAYER, overlay)
     }
 
     private fun initObservers() {
@@ -292,118 +285,28 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     showToast(it.message)
                 }
                 is LayerLoading -> {
-                    homeLayersFab.inProgress = it.inProgress
+                    binding.homeLayersFab.inProgress = it.inProgress
                 }
                 is SearchBarLoading -> {
-                    homeSearchBarProgress.visibleOrGone(it.inProgress)
+                    binding.homeSearchBarProgress.visibleOrGone(it.inProgress)
                 }
                 is PlacesResult -> {
-                    searchBarAdapter.submitList(it.results.map { placeUiModel -> SearchBarItem.Place(placeUiModel) })
-                    searchBarPopup.width = homeSearchBarInputLayout.width
-                    searchBarPopup.height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
-                    searchBarPopup.show()
+                    initPlaceResult(it)
                 }
                 is PlacesErrorResult -> {
-                    searchBarAdapter.submitList(listOf(SearchBarItem.Info(it.messageRes, it.drawableRes)))
-                    searchBarPopup.width = homeSearchBarInputLayout.width
-                    searchBarPopup.height = ListPopupWindow.WRAP_CONTENT
-                    searchBarPopup.show()
+                    initPlaceErrorResult(it)
                 }
                 is LandscapesResult -> {
-                    it.landscapes.forEach { landscape ->
-                        with(inflateLayout(R.layout.item_home_landscapes_chip, homeLandscapeChipGroup)) {
-                            landscapesChip.text = landscape.primaryText
-                            landscapesChip.setChipIconResource(landscape.iconRes)
-                            landscapesChip.setOnClickListener {
-                                myLocationOverlay?.disableFollowLocation()
-                                viewModel.loadPlaceDetails(landscape)
-                            }
-                            homeLandscapeChipGroup.addView(this)
-                        }
-                    }
+                    initLandscapeResult(it)
                 }
                 is PlaceDetailsResult -> {
-                    when (it.placeDetails.payLoad) {
-                        is UiPayLoad.Node -> {
-                            val geoPoint = it.placeDetails.payLoad.geoPoint
-                            val marker = homeMapView.addMarker(geoPoint, R.drawable.ic_marker_poi.toDrawable(this),
-                                onClick = { marker ->
-                                    initNodeBottomSheet(it.placeDetails.place, geoPoint, marker)
-                                    placeDetailsSheet.collapse()
-
-                                    homeMapView.controller.animateTo(geoPoint)
-                                }
-                            )
-                            initNodeBottomSheet(it.placeDetails.place, geoPoint, marker)
-                            placeDetailsSheet.collapse()
-
-                            homeMapView.animateCenterAndZoom(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
-                        }
-                        is UiPayLoad.Way -> {
-                            val geoPoints = it.placeDetails.payLoad.geoPoints
-                            val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
-                            val polyOverlay = if (it.placeDetails.payLoad.isClosed) {
-                                homeMapView.addPolygon(geoPoints, onClick = { polygon ->
-                                    initWayBottomSheet(it.placeDetails.place, boundingBox, polygon)
-                                    placeDetailsSheet.collapse()
-                                    homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
-                                })
-                            } else {
-                                homeMapView.addPolyline(geoPoints, onClick = { polyline ->
-                                    initWayBottomSheet(it.placeDetails.place, boundingBox, polyline)
-                                    placeDetailsSheet.collapse()
-                                    homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
-                                })
-                            }
-
-                            initWayBottomSheet(it.placeDetails.place, boundingBox, polyOverlay)
-                            placeDetailsSheet.collapse()
-
-                            homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
-                        }
-                    }
+                    initPlaceDetailsResult(it)
                 }
                 is HikingRoutesResult -> {
-                    val hikingRoutesAdapter = HikingRoutesAdapter(
-                        onItemClick = { hikingRoute ->
-                            hikingRoutesSheet.hide()
-                            myLocationOverlay?.disableFollowLocation()
-                            viewModel.loadHikingRouteDetails(hikingRoute)
-                            homeMapView.removeOverlays()
-                        },
-                        onCloseClick = {
-                            hikingRoutesSheet.hide()
-                        }
-                    )
-                    hikingRoutesList.setHasFixedSize(true)
-                    hikingRoutesList.adapter = hikingRoutesAdapter
-                    hikingRoutesAdapter.submitList(it.hikingRoutes)
-                    hikingRoutesEmptyView.visibleOrGone(it.hikingRoutes.size <= 1)
-
-                    hikingRoutesSheet.collapse()
+                    initHikingRoutesResult(it)
                 }
                 is HikingRouteDetailsResult -> {
-                    val placeDetails = it.placeDetails
-                    val payLoad = placeDetails.payLoad as UiPayLoad.Relation
-                    val boundingBox = BoundingBox
-                        .fromGeoPoints(payLoad.ways.flatMap { way -> way.geoPoints })
-                        .withDefaultOffset()
-                    val overlays = mutableListOf<Overlay>()
-                    payLoad.ways.forEach { way ->
-                        val geoPoints = way.geoPoints
-                        val overlay = homeMapView.addPolyline(geoPoints, onClick = {
-                            initWayBottomSheet(placeDetails.place, boundingBox, *overlays.toTypedArray())
-                            placeDetailsSheet.collapse()
-                            homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
-                        })
-
-                        overlays.add(overlay)
-                    }
-
-                    initWayBottomSheet(placeDetails.place, boundingBox, *overlays.toTypedArray())
-                    placeDetailsSheet.collapse()
-
-                    homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
+                    initHikingRouteDetailsResult(it)
                 }
             }
         })
@@ -420,44 +323,168 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         })
     }
 
-    private fun initNodeBottomSheet(place: PlaceUiModel, geoPoint: GeoPoint, marker: Marker) {
-        fillPlaceInfo(place)
-        placeDetailsDirectionsButton.visible()
-        placeDetailsDirectionsButton.setOnClickListener {
-            startGoogleDirections(geoPoint)
+    private fun initPlaceResult(placesResult: PlacesResult) {
+        searchBarAdapter.submitList(placesResult.results.map { placeUiModel -> SearchBarItem.Place(placeUiModel) })
+        searchBarPopup.apply {
+            width = binding.homeSearchBarInputLayout.width
+            height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
+            show()
         }
-        placeDetailsHikingTrailsButton.setOnClickListener {
-            placeDetailsSheet.hide()
-            viewModel.loadHikingRoutes(
-                getString(R.string.map_place_name_node_routes_nearby, place.primaryText),
-                homeMapView.boundingBox.toDomainBoundingBox()
+    }
+
+    private fun initPlaceErrorResult(placesErrorResult: PlacesErrorResult) {
+        searchBarAdapter.submitList(
+            listOf(SearchBarItem.Info(placesErrorResult.messageRes, placesErrorResult.drawableRes))
+        )
+        searchBarPopup.apply {
+            width = binding.homeSearchBarInputLayout.width
+            height = ListPopupWindow.WRAP_CONTENT
+            show()
+        }
+    }
+
+    private fun initLandscapeResult(landscapesResult: LandscapesResult) {
+        landscapesResult.landscapes.forEach { landscape ->
+            val chipBinding = ItemHomeLandscapesChipBinding.inflate(
+                layoutInflater,
+                binding.homeLandscapeChipGroup,
+                false
             )
-        }
-        placeDetailsCloseButton.setOnClickListener {
-            homeMapView.removeMarker(marker)
-            placeDetailsSheet.hide()
-        }
-    }
-
-    private fun initWayBottomSheet(place: PlaceUiModel, boundingBox: BoundingBox, vararg overlays: Overlay) {
-        fillPlaceInfo(place)
-        placeDetailsDirectionsButton.gone()
-        placeDetailsHikingTrailsButton.setOnClickListener {
-            placeDetailsSheet.hide()
-            viewModel.loadHikingRoutes(place.primaryText, boundingBox.toDomainBoundingBox())
-        }
-        placeDetailsCloseButton.setOnClickListener {
-            placeDetailsSheet.hide()
-            homeMapView.removeOverlay(*overlays)
+            chipBinding.bindUiModel(
+                uiModel = landscape,
+                onChipClick = {
+                    myLocationOverlay?.disableFollowLocation()
+                    viewModel.loadPlaceDetails(landscape)
+                }
+            )
+            binding.homeLandscapeChipGroup.addView(chipBinding.root)
         }
     }
 
-    private fun fillPlaceInfo(placeUiModel: PlaceUiModel) {
-        with(placeUiModel) {
-            placeDetailsPrimaryText.text = primaryText
-            placeDetailsSecondaryText.setTextOrGone(secondaryText)
-            placeDetailsImage.setImageResource(iconRes)
+    private fun initPlaceDetailsResult(placeDetailsResult: PlaceDetailsResult) {
+        val placeDetails = placeDetailsResult.placeDetails
+        when (placeDetails.payLoad) {
+            is UiPayLoad.Node -> {
+                val geoPoint = placeDetails.payLoad.geoPoint
+                val marker = homeMapView.addMarker(geoPoint, R.drawable.ic_marker_poi.toDrawable(this),
+                    onClick = { marker ->
+                        initNodeBottomSheet(placeDetails.place, geoPoint, marker)
+                        placeDetailsSheet.collapse()
+
+                        homeMapView.controller.animateTo(geoPoint)
+                    }
+                )
+                initNodeBottomSheet(placeDetails.place, geoPoint, marker)
+                placeDetailsSheet.collapse()
+
+                homeMapView.animateCenterAndZoom(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
+            }
+            is UiPayLoad.Way -> {
+                val geoPoints = placeDetails.payLoad.geoPoints
+                val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
+                val polyOverlay = if (placeDetails.payLoad.isClosed) {
+                    homeMapView.addPolygon(geoPoints, onClick = { polygon ->
+                        initWayBottomSheet(placeDetails.place, boundingBox, polygon)
+                        placeDetailsSheet.collapse()
+                        homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
+                    })
+                } else {
+                    homeMapView.addPolyline(geoPoints, onClick = { polyline ->
+                        initWayBottomSheet(placeDetails.place, boundingBox, polyline)
+                        placeDetailsSheet.collapse()
+                        homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
+                    })
+                }
+
+                initWayBottomSheet(placeDetails.place, boundingBox, polyOverlay)
+                placeDetailsSheet.collapse()
+
+                homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
+            }
+            else -> {
+                // no-op
+            }
         }
+    }
+
+    private fun initHikingRoutesResult(it: HikingRoutesResult) {
+        with(binding.homeHikingRoutesBottomSheetContainer) {
+            val hikingRoutesAdapter = HikingRoutesAdapter(
+                onItemClick = { hikingRoute ->
+                    hikingRoutesSheet.hide()
+                    myLocationOverlay?.disableFollowLocation()
+                    viewModel.loadHikingRouteDetails(hikingRoute)
+                    homeMapView.removeOverlays()
+                },
+                onCloseClick = {
+                    hikingRoutesSheet.hide()
+                }
+            )
+            hikingRoutesList.setHasFixedSize(true)
+            hikingRoutesList.adapter = hikingRoutesAdapter
+            hikingRoutesAdapter.submitList(it.hikingRoutes)
+            hikingRoutesEmptyView.visibleOrGone(it.hikingRoutes.size <= 1)
+
+            hikingRoutesSheet.collapse()
+        }
+    }
+
+    private fun initHikingRouteDetailsResult(it: HikingRouteDetailsResult) {
+        val placeDetails = it.placeDetails
+        val payLoad = placeDetails.payLoad as UiPayLoad.Relation
+        val boundingBox = BoundingBox
+            .fromGeoPoints(payLoad.ways.flatMap { way -> way.geoPoints })
+            .withDefaultOffset()
+        val overlays = mutableListOf<Overlay>()
+        payLoad.ways.forEach { way ->
+            val geoPoints = way.geoPoints
+            val overlay = homeMapView.addPolyline(geoPoints, onClick = {
+                initWayBottomSheet(placeDetails.place, boundingBox, *overlays.toTypedArray())
+                placeDetailsSheet.collapse()
+                homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
+            })
+
+            overlays.add(overlay)
+        }
+
+        initWayBottomSheet(placeDetails.place, boundingBox, *overlays.toTypedArray())
+        placeDetailsSheet.collapse()
+
+        homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
+    }
+
+    private fun initNodeBottomSheet(placeUiModel: PlaceUiModel, geoPoint: GeoPoint, marker: Marker) {
+        binding.homePlaceDetailsBottomSheetContainer.bindNodeUiModel(
+            place = placeUiModel,
+            onHikingTrailsButtonClick = {
+                placeDetailsSheet.hide()
+                viewModel.loadHikingRoutes(
+                    getString(R.string.map_place_name_node_routes_nearby, placeUiModel.primaryText),
+                    homeMapView.boundingBox.toDomainBoundingBox()
+                )
+            },
+            onCloseButtonClick = {
+                homeMapView.removeMarker(marker)
+                placeDetailsSheet.hide()
+            },
+            onDirectionsButtonClick = {
+                startGoogleDirections(geoPoint)
+            }
+        )
+    }
+
+    private fun initWayBottomSheet(placeUiModel: PlaceUiModel, boundingBox: BoundingBox, vararg overlays: Overlay) {
+        binding.homePlaceDetailsBottomSheetContainer.bindWayUiModel(
+            uiModel = placeUiModel,
+            onHikingTrailsButtonClick = {
+                placeDetailsSheet.hide()
+                viewModel.loadHikingRoutes(placeUiModel.primaryText, boundingBox.toDomainBoundingBox())
+            },
+            onCloseButtonClick = {
+                placeDetailsSheet.hide()
+                homeMapView.removeOverlay(*overlays)
+            }
+        )
     }
 
     private fun initReceivers() {

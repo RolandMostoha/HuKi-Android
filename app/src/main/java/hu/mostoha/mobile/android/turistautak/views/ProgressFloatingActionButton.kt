@@ -2,17 +2,22 @@ package hu.mostoha.mobile.android.turistautak.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import hu.mostoha.mobile.android.turistautak.R
+import hu.mostoha.mobile.android.turistautak.databinding.ViewProgressFloatingActionButtonBinding
 import hu.mostoha.mobile.android.turistautak.extensions.gone
+import hu.mostoha.mobile.android.turistautak.extensions.inflater
 import hu.mostoha.mobile.android.turistautak.extensions.visible
-import kotlinx.android.synthetic.main.view_progress_floating_action_button.view.*
 
 class ProgressFloatingActionButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+
+    private val binding = ViewProgressFloatingActionButtonBinding.inflate(context.inflater, this)
+
+    private val progressBar by lazy { binding.progressBar }
+    private val fab by lazy { binding.fab }
 
     var inProgress: Boolean = false
         set(value) {
@@ -25,10 +30,6 @@ class ProgressFloatingActionButton @JvmOverloads constructor(
         }
 
     init {
-        LayoutInflater
-            .from(context)
-            .inflate(R.layout.view_progress_floating_action_button, this, true)
-
         with(context.obtainStyledAttributes(attrs, R.styleable.ProgressFloatingActionButton)) {
             fab.setImageDrawable(getDrawable(R.styleable.ProgressFloatingActionButton_iconSrc))
 

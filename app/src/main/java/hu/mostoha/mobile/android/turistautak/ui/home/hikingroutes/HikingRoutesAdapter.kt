@@ -1,16 +1,13 @@
 package hu.mostoha.mobile.android.turistautak.ui.home.hikingroutes
 
-import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.extensions.inflateLayout
+import hu.mostoha.mobile.android.turistautak.databinding.ItemHomeHikingRoutesBinding
+import hu.mostoha.mobile.android.turistautak.databinding.ItemHomeHikingRoutesHeaderBinding
+import hu.mostoha.mobile.android.turistautak.extensions.inflater
 import hu.mostoha.mobile.android.turistautak.extensions.setDrawableStart
 import hu.mostoha.mobile.android.turistautak.model.ui.HikingRouteUiModel
-import kotlinx.android.synthetic.main.item_home_hiking_routes.view.*
-import kotlinx.android.synthetic.main.item_home_hiking_routes_header.view.*
 
 class HikingRoutesAdapter(
     val onItemClick: (HikingRouteUiModel) -> Unit,
@@ -33,10 +30,14 @@ class HikingRoutesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_HEADER -> {
-                ViewHolderHeader(parent.context.inflateLayout(R.layout.item_home_hiking_routes_header, parent))
+                ViewHolderHeader(
+                    ItemHomeHikingRoutesHeaderBinding.inflate(parent.context.inflater, parent, false)
+                )
             }
             TYPE_ITEM -> {
-                ViewHolderItem(parent.context.inflateLayout(R.layout.item_home_hiking_routes, parent))
+                ViewHolderItem(
+                    ItemHomeHikingRoutesBinding.inflate(parent.context.inflater, parent, false)
+                )
             }
             else -> throw IllegalArgumentException()
         }
@@ -53,47 +54,30 @@ class HikingRoutesAdapter(
         }
     }
 
-    inner class ViewHolderHeader(val view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolderHeader(
+        private val binding: ItemHomeHikingRoutesHeaderBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(text: String) {
-            view.hikingRoutesHeaderText.text = text
-            view.hikingRoutesCloseButton.setOnClickListener {
-                onCloseClick.invoke()
+            with(binding) {
+                hikingRoutesHeaderText.text = text
+                hikingRoutesCloseButton.setOnClickListener {
+                    onCloseClick.invoke()
+                }
             }
         }
     }
 
-    inner class ViewHolderItem(val view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolderItem(
+        private val binding: ItemHomeHikingRoutesBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(hikingRouteUiModel: HikingRouteUiModel) {
-            view.hikingRoutesItemText.text = hikingRouteUiModel.name
-            view.hikingRoutesItemText.setDrawableStart(hikingRouteUiModel.symbolIcon)
-            view.hikingRoutesItemText.setOnClickListener {
-                onItemClick.invoke(hikingRouteUiModel)
+            with(binding) {
+                hikingRoutesItemText.text = hikingRouteUiModel.name
+                hikingRoutesItemText.setDrawableStart(hikingRouteUiModel.symbolIcon)
+                hikingRoutesItemText.setOnClickListener {
+                    onItemClick.invoke(hikingRouteUiModel)
+                }
             }
-        }
-    }
-
-}
-
-sealed class HikingRoutesItem {
-    data class Header(val text: String) : HikingRoutesItem()
-    data class Item(val hikingRouteUiModel: HikingRouteUiModel) : HikingRoutesItem()
-}
-
-object HikingRoutesComparator : DiffUtil.ItemCallback<HikingRoutesItem>() {
-
-    override fun areItemsTheSame(oldItem: HikingRoutesItem, newItem: HikingRoutesItem): Boolean {
-        return oldItem == newItem
-    }
-
-    override fun areContentsTheSame(oldItem: HikingRoutesItem, newItem: HikingRoutesItem): Boolean {
-        return when {
-            oldItem is HikingRoutesItem.Header && newItem is HikingRoutesItem.Header -> {
-                oldItem.text == newItem.text
-            }
-            oldItem is HikingRoutesItem.Item && newItem is HikingRoutesItem.Item -> {
-                oldItem.hikingRouteUiModel == newItem.hikingRouteUiModel
-            }
-            else -> false
         }
     }
 

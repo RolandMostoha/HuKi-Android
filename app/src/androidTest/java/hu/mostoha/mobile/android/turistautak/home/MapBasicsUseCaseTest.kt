@@ -89,12 +89,12 @@ class MapBasicsUseCaseTest {
         launch<HomeActivity> {
             val searchText = "Mecsek"
 
-            R.id.placeDetailsContainer.isNotDisplayed()
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
 
             R.id.homeSearchBarInput.typeText(searchText)
             "Mecseki Way".clickWithTextInPopup()
 
-            R.id.placeDetailsContainer.isDisplayed()
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
             "Mecseki Way".isTextDisplayed()
         }
     }
@@ -116,7 +116,7 @@ class MapBasicsUseCaseTest {
     }
 
     @Test
-    fun givenPlaceDetails_whenCloseClick_thenBottomSheetHidden() {
+    fun givenPlaceDetails_whenCloseClick_thenBottomSheetIsHidden() {
         answerTestHikingLayer()
         answerTestPlacePredictions()
         answerTestPlaceDetails()
@@ -128,7 +128,7 @@ class MapBasicsUseCaseTest {
             "Mecseki Way".clickWithTextInPopup()
             R.id.placeDetailsCloseButton.click()
 
-            R.id.placeDetailsContainer.isNotDisplayed()
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
         }
     }
 

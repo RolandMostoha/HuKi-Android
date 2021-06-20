@@ -17,7 +17,7 @@
         android:text="@string/layers_base_layers_title" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/layersList"
+        android:id="@+id/popupLayersBaseLayersList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -34,6 +34,8 @@
         android:layout_marginTop="@dimen/space_small"
         android:text="@string/layers_hiking_layers_title" />
 
-    <include layout="@layout/item_layers_hiking" />
+    <include
+        android:id="@+id/popupLayersHikingLayerContainer"
+        layout="@layout/item_layers_hiking" />
 
 </LinearLayout>

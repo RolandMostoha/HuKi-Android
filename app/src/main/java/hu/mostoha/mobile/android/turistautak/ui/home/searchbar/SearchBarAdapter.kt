@@ -6,15 +6,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import hu.mostoha.mobile.android.turistautak.R
-import hu.mostoha.mobile.android.turistautak.extensions.inflateLayout
+import hu.mostoha.mobile.android.turistautak.databinding.ItemHomeSearchBarInfoBinding
+import hu.mostoha.mobile.android.turistautak.databinding.ItemHomeSearchBarPlaceBinding
+import hu.mostoha.mobile.android.turistautak.extensions.inflater
 import hu.mostoha.mobile.android.turistautak.extensions.setDrawableTop
 import hu.mostoha.mobile.android.turistautak.extensions.setTextOrGone
-import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
-import kotlinx.android.synthetic.main.item_home_search_bar_info.view.*
-import kotlinx.android.synthetic.main.item_home_search_bar_place.view.*
 
 class SearchBarAdapter(context: Context) : ArrayAdapter<SearchBarItem>(context, 0) {
 
@@ -29,12 +25,13 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchBarItem>(context, 
         when (searchBarItem) {
             is SearchBarItem.Place -> {
                 if (convertView == null || convertView.tag == null) {
-                    view = parent.context.inflateLayout(R.layout.item_home_search_bar_place, parent, false)
+                    val binding = ItemHomeSearchBarPlaceBinding.inflate(parent.context.inflater, parent, false)
+                    view = binding.root
                     holder = ViewHolder()
-                    holder.primaryText = view.searchBarResultPrimaryText
-                    holder.secondaryText = view.searchBarResultSecondaryText
-                    holder.iconImage = view.homeSearchBarResultIcon
-                    view.tag = holder
+                    holder.primaryText = binding.searchBarResultPrimaryText
+                    holder.secondaryText = binding.searchBarResultSecondaryText
+                    holder.iconImage = binding.homeSearchBarResultIcon
+                    binding.root.tag = holder
                 } else {
                     view = convertView
                     holder = convertView.tag as ViewHolder
@@ -45,9 +42,11 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchBarItem>(context, 
                 holder.iconImage.setImageResource(searchBarItem.placeUiModel.iconRes)
             }
             is SearchBarItem.Info -> {
-                view = parent.context.inflateLayout(R.layout.item_home_search_bar_info, parent, false)
-                view.searchBarInfoView.text = parent.context.getString(searchBarItem.messageRes)
-                view.searchBarInfoView.setDrawableTop(searchBarItem.drawableRes)
+                val binding = ItemHomeSearchBarInfoBinding.inflate(parent.context.inflater, parent, false)
+                binding.searchBarInfoView.text = parent.context.getString(searchBarItem.messageRes)
+                binding.searchBarInfoView.setDrawableTop(searchBarItem.drawableRes)
+
+                view = binding.root
             }
         }
 
@@ -67,9 +66,4 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchBarItem>(context, 
         lateinit var iconImage: ImageView
     }
 
-}
-
-sealed class SearchBarItem {
-    data class Place(val placeUiModel: PlaceUiModel) : SearchBarItem()
-    data class Info(@StringRes val messageRes: Int, @DrawableRes val drawableRes: Int) : SearchBarItem()
 }
