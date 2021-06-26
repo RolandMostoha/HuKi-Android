@@ -1,6 +1,8 @@
 package hu.mostoha.mobile.android.turistautak.home
 
 import android.Manifest
+import android.app.DownloadManager
+import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -18,11 +20,10 @@ import hu.mostoha.mobile.android.turistautak.repository.LandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.turistautak.repository.PlacesRepository
 import hu.mostoha.mobile.android.turistautak.ui.home.HomeActivity
-import hu.mostoha.mobile.android.turistautak.util.espresso.click
-import hu.mostoha.mobile.android.turistautak.util.espresso.isDisplayed
+import hu.mostoha.mobile.android.turistautak.util.espresso.clickInPopup
 import hu.mostoha.mobile.android.turistautak.util.espresso.isPopupTextDisplayed
-import hu.mostoha.mobile.android.turistautak.util.espresso.isTextDoesNotExist
 import hu.mostoha.mobile.android.turistautak.util.launch
+import hu.mostoha.mobile.android.turistautak.util.testAppContext
 import hu.mostoha.mobile.android.turistautak.util.testContext
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -69,28 +70,35 @@ class MapLayersUseCaseTest {
     }
 
     @Test
-    fun givenOpenLayersDialog_whenClickOnLayersFab_thenLayersPopupNotDisplayed() {
-        answerTestHikingLayer()
+    fun givenNullLayerFile_whenScreenStarts_thenLayersPopupWindowShouldShown() {
+        answerNullHikingLayer()
 
         launch<HomeActivity> {
-            R.id.homeLayersFab.click()
-
             R.string.layers_base_layers_title.isPopupTextDisplayed()
-
-            R.id.homeLayersFab.click()
-
-            R.string.layers_base_layers_title.isTextDoesNotExist()
         }
     }
 
     @Test
-    fun givenNullLayerFile_whenScreenStarts_thenDialogShouldShown() {
-        answerNullHikingLayer()
+    fun givenNullLayerFile_whenLayerIsDownloaded_thenLayersPopupWindowShouldUpdate() {
+        coEvery {
+            layerRepository.getHikingLayerFile()
+        } returnsMany listOf(
+            null,
+            osmConfiguration.getHikingLayerFile().apply {
+                copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
+            }
+        )
+        coEvery { layerRepository.downloadHikingLayerFile() } returns 1
+        coEvery { layerRepository.saveHikingLayerFile(1) } returns Unit
 
         launch<HomeActivity> {
-            R.id.homeMapView.isDisplayed()
+            R.id.itemLayersHikingDownloadButton.clickInPopup()
 
-            R.string.layers_base_layers_title.isPopupTextDisplayed()
+            testAppContext.sendBroadcast(Intent(DownloadManager.ACTION_DOWNLOAD_COMPLETE).apply {
+                putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 1L)
+            })
+
+            R.string.layers_hiking_update_label.isPopupTextDisplayed()
         }
     }
 

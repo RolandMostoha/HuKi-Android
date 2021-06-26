@@ -13,7 +13,7 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindLayerRepository(layerRepository: HikingLayerRepositoryImpl): HikingLayerRepository
+    abstract fun bindLayerRepository(layerRepository: DefaultHikingLayerRepository): HikingLayerRepository
 
     @Singleton
     @Binds

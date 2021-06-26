@@ -4,7 +4,7 @@ import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.turistautak.R
 import hu.mostoha.mobile.android.turistautak.databinding.ItemHomeLandscapesChipBinding
 import hu.mostoha.mobile.android.turistautak.databinding.LayoutBottomSheetPlaceDetailsBinding
-import hu.mostoha.mobile.android.turistautak.databinding.PopupLayersBinding
+import hu.mostoha.mobile.android.turistautak.databinding.WindowPopupLayersBinding
 import hu.mostoha.mobile.android.turistautak.extensions.gone
 import hu.mostoha.mobile.android.turistautak.extensions.setTextOrGone
 import hu.mostoha.mobile.android.turistautak.extensions.visible
@@ -13,7 +13,7 @@ import hu.mostoha.mobile.android.turistautak.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.turistautak.ui.home.layers.BaseLayer
 import hu.mostoha.mobile.android.turistautak.ui.home.layers.LayersAdapter
 
-fun PopupLayersBinding.bindUiModel(
+fun WindowPopupLayersBinding.bindUiModel(
     uiModel: HikingLayerDetailsUiModel,
     onDownloadButtonClick: () -> Unit
 ) {
