@@ -41,6 +41,10 @@ android {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
+    lintOptions {
+        abortOnError true
+    }
+
     packagingOptions {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'

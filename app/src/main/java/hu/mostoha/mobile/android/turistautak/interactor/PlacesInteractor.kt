@@ -54,5 +54,4 @@ class PlacesInteractor @Inject constructor(
         }
     }
 
-
 }

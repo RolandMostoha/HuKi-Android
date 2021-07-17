@@ -98,7 +98,7 @@ class HomeUiModelGenerator @Inject constructor(
 
     fun generateHikingRouteDetails(hikingRoute: HikingRouteUiModel, placeDetails: PlaceDetails): PlaceDetailsUiModel {
         val relation = placeDetails.payLoad as PayLoad.Relation
-        val totalDistance = relation.ways.sumBy { it.distance }
+        val totalDistance = relation.ways.sumOf { it.distance }
         return generatePlaceDetails(
             placeUiModel = PlaceUiModel(
                 id = hikingRoute.id,

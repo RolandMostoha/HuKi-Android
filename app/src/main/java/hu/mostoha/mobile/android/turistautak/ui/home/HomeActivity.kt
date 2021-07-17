@@ -283,34 +283,34 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initObservers() {
-        viewModel.liveEvents.observe(this, {
-            when (it) {
+        viewModel.liveEvents.observe(this, { event ->
+            when (event) {
                 is ErrorOccurred -> {
-                    showToast(it.message)
+                    showToast(event.message)
                 }
                 is LayerLoading -> {
-                    homeLayersFab.inProgress = it.inProgress
+                    homeLayersFab.inProgress = event.inProgress
                 }
                 is SearchBarLoading -> {
-                    binding.homeSearchBarProgress.visibleOrGone(it.inProgress)
+                    binding.homeSearchBarProgress.visibleOrGone(event.inProgress)
                 }
                 is PlacesResult -> {
-                    initPlaceResult(it)
+                    initPlaceResult(event)
                 }
                 is PlacesErrorResult -> {
-                    initPlaceErrorResult(it)
+                    initPlaceErrorResult(event)
                 }
                 is LandscapesResult -> {
-                    initLandscapeResult(it)
+                    initLandscapeResult(event)
                 }
                 is PlaceDetailsResult -> {
-                    initPlaceDetailsResult(it)
+                    initPlaceDetailsResult(event)
                 }
                 is HikingRoutesResult -> {
-                    initHikingRoutesResult(it)
+                    initHikingRoutesResult(event)
                 }
                 is HikingRouteDetailsResult -> {
-                    initHikingRouteDetailsResult(it)
+                    initHikingRouteDetailsResult(event)
                 }
             }
         })
