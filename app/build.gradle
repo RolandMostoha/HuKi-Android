@@ -8,13 +8,13 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "hu.mostoha.mobile.android.turistautak"
+        applicationId "hu.mostoha.mobile.android.huki"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "hu.mostoha.mobile.android.turistautak.HiltTestRunner"
+        testInstrumentationRunner "hu.mostoha.mobile.android.huki.HiltTestRunner"
     }
 
     buildFeatures {

@@ -1,8 +1,0 @@
-package hu.mostoha.mobile.android.turistautak.interactor
-
-import androidx.annotation.StringRes
-
-open class DomainException(
-    @StringRes val messageRes: Int,
-    throwable: Throwable? = null
-) : Exception(throwable)

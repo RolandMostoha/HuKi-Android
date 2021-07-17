@@ -109,7 +109,7 @@
 
         </HorizontalScrollView>
 
-        <hu.mostoha.mobile.android.turistautak.views.ProgressFloatingActionButton
+        <hu.mostoha.mobile.android.huki.views.ProgressFloatingActionButton
             android:id="@+id/homeLayersFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
