@@ -76,7 +76,7 @@ class MapRoutesNearbyUseCaseTest {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY - 1)
             waitForFabAnimation()
 
-            R.id.homeRoutesNearbyFab.isDisplayed()
+            R.id.homeRoutesNearbyFab.isNotDisplayed()
 
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY + 1)
             waitForFabAnimation()
