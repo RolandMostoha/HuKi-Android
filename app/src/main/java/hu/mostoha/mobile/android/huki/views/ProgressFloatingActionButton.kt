@@ -16,8 +16,8 @@ class ProgressFloatingActionButton @JvmOverloads constructor(
 
     private val binding = ViewProgressFloatingActionButtonBinding.inflate(context.inflater, this)
 
-    private val progressBar by lazy { binding.progressBar }
-    private val fab by lazy { binding.fab }
+    private val progressBar by lazy { binding.progressFabProgressBar }
+    private val fab by lazy { binding.progressFabButton }
 
     var inProgress: Boolean = false
         set(value) {

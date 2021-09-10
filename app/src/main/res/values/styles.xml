@@ -83,16 +83,16 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
-    <style name="DefaultCircularProgressBar">
-        <item name="foregroundStrokeColor">@color/colorPrimary</item>
-        <item name="indeterminate">true</item>
-        <item name="foregroundStrokeWidth">2dp</item>
+    <style name="DefaultCircularProgressIndicator">
+        <item name="android:indeterminate">true</item>
+        <item name="trackThickness">2dp</item>
     </style>
 
     <style name="DefaultBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/DefaultShapeAppearance.BottomSheet</item>
         <item name="android:backgroundTint">@color/colorBackground</item>
-        <item name="layout_behavior">com.google.android.material.bottomsheet.BottomSheetBehavior</item>
+        <item name="layout_behavior">com.google.android.material.bottomsheet.BottomSheetBehavior
+        </item>
     </style>
 
     <style name="DefaultFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
