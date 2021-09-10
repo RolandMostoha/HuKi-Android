@@ -3,9 +3,9 @@ package hu.mostoha.mobile.android.huki.model.network
 import androidx.annotation.DrawableRes
 import com.squareup.moshi.Json
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.model.domain.IconEnum
 
 enum class SymbolType : IconEnum {
+
     UNHANDLED {
         @DrawableRes
         override fun getIconRes(): Int = R.drawable.ic_symbol_empty
@@ -370,4 +370,5 @@ enum class SymbolType : IconEnum {
         @DrawableRes
         override fun getIconRes(): Int = R.drawable.ic_symbol_smz
     },
+
 }

@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.formatter
+package hu.mostoha.mobile.android.huki.model.generator.formatter
 
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry

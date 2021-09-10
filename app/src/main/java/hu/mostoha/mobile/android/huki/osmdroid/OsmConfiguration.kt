@@ -73,9 +73,7 @@ class OsmConfiguration @Inject constructor(@ApplicationContext private val conte
         }
     }
 
-    fun getHikingLayerFile(): File {
-        return File(getOsmDroidLayerDirectory(), FILE_NAME_HIKING_LAYER)
-    }
+    fun getHikingLayerFile(): File = File(getOsmDroidLayerDirectory(), FILE_NAME_HIKING_LAYER)
 
     private fun getOsmDroidLayerDirectory(): File {
         return if (osmDroidLayerPath == null) {

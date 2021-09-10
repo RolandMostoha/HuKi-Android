@@ -13,8 +13,9 @@ class MyLocationOverlay(
     private val mapView: MapView
 ) : MyLocationNewOverlay(provider, mapView) {
 
+    private var onLocationChanged: ((Location) -> Unit)? = null
+
     var onFollowLocationDisabled: (() -> Unit)? = null
-    var onLocationChanged: ((Location) -> Unit)? = null
 
     override fun setLocation(location: Location) {
         if (mIsFollowing && mMapView.zoomLevelDouble != MY_LOCATION_DEFAULT_ZOOM) {

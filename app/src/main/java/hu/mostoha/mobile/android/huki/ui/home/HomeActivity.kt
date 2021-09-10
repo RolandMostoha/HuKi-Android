@@ -60,6 +60,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var layersPopupBinding: WindowPopupLayersBinding
 
     private val homeMapView by lazy { binding.homeMapView }
+    private val homeSearchBarContainer by lazy { binding.homeSearchBarContainer }
     private val homeSearchBarInputLayout by lazy { binding.homeSearchBarInputLayout }
     private val homeSearchBarInput by lazy { binding.homeSearchBarInput }
     private val homeMyLocationButton by lazy { binding.homeMyLocationButton }
@@ -90,7 +91,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initWindow() {
         setStatusBarColor(android.R.color.transparent)
-        binding.homeSearchBarContainer.applyTopMarginForStatusBar(this)
+        homeSearchBarContainer.applyTopMarginForStatusBar(this)
     }
 
     private fun initViews() {
@@ -410,7 +411,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initHikingRoutesResult(it: HikingRoutesResult) {
+    private fun initHikingRoutesResult(hikingRoutesResult: HikingRoutesResult) {
         with(binding.homeHikingRoutesBottomSheetContainer) {
             val hikingRoutesAdapter = HikingRoutesAdapter(
                 onItemClick = { hikingRoute ->
@@ -425,8 +426,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             )
             hikingRoutesList.setHasFixedSize(true)
             hikingRoutesList.adapter = hikingRoutesAdapter
-            hikingRoutesAdapter.submitList(it.hikingRoutes)
-            hikingRoutesEmptyView.visibleOrGone(it.hikingRoutes.size <= 1)
+            hikingRoutesAdapter.submitList(hikingRoutesResult.hikingRoutes)
+            hikingRoutesEmptyView.visibleOrGone(hikingRoutesResult.hikingRoutes.size <= 1)
 
             hikingRoutesSheet.collapse()
         }

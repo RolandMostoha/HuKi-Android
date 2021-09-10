@@ -1,12 +1,8 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.architecture.BaseViewModel
-import hu.mostoha.mobile.android.huki.architecture.LiveEvents
-import hu.mostoha.mobile.android.huki.architecture.ViewState
 import hu.mostoha.mobile.android.huki.executor.TaskExecutor
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.LayerInteractor
@@ -15,14 +11,10 @@ import hu.mostoha.mobile.android.huki.interactor.TaskResult
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
-import hu.mostoha.mobile.android.huki.model.ui.HikingLayerDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
-import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.ui.home.HomeLiveEvents.*
-import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.ui.utils.Message
 import hu.mostoha.mobile.android.huki.ui.utils.toMessage
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -193,16 +185,3 @@ class HomeViewModel @Inject constructor(
 
 }
 
-data class HomeViewState(val hikingLayerDetails: HikingLayerDetailsUiModel) : ViewState
-
-sealed class HomeLiveEvents : LiveEvents {
-    data class ErrorOccurred(val message: Message) : HomeLiveEvents()
-    data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
-    data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
-    data class PlacesResult(val results: List<PlaceUiModel>) : HomeLiveEvents()
-    data class PlacesErrorResult(@StringRes val messageRes: Int, @DrawableRes val drawableRes: Int) : HomeLiveEvents()
-    data class PlaceDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
-    data class LandscapesResult(val landscapes: List<PlaceUiModel>) : HomeLiveEvents()
-    data class HikingRoutesResult(val hikingRoutes: List<HikingRoutesItem>) : HomeLiveEvents()
-    data class HikingRouteDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
-}

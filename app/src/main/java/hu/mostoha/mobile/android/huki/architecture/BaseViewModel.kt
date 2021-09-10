@@ -32,7 +32,3 @@ open class BaseViewModel<E : LiveEvents, VS : ViewState>(
     }
 
 }
-
-interface LiveEvents
-
-interface ViewState

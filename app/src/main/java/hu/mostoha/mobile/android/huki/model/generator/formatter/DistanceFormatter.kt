@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.formatter
+package hu.mostoha.mobile.android.huki.model.generator.formatter
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -9,6 +9,7 @@ class DistanceFormatter @Inject constructor(@ApplicationContext val context: Con
 
     fun format(meters: Int): String {
         val km = meters.toDouble() / 1000
+
         return if (km > 1) {
             context.getString(R.string.default_distance_template_km, km)
         } else {

@@ -6,10 +6,7 @@ import android.view.WindowManager
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.marginTop
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updateMargins
+import androidx.core.view.*
 import hu.mostoha.mobile.android.huki.R
 
 fun AppCompatActivity.setStatusBarColor(@ColorRes colorRes: Int) {
@@ -24,8 +21,8 @@ fun View.applyTopMarginForStatusBar(appCompatActivity: AppCompatActivity) {
 
     ViewCompat.setOnApplyWindowInsetsListener(appCompatActivity.findViewById(R.id.homeContainer)) { _, insets ->
         updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            updateMargins(top = viewTopMargin + insets.systemWindowInsetTop)
+            updateMargins(top = viewTopMargin + insets.getInsets(WindowInsetsCompat.Type.systemBars()).top)
         }
-        insets.consumeSystemWindowInsets()
+        WindowInsetsCompat.CONSUMED
     }
 }

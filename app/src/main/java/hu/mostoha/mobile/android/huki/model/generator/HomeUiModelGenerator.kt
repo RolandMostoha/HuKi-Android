@@ -5,8 +5,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatShortDate
 import hu.mostoha.mobile.android.huki.extensions.toLocalDateTime
-import hu.mostoha.mobile.android.huki.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.model.domain.*
+import hu.mostoha.mobile.android.huki.model.generator.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.model.ui.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import java.io.File
