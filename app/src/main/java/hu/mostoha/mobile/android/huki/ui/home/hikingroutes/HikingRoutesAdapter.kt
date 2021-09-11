@@ -23,7 +23,7 @@ class HikingRoutesAdapter(
         return when (getItem(position)) {
             is HikingRoutesItem.Header -> TYPE_HEADER
             is HikingRoutesItem.Item -> TYPE_ITEM
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("Not handled ItemViewType")
         }
     }
 

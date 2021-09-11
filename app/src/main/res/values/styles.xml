@@ -85,7 +85,7 @@
 
     <style name="DefaultCircularProgressIndicator">
         <item name="android:indeterminate">true</item>
-        <item name="trackThickness">2dp</item>
+        <item name="trackThickness">@dimen/progress_fab_stroke_width</item>
     </style>
 
     <style name="DefaultBottomSheet" parent="Widget.MaterialComponents.BottomSheet">

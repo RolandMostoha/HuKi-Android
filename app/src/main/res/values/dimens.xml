@@ -49,7 +49,6 @@
     <dimen name="home_map_view_end_offset">20dp</dimen>
 
     <dimen name="place_details_bottom_sheet_image_size">45dp</dimen>
-    <dimen name="place_details_bottom_sheet_elevation">10dp</dimen>
 
     <dimen name="hiking_routes_bottom_sheet_peek_height">250dp</dimen>
 
