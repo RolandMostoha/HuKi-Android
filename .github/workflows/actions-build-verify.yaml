@@ -1,0 +1,32 @@
+name: Build and Verify
+
+## Triggers
+on: [ push ]
+
+jobs:
+  lint:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Lint check
+        run: ./gradlew lint
+
+  unit_tests:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Unit tests
+        run: ./gradlew test
+
+  android_tests:
+    runs-on: [ macos-latest ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Instrumentation Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 26
+          script: ./gradlew connectedAndroidTest
