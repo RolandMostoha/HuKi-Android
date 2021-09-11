@@ -1,11 +1,9 @@
-package hu.mostoha.mobile.android.huki.network.model
+package hu.mostoha.mobile.android.huki.osm_overpasser.query
 
-import hu.mostoha.mobile.android.huki.network.NetworkConfig
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputFormat
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputModificator
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputOrder
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputVerbosity
-import hu.mostoha.mobile.android.huki.network.overpasser.query.OverpassQuery
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputFormat
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputModificator
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputOrder
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputVerbosity
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -26,7 +24,7 @@ class OverpassQueryTest {
     fun `Given relBy query, when build, then relation id is in brackets`() {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_SEC)
+            .timeout(TIMEOUT_SEC)
             .filterQuery()
             .relBy("4640869")
             .end()
@@ -40,7 +38,7 @@ class OverpassQueryTest {
     fun `Given case insensitive query, when build, then 'i' is appended`() {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_SEC)
+            .timeout(TIMEOUT_SEC)
             .filterQuery()
             .rel()
             .tagRegex("name", "Mec", false)
@@ -49,6 +47,10 @@ class OverpassQueryTest {
             .build()
 
         assertEquals("[out:json][timeout:30]; (rel[\"name\"~\"Mec\",i];<;); out tags center qt 20;", query)
+    }
+
+    companion object {
+        private const val TIMEOUT_SEC = 30
     }
 
 }

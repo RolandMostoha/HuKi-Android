@@ -1,15 +1,15 @@
-package hu.mostoha.mobile.android.huki.network.overpasser.query;
+package hu.mostoha.mobile.android.huki.osm_overpasser.query;
+
+import static hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputModificator.CENTER;
+import static hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputOrder.QT;
+import static hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputVerbosity.BODY;
 
 import java.util.Locale;
 
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputFormat;
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputModificator;
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputOrder;
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputVerbosity;
-
-import static hu.mostoha.mobile.android.huki.network.overpasser.output.OutputModificator.CENTER;
-import static hu.mostoha.mobile.android.huki.network.overpasser.output.OutputOrder.QT;
-import static hu.mostoha.mobile.android.huki.network.overpasser.output.OutputVerbosity.BODY;
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputFormat;
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputModificator;
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputOrder;
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputVerbosity;
 
 /**
  * The main query class to create and build requests using the Overpass QL

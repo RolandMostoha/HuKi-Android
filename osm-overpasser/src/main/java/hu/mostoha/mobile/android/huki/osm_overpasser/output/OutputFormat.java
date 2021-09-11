@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.network.overpasser.output;
+package hu.mostoha.mobile.android.huki.osm_overpasser.output;
 
 /**
  * Represents the possible output formats for the query result.

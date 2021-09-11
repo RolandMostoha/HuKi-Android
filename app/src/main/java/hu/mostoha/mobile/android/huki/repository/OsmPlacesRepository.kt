@@ -7,9 +7,9 @@ import hu.mostoha.mobile.android.huki.model.network.OverpassQueryResponse
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
 import hu.mostoha.mobile.android.huki.network.PhotonService
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputFormat
-import hu.mostoha.mobile.android.huki.network.overpasser.output.OutputVerbosity
-import hu.mostoha.mobile.android.huki.network.overpasser.query.OverpassQuery
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputFormat
+import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputVerbosity
+import hu.mostoha.mobile.android.huki.osm_overpasser.query.OverpassQuery
 import javax.inject.Inject
 
 class OsmPlacesRepository @Inject constructor(
