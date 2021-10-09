@@ -36,7 +36,7 @@ jobs:
           script: ./gradlew connectedAndroidTest
 
   release:
-    needs: [ unit_tests ]
+    needs: [ lint, unit_tests ]
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout code
@@ -45,7 +45,7 @@ jobs:
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease
 
-      - name: Sign APK
+      - name: Sign AAB
         uses: r0adkll/sign-android-release@v1
         # ID used to access action output
         id: sign_app
