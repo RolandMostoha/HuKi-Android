@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
+apply from: "$project.rootDir/tools/git-version-generator.gradle"
 
 android {
     compileSdk 31
@@ -10,8 +11,9 @@ android {
         applicationId "hu.mostoha.mobile.android.huki"
         minSdk 26
         targetSdk 31
-        versionCode 1
-        versionName "0.1"
+        versionCode gitVersionCode
+        versionName gitVersionName
+        archivesBaseName = "HUKI_v${versionCode}_${versionName}}"
 
         testInstrumentationRunner "hu.mostoha.mobile.android.huki.HiltTestRunner"
     }
@@ -22,9 +24,10 @@ android {
 
     buildTypes {
         debug {
-
+            archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
         }
         release {
+            archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
