@@ -37,20 +37,20 @@ jobs:
 
   release:
     needs: [ unit_tests, android_tests ]
-    runs-on: ubuntu-latest
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Generate Release APK
-        run: ./gradlew assembleRelease
+      - name: Generate Release Bundle AAB
+        run: ./gradlew app:bundleRelease
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
         # ID used to access action output
         id: sign_app
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/build/outputs/bundle/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -58,7 +58,7 @@ jobs:
 
       - uses: actions/upload-artifact@master
         with:
-          name: release.apk
+          name: app-release.aab
           path: ${{steps.sign_app.outputs.signedReleaseFile}}
 
       - uses: actions/upload-artifact@master
