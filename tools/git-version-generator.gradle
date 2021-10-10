@@ -21,6 +21,7 @@ ext {
 }
 
 task printVersion() {
+    println("Project DIR: $projectDir")
     println("Version Name: $gitVersionName")
     println("Version Code: $gitVersionCode")
 }
