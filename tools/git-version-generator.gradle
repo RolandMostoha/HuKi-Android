@@ -15,13 +15,13 @@ buildscript {
 import org.ajoberstar.grgit.Grgit
 
 ext {
-    git = Grgit.open(dir: project.rootDir)
+    git = Grgit.open(currentDir: "$project.rootDir/tools")
     gitVersionName = git.describe()
     gitVersionCode = git.log().size()
 }
 
 task printVersion() {
-    println("Project rootDir: $project.rootDir")
+    println("Project rootDir: $project.rootDir/tools")
     println("Version Name: $gitVersionName")
     println("Version Code: $gitVersionCode")
 }
