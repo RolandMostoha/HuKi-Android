@@ -39,13 +39,10 @@ jobs:
     needs: [ lint, unit_tests ]
     runs-on: [ ubuntu-latest ]
     steps:
-      - name: Get latest Git
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git
-
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease
