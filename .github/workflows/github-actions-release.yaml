@@ -38,12 +38,11 @@ jobs:
   release:
     needs: [ lint, unit_tests ]
     runs-on: [ ubuntu-latest ]
-    container: ubuntu:20.04
     steps:
       - name: Get latest Git
         run: |
-          apt-get update
-          apt-get install -y git
+          sudo apt-get update
+          sudo apt-get install -y git
 
       - name: Checkout code
         uses: actions/checkout@v2
