@@ -39,8 +39,10 @@ jobs:
     needs: [ lint, unit_tests ]
     runs-on: [ ubuntu-latest ]
     steps:
-      - name: Get latest git within container
-        run: apk add git --update-cache
+      - name: Get latest Git
+        run: |
+          apt-get update
+          apt-get install -y git
 
       - name: Checkout code
         uses: actions/checkout@v2
