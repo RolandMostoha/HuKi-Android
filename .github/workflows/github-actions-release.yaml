@@ -67,8 +67,8 @@ jobs:
 
       - uses: actions/upload-artifact@master
         with:
-          name: env.ARTIFACT_NAME_AAB
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+          name: ${{ env.ARTIFACT_NAME_AAB }}
+          path: ${{ steps.sign_app.outputs.signedReleaseFile }}
 
       - uses: actions/upload-artifact@master
         with:
