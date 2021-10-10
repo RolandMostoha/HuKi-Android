@@ -45,6 +45,15 @@ jobs:
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease
 
+      - name: Set artifact names to ENV
+        id: set-artifact-names
+        run: |
+          ARTIFACT_PATHNAME_AAB=$(ls app/build/outputs/bundle/release/*.aab | head -n 1)
+          ARTIFACT_NAME_AAB=$(basename $ARTIFACT_PATHNAME_AAB)
+          echo "ARTIFACT_NAME_AAB is " ${ARTIFACT_NAME_AAB}
+          echo "ARTIFACT_PATHNAME_AAB=${ARTIFACT_PATHNAME_AAB}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME_AAB=${ARTIFACT_NAME_AAB}" >> $GITHUB_ENV
+
       - name: Sign AAB
         uses: r0adkll/sign-android-release@v1
         # ID used to access action output
@@ -58,7 +67,7 @@ jobs:
 
       - uses: actions/upload-artifact@master
         with:
-          name: Signed app bundle
+          name: env.ARTIFACT_NAME_AAB
           path: ${{steps.sign_app.outputs.signedReleaseFile}}
 
       - uses: actions/upload-artifact@master
