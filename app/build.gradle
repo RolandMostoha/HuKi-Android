@@ -13,7 +13,6 @@ android {
         targetSdk 31
         versionCode gitVersionCode
         versionName gitVersionName
-        archivesBaseName = "HUKI_v${versionCode}_${versionName}}"
 
         testInstrumentationRunner "hu.mostoha.mobile.android.huki.HiltTestRunner"
     }
