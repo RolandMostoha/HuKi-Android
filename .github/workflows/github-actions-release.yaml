@@ -1,7 +1,9 @@
 name: Build and Verify
 
-## Triggers
-on: [ push ]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   lint:
@@ -39,7 +41,7 @@ jobs:
     needs: [ lint, unit_tests ]
     runs-on: [ ubuntu-latest ]
     steps:
-      - name: Checkout code
+      - name: Checkout code with history
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -48,7 +50,7 @@ jobs:
         run: ./gradlew app:bundleRelease
 
       - name: Set artifact names to ENV
-        id: set-artifact-names
+        id: set_artifact_names
         run: |
           ARTIFACT_PATHNAME_AAB=$(ls app/build/outputs/bundle/release/*.aab | head -n 1)
           ARTIFACT_NAME_AAB=$(basename $ARTIFACT_PATHNAME_AAB)
@@ -75,3 +77,25 @@ jobs:
         with:
           name: mapping.txt
           path: app/build/outputs/mapping/release/mapping.txt
+
+  deploy-play-store:
+    needs: [ release ]
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME_AAB }}
+
+      - uses: actions/download-artifact@master
+        with:
+          name: mapping.txt
+
+      - name: Publish to Play Store internal test track
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: hu.mostoha.mobile.android.huki
+          releaseFiles: ${{ env.ARTIFACT_PATHNAME_AAB }}
+          track: internal
+          whatsNewDirectory: assets/googlePlayStore/whatsnew
+          mappingFile: mapping.txt
