@@ -82,13 +82,7 @@ jobs:
     needs: [ release ]
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME_AAB }}
-
-      - uses: actions/download-artifact@master
-        with:
-          name: mapping.txt
+      - uses: actions/download-artifact@v2
 
       - name: Publish to Play Store internal test track
         uses: r0adkll/upload-google-play@v1
