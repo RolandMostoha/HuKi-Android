@@ -89,7 +89,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: hu.mostoha.mobile.android.huki
-          releaseFiles: ${{ env.ARTIFACT_PATHNAME_AAB }}
+          releaseFile: ${{ env.ARTIFACT_NAME_AAB }}
           track: internal
           whatsNewDirectory: assets/googlePlayStore/whatsnew
           mappingFile: mapping.txt
