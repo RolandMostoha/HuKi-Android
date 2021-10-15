@@ -83,13 +83,24 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/download-artifact@v2
+        id: download_artifact
+
+      - name: Set artifact names to ENV
+        id: set_artifact_names
+        run: |
+          echo ${{steps.download_artifact.outputs.download-path}}
+          ARTIFACT_PATHNAME_AAB=$(ls ${{steps.download_artifact.outputs.download-path}}/*.aab | head -n 1)
+          ARTIFACT_NAME_AAB=$(basename $ARTIFACT_PATHNAME_AAB)
+          echo "ARTIFACT_NAME_AAB is " ${ARTIFACT_NAME_AAB}
+          echo "ARTIFACT_PATHNAME_AAB=${ARTIFACT_PATHNAME_AAB}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME_AAB=${ARTIFACT_NAME_AAB}" >> $GITHUB_ENV
 
       - name: Publish to Play Store internal test track
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: hu.mostoha.mobile.android.huki
-          releaseFile: ${{ env.ARTIFACT_NAME_AAB }}
+          releaseFile: ${{ env.ARTIFACT_PATHNAME_AAB }}
           track: internal
           whatsNewDirectory: assets/googlePlayStore/whatsnew
           mappingFile: mapping.txt
