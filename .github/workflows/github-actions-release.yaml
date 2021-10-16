@@ -79,7 +79,7 @@ jobs:
           path: app/build/outputs/mapping/release/mapping.txt
 
       - name: Publish to Google Play Store
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@v1.0.15
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_PUBLISHER_SERVICE_ACCOUNT }}
           packageName: hu.mostoha.mobile.android.huki
