@@ -26,7 +26,10 @@ jobs:
     runs-on: [ ubuntu-latest ]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code with history
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Create test apks
         run: |
@@ -36,8 +39,8 @@ jobs:
       - name: Set test artifact names to ENV
         id: set_artifact_names
         run: |
-          ARTIFACT_PATHNAME_APK=$(ls app/build/outputs/apk/androidTest/*.apk | head -n 1)
-          ARTIFACT_PATHNAME_TEST_APK=$(ls app/build/outputs/apk/debug/*.apk | head -n 1)
+          ARTIFACT_PATHNAME_APK=$(ls app/build/outputs/apk/debug/*.apk | head -n 1)
+          ARTIFACT_PATHNAME_TEST_APK=$(ls app/build/outputs/apk/androidTest/debug/*.apk | head -n 1)
           echo "ARTIFACT_PATHNAME_APK is " ${ARTIFACT_PATHNAME_APK}
           echo "ARTIFACT_PATHNAME_TEST_APK is " ${ARTIFACT_PATHNAME_TEST_APK}
           echo "ARTIFACT_PATHNAME_APK=${ARTIFACT_PATHNAME_APK}" >> $GITHUB_ENV
