@@ -92,15 +92,15 @@ complexity:
     ignoreSimpleWhenEntries: false
     ignoreNestingFunctions: false
     nestingFunctions:
-      - 'run'
-      - 'let'
-      - 'apply'
-      - 'with'
       - 'also'
-      - 'use'
+      - 'apply'
       - 'forEach'
       - 'isNotNull'
       - 'ifNull'
+      - 'let'
+      - 'run'
+      - 'use'
+      - 'with'
   LabeledExpression:
     active: false
     ignoredLabels: [ ]
@@ -139,11 +139,11 @@ complexity:
   TooManyFunctions:
     active: true
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
-    thresholdInFiles: 11
-    thresholdInClasses: 11
-    thresholdInInterfaces: 11
-    thresholdInObjects: 11
-    thresholdInEnums: 11
+    thresholdInFiles: 30
+    thresholdInClasses: 30
+    thresholdInInterfaces: 30
+    thresholdInObjects: 30
+    thresholdInEnums: 30
     ignoreDeprecated: false
     ignorePrivate: false
     ignoreOverridden: false
@@ -199,10 +199,10 @@ exceptions:
   ExceptionRaisedInUnexpectedLocation:
     active: true
     methodNames:
-      - 'toString'
-      - 'hashCode'
       - 'equals'
       - 'finalize'
+      - 'hashCode'
+      - 'toString'
   InstanceOfCheckForException:
     active: false
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
@@ -220,10 +220,10 @@ exceptions:
   SwallowedException:
     active: true
     ignoredExceptionTypes:
-      - 'NumberFormatException'
       - 'InterruptedException'
-      - 'ParseException'
       - 'MalformedURLException'
+      - 'NumberFormatException'
+      - 'ParseException'
     allowedExceptionNameRegex: '_|(ignore|expected).*'
   ThrowingExceptionFromFinally:
     active: true
@@ -234,25 +234,26 @@ exceptions:
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
     exceptions:
       - 'ArrayIndexOutOfBoundsException'
-      - 'Error'
       - 'Exception'
+      - 'IllegalArgumentException'
       - 'IllegalMonitorStateException'
-      - 'NullPointerException'
+      - 'IllegalStateException'
       - 'IndexOutOfBoundsException'
+      - 'NullPointerException'
       - 'RuntimeException'
       - 'Throwable'
   ThrowingNewInstanceOfSameException:
     active: true
   TooGenericExceptionCaught:
     active: true
-    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
+    excludes: [ '**/interactor/**', '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
     exceptionNames:
       - 'ArrayIndexOutOfBoundsException'
       - 'Error'
       - 'Exception'
       - 'IllegalMonitorStateException'
-      - 'NullPointerException'
       - 'IndexOutOfBoundsException'
+      - 'NullPointerException'
       - 'RuntimeException'
       - 'Throwable'
     allowedExceptionNameRegex: '_|(ignore|expected).*'
@@ -261,8 +262,8 @@ exceptions:
     exceptionNames:
       - 'Error'
       - 'Exception'
-      - 'Throwable'
       - 'RuntimeException'
+      - 'Throwable'
 
 formatting:
   active: true
@@ -314,7 +315,7 @@ formatting:
     active: true
     autoCorrect: true
   NoBlankLineBeforeRbrace:
-    active: true
+    active: false
     autoCorrect: true
   NoConsecutiveBlankLines:
     active: true
@@ -347,7 +348,7 @@ formatting:
     active: true
     autoCorrect: true
   NoWildcardImports:
-    active: true
+    active: false
   PackageName:
     active: true
     autoCorrect: true
@@ -401,6 +402,10 @@ formatting:
 
 naming:
   active: true
+  BooleanPropertyNaming:
+    active: false
+    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
+    allowedPattern: '^(is|has|are)'
   ClassNaming:
     active: true
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
@@ -504,6 +509,10 @@ performance:
 
 potential-bugs:
   active: true
+  AvoidReferentialEquality:
+    active: false
+    forbiddenTypePatterns:
+      - 'kotlin.String'
   CastToNullableType:
     active: false
   Deprecation:
@@ -528,8 +537,10 @@ potential-bugs:
     active: false
     restrictToAnnotatedMethods: true
     returnValueAnnotations:
-      - '*.CheckReturnValue'
       - '*.CheckResult'
+      - '*.CheckReturnValue'
+    ignoreReturnValueAnnotations:
+      - '*.CanIgnoreReturnValue'
   ImplicitDefaultLocale:
     active: true
   ImplicitUnitReturnType:
@@ -604,9 +615,9 @@ style:
   ForbiddenComment:
     active: true
     values:
-      - 'TODO:'
       - 'FIXME:'
       - 'STOPSHIP:'
+      - 'TODO:'
     allowedPatterns: ''
   ForbiddenImport:
     active: false
@@ -615,8 +626,8 @@ style:
   ForbiddenMethodCall:
     active: false
     methods:
-      - 'kotlin.io.println'
       - 'kotlin.io.print'
+      - 'kotlin.io.println'
   ForbiddenPublicDataClass:
     active: true
     excludes: [ '**' ]
@@ -779,7 +790,7 @@ style:
   VarCouldBeVal:
     active: true
   WildcardImport:
-    active: true
+    active: false
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
     excludeImports:
       - 'java.util.*'

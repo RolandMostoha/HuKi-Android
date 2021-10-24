@@ -12,10 +12,8 @@ import org.osmdroid.events.ZoomEvent
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.*
-import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint
-import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay
-import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions
-import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme
+
+private const val MAP_ANIMATION_DURATION: Long = 1000
 
 fun MapView.addOverlay(position: Int, overlay: Overlay) {
     if (position > overlays.size - 1) {
@@ -26,7 +24,7 @@ fun MapView.addOverlay(position: Int, overlay: Overlay) {
     invalidate()
 }
 
-fun MapView.removeOverlay(vararg overlay: Overlay) {
+fun MapView.removeOverlay(overlay: List<Overlay>) {
     overlay.forEach {
         overlays.remove(it)
     }
@@ -118,42 +116,13 @@ fun MapView.addPolyline(
     return polyline
 }
 
-fun MapView.addFastOverlay(
-    geoPoints: List<GeoPoint>,
-    onClick: (SimpleFastPointOverlay) -> Unit,
-    @ColorRes pointColor: Int = R.color.colorPolyline
-): SimpleFastPointOverlay {
-    val context = this.context
-    val points = geoPoints.map { LabelledGeoPoint(it) }
-    val pointStyle = Paint().apply {
-        style = Paint.Style.FILL
-        color = ContextCompat.getColor(context, pointColor)
-    }
-    val options = SimpleFastPointOverlayOptions.getDefaultStyle()
-        .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.NO_OPTIMIZATION)
-        .setSymbol(SimpleFastPointOverlayOptions.Shape.CIRCLE)
-        .setPointStyle(pointStyle)
-        .setRadius(7f)
-        .setIsClickable(true)
-
-    val fastOverlay = SimpleFastPointOverlay(SimplePointTheme(points, true), options)
-    fastOverlay.setOnClickListener { _, _ ->
-        onClick.invoke(fastOverlay)
-    }
-
-    overlays.add(fastOverlay)
-    invalidate()
-
-    return fastOverlay
-}
-
 fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {
     controller.setZoom(zoomLevel)
     controller.setCenter(geoPoint)
 }
 
 fun MapView.animateCenterAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {
-    controller.animateTo(geoPoint, zoomLevel, 1000)
+    controller.animateTo(geoPoint, zoomLevel, MAP_ANIMATION_DURATION)
 }
 
 fun MapView.addZoomListener(onZoom: (event: ZoomEvent) -> Unit) {

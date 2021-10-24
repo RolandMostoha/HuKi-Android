@@ -12,7 +12,12 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
         classpath 'com.google.gms:google-services:4.3.10'
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.18.1"
     }
+}
+
+subprojects {
+    apply from: "$project.rootDir/buildscripts/detekt.gradle"
 }
 
 allprojects {

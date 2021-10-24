@@ -6,7 +6,17 @@ const val MY_LOCATION_DEFAULT_ZOOM = 13.0
 const val MY_LOCATION_MIN_TIME_MS = 3000L
 const val MY_LOCATION_MIN_DISTANCE_METER = 3f
 
-val HUNGARY = BoundingBox(48.62385, 22.71053, 45.75948, 16.20229)
+const val HUNGARY_BOX_NORTH = 48.62385
+const val HUNGARY_BOX_WEST = 16.20229
+const val HUNGARY_BOX_EAST = 22.71053
+const val HUNGARY_BOX_SOUTH = 45.75948
+
+val HUNGARY = BoundingBox(
+        north = HUNGARY_BOX_NORTH,
+        east = HUNGARY_BOX_WEST,
+        south = HUNGARY_BOX_EAST,
+        west = HUNGARY_BOX_SOUTH,
+)
 
 const val MAP_DEFAULT_ZOOM_LEVEL = 15.0
 const val MAP_TILES_SCALE_FACTOR = 1.5f

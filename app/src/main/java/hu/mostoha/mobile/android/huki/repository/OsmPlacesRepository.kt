@@ -18,11 +18,17 @@ class OsmPlacesRepository @Inject constructor(
     private val modelGenerator: PlacesDomainModelGenerator
 ) : PlacesRepository {
 
+    companion object {
+        const val PHOTON_SEARCH_QUERY_LIMIT = 10
+        const val PHOTON_HIKING_ROUTES_QUERY_LIMIT = 50
+    }
+
     override suspend fun getPlacesBy(searchText: String): List<PlacePrediction> {
-        val response = photonService.query(searchText, 10)
+        val response = photonService.query(searchText, PHOTON_SEARCH_QUERY_LIMIT)
         val nodesAndWays = response.copy(
-            features = response.features.filter { it.properties.osmType != OsmType.RELATION }
+                features = response.features.filter { it.properties.osmType != OsmType.RELATION }
         )
+
         return modelGenerator.generatePlacePredictions(nodesAndWays)
     }
 
@@ -45,19 +51,20 @@ class OsmPlacesRepository @Inject constructor(
 
     override suspend fun getHikingRoutes(boundingBox: BoundingBox): List<HikingRoute> {
         val query = OverpassQuery()
-            .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.TIMEOUT_SEC)
-            .filterQuery()
-            .rel()
-            .tag("type", "route")
-            .tag("route", "hiking")
-            .tag("jel")
-            .boundingBox(boundingBox.south, boundingBox.west, boundingBox.north, boundingBox.east)
-            .end()
-            .output(OutputVerbosity.TAGS, null, null, 50)
+                .format(OutputFormat.JSON)
+                .timeout(NetworkConfig.TIMEOUT_SEC)
+                .filterQuery()
+                .rel()
+                .tag("type", "route")
+                .tag("route", "hiking")
+                .tag("jel")
+                .boundingBox(boundingBox.south, boundingBox.west, boundingBox.north, boundingBox.east)
+                .end()
+                .output(OutputVerbosity.TAGS, null, null, PHOTON_HIKING_ROUTES_QUERY_LIMIT)
             .build()
 
         val response = overpassService.interpreter(query)
+
         return modelGenerator.generateHikingRoutes(response)
     }
 
@@ -70,6 +77,7 @@ class OsmPlacesRepository @Inject constructor(
             .end()
             .output(OutputVerbosity.BODY, null, null, 1)
             .build()
+
         return overpassService.interpreter(query)
     }
 
@@ -82,6 +90,7 @@ class OsmPlacesRepository @Inject constructor(
             .end()
             .output(OutputVerbosity.GEOM, null, null, -1)
             .build()
+
         return overpassService.interpreter(query)
     }
 
@@ -94,6 +103,7 @@ class OsmPlacesRepository @Inject constructor(
             .end()
             .output(OutputVerbosity.GEOM, null, null, -1)
             .build()
+
         return overpassService.interpreter(query)
     }
 

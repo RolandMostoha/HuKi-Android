@@ -36,10 +36,10 @@ class HikingRoutesAdapter(
             }
             TYPE_ITEM -> {
                 ViewHolderItem(
-                    ItemHomeHikingRoutesBinding.inflate(parent.context.inflater, parent, false)
+                        ItemHomeHikingRoutesBinding.inflate(parent.context.inflater, parent, false)
                 )
             }
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("Not supported viewType")
         }
     }
 

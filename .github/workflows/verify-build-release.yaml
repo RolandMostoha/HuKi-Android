@@ -1,4 +1,4 @@
-name: Build and Verify
+name: Verify, Build, Release, Deploy
 
 on:
   push:
@@ -11,8 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Lint check
-        run: ./gradlew lint
+      - name: Static code analysis
+        run: ./gradlew lint detekt
 
   unit_tests:
     runs-on: [ ubuntu-latest ]

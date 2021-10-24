@@ -7,6 +7,7 @@ import javax.inject.Inject
 
 class DistanceFormatter @Inject constructor(@ApplicationContext val context: Context) {
 
+    @Suppress("MagicNumber")
     fun format(meters: Int): String {
         val km = meters.toDouble() / 1000
 
