@@ -2,6 +2,8 @@ package hu.mostoha.mobile.android.huki.util
 
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import kotlin.math.*
+import android.location.Location as AndroidLocation
+
 
 private const val EARTH_RADIUS = 6_372_800
 
@@ -26,4 +28,15 @@ fun List<Location>.calculateDistance(): Int {
         distance += location.distanceBetween(this[min(size - 1, index + 1)])
     }
     return distance
+}
+
+private const val ZOOM_LEVEL_MAP_SCALE = 591_657_550
+private const val ZOOM_LEVEL_MAP_OFFSET = 2
+private const val ZOOM_LEVEL_MAX = 20
+
+fun AndroidLocation.calculateZoomLevel(): Int {
+    return min(
+        ZOOM_LEVEL_MAX,
+        max(1, log2(ZOOM_LEVEL_MAP_SCALE / accuracy).toInt() - ZOOM_LEVEL_MAP_OFFSET)
+    )
 }

@@ -2,7 +2,6 @@ package hu.mostoha.mobile.android.huki.util
 
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 
-const val MY_LOCATION_DEFAULT_ZOOM = 13.0
 const val MY_LOCATION_MIN_TIME_MS = 3000L
 const val MY_LOCATION_MIN_DISTANCE_METER = 3f
 

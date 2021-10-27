@@ -3,7 +3,7 @@ package hu.mostoha.mobile.android.huki.osmdroid
 import android.graphics.Bitmap
 import android.location.Location
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
-import hu.mostoha.mobile.android.huki.util.MY_LOCATION_DEFAULT_ZOOM
+import hu.mostoha.mobile.android.huki.util.calculateZoomLevel
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider
@@ -27,8 +27,10 @@ class MyLocationOverlay(
     var onFollowLocationDisabled: (() -> Unit)? = null
 
     override fun setLocation(location: Location) {
-        if (mIsFollowing && mMapView.zoomLevelDouble != MY_LOCATION_DEFAULT_ZOOM) {
-            mapView.animateCenterAndZoom(GeoPoint(location), MY_LOCATION_DEFAULT_ZOOM)
+        val zoomLevel = location.calculateZoomLevel().toDouble()
+
+        if (mIsFollowing && mMapView.zoomLevelDouble != zoomLevel) {
+            mapView.animateCenterAndZoom(GeoPoint(location), zoomLevel)
         }
 
         super.setLocation(location)
