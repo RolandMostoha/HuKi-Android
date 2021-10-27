@@ -479,15 +479,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initWayBottomSheet(placeUiModel: PlaceUiModel, boundingBox: BoundingBox, overlays: List<Overlay>) {
         binding.homePlaceDetailsBottomSheetContainer.bindWayUiModel(
-                uiModel = placeUiModel,
-                onHikingTrailsButtonClick = {
-                    placeDetailsSheet.hide()
-                    viewModel.loadHikingRoutes(placeUiModel.primaryText, boundingBox.toDomainBoundingBox())
-                },
-                onCloseButtonClick = {
-                    placeDetailsSheet.hide()
-                    homeMapView.removeOverlay(overlays)
-                }
+            uiModel = placeUiModel,
+            onHikingTrailsButtonClick = {
+                placeDetailsSheet.hide()
+                viewModel.loadHikingRoutes(placeUiModel.primaryText, boundingBox.toDomainBoundingBox())
+            },
+            onCloseButtonClick = {
+                placeDetailsSheet.hide()
+                homeMapView.removeOverlay(overlays)
+            }
         )
     }
 

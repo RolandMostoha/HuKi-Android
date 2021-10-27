@@ -76,7 +76,7 @@ dependencies {
     implementation 'com.github.hadilq.liveevent:liveevent:1.2.0'
 
     // OSM
-    implementation 'org.osmdroid:osmdroid-android:6.1.6'
+    implementation 'org.osmdroid:osmdroid-android:6.1.11'
 
     // Network
     def moshiVersion = '1.12.0'
