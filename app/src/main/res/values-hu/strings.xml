@@ -17,7 +17,7 @@
     <string name="map_place_name_routes_nearby">Túraútvonalak a térképen</string>
     <string name="map_place_name_node_routes_nearby">%s közelében</string>
 
-    <string name="download_layer_notification_title">Túra réteg letöltése</string>
+    <string name="download_layer_notification_title">HuKi - Túra réteg letöltése</string>
     <string name="download_layer_missing_downloaded_file">Porbléma lépett fel a letöltött túraréteg fájl mentése közben!</string>
 
     <string name="my_location_rationale_title">Helyadatok engedélyezése</string>
