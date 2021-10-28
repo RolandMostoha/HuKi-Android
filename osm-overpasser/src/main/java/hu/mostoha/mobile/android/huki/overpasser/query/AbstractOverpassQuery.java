@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.osm_overpasser.query;
+package hu.mostoha.mobile.android.huki.overpasser.query;
 
 abstract class AbstractOverpassQuery {
     protected OverpassQueryBuilder builder;

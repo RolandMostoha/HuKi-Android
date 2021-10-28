@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.osm_overpasser.output;
+package hu.mostoha.mobile.android.huki.overpasser.output;
 
 /**
  * Represents the possible output modificators for derived information

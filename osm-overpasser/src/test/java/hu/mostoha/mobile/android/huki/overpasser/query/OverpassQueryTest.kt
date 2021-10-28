@@ -1,9 +1,9 @@
-package hu.mostoha.mobile.android.huki.osm_overpasser.query
+package hu.mostoha.mobile.android.huki.overpasser.query
 
-import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputFormat
-import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputModificator
-import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputOrder
-import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputVerbosity
+import hu.mostoha.mobile.android.huki.overpasser.output.OutputFormat
+import hu.mostoha.mobile.android.huki.overpasser.output.OutputModificator
+import hu.mostoha.mobile.android.huki.overpasser.output.OutputOrder
+import hu.mostoha.mobile.android.huki.overpasser.output.OutputVerbosity
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

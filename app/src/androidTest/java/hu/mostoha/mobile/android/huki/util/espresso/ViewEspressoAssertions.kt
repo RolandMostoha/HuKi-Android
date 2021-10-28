@@ -60,7 +60,6 @@ fun @receiver:StringRes Int.isPopupTextNotDisplayed() {
         .check(matches(not(ViewMatchers.isDisplayed())))
 }
 
-
 fun @receiver:IdRes Int.click() {
     onView(withId(this)).perform(ViewActions.click())
 }

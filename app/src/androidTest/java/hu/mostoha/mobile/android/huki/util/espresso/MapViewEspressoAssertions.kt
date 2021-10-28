@@ -39,7 +39,6 @@ inline fun <reified T> hasOverlayMatcher(position: Int): BoundedMatcher<View, Ma
     }
 }
 
-
 fun @receiver:IdRes Int.zoomTo(zoomLevel: Double) {
     onView(withId(this)).perform(zoomToAction(zoomLevel))
 }
@@ -61,4 +60,3 @@ fun zoomToAction(zoomLevel: Double): ViewAction {
         }
     }
 }
-

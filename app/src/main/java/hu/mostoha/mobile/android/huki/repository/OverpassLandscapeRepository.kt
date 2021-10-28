@@ -4,9 +4,9 @@ import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.model.generator.LandscapeDomainModelGenerator
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
-import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputFormat
-import hu.mostoha.mobile.android.huki.osm_overpasser.output.OutputVerbosity
-import hu.mostoha.mobile.android.huki.osm_overpasser.query.OverpassQuery
+import hu.mostoha.mobile.android.huki.overpasser.output.OutputFormat
+import hu.mostoha.mobile.android.huki.overpasser.output.OutputVerbosity
+import hu.mostoha.mobile.android.huki.overpasser.query.OverpassQuery
 import hu.mostoha.mobile.android.huki.util.HUNGARY
 import javax.inject.Inject
 
