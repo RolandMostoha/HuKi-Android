@@ -40,6 +40,10 @@
     <dimen name="home_search_bar_progress_size">25dp</dimen>
     <dimen name="home_search_bar_popup_height">350dp</dimen>
 
+    <dimen name="home_layers_popup_height">370dp</dimen>
+    <dimen name="home_layers_hiking_layer_image_width">125dp</dimen>
+    <dimen name="home_layers_hiking_layer_image_height">80dp</dimen>
+
     <dimen name="home_landscapes_icon_size">19dp</dimen>
     <dimen name="home_landscapes_chip_min_height">39dp</dimen>
 

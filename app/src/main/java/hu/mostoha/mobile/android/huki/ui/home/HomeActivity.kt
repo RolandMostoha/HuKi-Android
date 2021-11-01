@@ -142,11 +142,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         searchBarPopup = ListPopupWindow(this).apply {
             anchorView = homeSearchBarInput
-            height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
+            height = resources.getDimensionPixelSize(R.dimen.home_layers_popup_height)
             setBackgroundDrawable(
                 ContextCompat.getDrawable(
                     this@HomeActivity,
-                    R.drawable.background_home_search_bar_dropdown
+                    R.drawable.background_dialog
                 )
             )
             setAdapter(searchBarAdapter)
@@ -173,14 +173,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 InsetDrawable(
                     ContextCompat.getDrawable(
                         this@HomeActivity,
-                        R.drawable.background_home_search_bar_dropdown
+                        R.drawable.background_dialog
                     ), 0, 0,
                     resources.getDimensionPixelSize(R.dimen.space_medium),
                     resources.getDimensionPixelSize(R.dimen.space_medium)
                 )
             )
             width = WRAP_CONTENT
-            height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
+            height = resources.getDimensionPixelSize(R.dimen.home_layers_popup_height)
             isOutsideTouchable = true
             isFocusable = true
             elevation = resources.getDimension(R.dimen.default_elevation)

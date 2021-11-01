@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/itemLayersImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/home_layers_hiking_layer_image_width"
+            android:layout_height="@dimen/home_layers_hiking_layer_image_height"
             android:src="@drawable/ic_layers_hiking" />
 
         <ImageView
