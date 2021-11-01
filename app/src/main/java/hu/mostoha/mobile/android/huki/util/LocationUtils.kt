@@ -31,9 +31,12 @@ fun List<Location>.calculateDistance(): Int {
 }
 
 private const val ZOOM_LEVEL_MAP_SCALE = 591_657_550
-private const val ZOOM_LEVEL_MAP_OFFSET = 2
+private const val ZOOM_LEVEL_MAP_OFFSET = 4
 private const val ZOOM_LEVEL_MAX = 20
 
+/**
+ * Algorithm for reasonable zoom level by accuracy: https://gis.stackexchange.com/a/7443
+ */
 fun AndroidLocation.calculateZoomLevel(): Int {
     return min(
         ZOOM_LEVEL_MAX,
