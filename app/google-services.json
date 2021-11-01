@@ -33,6 +33,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550684341915:android:129afd9aa921d2f044383e",
+        "android_client_info": {
+          "package_name": "hu.mostoha.mobile.android.huki.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550684341915-2uglv4rirnpd9e2rqh57gs9ekh1oinr3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBki9L-uEIMk2kK_ey-y7LRbGf3yFX1_JY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550684341915-2uglv4rirnpd9e2rqh57gs9ekh1oinr3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
