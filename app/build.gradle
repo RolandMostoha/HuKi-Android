@@ -26,12 +26,20 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
+            manifestPlaceholders = [
+                    appName: "@string/app_name_debug",
+                    appIcon: "@mipmap/ic_launcher_debug"
+            ]
             archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
             firebaseCrashlytics {
                 mappingFileUploadEnabled false
             }
         }
         release {
+            manifestPlaceholders = [
+                    appName: "@string/app_name",
+                    appIcon: "@mipmap/ic_launcher"
+            ]
             archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

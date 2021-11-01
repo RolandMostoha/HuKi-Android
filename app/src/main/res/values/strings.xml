@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">HuKi</string>
+    <string name="app_name_debug">HuKi-Debug</string>
 
     <string name="default_error_message_unknown">Unexpected error has occurred!</string>
 

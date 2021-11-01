@@ -11,8 +11,8 @@
     <application
         android:name="hu.mostoha.mobile.android.huki.HikingRoutesApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="${appIcon}"
+        android:label="${appName}"
         android:supportsRtl="true"
         android:theme="@style/BaseTheme.HuKiTheme">
 

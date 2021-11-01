@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="colorLauncher">#2e7d32</color>
+    <color name="colorLauncherDebug">#e64a19</color>
+
     <color name="colorPrimary">#2e7d32</color>
     <color name="colorOnPrimary">#ffffff</color>
     <color name="colorPrimaryIcon">#DE404040</color>
