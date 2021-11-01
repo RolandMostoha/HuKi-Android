@@ -125,6 +125,24 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `Given Error TaskResult, when loadDownloadedFile, then ErrorOccurred posted`() {
+        val downloadId = 1L
+        val errorRes = R.string.download_layer_missing_downloaded_file
+        coEvery {
+            layerInteractor.requestSaveHikingLayer(downloadId)
+        } returns TaskResult.Error(DomainException(errorRes))
+
+        homeViewModel.loadDownloadedFile(downloadId)
+
+        coVerifyOrder {
+            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
+            layerInteractor.requestSaveHikingLayer(downloadId)
+            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
+            homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes.toMessage()))
+        }
+    }
+
+    @Test
     fun `Given Success TaskResult, when loadPlacesBy, then PlacesResult posted`() {
         val searchText = "Mecs"
         val predictions = listOf("Mecsek".testPrediction(), "Mecsek utca".testPrediction())

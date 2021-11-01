@@ -37,6 +37,7 @@ class HomeViewModel @Inject constructor(
         val result = layerInteractor.requestGetHikingLayer()
 
         postEvent(LayerLoading(false))
+
         when (result) {
             is TaskResult.Success -> {
                 postState(HomeViewState(generator.generateHikingLayerDetails(result.data)))
@@ -66,6 +67,7 @@ class HomeViewModel @Inject constructor(
                 loadHikingLayer()
             }
             is TaskResult.Error -> {
+                postEvent(LayerLoading(false))
                 postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
             }
         }
