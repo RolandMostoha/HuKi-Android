@@ -1,12 +1,14 @@
 package hu.mostoha.mobile.android.huki.model.domain
 
+import org.osmdroid.util.BoundingBox as OsmBoundingBox
+
 data class BoundingBox(
-        val north: Double,
-        val east: Double,
-        val south: Double,
-        val west: Double
+    val north: Double,
+    val east: Double,
+    val south: Double,
+    val west: Double
 )
 
-fun BoundingBox.toOsmBoundingBox() = org.osmdroid.util.BoundingBox(north, east, south, west)
+fun BoundingBox.toOsmBoundingBox() = OsmBoundingBox(north, east, south, west)
 
-fun org.osmdroid.util.BoundingBox.toDomainBoundingBox() = BoundingBox(latNorth, lonEast, latSouth, lonWest)
+fun OsmBoundingBox.toDomainBoundingBox() = BoundingBox(latNorth, lonEast, latSouth, lonWest)

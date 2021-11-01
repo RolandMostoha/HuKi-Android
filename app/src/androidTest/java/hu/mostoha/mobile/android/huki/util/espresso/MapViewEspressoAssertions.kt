@@ -12,6 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 
 inline fun <reified T> @receiver:IdRes Int.hasOverlayInPosition(position: Int) {
@@ -39,12 +40,35 @@ inline fun <reified T> hasOverlayMatcher(position: Int): BoundedMatcher<View, Ma
     }
 }
 
+fun @receiver:IdRes Int.hasCenterAndZoom(center: GeoPoint, zoom: Double) {
+    onView(withId(this)).check(matches(hasCenterAndZoomMatcher(center, zoom)))
+}
+
+fun hasCenterAndZoomMatcher(center: GeoPoint, zoom: Double): BoundedMatcher<View, MapView> {
+    return object : BoundedMatcher<View, MapView>(MapView::class.java) {
+
+        override fun matchesSafely(mapView: MapView?): Boolean {
+            if (mapView == null) return false
+
+            val actualCenter = mapView.mapCenter
+            val actualZoom = mapView.zoomLevelDouble
+
+            return center == actualCenter && zoom == actualZoom
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("Has center and zoom $center, $zoom")
+        }
+    }
+}
+
 fun @receiver:IdRes Int.zoomTo(zoomLevel: Double) {
     onView(withId(this)).perform(zoomToAction(zoomLevel))
 }
 
 fun zoomToAction(zoomLevel: Double): ViewAction {
     return object : ViewAction {
+
         override fun getConstraints(): Matcher<View> {
             return ViewMatchers.isAssignableFrom(MapView::class.java)
         }

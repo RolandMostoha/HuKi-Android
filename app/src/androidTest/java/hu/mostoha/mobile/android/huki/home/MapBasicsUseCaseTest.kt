@@ -29,6 +29,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
@@ -40,6 +41,11 @@ import javax.inject.Inject
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
 class MapBasicsUseCaseTest {
+
+    companion object {
+        private val HUNGARY_BOUNDING_BOX_CENTER = GeoPoint(47.31885723983627, 19.45407265979361)
+        private const val HUNGARY_BOUNDING_BOX_ZOOM = 7.035469547173922
+    }
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -72,11 +78,23 @@ class MapBasicsUseCaseTest {
     }
 
     @Test
-    fun givenTuraReteg1000_whenHomeOpens_thenHikingLayerDisplays() {
+    fun givenTuraReteg1000_whenMapOpens_thenHikingLayerDisplays() {
         answerTestHikingLayer()
 
         launch<HomeActivity> {
             R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(OverlayPositions.HIKING_LAYER)
+        }
+    }
+
+    @Test
+    fun whenMapOpens_thenItIsCenteredAndZoomedToHungary() {
+        answerTestHikingLayer()
+
+        launch<HomeActivity> {
+            R.id.homeMapView.hasCenterAndZoom(
+                center = HUNGARY_BOUNDING_BOX_CENTER,
+                zoom = HUNGARY_BOUNDING_BOX_ZOOM
+            )
         }
     }
 

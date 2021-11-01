@@ -10,11 +10,11 @@ const val HUNGARY_BOX_WEST = 16.20229
 const val HUNGARY_BOX_EAST = 22.71053
 const val HUNGARY_BOX_SOUTH = 45.75948
 
-val HUNGARY = BoundingBox(
+val HUNGARY_BOUNDING_BOX = BoundingBox(
     north = HUNGARY_BOX_NORTH,
-    east = HUNGARY_BOX_WEST,
-    south = HUNGARY_BOX_EAST,
-    west = HUNGARY_BOX_SOUTH,
+    east = HUNGARY_BOX_EAST,
+    south = HUNGARY_BOX_SOUTH,
+    west = HUNGARY_BOX_WEST
 )
 
 const val MAP_DEFAULT_ZOOM_LEVEL = 15.0

@@ -111,7 +111,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             addOnFirstLayoutListener { _, _, _, _, _ ->
                 viewModel.loadHikingLayer()
 
-                zoomToBoundingBox(HUNGARY.toOsmBoundingBox().withDefaultOffset(), false)
+                zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toOsmBoundingBox().withDefaultOffset(), false)
 
                 if (isLocationPermissionsGranted()) {
                     showMyLocation()

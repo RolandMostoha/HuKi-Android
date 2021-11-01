@@ -12,7 +12,6 @@ import java.io.File
 import java.io.FileNotFoundException
 import javax.inject.Inject
 
-
 class DefaultHikingLayerRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     private val osmConfiguration: OsmConfiguration

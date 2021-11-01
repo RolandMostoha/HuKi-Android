@@ -7,7 +7,7 @@ import hu.mostoha.mobile.android.huki.network.OverpassService
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputFormat
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputVerbosity
 import hu.mostoha.mobile.android.huki.overpasser.query.OverpassQuery
-import hu.mostoha.mobile.android.huki.util.HUNGARY
+import hu.mostoha.mobile.android.huki.util.HUNGARY_BOUNDING_BOX
 import javax.inject.Inject
 
 class OverpassLandscapeRepository @Inject constructor(
@@ -23,10 +23,10 @@ class OverpassLandscapeRepository @Inject constructor(
             .way()
             .tag("natural", "mountain_range")
             .boundingBox(
-                HUNGARY.south,
-                HUNGARY.west,
-                HUNGARY.north,
-                HUNGARY.east
+                HUNGARY_BOUNDING_BOX.south,
+                HUNGARY_BOUNDING_BOX.west,
+                HUNGARY_BOUNDING_BOX.north,
+                HUNGARY_BOUNDING_BOX.east
             )
             .end()
             .output(OutputVerbosity.TAGS, null, null, -1)
