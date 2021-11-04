@@ -3,15 +3,52 @@
 HuKi - Hungarian Hiking Map
 
 # Short Description
-HuKi helps you orient in the hiking trails of Hungary.
+HuKi helps you explore the hiking trails of Hungary.
 
 # Long Description
-Hungarian hiking map for travelers and adventurers!
+Hungarian hiking map for hikers and nature lovers!
 
-HuKi is based on OpenStreetMap and integrates the Hungarian Hiking Trail map automatically.
+HuKi is based on OpenStreetMap and it integrates the base map with the Hungarian hiking trails. It comes in handy when you want to see the hiking trails nearby or you plan your trip beforehand.
 
-# Screenshot descriptions
+<b>Hungarian hiking layer integration</b>
+You can download the Hungarian Hiking Layer which is integrated with the base (Mapnik) layer.
+
+<b>Live location support</b>
+HuKi can show your actual position, orientation and location accuracy during your trip.
+
+<b>Search for places</b>
+You can make text based searches for places or hiking routes.
+
+<b>Explore landscapes</b>
+You can search in the main Hungarian landscapes like Bükk, Mátra, Balaton etc.
+
+<b>Hiking routes nearby</b>
+HuKi can show the nearest hiking routes in a list view format.
+
 
 ## HU
 # App Title
-HuKi - Magyar Túratérkép
+HuKi - A Magyar Túratérkép
+
+# Short Description
+HuKi egy túratérkép, amely segít eligazodni a magyar túraútvonalakon.
+
+# Long Description
+Magyar túratérkép túrázóknak és természetbarátoknak.
+
+HuKi egy OpenStreetMap alapú térkép amely magába foglalja a Magyar Túraréteget. Jól jöhet amikor a közeledben lévő túraútvonalakat szeretnéd látni vagy épp egy kirándulást tervezel a jövőben.
+
+<b>A Magyar Túraréteg integrációja</b>
+Az alkalmazás segítségével letöltheted a Magyar Túraréteget, amely integrálódik az alap (Mapnik) réteggel.
+
+<b>Élő helymeghatározás</b>
+HuKi mutatja az aktuális pozíciód, irányod és a helymeghatározás pontosságát a túra alatt.
+
+<b>Hely keresése</b>
+Szöveges kereső segítségével kereshetsz helyek, túraútvonalak után.
+
+<b>Tájak felfedezése</b>
+Külön kereshetsz Magyarország tájegységei közt mint például Bükk, Mátra, Balaton stb.
+
+<b>Közeli túraútonalak keresése</b>
+Az alkalmazás lista nézetben mutatja a közeli útvonalakat.
