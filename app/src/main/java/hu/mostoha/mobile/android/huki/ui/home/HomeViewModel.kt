@@ -127,7 +127,9 @@ class HomeViewModel @Inject constructor(
         when (val result = placesInteractor.requestGetPlaceDetails(place.id, place.placeType)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
+
                 val placeDetails = generator.generatePlaceDetails(place, result.data)
+
                 postEvent(PlaceDetailsResult(placeDetails))
             }
             is TaskResult.Error -> {

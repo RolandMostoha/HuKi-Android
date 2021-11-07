@@ -26,6 +26,7 @@ class PlacesDomainModelGenerator @Inject constructor() {
 
     fun generatePlaceDetailsByNode(response: OverpassQueryResponse): PlaceDetails {
         val nodeElement = response.elements.first()
+
         return PlaceDetails(
             id = nodeElement.id.toString(),
             payLoad = PayLoad.Node(Location(nodeElement.lat!!, nodeElement.lon!!))
@@ -38,6 +39,7 @@ class PlacesDomainModelGenerator @Inject constructor() {
         } ?: TODO()
         val wayId = wayElement.id.toString()
         val locations = wayElement.geometry?.extractLocations() ?: emptyList()
+
         return PlaceDetails(
             id = wayId,
             payLoad = PayLoad.Way(
@@ -67,6 +69,7 @@ class PlacesDomainModelGenerator @Inject constructor() {
                 null
             }
         } ?: emptyList()
+
         return PlaceDetails(
             id = relElement.id.toString(),
             payLoad = PayLoad.Relation(ways)
