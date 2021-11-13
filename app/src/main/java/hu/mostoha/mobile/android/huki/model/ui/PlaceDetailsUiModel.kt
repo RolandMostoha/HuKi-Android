@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.huki.model.ui
 
 data class PlaceDetailsUiModel(
-    val id: String,
-    val place: PlaceUiModel,
-    val payLoad: UiPayLoad
+    val osmId: String,
+    val placeUiModel: PlaceUiModel,
+    val payload: UiPayload
 )

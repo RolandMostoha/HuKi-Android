@@ -3,7 +3,9 @@
     <string name="app_name">HuKi</string>
     <string name="app_name_debug">HuKi-Debug</string>
 
-    <string name="default_error_message_unknown">Nem várt hiba történt!</string>
+    <string name="error_message_unknown">Nem várt hiba történt!</string>
+    <string name="error_message_missing_osm_id">A hely nem létezik a megadott OSM ID-vel.</string>
+    <string name="error_message_missing_relation_bounding_box">Nem sikerült lekérdezni az OSM kapcsolat koordinátáit.</string>
 
     <string name="default_distance_template_m">%d m</string>
     <string name="default_distance_template_km">%.2f km</string>

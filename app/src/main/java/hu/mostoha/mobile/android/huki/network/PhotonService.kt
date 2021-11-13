@@ -1,6 +1,6 @@
 package hu.mostoha.mobile.android.huki.network
 
-import hu.mostoha.mobile.android.huki.model.network.PhotonQueryResponse
+import hu.mostoha.mobile.android.huki.model.network.photon.PhotonQueryResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

@@ -10,7 +10,8 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.ServiceModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
-import hu.mostoha.mobile.android.huki.model.domain.PlacePrediction
+import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
@@ -64,8 +65,8 @@ class MapSearchBarUseCaseTest {
     fun givenSearchText_whenTyping_thenPlacePredictionsDisplay() {
         answerTestHikingLayer()
         coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
-            PlacePrediction("1", PlaceType.WAY, "Mecseki Kéktúra", null),
-            PlacePrediction("2", PlaceType.NODE, "Mecseknádasdi Piroska", "Mecseknádasd")
+            Place("1", "Mecseki Kéktúra", PlaceType.WAY, Location(47.0983397, 17.7575106)),
+            Place("2", "Mecseknádasdi Piroska", PlaceType.NODE, Location(47.0982297, 17.7546106))
         )
 
         launch<HomeActivity> {
@@ -95,14 +96,14 @@ class MapSearchBarUseCaseTest {
     @Test
     fun givenErrorResult_whenTyping_thenErrorViewDisplay() {
         answerTestHikingLayer()
-        coEvery { placeRepository.getPlacesBy(any()) } throws IllegalStateException()
+        coEvery { placeRepository.getPlacesBy(any()) } throws IllegalStateException("Error")
 
         launch<HomeActivity> {
             val searchText = "QWER"
 
             R.id.homeSearchBarInput.typeText(searchText)
 
-            R.string.default_error_message_unknown.isPopupTextDisplayed()
+            R.string.error_message_unknown.isPopupTextDisplayed()
         }
     }
 

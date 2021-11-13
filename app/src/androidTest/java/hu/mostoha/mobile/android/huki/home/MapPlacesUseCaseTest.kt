@@ -40,11 +40,23 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
-class MapBasicsUseCaseTest {
+class MapPlacesUseCaseTest {
 
     companion object {
-        private val HUNGARY_BOUNDING_BOX_CENTER = GeoPoint(47.31885723983627, 19.45407265979361)
         private const val HUNGARY_BOUNDING_BOX_ZOOM = 7.035469547173922
+        private val HUNGARY_BOUNDING_BOX_CENTER = GeoPoint(47.31885723983627, 19.45407265979361)
+        private val DEFAULT_PLACE_WAY = Place(
+            osmId = "1",
+            name = "Mecseki Kéktúra",
+            placeType = PlaceType.WAY,
+            location = Location(47.0983397, 17.7575106)
+        )
+        private val DEFAULT_PLACE_NODE = Place(
+            osmId = "2",
+            name = "Mecsek hegy",
+            placeType = PlaceType.NODE,
+            location = Location(47.0982297, 17.7578106)
+        )
     }
 
     @get:Rule
@@ -173,13 +185,11 @@ class MapBasicsUseCaseTest {
     @Test
     fun givenOpenWay_whenGetPlaceDetails_thenPolylineDisplays() {
         answerTestHikingLayer()
-        coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
-            PlacePrediction("1", PlaceType.WAY, "Mecseki Way", null)
-        )
+        coEvery { placeRepository.getPlacesBy(any()) } returns listOf(DEFAULT_PLACE_WAY)
         coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
-            id = "1",
-            payLoad = PayLoad.Way(
-                id = "1",
+            osmId = "1",
+            payload = Payload.Way(
+                osmId = "1",
                 locations = listOf(
                     Location(47.123, 19.124),
                     Location(47.125, 19.126),
@@ -202,13 +212,11 @@ class MapBasicsUseCaseTest {
     @Test
     fun givenClosedWay_whenGetPlaceDetails_thenPolygonDisplays() {
         answerTestHikingLayer()
-        coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
-            PlacePrediction("1", PlaceType.WAY, "Mecseki Way", null)
-        )
+        coEvery { placeRepository.getPlacesBy(any()) } returns listOf(DEFAULT_PLACE_WAY)
         coEvery { placeRepository.getPlaceDetails(any(), any()) } returns PlaceDetails(
-            id = "1",
-            payLoad = PayLoad.Way(
-                id = "1",
+            osmId = "1",
+            payload = Payload.Way(
+                osmId = "1",
                 locations = listOf(
                     Location(47.123, 19.124),
                     Location(47.125, 19.126),
@@ -230,14 +238,14 @@ class MapBasicsUseCaseTest {
 
     private fun answerTestPlacePredictions() {
         coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
-            PlacePrediction("1", PlaceType.WAY, "Mecseki Way", null),
-            PlacePrediction("2", PlaceType.NODE, "Mecseki Node", "Mecseknádasd")
+            DEFAULT_PLACE_WAY,
+            DEFAULT_PLACE_NODE
         )
     }
 
     private fun answerTestPlaceDetails() {
         coEvery { placeRepository.getPlaceDetails("1", any()) } returns PlaceDetails(
-            "1", PayLoad.Way(
+            "1", Payload.Way(
                 "1", listOf(
                     Location(47.4979, 19.0402),
                     Location(47.4566, 19.0640)
@@ -245,7 +253,7 @@ class MapBasicsUseCaseTest {
             )
         )
         coEvery { placeRepository.getPlaceDetails("2", any()) } returns PlaceDetails(
-            "2", PayLoad.Node(Location(47.123, 19.123))
+            "2", Payload.Node(Location(47.123, 19.123))
         )
     }
 

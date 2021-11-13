@@ -14,7 +14,7 @@ import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.ServiceModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.model.domain.*
-import hu.mostoha.mobile.android.huki.model.network.SymbolType
+import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
@@ -75,7 +75,7 @@ class MapLandscapesUseCaseTest {
     fun whenClickOnLandscape_thenPlaceDetailsDisplayOnBottomSheet() {
         val landscape = landscapes.first()
         answerTestHikingLayer()
-        answerTestPlaceDetailsWay(landscape.id)
+        answerTestPlaceDetailsWay(landscape.osmId)
 
         launch<HomeActivity> {
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -91,7 +91,7 @@ class MapLandscapesUseCaseTest {
     fun givenHikingRoutesInLandscapes_whenClickHikingTrails_thenHikingRoutesDisplayOnBottomSheet() {
         val landscape = landscapes.first()
         answerTestHikingLayer()
-        answerTestPlaceDetailsWay(landscape.id)
+        answerTestPlaceDetailsWay(landscape.osmId)
         coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
             HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
             HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
@@ -112,17 +112,17 @@ class MapLandscapesUseCaseTest {
     fun givenHikingRoute_whenClick_thenHikingRouteDetailsDisplayOnBottomSheet() {
         val landscape = landscapes.first()
         answerTestHikingLayer()
-        answerTestPlaceDetailsWay(landscape.id)
+        answerTestPlaceDetailsWay(landscape.osmId)
         coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
             HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
             HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
         )
         coEvery { placeRepository.getPlaceDetails("1", PlaceType.RELATION) } returns PlaceDetails(
-            id = "1",
-            payLoad = PayLoad.Relation(
+            osmId = "1",
+            payload = Payload.Relation(
                 ways = listOf(
-                    PayLoad.Way(
-                        id = "1",
+                    Payload.Way(
+                        osmId = "1",
                         locations = listOf(Location(47.123, 19.124)),
                         distance = 5000
                     )
@@ -143,9 +143,9 @@ class MapLandscapesUseCaseTest {
 
     private fun answerTestPlaceDetailsWay(id: String) {
         coEvery { placeRepository.getPlaceDetails(id, any()) } returns PlaceDetails(
-            id = id,
-            payLoad = PayLoad.Way(
-                id = id,
+            osmId = id,
+            payload = Payload.Way(
+                osmId = id,
                 locations = listOf(Location(47.123, 19.124)),
                 distance = 5000
             )

@@ -2,8 +2,8 @@ package hu.mostoha.mobile.android.huki.repository
 
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.generator.PlacesDomainModelGenerator
-import hu.mostoha.mobile.android.huki.model.network.OsmType
-import hu.mostoha.mobile.android.huki.model.network.OverpassQueryResponse
+import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
+import hu.mostoha.mobile.android.huki.model.network.photon.OsmType
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
 import hu.mostoha.mobile.android.huki.network.PhotonService
@@ -19,48 +19,48 @@ class OsmPlacesRepository @Inject constructor(
 ) : PlacesRepository {
 
     companion object {
-        const val PHOTON_SEARCH_QUERY_LIMIT = 10
-        const val PHOTON_HIKING_ROUTES_QUERY_LIMIT = 50
+        const val PHOTON_SEARCH_QUERY_LIMIT = 20
+        const val OSM_HIKING_ROUTES_QUERY_LIMIT = 50
     }
 
-    override suspend fun getPlacesBy(searchText: String): List<PlacePrediction> {
+    override suspend fun getPlacesBy(searchText: String): List<Place> {
         val response = photonService.query(searchText, PHOTON_SEARCH_QUERY_LIMIT)
         val nodesAndWays = response.copy(
-                features = response.features.filter { it.properties.osmType != OsmType.RELATION }
+            features = response.features.filter { it.properties.osmType != OsmType.RELATION }
         )
 
-        return modelGenerator.generatePlacePredictions(nodesAndWays)
+        return modelGenerator.generatePlace(nodesAndWays)
     }
 
-    override suspend fun getPlaceDetails(id: String, placeType: PlaceType): PlaceDetails {
+    override suspend fun getPlaceDetails(osmId: String, placeType: PlaceType): PlaceDetails {
         return when (placeType) {
             PlaceType.NODE -> {
-                val response = getNode(id)
+                val response = getNode(osmId)
                 modelGenerator.generatePlaceDetailsByNode(response)
             }
             PlaceType.WAY -> {
-                val response = getNodesByWay(id)
-                modelGenerator.generatePlaceDetailsByWay(response, id)
+                val response = getNodesByWay(osmId)
+                modelGenerator.generatePlaceDetailsByWay(response, osmId)
             }
             PlaceType.RELATION -> {
-                val response = getNodesByRelation(id)
-                modelGenerator.generatePlaceDetailsByRel(response, id)
+                val response = getNodesByRelation(osmId)
+                modelGenerator.generatePlaceDetailsByRelation(response, osmId)
             }
         }
     }
 
     override suspend fun getHikingRoutes(boundingBox: BoundingBox): List<HikingRoute> {
         val query = OverpassQuery()
-                .format(OutputFormat.JSON)
-                .timeout(NetworkConfig.TIMEOUT_SEC)
-                .filterQuery()
-                .rel()
-                .tag("type", "route")
-                .tag("route", "hiking")
-                .tag("jel")
-                .boundingBox(boundingBox.south, boundingBox.west, boundingBox.north, boundingBox.east)
-                .end()
-                .output(OutputVerbosity.TAGS, null, null, PHOTON_HIKING_ROUTES_QUERY_LIMIT)
+            .format(OutputFormat.JSON)
+            .timeout(NetworkConfig.TIMEOUT_SEC)
+            .filterQuery()
+            .rel()
+            .tag("type", "route")
+            .tag("route", "hiking")
+            .tag("jel")
+            .boundingBox(boundingBox.south, boundingBox.west, boundingBox.north, boundingBox.east)
+            .end()
+            .output(OutputVerbosity.TAGS, null, null, OSM_HIKING_ROUTES_QUERY_LIMIT)
             .build()
 
         val response = overpassService.interpreter(query)

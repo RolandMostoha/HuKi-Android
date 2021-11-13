@@ -12,7 +12,7 @@ class PlacesInteractor @Inject constructor(
     private val placesRepository: PlacesRepository
 ) {
 
-    suspend fun requestGetPlacesBy(searchText: String): TaskResult<List<PlacePrediction>> {
+    suspend fun requestGetPlacesBy(searchText: String): TaskResult<List<Place>> {
         return taskExecutor.runOnBackground {
             try {
                 val response = placesRepository.getPlacesBy(searchText)
@@ -21,21 +21,21 @@ class PlacesInteractor @Inject constructor(
             } catch (exception: Exception) {
                 Timber.w(exception)
 
-                TaskResult.Error(DomainException(R.string.default_error_message_unknown, exception))
+                TaskResult.Error(DomainException(R.string.error_message_unknown, exception))
             }
         }
     }
 
-    suspend fun requestGetPlaceDetails(id: String, placeType: PlaceType): TaskResult<PlaceDetails> {
+    suspend fun requestGetPlaceDetails(osmId: String, placeType: PlaceType): TaskResult<PlaceDetails> {
         return taskExecutor.runOnBackground {
             try {
-                val response = placesRepository.getPlaceDetails(id, placeType)
+                val response = placesRepository.getPlaceDetails(osmId, placeType)
 
                 TaskResult.Success(response)
             } catch (exception: Exception) {
                 Timber.w(exception)
 
-                TaskResult.Error(DomainException(R.string.default_error_message_unknown, exception))
+                TaskResult.Error(DomainException(R.string.error_message_unknown, exception))
             }
         }
     }
@@ -49,7 +49,7 @@ class PlacesInteractor @Inject constructor(
             } catch (exception: Exception) {
                 Timber.w(exception)
 
-                TaskResult.Error(DomainException(R.string.default_error_message_unknown, exception))
+                TaskResult.Error(DomainException(R.string.error_message_unknown, exception))
             }
         }
     }

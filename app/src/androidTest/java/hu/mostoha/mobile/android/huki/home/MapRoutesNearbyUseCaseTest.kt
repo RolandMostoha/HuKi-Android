@@ -13,7 +13,7 @@ import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.ServiceModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
-import hu.mostoha.mobile.android.huki.model.network.SymbolType
+import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository

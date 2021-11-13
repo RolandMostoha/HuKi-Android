@@ -6,6 +6,7 @@ import hu.mostoha.mobile.android.huki.databinding.ItemHomeLandscapesChipBinding
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceDetailsBinding
 import hu.mostoha.mobile.android.huki.databinding.WindowPopupLayersBinding
 import hu.mostoha.mobile.android.huki.extensions.gone
+import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.ui.HikingLayerDetailsUiModel
@@ -59,7 +60,7 @@ fun LayoutBottomSheetPlaceDetailsBinding.bindWayUiModel(
     onCloseButtonClick: () -> Unit,
 ) {
     placeDetailsPrimaryText.text = uiModel.primaryText
-    placeDetailsSecondaryText.setTextOrGone(uiModel.secondaryText)
+    placeDetailsSecondaryText.setMessageOrGone(uiModel.secondaryText)
     placeDetailsImage.setImageResource(uiModel.iconRes)
     placeDetailsDirectionsButton.gone()
     placeDetailsHikingTrailsButton.setOnClickListener {
@@ -77,7 +78,7 @@ fun LayoutBottomSheetPlaceDetailsBinding.bindNodeUiModel(
     onDirectionsButtonClick: () -> Unit,
 ) {
     placeDetailsPrimaryText.text = place.primaryText
-    placeDetailsSecondaryText.setTextOrGone(place.secondaryText)
+    placeDetailsSecondaryText.setMessageOrGone(place.secondaryText)
     placeDetailsImage.setImageResource(place.iconRes)
     placeDetailsDirectionsButton.visible()
     placeDetailsDirectionsButton.setOnClickListener {

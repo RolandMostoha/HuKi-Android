@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.model.network
+package hu.mostoha.mobile.android.huki.model.ui
 
 import androidx.annotation.DrawableRes
 

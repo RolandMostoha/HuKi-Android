@@ -8,7 +8,7 @@ import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.di.module.ServiceModule
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.PayLoad
+import hu.mostoha.mobile.android.huki.model.domain.Payload
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -40,7 +40,7 @@ class OsmPlacesRepositoryTest {
 
     @Test
     fun givenSearchText_whenGetPlacesBy_thenResultIsNotNull() = runBlocking {
-        val result = repository.getPlacesBy("Dobogókő")
+        val result = repository.getPlacesBy("Mecsek")
 
         assertNotNull(result)
     }
@@ -51,8 +51,8 @@ class OsmPlacesRepositoryTest {
 
         val result = repository.getPlaceDetails(placeId, PlaceType.NODE)
 
-        assertEquals(placeId, result.id)
-        assertEquals(Location(47.7193842, 18.8962014), (result.payLoad as PayLoad.Node).location)
+        assertEquals(placeId, result.osmId)
+        assertEquals(Location(47.7193842, 18.8962014), (result.payload as Payload.Node).location)
     }
 
     @Test

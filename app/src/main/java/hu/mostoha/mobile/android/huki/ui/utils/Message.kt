@@ -6,7 +6,10 @@ sealed class Message {
 
     data class Text(val text: String) : Message()
 
-    data class Res(@StringRes val res: Int) : Message()
+    data class Res(
+        @StringRes val res: Int,
+        val formatArgs: List<String> = emptyList()
+    ) : Message()
 
 }
 

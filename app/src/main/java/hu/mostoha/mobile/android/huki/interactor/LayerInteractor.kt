@@ -22,7 +22,7 @@ class LayerInteractor @Inject constructor(
             } catch (exception: Exception) {
                 Timber.w(exception)
 
-                TaskResult.Error(DomainException(R.string.default_error_message_unknown, exception))
+                TaskResult.Error(DomainException(R.string.error_message_unknown, exception))
             }
         }
     }
@@ -36,7 +36,7 @@ class LayerInteractor @Inject constructor(
             } catch (exception: Exception) {
                 Timber.w(exception)
 
-                TaskResult.Error(DomainException(R.string.default_error_message_unknown, exception))
+                TaskResult.Error(DomainException(R.string.error_message_unknown, exception))
             }
         }
     }
@@ -56,7 +56,7 @@ class LayerInteractor @Inject constructor(
                             DomainException(R.string.download_layer_missing_downloaded_file, exception)
                         }
                         else -> {
-                            DomainException(R.string.default_error_message_unknown, exception)
+                            DomainException(R.string.error_message_unknown, exception)
                         }
                     }
                 )

@@ -4,7 +4,7 @@ import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.JsonReader
-import hu.mostoha.mobile.android.huki.model.network.SymbolType
+import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import timber.log.Timber
 
 object SymbolTypeAdapter {

@@ -1,6 +1,6 @@
 package hu.mostoha.mobile.android.huki.network
 
-import hu.mostoha.mobile.android.huki.model.network.OverpassQueryResponse
+import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

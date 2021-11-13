@@ -88,7 +88,7 @@ class HomeViewModel @Inject constructor(
             when (val result = placesInteractor.requestGetPlacesBy(searchText)) {
                 is TaskResult.Success -> {
                     postEvent(SearchBarLoading(false))
-                    val searchResults = generator.generatePlacesResult(result.data)
+                    val searchResults = generator.generatePlaceUiModels(result.data)
                     if (searchResults.isEmpty()) {
                         postEvent(
                             PlacesErrorResult(
@@ -121,15 +121,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun loadPlaceDetails(place: PlaceUiModel) = launch {
+    fun loadPlaceDetails(placeUiModel: PlaceUiModel) = launch {
         postEvent(SearchBarLoading(true))
 
-        when (val result = placesInteractor.requestGetPlaceDetails(place.id, place.placeType)) {
+        when (val result = placesInteractor.requestGetPlaceDetails(placeUiModel.osmId, placeUiModel.placeType)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
-
-                val placeDetails = generator.generatePlaceDetails(place, result.data)
-
+                val placeDetails = generator.generatePlaceDetails(placeUiModel, result.data)
                 postEvent(PlaceDetailsResult(placeDetails))
             }
             is TaskResult.Error -> {
@@ -174,7 +172,7 @@ class HomeViewModel @Inject constructor(
     fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = launch {
         postEvent(SearchBarLoading(true))
 
-        when (val result = placesInteractor.requestGetPlaceDetails(hikingRoute.id, PlaceType.RELATION)) {
+        when (val result = placesInteractor.requestGetPlaceDetails(hikingRoute.osmId, PlaceType.RELATION)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
                 val placeDetails = generator.generateHikingRouteDetails(hikingRoute, result.data)
@@ -188,4 +186,3 @@ class HomeViewModel @Inject constructor(
     }
 
 }
-
