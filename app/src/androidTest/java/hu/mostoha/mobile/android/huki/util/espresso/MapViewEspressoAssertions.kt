@@ -57,7 +57,7 @@ fun hasCenterAndZoomMatcher(center: GeoPoint, zoom: Double): BoundedMatcher<View
         }
 
         override fun describeTo(description: Description) {
-            description.appendText("Has center and zoom $center, $zoom")
+            description.appendText("Failed: has center: $center and zoom: $zoom")
         }
     }
 }

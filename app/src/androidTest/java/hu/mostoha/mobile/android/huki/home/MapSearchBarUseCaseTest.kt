@@ -45,11 +45,11 @@ class MapSearchBarUseCaseTest {
 
     @BindValue
     @JvmField
-    val layerRepository: HikingLayerRepository = mockk()
+    val hikingLayerRepository: HikingLayerRepository = mockk()
 
     @BindValue
     @JvmField
-    val placeRepository: PlacesRepository = mockk()
+    val placesRepository: PlacesRepository = mockk()
 
     @BindValue
     @JvmField
@@ -64,7 +64,7 @@ class MapSearchBarUseCaseTest {
     @Test
     fun givenSearchText_whenTyping_thenPlacePredictionsDisplay() {
         answerTestHikingLayer()
-        coEvery { placeRepository.getPlacesBy(any()) } returns listOf(
+        coEvery { placesRepository.getPlacesBy(any()) } returns listOf(
             Place("1", "Mecseki Kéktúra", PlaceType.WAY, Location(47.0983397, 17.7575106)),
             Place("2", "Mecseknádasdi Piroska", PlaceType.NODE, Location(47.0982297, 17.7546106))
         )
@@ -82,7 +82,7 @@ class MapSearchBarUseCaseTest {
     @Test
     fun givenEmptyResult_whenTyping_thenEmptyViewDisplay() {
         answerTestHikingLayer()
-        coEvery { placeRepository.getPlacesBy(any()) } returns emptyList()
+        coEvery { placesRepository.getPlacesBy(any()) } returns emptyList()
 
         launch<HomeActivity> {
             val searchText = "QWER"
@@ -96,7 +96,7 @@ class MapSearchBarUseCaseTest {
     @Test
     fun givenErrorResult_whenTyping_thenErrorViewDisplay() {
         answerTestHikingLayer()
-        coEvery { placeRepository.getPlacesBy(any()) } throws IllegalStateException("Error")
+        coEvery { placesRepository.getPlacesBy(any()) } throws IllegalStateException("Error")
 
         launch<HomeActivity> {
             val searchText = "QWER"
@@ -108,7 +108,7 @@ class MapSearchBarUseCaseTest {
     }
 
     private fun answerTestHikingLayer() {
-        coEvery { layerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
+        coEvery { hikingLayerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
             copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
         }
     }

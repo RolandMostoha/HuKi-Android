@@ -53,11 +53,11 @@ class MapLayersUseCaseTest {
 
     @BindValue
     @JvmField
-    val layerRepository: HikingLayerRepository = mockk()
+    val hikingLayerRepository: HikingLayerRepository = mockk()
 
     @BindValue
     @JvmField
-    val placeRepository: PlacesRepository = mockk()
+    val placesRepository: PlacesRepository = mockk()
 
     @BindValue
     @JvmField
@@ -81,15 +81,15 @@ class MapLayersUseCaseTest {
     @Test
     fun givenNullLayerFile_whenLayerIsDownloaded_thenLayersPopupWindowShouldUpdate() {
         coEvery {
-            layerRepository.getHikingLayerFile()
+            hikingLayerRepository.getHikingLayerFile()
         } returnsMany listOf(
             null,
             osmConfiguration.getHikingLayerFile().apply {
                 copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
             }
         )
-        coEvery { layerRepository.downloadHikingLayerFile() } returns 1
-        coEvery { layerRepository.saveHikingLayerFile(1) } returns Unit
+        coEvery { hikingLayerRepository.downloadHikingLayerFile() } returns 1
+        coEvery { hikingLayerRepository.saveHikingLayerFile(1) } returns Unit
 
         launch<HomeActivity> {
             R.id.itemLayersHikingDownloadButton.clickInPopup()
@@ -103,7 +103,7 @@ class MapLayersUseCaseTest {
     }
 
     private fun answerNullHikingLayer() {
-        coEvery { layerRepository.getHikingLayerFile() } returns null
+        coEvery { hikingLayerRepository.getHikingLayerFile() } returns null
     }
 
 }

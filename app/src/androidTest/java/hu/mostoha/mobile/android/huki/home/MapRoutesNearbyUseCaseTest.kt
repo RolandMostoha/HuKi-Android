@@ -52,11 +52,11 @@ class MapRoutesNearbyUseCaseTest {
 
     @BindValue
     @JvmField
-    val layerRepository: HikingLayerRepository = mockk()
+    val hikingLayerRepository: HikingLayerRepository = mockk()
 
     @BindValue
     @JvmField
-    val placeRepository: PlacesRepository = mockk()
+    val placesRepository: PlacesRepository = mockk()
 
     @BindValue
     @JvmField
@@ -88,7 +88,7 @@ class MapRoutesNearbyUseCaseTest {
     @Test
     fun givenHikingRoutes_whenClickRoutesNearby_thenHikingRoutesDisplayOnBottomSheet() {
         answerTestHikingLayer()
-        coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
+        coEvery { placesRepository.getHikingRoutes(any()) } returns listOf(
             HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
             HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
         )
@@ -105,7 +105,7 @@ class MapRoutesNearbyUseCaseTest {
     @Test
     fun givenEmptyHikingRoutes_whenClickRoutesNearby_thenEmptyViewDisplayOnBottomSheet() {
         answerTestHikingLayer()
-        coEvery { placeRepository.getHikingRoutes(any()) } returns emptyList()
+        coEvery { placesRepository.getHikingRoutes(any()) } returns emptyList()
 
         launch<HomeActivity> {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
@@ -117,7 +117,7 @@ class MapRoutesNearbyUseCaseTest {
     }
 
     private fun answerTestHikingLayer() {
-        coEvery { layerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
+        coEvery { hikingLayerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
             copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
         }
     }

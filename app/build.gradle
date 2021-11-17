@@ -17,6 +17,7 @@ android {
         versionName gitVersionName
 
         testInstrumentationRunner "hu.mostoha.mobile.android.huki.HiltTestRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
     buildFeatures {

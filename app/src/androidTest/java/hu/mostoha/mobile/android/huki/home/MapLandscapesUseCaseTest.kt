@@ -55,11 +55,11 @@ class MapLandscapesUseCaseTest {
 
     @BindValue
     @JvmField
-    val layerRepository: HikingLayerRepository = mockk()
+    val hikingLayerRepository: HikingLayerRepository = mockk()
 
     @BindValue
     @JvmField
-    val placeRepository: PlacesRepository = mockk()
+    val placesRepository: PlacesRepository = mockk()
 
     @BindValue
     @JvmField
@@ -92,7 +92,7 @@ class MapLandscapesUseCaseTest {
         val landscape = landscapes.first()
         answerTestHikingLayer()
         answerTestPlaceDetailsWay(landscape.osmId)
-        coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
+        coEvery { placesRepository.getHikingRoutes(any()) } returns listOf(
             HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
             HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
         )
@@ -113,11 +113,11 @@ class MapLandscapesUseCaseTest {
         val landscape = landscapes.first()
         answerTestHikingLayer()
         answerTestPlaceDetailsWay(landscape.osmId)
-        coEvery { placeRepository.getHikingRoutes(any()) } returns listOf(
+        coEvery { placesRepository.getHikingRoutes(any()) } returns listOf(
             HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
             HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
         )
-        coEvery { placeRepository.getPlaceDetails("1", PlaceType.RELATION) } returns PlaceDetails(
+        coEvery { placesRepository.getPlaceDetails("1", PlaceType.RELATION) } returns PlaceDetails(
             osmId = "1",
             payload = Payload.Relation(
                 ways = listOf(
@@ -142,7 +142,7 @@ class MapLandscapesUseCaseTest {
     }
 
     private fun answerTestPlaceDetailsWay(id: String) {
-        coEvery { placeRepository.getPlaceDetails(id, any()) } returns PlaceDetails(
+        coEvery { placesRepository.getPlaceDetails(id, any()) } returns PlaceDetails(
             osmId = id,
             payload = Payload.Way(
                 osmId = id,
@@ -153,7 +153,7 @@ class MapLandscapesUseCaseTest {
     }
 
     private fun answerTestHikingLayer() {
-        coEvery { layerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
+        coEvery { hikingLayerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
             copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
         }
     }
