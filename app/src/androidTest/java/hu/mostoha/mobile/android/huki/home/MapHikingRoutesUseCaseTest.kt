@@ -12,13 +12,16 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.ServiceModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
+import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
 import hu.mostoha.mobile.android.huki.util.espresso.*
@@ -36,7 +39,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
-class MapRoutesNearbyUseCaseTest {
+class MapHikingRoutesUseCaseTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -69,7 +72,7 @@ class MapRoutesNearbyUseCaseTest {
     }
 
     @Test
-    fun givenZoomLevelInThreshold_whenZoomOut_thenRoutesNearbyNotVisible() {
+    fun givenZoomLevelInThreshold_whenZoomOut_thenRoutesNearbyIsNotVisible() {
         answerTestHikingLayer()
 
         launch<HomeActivity> {
@@ -88,17 +91,16 @@ class MapRoutesNearbyUseCaseTest {
     @Test
     fun givenHikingRoutes_whenClickRoutesNearby_thenHikingRoutesDisplayOnBottomSheet() {
         answerTestHikingLayer()
-        coEvery { placesRepository.getHikingRoutes(any()) } returns listOf(
-            HikingRoute("1", "Írott-kő - Budapest - Hollóháza", SymbolType.Z),
-            HikingRoute("2", "Országos Kéktúra 19. - Becske–Mátraverebély", SymbolType.K)
-        )
+        answerTestHikingRoute()
 
         launch<HomeActivity> {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
+
             waitForFabAnimation()
+
             R.id.homeRoutesNearbyFab.click()
 
-            "Írott-kő - Budapest - Hollóháza".isTextDisplayed()
+            DEFAULT_HIKING_ROUTE.name.isTextDisplayed()
         }
     }
 
@@ -116,6 +118,35 @@ class MapRoutesNearbyUseCaseTest {
         }
     }
 
+    @Test
+    fun givenHikingRoute_whenClickOnRouteInBottomSheet_thenHikingRouteDetailsDisplayOnBottomSheet() {
+        answerTestHikingLayer()
+        answerTestGeometries()
+        answerTestHikingRoute()
+
+        launch<HomeActivity> {
+            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
+
+            waitForFabAnimation()
+
+            R.id.homeRoutesNearbyFab.click()
+
+            DEFAULT_HIKING_ROUTE.name.clickWithText()
+
+            R.id.homeRoutesNearbyFab.isDisplayed()
+        }
+    }
+
+    private fun answerTestHikingRoute() {
+        coEvery { placesRepository.getHikingRoutes(any()) } returns listOf(DEFAULT_HIKING_ROUTE)
+    }
+
+    private fun answerTestGeometries() {
+        coEvery {
+            placesRepository.getGeometry(DEFAULT_HIKING_ROUTE.osmId, any())
+        } returns DEFAULT_HIKING_ROUTE_GEOMETRY
+    }
+
     private fun answerTestHikingLayer() {
         coEvery { hikingLayerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
             copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
@@ -124,6 +155,24 @@ class MapRoutesNearbyUseCaseTest {
 
     private fun waitForFabAnimation() {
         waitFor(300)
+    }
+
+    companion object {
+        private val DEFAULT_HIKING_ROUTE = HikingRoute(
+            osmId = DEFAULT_HIKING_ROUTE_OSM_ID,
+            name = DEFAULT_HIKING_ROUTE_NAME,
+            symbolType = SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL)
+        )
+        private val DEFAULT_HIKING_ROUTE_GEOMETRY = Geometry.Relation(
+            osmId = DEFAULT_HIKING_ROUTE.osmId,
+            ways = listOf(
+                Geometry.Way(
+                    osmId = DEFAULT_HIKING_ROUTE_WAY_OSM_ID,
+                    locations = DEFAULT_HIKING_ROUTE_WAY_GEOMETRY.map { Location(it.first, it.second) },
+                    distance = 8500
+                )
+            )
+        )
     }
 
 }

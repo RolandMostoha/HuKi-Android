@@ -6,10 +6,10 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Member(
     @field:Json(name = "ref")
-    var ref: String? = null,
+    var ref: String,
 
     @field:Json(name = "type")
-    var type: ElementType? = null,
+    var type: ElementType,
 
     @field:Json(name = "geometry")
     var geometry: List<Geom>? = null

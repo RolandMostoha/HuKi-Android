@@ -24,12 +24,14 @@ import hu.mostoha.mobile.android.huki.databinding.WindowPopupLayersBinding
 import hu.mostoha.mobile.android.huki.extensions.*
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
+import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingLayerDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
-import hu.mostoha.mobile.android.huki.model.ui.UiPayload
 import hu.mostoha.mobile.android.huki.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.ui.home.HomeLiveEvents.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesAdapter
+import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarAdapter
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.util.*
@@ -159,7 +161,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeSearchBarInput.clearFocusAndHideKeyboard()
                     searchBarPopup.dismiss()
 
-                    viewModel.loadPlaceDetails(place.placeUiModel)
+                    viewModel.loadPlace(place.placeUiModel)
                 }
             }
         }
@@ -285,33 +287,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initObservers() {
         viewModel.liveEvents.observe(this, { event ->
             when (event) {
-                is ErrorOccurred -> {
-                    showToast(event.message)
-                }
-                is LayerLoading -> {
-                    homeLayersFab.inProgress = event.inProgress
-                }
-                is SearchBarLoading -> {
-                    binding.homeSearchBarProgress.visibleOrGone(event.inProgress)
-                }
-                is PlacesResult -> {
-                    initPlaceResult(event)
-                }
-                is PlacesErrorResult -> {
-                    initPlaceErrorResult(event)
-                }
-                is LandscapesResult -> {
-                    initLandscapeResult(event)
-                }
-                is PlaceDetailsResult -> {
-                    initPlaceDetailsResult(event)
-                }
-                is HikingRoutesResult -> {
-                    initHikingRoutesResult(event)
-                }
-                is HikingRouteDetailsResult -> {
-                    initHikingRouteDetailsResult(event)
-                }
+                is ErrorOccurred -> showToast(event.message)
+                is LayerLoading -> homeLayersFab.inProgress = event.inProgress
+                is SearchBarLoading -> binding.homeSearchBarProgress.visibleOrGone(event.inProgress)
+                is PlacesResult -> initPlaces(event.places)
+                is PlacesErrorResult -> initPlacesErrorResult(event)
+                is PlaceResult -> initPlace(event.place)
+                is LandscapesResult -> initLandscapeResult(event.landscapes)
+                is PlaceDetailsResult -> initPlaceDetails(event.placeDetails)
+                is HikingRoutesResult -> initHikingRoutesResult(event.hikingRoutes)
+                is HikingRouteDetailsResult -> initHikingRouteDetailsResult(event.placeDetails)
             }
         })
         viewModel.viewState.observe(this, {
@@ -327,8 +312,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         })
     }
 
-    private fun initPlaceResult(placesResult: PlacesResult) {
-        searchBarAdapter.submitList(placesResult.results.map { placeUiModel -> SearchBarItem.Place(placeUiModel) })
+    private fun initPlaces(places: List<PlaceUiModel>) {
+        searchBarAdapter.submitList(places.map { placeUiModel -> SearchBarItem.Place(placeUiModel) })
         searchBarPopup.apply {
             width = binding.homeSearchBarInputLayout.width
             height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
@@ -336,7 +321,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initPlaceErrorResult(placesErrorResult: PlacesErrorResult) {
+    private fun initPlacesErrorResult(placesErrorResult: PlacesErrorResult) {
         searchBarAdapter.submitList(
             listOf(SearchBarItem.Info(placesErrorResult.messageRes, placesErrorResult.drawableRes))
         )
@@ -347,8 +332,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initLandscapeResult(landscapesResult: LandscapesResult) {
-        landscapesResult.landscapes.forEach { landscape ->
+    private fun initLandscapeResult(landscapes: List<PlaceUiModel>) {
+        landscapes.forEach { landscape ->
             val chipBinding = ItemHomeLandscapesChipBinding.inflate(
                 layoutInflater,
                 binding.homeLandscapeChipGroup,
@@ -365,39 +350,57 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initPlaceDetailsResult(placeDetailsResult: PlaceDetailsResult) {
-        val placeDetails = placeDetailsResult.placeDetails
-        when (placeDetails.payload) {
-            is UiPayload.Node -> {
-                val geoPoint = placeDetails.payload.geoPoint
-                val marker = homeMapView.addMarker(geoPoint, R.drawable.ic_marker_poi.toDrawable(this),
-                    onClick = { marker ->
-                        initNodeBottomSheet(placeDetails.placeUiModel, geoPoint, marker)
-                        placeDetailsSheet.collapse()
+    private fun initPlace(placeUiModel: PlaceUiModel) {
+        val geoPoint = placeUiModel.geoPoint
+        val boundingBox = placeUiModel.boundingBox
 
-                        homeMapView.controller.animateTo(geoPoint)
-                    }
-                )
-                initNodeBottomSheet(placeDetails.placeUiModel, geoPoint, marker)
+        val marker = homeMapView.addMarker(
+            geoPoint = geoPoint,
+            icon = R.drawable.ic_marker_poi.toDrawable(this),
+            onClick = { marker ->
+                initNodeBottomSheet(placeUiModel, geoPoint, marker)
                 placeDetailsSheet.collapse()
 
-                homeMapView.animateCenterAndZoom(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
-            }
-            is UiPayload.Way -> {
-                val geoPoints = placeDetails.payload.geoPoints
-                val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
-                val polyOverlay = if (placeDetails.payload.isClosed) {
-                    homeMapView.addPolygon(geoPoints, onClick = { polygon ->
-                        initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polygon))
-                        placeDetailsSheet.collapse()
-                        homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
-                    })
+                if (boundingBox != null) {
+                    homeMapView.zoomToBoundingBox(boundingBox.toOsmBoundingBox().withDefaultOffset(), true)
                 } else {
-                    homeMapView.addPolyline(geoPoints, onClick = { polyline ->
-                        initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polyline))
-                        placeDetailsSheet.collapse()
-                        homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
-                    })
+                    homeMapView.animateCenterAndZoom(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
+                }
+            }
+        )
+        initNodeBottomSheet(placeUiModel, geoPoint, marker)
+        placeDetailsSheet.collapse()
+
+        if (boundingBox != null) {
+            homeMapView.zoomToBoundingBox(boundingBox.toOsmBoundingBox(), true)
+        } else {
+            homeMapView.animateCenterAndZoom(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
+        }
+    }
+
+    private fun initPlaceDetails(placeDetails: PlaceDetailsUiModel) {
+        when (placeDetails.geometryUiModel) {
+            is GeometryUiModel.Way -> {
+                val geoPoints = placeDetails.geometryUiModel.geoPoints
+                val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
+                val polyOverlay = if (placeDetails.geometryUiModel.isClosed) {
+                    homeMapView.addPolygon(
+                        geoPoints = geoPoints,
+                        onClick = { polygon ->
+                            initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polygon))
+                            placeDetailsSheet.collapse()
+                            homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
+                        }
+                    )
+                } else {
+                    homeMapView.addPolyline(
+                        geoPoints = geoPoints,
+                        onClick = { polyline ->
+                            initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polyline))
+                            placeDetailsSheet.collapse()
+                            homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
+                        }
+                    )
                 }
 
                 initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polyOverlay))
@@ -411,7 +414,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initHikingRoutesResult(hikingRoutesResult: HikingRoutesResult) {
+    private fun initHikingRoutesResult(hikingRoutes: List<HikingRoutesItem>) {
         with(binding.homeHikingRoutesBottomSheetContainer) {
             val hikingRoutesAdapter = HikingRoutesAdapter(
                 onItemClick = { hikingRoute ->
@@ -426,18 +429,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             )
             hikingRoutesList.setHasFixedSize(true)
             hikingRoutesList.adapter = hikingRoutesAdapter
-            hikingRoutesAdapter.submitList(hikingRoutesResult.hikingRoutes)
-            hikingRoutesEmptyView.visibleOrGone(hikingRoutesResult.hikingRoutes.size <= 1)
+            hikingRoutesAdapter.submitList(hikingRoutes)
+            hikingRoutesEmptyView.visibleOrGone(hikingRoutes.size <= 1)
 
             hikingRoutesSheet.collapse()
         }
     }
 
-    private fun initHikingRouteDetailsResult(it: HikingRouteDetailsResult) {
-        val placeDetails = it.placeDetails
-        val payLoad = placeDetails.payload as UiPayload.Relation
+    private fun initHikingRouteDetailsResult(placeDetails: PlaceDetailsUiModel) {
+        val payLoad = placeDetails.geometryUiModel as GeometryUiModel.Relation
         val boundingBox = BoundingBox
-            .fromGeoPoints(payLoad.ways.flatMap { way -> way.geoPoints })
+            .fromGeoPoints(payLoad.ways.flatMap { it.geoPoints })
             .withDefaultOffset()
         val overlays = mutableListOf<Overlay>()
         payLoad.ways.forEach { way ->

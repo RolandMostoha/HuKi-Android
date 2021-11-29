@@ -3,11 +3,11 @@ package hu.mostoha.mobile.android.huki.repository
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.generator.PlacesDomainModelGenerator
 import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
-import hu.mostoha.mobile.android.huki.model.network.photon.OsmType
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
 import hu.mostoha.mobile.android.huki.network.PhotonService
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputFormat
+import hu.mostoha.mobile.android.huki.overpasser.output.OutputModificator
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputVerbosity
 import hu.mostoha.mobile.android.huki.overpasser.query.OverpassQuery
 import javax.inject.Inject
@@ -25,26 +25,26 @@ class OsmPlacesRepository @Inject constructor(
 
     override suspend fun getPlacesBy(searchText: String): List<Place> {
         val response = photonService.query(searchText, PHOTON_SEARCH_QUERY_LIMIT)
-        val nodesAndWays = response.copy(
-            features = response.features.filter { it.properties.osmType != OsmType.RELATION }
-        )
 
-        return modelGenerator.generatePlace(nodesAndWays)
+        return modelGenerator.generatePlace(response)
     }
 
-    override suspend fun getPlaceDetails(osmId: String, placeType: PlaceType): PlaceDetails {
+    override suspend fun getGeometry(osmId: String, placeType: PlaceType): Geometry {
         return when (placeType) {
             PlaceType.NODE -> {
                 val response = getNode(osmId)
-                modelGenerator.generatePlaceDetailsByNode(response)
+
+                modelGenerator.generateGeometryByNode(response, osmId)
             }
             PlaceType.WAY -> {
                 val response = getNodesByWay(osmId)
-                modelGenerator.generatePlaceDetailsByWay(response, osmId)
+
+                modelGenerator.generateGeometryByWay(response, osmId)
             }
             PlaceType.RELATION -> {
                 val response = getNodesByRelation(osmId)
-                modelGenerator.generatePlaceDetailsByRelation(response, osmId)
+
+                modelGenerator.generateGeometryByRelation(response, osmId)
             }
         }
     }
@@ -75,7 +75,7 @@ class OsmPlacesRepository @Inject constructor(
             .filterQuery()
             .nodeBy(id)
             .end()
-            .output(OutputVerbosity.BODY, null, null, 1)
+            .output(OutputVerbosity.BODY, OutputModificator.GEOM, null, 1)
             .build()
 
         return overpassService.interpreter(query)
@@ -88,7 +88,7 @@ class OsmPlacesRepository @Inject constructor(
             .filterQuery()
             .wayBy(id)
             .end()
-            .output(OutputVerbosity.GEOM, null, null, -1)
+            .output(OutputVerbosity.BODY, OutputModificator.GEOM, null, -1)
             .build()
 
         return overpassService.interpreter(query)
@@ -101,7 +101,7 @@ class OsmPlacesRepository @Inject constructor(
             .filterQuery()
             .relBy(id)
             .end()
-            .output(OutputVerbosity.GEOM, null, null, -1)
+            .output(OutputVerbosity.BODY, OutputModificator.GEOM, null, -1)
             .build()
 
         return overpassService.interpreter(query)

@@ -3,7 +3,7 @@ package hu.mostoha.mobile.android.huki.extensions
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-import hu.mostoha.mobile.android.huki.ui.utils.Message
+import hu.mostoha.mobile.android.huki.ui.util.Message
 
 fun TextView.setDrawableStart(@DrawableRes drawableRes: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableRes)
@@ -17,7 +17,7 @@ fun TextView.setDrawableTop(@DrawableRes drawableRes: Int) {
 
 fun TextView.setMessage(message: Message) {
     text = when (message) {
-        is Message.Res -> context.getString(message.res, message.formatArgs)
+        is Message.Res -> context.getString(message.res, *message.formatArgs.toTypedArray())
         is Message.Text -> message.text
     }
 }

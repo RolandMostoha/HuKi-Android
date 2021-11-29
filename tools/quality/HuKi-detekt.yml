@@ -502,7 +502,7 @@ performance:
     active: true
     excludes: [ '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
   SpreadOperator:
-    active: true
+    active: false
     excludes: [ '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
   UnnecessaryTemporaryInstantiation:
     active: true
@@ -677,6 +677,7 @@ style:
   MandatoryBracesLoops:
     active: false
   MaxLineLength:
+    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
     active: true
     maxLineLength: 120
     excludePackageStatements: true

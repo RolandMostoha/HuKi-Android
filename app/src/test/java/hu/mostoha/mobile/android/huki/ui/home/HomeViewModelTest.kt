@@ -8,7 +8,7 @@ import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
 import hu.mostoha.mobile.android.huki.model.ui.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.ui.utils.toMessage
+import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.mockk
@@ -145,10 +145,9 @@ class HomeViewModelTest {
     fun `Given Success TaskResult, when loadPlacesBy, then PlacesResult posted`() {
         val searchText = "Mecs"
         val predictions = listOf("Mecsek".toTestPlace(), "Mecsek utca".toTestPlace())
-        val placeUiModels = listOf("Mecsek".toTestPlaceUiModel())
-
+        val placeUiModels = listOf("Mecsek".toTestPlaceUiModel(), "Mecsek utca".toTestPlaceUiModel())
         coEvery { placesInteractor.requestGetPlacesBy(searchText) } returns TaskResult.Success(predictions)
-        coEvery { generator.generatePlaceUiModels(any()) } returns placeUiModels
+        coEvery { generator.generatePlaces(any()) } returns placeUiModels
 
         homeViewModel.loadPlacesBy(searchText)
 
@@ -156,7 +155,7 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             placesInteractor.requestGetPlacesBy(searchText)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            generator.generatePlaceUiModels(predictions)
+            generator.generatePlaces(predictions)
             homeViewModel.postEvent(HomeLiveEvents.PlacesResult(placeUiModels))
         }
     }
@@ -166,9 +165,8 @@ class HomeViewModelTest {
         val searchText = "Mecs"
         val predictions = emptyList<Place>()
         val placeUiModels = emptyList<PlaceUiModel>()
-
         coEvery { placesInteractor.requestGetPlacesBy(searchText) } returns TaskResult.Success(predictions)
-        coEvery { generator.generatePlaceUiModels(any()) } returns placeUiModels
+        coEvery { generator.generatePlaces(any()) } returns placeUiModels
 
         homeViewModel.loadPlacesBy(searchText)
 
@@ -176,7 +174,7 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             placesInteractor.requestGetPlacesBy(searchText)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            generator.generatePlaceUiModels(predictions)
+            generator.generatePlaces(predictions)
             homeViewModel.postEvent(
                 HomeLiveEvents.PlacesErrorResult(
                     R.string.search_bar_empty_message, R.drawable.ic_search_bar_empty_result
@@ -205,31 +203,42 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Given Success TaskResult, when loadPlaceDetails, then PlaceDetailsResult posted`() {
-        val osmId = "123456L"
-        val place = PlaceUiModel(osmId, PlaceType.NODE, "", "".toMessage(), 0)
-        val placeDetails = PlaceDetails(osmId, Payload.Node(Location(47.123, 19.123)))
-        val placeDetailsUiModel = "Mecsek".toTestPlaceDetailsUiModel()
+    fun `Given place, when loadPlace, then PlaceResult posted`() {
+        val place = "Mecsek".toTestPlaceUiModel()
 
-        coEvery { placesInteractor.requestGetPlaceDetails(osmId, any()) } returns TaskResult.Success(placeDetails)
+        homeViewModel.loadPlace(place)
+
+        coVerifyOrder {
+            homeViewModel.postEvent(HomeLiveEvents.PlaceResult(place))
+        }
+    }
+
+    @Test
+    fun `Given Success TaskResult, when loadPlaceDetails, then PlaceDetailsResult posted`() {
+        val osmId = "1234567"
+        val placeName = "Mecsek"
+        val place = placeName.toTestPlaceUiModel(osmId)
+        val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
+        val placeDetailsUiModel = placeName.toTestPlaceDetailsUiModel()
+        coEvery { placesInteractor.requestGetGeometry(osmId, any()) } returns TaskResult.Success(geometry)
         coEvery { generator.generatePlaceDetails(any(), any()) } returns placeDetailsUiModel
 
         homeViewModel.loadPlaceDetails(place)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            placesInteractor.requestGetPlaceDetails(osmId, any())
+            placesInteractor.requestGetGeometry(osmId, any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            generator.generatePlaceDetails(place, placeDetails)
+            generator.generatePlaceDetails(place, geometry)
             homeViewModel.postEvent(HomeLiveEvents.PlaceDetailsResult(placeDetailsUiModel))
         }
     }
 
     @Test
     fun `Given Error TaskResult, when loadPlaceDetails, then ErrorOccurred posted`() {
-        val place = PlaceUiModel("123456L", PlaceType.NODE, "", "".toMessage(), 0)
+        val place = "Gerecse".toTestPlaceUiModel()
         val errorRes = R.string.error_message_unknown
-        coEvery { placesInteractor.requestGetPlaceDetails(any(), any()) } returns TaskResult.Error(
+        coEvery { placesInteractor.requestGetGeometry(any(), any()) } returns TaskResult.Error(
             DomainException(errorRes)
         )
 
@@ -237,7 +246,7 @@ class HomeViewModelTest {
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            placesInteractor.requestGetPlaceDetails(any(), any())
+            placesInteractor.requestGetGeometry(any(), any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes.toMessage()))
         }
@@ -246,10 +255,9 @@ class HomeViewModelTest {
     @Test
     fun `Given Success TaskResult, when loadLandscapes, then LandscapesResult posted`() {
         val landscapes = emptyList<Landscape>()
-        val landscapesUiModel = listOf(PlaceUiModel("1", PlaceType.NODE, "", "".toMessage(), 0))
-
+        val landscapesUiModels = listOf("Gerecse".toTestPlaceUiModel())
         coEvery { landscapeInteractor.requestGetLandscapes() } returns TaskResult.Success(landscapes)
-        coEvery { generator.generateLandscapes(landscapes) } returns landscapesUiModel
+        coEvery { generator.generateLandscapes(landscapes) } returns landscapesUiModels
 
         homeViewModel.loadLandscapes()
 
@@ -258,7 +266,7 @@ class HomeViewModelTest {
             landscapeInteractor.requestGetLandscapes()
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             generator.generateLandscapes(landscapes)
-            homeViewModel.postEvent(HomeLiveEvents.LandscapesResult(landscapesUiModel))
+            homeViewModel.postEvent(HomeLiveEvents.LandscapesResult(landscapesUiModels))
         }
     }
 
@@ -284,17 +292,17 @@ class HomeViewModelTest {
         val boundingBox = BoundingBox(48.0058358, 20.2007937, 47.7747357, 19.6898570)
         val hikingRoutes = emptyList<HikingRoute>()
         val hikingRoutesUiModel = listOf(HikingRoutesItem.Item(HikingRouteUiModel("1", "HikingRoute", 0)))
-
+        val placeName = "Bükk"
         coEvery { placesInteractor.requestGetHikingRoutes(boundingBox) } returns TaskResult.Success(hikingRoutes)
-        coEvery { generator.generateHikingRoutes("Bükk", hikingRoutes) } returns hikingRoutesUiModel
+        coEvery { generator.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRoutesUiModel
 
-        homeViewModel.loadHikingRoutes("Bükk", boundingBox)
+        homeViewModel.loadHikingRoutes(placeName, boundingBox)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             placesInteractor.requestGetHikingRoutes(boundingBox)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            generator.generateHikingRoutes("Bükk", hikingRoutes)
+            generator.generateHikingRoutes(placeName, hikingRoutes)
             homeViewModel.postEvent(HomeLiveEvents.HikingRoutesResult(hikingRoutesUiModel))
         }
     }
@@ -303,11 +311,12 @@ class HomeViewModelTest {
     fun `Given Error TaskResult, when loadHikingRoutes, then ErrorOccurred posted`() {
         val boundingBox = BoundingBox(48.0058358, 20.2007937, 47.7747357, 19.6898570)
         val errorRes = R.string.error_message_unknown
+        val placeName = "Bükk"
         coEvery { placesInteractor.requestGetHikingRoutes(boundingBox) } returns TaskResult.Error(
             DomainException(errorRes)
         )
 
-        homeViewModel.loadHikingRoutes("Bükk", boundingBox)
+        homeViewModel.loadHikingRoutes(placeName, boundingBox)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
@@ -320,20 +329,20 @@ class HomeViewModelTest {
     @Test
     fun `Given Success TaskResult, when loadHikingRouteDetails, then PlaceDetailsResult posted`() {
         val osmId = "1"
-        val hikingRoute = HikingRouteUiModel(osmId, "HikingRoute", 0)
-        val placeDetails = PlaceDetails(osmId, Payload.Node(Location(47.123, 19.123)))
-        val placeDetailsUiModel = "HikingRoute".toTestPlaceDetailsUiModel()
-
-        coEvery { placesInteractor.requestGetPlaceDetails(osmId, any()) } returns TaskResult.Success(placeDetails)
-        coEvery { generator.generateHikingRouteDetails(hikingRoute, placeDetails) } returns placeDetailsUiModel
+        val hikingRouteName = "Z+ János hegyi túra"
+        val hikingRoute = HikingRouteUiModel(osmId, hikingRouteName, 0)
+        val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
+        val placeDetailsUiModel = hikingRouteName.toTestPlaceDetailsUiModel()
+        coEvery { placesInteractor.requestGetGeometry(osmId, any()) } returns TaskResult.Success(geometry)
+        coEvery { generator.generateHikingRouteDetails(hikingRoute, geometry) } returns placeDetailsUiModel
 
         homeViewModel.loadHikingRouteDetails(hikingRoute)
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            placesInteractor.requestGetPlaceDetails(osmId, PlaceType.RELATION)
+            placesInteractor.requestGetGeometry(osmId, PlaceType.RELATION)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            generator.generateHikingRouteDetails(hikingRoute, placeDetails)
+            generator.generateHikingRouteDetails(hikingRoute, geometry)
             homeViewModel.postEvent(HomeLiveEvents.HikingRouteDetailsResult(placeDetailsUiModel))
         }
     }
@@ -342,7 +351,7 @@ class HomeViewModelTest {
     fun `Given Error TaskResult, when loadHikingRouteDetails, then ErrorOccurred posted`() {
         val hikingRoute = HikingRouteUiModel("1", "HikingRoute", 0)
         val errorRes = R.string.error_message_unknown
-        coEvery { placesInteractor.requestGetPlaceDetails(any(), any()) } returns TaskResult.Error(
+        coEvery { placesInteractor.requestGetGeometry(any(), any()) } returns TaskResult.Error(
             DomainException(errorRes)
         )
 
@@ -350,22 +359,38 @@ class HomeViewModelTest {
 
         coVerifyOrder {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
-            placesInteractor.requestGetPlaceDetails(any(), any())
+            placesInteractor.requestGetGeometry(any(), any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorOccurred(errorRes.toMessage()))
         }
     }
 
-    private fun String.toTestPlace(): Place {
-        return Place("130074457", this, PlaceType.NODE, Location(47.7193842, 18.8962014))
+    private fun String.toTestPlace(osmId: String? = null): Place {
+        return Place(
+            osmId = osmId ?: "130074457",
+            name = this,
+            placeType = PlaceType.NODE,
+            location = Location(47.7193842, 18.8962014)
+        )
     }
 
-    private fun String.toTestPlaceUiModel(): PlaceUiModel {
-        return PlaceUiModel("130074457", PlaceType.NODE, this, null, 0)
+    private fun String.toTestPlaceUiModel(osmId: String? = null): PlaceUiModel {
+        return PlaceUiModel(
+            osmId = osmId ?: "130074457",
+            placeType = PlaceType.NODE,
+            primaryText = this,
+            secondaryText = this.toMessage(),
+            iconRes = 0,
+            geoPoint = GeoPoint(47.7193842, 18.8962014),
+            boundingBox = null
+        )
     }
 
     private fun String.toTestPlaceDetailsUiModel(): PlaceDetailsUiModel {
-        return PlaceDetailsUiModel("130074457", this.toTestPlaceUiModel(), UiPayload.Node(GeoPoint(47.123, 19.123)))
+        return PlaceDetailsUiModel(
+            placeUiModel = this.toTestPlaceUiModel(),
+            geometryUiModel = GeometryUiModel.Node(GeoPoint(47.123, 19.123))
+        )
     }
 
 }

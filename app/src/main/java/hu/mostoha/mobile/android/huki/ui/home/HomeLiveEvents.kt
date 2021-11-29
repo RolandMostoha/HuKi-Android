@@ -6,7 +6,7 @@ import hu.mostoha.mobile.android.huki.architecture.LiveEvents
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.ui.utils.Message
+import hu.mostoha.mobile.android.huki.ui.util.Message
 
 sealed class HomeLiveEvents : LiveEvents {
 
@@ -16,12 +16,14 @@ sealed class HomeLiveEvents : LiveEvents {
 
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
 
-    data class PlacesResult(val results: List<PlaceUiModel>) : HomeLiveEvents()
+    data class PlacesResult(val places: List<PlaceUiModel>) : HomeLiveEvents()
 
     data class PlacesErrorResult(
         @StringRes val messageRes: Int,
         @DrawableRes val drawableRes: Int
     ) : HomeLiveEvents()
+
+    data class PlaceResult(val place: PlaceUiModel) : HomeLiveEvents()
 
     data class PlaceDetailsResult(val placeDetails: PlaceDetailsUiModel) : HomeLiveEvents()
 

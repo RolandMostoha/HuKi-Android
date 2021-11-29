@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
-import hu.mostoha.mobile.android.huki.ui.utils.Message
+import hu.mostoha.mobile.android.huki.ui.util.Message
 
 val Context.inflater: LayoutInflater
     get() = LayoutInflater.from(this)

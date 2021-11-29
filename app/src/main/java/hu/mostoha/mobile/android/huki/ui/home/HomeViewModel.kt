@@ -15,7 +15,7 @@ import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.ui.home.HomeLiveEvents.*
-import hu.mostoha.mobile.android.huki.ui.utils.toMessage
+import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import javax.inject.Inject
@@ -88,11 +88,12 @@ class HomeViewModel @Inject constructor(
             when (val result = placesInteractor.requestGetPlacesBy(searchText)) {
                 is TaskResult.Success -> {
                     postEvent(SearchBarLoading(false))
-                    val searchResults = generator.generatePlaceUiModels(result.data)
+                    val searchResults = generator.generatePlaces(result.data)
                     if (searchResults.isEmpty()) {
                         postEvent(
                             PlacesErrorResult(
-                                R.string.search_bar_empty_message, R.drawable.ic_search_bar_empty_result
+                                messageRes = R.string.search_bar_empty_message,
+                                drawableRes = R.drawable.ic_search_bar_empty_result
                             )
                         )
                     } else {
@@ -103,7 +104,8 @@ class HomeViewModel @Inject constructor(
                     postEvent(SearchBarLoading(false))
                     postEvent(
                         PlacesErrorResult(
-                            result.domainException.messageRes, R.drawable.ic_search_bar_error
+                            messageRes = result.domainException.messageRes,
+                            drawableRes = R.drawable.ic_search_bar_error
                         )
                     )
                 }
@@ -121,10 +123,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun loadPlace(placeUiModel: PlaceUiModel) = launch {
+        postEvent(PlaceResult(placeUiModel))
+    }
+
     fun loadPlaceDetails(placeUiModel: PlaceUiModel) = launch {
         postEvent(SearchBarLoading(true))
 
-        when (val result = placesInteractor.requestGetPlaceDetails(placeUiModel.osmId, placeUiModel.placeType)) {
+        when (val result = placesInteractor.requestGetGeometry(placeUiModel.osmId, placeUiModel.placeType)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
                 val placeDetails = generator.generatePlaceDetails(placeUiModel, result.data)
@@ -172,7 +178,7 @@ class HomeViewModel @Inject constructor(
     fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = launch {
         postEvent(SearchBarLoading(true))
 
-        when (val result = placesInteractor.requestGetPlaceDetails(hikingRoute.osmId, PlaceType.RELATION)) {
+        when (val result = placesInteractor.requestGetGeometry(hikingRoute.osmId, PlaceType.RELATION)) {
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
                 val placeDetails = generator.generateHikingRouteDetails(hikingRoute, result.data)

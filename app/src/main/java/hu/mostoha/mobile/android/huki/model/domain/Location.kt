@@ -8,3 +8,5 @@ data class Location(
 )
 
 fun Location.toGeoPoint() = GeoPoint(latitude, longitude)
+
+fun GeoPoint.toLocation() = Location(latitude, longitude)

@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.model.generator
 
+import androidx.annotation.VisibleForTesting
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
@@ -15,10 +16,10 @@ import javax.inject.Inject
 class PlacesDomainModelGenerator @Inject constructor() {
 
     companion object {
-        private const val NORTH_EXTENT_POSITION = 2
-        private const val EAST_EXTENT_POSITION = 1
-        private const val SOUTH_EXTENT_POSITION = 0
-        private const val WEST_EXTENT_POSITION = 3
+        private const val NORTH_EXTENT_POSITION = 1
+        private const val EAST_EXTENT_POSITION = 2
+        private const val SOUTH_EXTENT_POSITION = 3
+        private const val WEST_EXTENT_POSITION = 0
     }
 
     fun generatePlace(response: PhotonQueryResponse): List<Place> {
@@ -53,75 +54,77 @@ class PlacesDomainModelGenerator @Inject constructor() {
         }
     }
 
-    fun generatePlaceDetailsByNode(response: OverpassQueryResponse): PlaceDetails {
-        val nodeElement = response.elements.first()
-
-        return PlaceDetails(
-            osmId = nodeElement.id.toString(),
-            payload = Payload.Node(Location(nodeElement.lat!!, nodeElement.lon!!))
-        )
-    }
-
-    fun generatePlaceDetailsByWay(response: OverpassQueryResponse, osmId: String): PlaceDetails {
-        val wayElement = response.elements.firstOrNull {
-            it.type == ElementType.WAY && it.id.toString() == osmId
-        } ?: TODO()
-        val wayId = wayElement.id.toString()
-        val locations = wayElement.geometry?.extractLocations() ?: emptyList()
-
-        return PlaceDetails(
-            osmId = wayId,
-            payload = Payload.Way(
-                osmId = wayId,
-                locations = locations,
-                distance = locations.calculateDistance()
-            )
-        )
-    }
-
-    fun generatePlaceDetailsByRelation(response: OverpassQueryResponse, osmId: String): PlaceDetails {
-        val relationElement = response.elements.firstOrNull {
-            it.type == ElementType.RELATION && it.id.toString() == osmId
+    fun generateGeometryByNode(response: OverpassQueryResponse, osmId: String): Geometry {
+        val nodeElement = response.elements.firstOrNull { element ->
+            element.type == ElementType.NODE && element.id.toString() == osmId
         } ?: throw DomainException(R.string.error_message_missing_osm_id)
 
-        val ways = relationElement.members?.mapNotNull {
-            val ref = it.ref
-            val geometry = it.geometry
-            if (ref != null && geometry != null) {
-                val locations = geometry.extractLocations()
-                Payload.Way(
-                    osmId = ref,
-                    locations = locations,
-                    distance = locations.calculateDistance()
-                )
-            } else {
+        return Geometry.Node(
+            osmId = osmId,
+            location = Location(nodeElement.lat!!, nodeElement.lon!!)
+        )
+    }
+
+    fun generateGeometryByWay(response: OverpassQueryResponse, osmId: String): Geometry {
+        val wayElement = response.elements.firstOrNull { element ->
+            element.type == ElementType.WAY && element.id.toString() == osmId
+        } ?: throw DomainException(R.string.error_message_missing_osm_id)
+
+        return generateWayGeometry(wayElement.id.toString(), wayElement.geometry ?: emptyList())
+    }
+
+    fun generateGeometryByRelation(response: OverpassQueryResponse, osmId: String): Geometry {
+        val relationElement = response.elements.firstOrNull { element ->
+            element.type == ElementType.RELATION && element.id.toString() == osmId
+        } ?: throw DomainException(R.string.error_message_missing_osm_id)
+
+        val ways = relationElement.members?.mapNotNull { member ->
+            val geometry = member.geometry
+            if (geometry.isNullOrEmpty()) {
                 null
+            } else {
+                generateWayGeometry(member.ref, geometry)
             }
         } ?: emptyList()
 
-        return PlaceDetails(
-            osmId = relationElement.id.toString(),
-            payload = Payload.Relation(ways)
+        return Geometry.Relation(osmId, ways)
+    }
+
+    private fun generateWayGeometry(wayId: String, geometry: List<Geom>): Geometry.Way {
+        val locations = extractLocations(geometry)
+
+        return Geometry.Way(
+            osmId = wayId,
+            locations = locations,
+            distance = locations.calculateDistance()
         )
     }
 
     fun generateHikingRoutes(response: OverpassQueryResponse): List<HikingRoute> {
-        return response.elements.mapNotNull {
+        return response.elements.mapNotNull { element ->
+            val name = element.tags?.name
+            val symbolType = element.tags?.jel
+
+            if (name == null || symbolType == null) {
+                return@mapNotNull null
+            }
+
             HikingRoute(
-                osmId = it.id.toString(),
-                name = it.tags?.name ?: return@mapNotNull null,
-                symbolType = it.tags?.jel ?: return@mapNotNull null
+                osmId = element.id.toString(),
+                name = name,
+                symbolType = symbolType
             )
         }
     }
 
-    private fun List<Geom>.extractLocations(): List<Location> {
-        return mapNotNull {
-            val lat = it.lat
-            val lon = it.lon
+    @VisibleForTesting
+    internal fun extractLocations(geometries: List<Geom>): List<Location> {
+        return geometries.mapNotNull {
+            val latitude = it.lat
+            val longitude = it.lon
 
-            if (lat != null && lon != null) {
-                Location(lat, lon)
+            if (latitude != null && longitude != null) {
+                Location(latitude, longitude)
             } else {
                 null
             }

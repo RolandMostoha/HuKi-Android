@@ -2,18 +2,18 @@ package hu.mostoha.mobile.android.huki.repository
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.di.module.ServiceModule
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.Payload
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.testdata.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -40,40 +40,58 @@ class OsmPlacesRepositoryTest {
 
     @Test
     fun givenSearchText_whenGetPlacesBy_thenResultIsNotNull() = runBlocking {
-        val result = repository.getPlacesBy("Mecsek")
+        val places = repository.getPlacesBy("Mecsek")
 
-        assertNotNull(result)
+        assertThat(places).isNotEmpty()
     }
 
     @Test
-    fun givenNodeType_whenGetPlaceDetails_thenResultIsNotNull() = runBlocking {
-        val placeId = "130074457"
+    fun givenNodeOsmId_whenGetGeometry_thenLocationIsPresent() = runBlocking {
+        val osmId = DEFAULT_NODE_OSM_ID
 
-        val result = repository.getPlaceDetails(placeId, PlaceType.NODE)
+        val geometry = repository.getGeometry(osmId, PlaceType.NODE)
+        val node = geometry as Geometry.Node
 
-        assertEquals(placeId, result.osmId)
-        assertEquals(Location(47.7193842, 18.8962014), (result.payload as Payload.Node).location)
+        assertThat(node.osmId).isEqualTo(osmId)
+        assertThat(node.location).isEqualTo(Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE))
     }
 
     @Test
-    fun givenWayType_whenGetPlaceDetails_thenResultIsNotNull() = runBlocking {
-        val result = repository.getPlaceDetails("671340353", PlaceType.WAY)
+    fun givenWayOsmId_whenGetGeometry_thenLocationListIsNotEmpty() = runBlocking {
+        val osmId = DEFAULT_WAY_OSM_ID
 
-        assertNotNull(result)
+        val geometry = repository.getGeometry(osmId, PlaceType.WAY)
+        val way = geometry as Geometry.Way
+
+        assertThat(way.osmId).isEqualTo(osmId)
+        assertThat(way.locations).isNotEmpty()
     }
 
     @Test
-    fun givenRelationType_whenGetPlaceDetails_thenResultIsNotNull() = runBlocking {
-        val result = repository.getPlaceDetails("382123", PlaceType.RELATION)
+    fun givenRelationOsmId_whenGetGeometry_thenWaysListIsNotEmpty() = runBlocking {
+        val osmId = DEFAULT_RELATION_OSM_ID
 
-        assertNotNull(result)
+        val geometry = repository.getGeometry(osmId, PlaceType.RELATION)
+        val relation = geometry as Geometry.Relation
+
+        assertThat(relation.osmId).isEqualTo(osmId)
+        assertThat(relation.ways).isNotEmpty()
     }
 
     @Test
-    fun givenBoundingBox_whenGetHikingRoutes_thenResultIsNotNull() = runBlocking {
-        val result = repository.getHikingRoutes(BoundingBox(48.0058358, 20.2007937, 47.7747357, 19.6898570))
+    fun givenBoundingBox_whenGetHikingRoutes_thenHikingRouteListIsNotEmpty() = runBlocking {
+        val hikingRoutes = repository.getHikingRoutes(DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES)
 
-        assertNotNull(result)
+        assertThat(hikingRoutes).isNotEmpty()
+    }
+
+    companion object {
+        private val DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES = BoundingBox(
+            north = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH,
+            east = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST,
+            south = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH,
+            west = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_WEST
+        )
     }
 
 }

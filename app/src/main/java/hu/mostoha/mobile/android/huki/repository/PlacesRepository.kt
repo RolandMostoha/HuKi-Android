@@ -6,7 +6,7 @@ interface PlacesRepository {
 
     suspend fun getPlacesBy(searchText: String): List<Place>
 
-    suspend fun getPlaceDetails(osmId: String, placeType: PlaceType): PlaceDetails
+    suspend fun getGeometry(osmId: String, placeType: PlaceType): Geometry
 
     suspend fun getHikingRoutes(boundingBox: BoundingBox): List<HikingRoute>
 

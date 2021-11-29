@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class FeaturesItem(
     @Json(name = "geometry")
-    val geometry: Geometry,
+    val geometry: PhotonGeometry,
 
     @Json(name = "type")
     val type: String,

@@ -20,7 +20,9 @@ import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
+import hu.mostoha.mobile.android.huki.util.OverlayPositions
 import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.launch
 import hu.mostoha.mobile.android.huki.util.testAppContext
@@ -31,6 +33,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.osmdroid.views.overlay.TilesOverlay
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -100,6 +103,22 @@ class MapLayersUseCaseTest {
 
             R.string.layers_hiking_update_label.isPopupTextDisplayed()
         }
+    }
+
+    @Test
+    fun givenTuraReteg1000_whenMapOpens_thenHikingLayerDisplays() {
+        answerTestHikingLayer()
+
+        launch<HomeActivity> {
+            R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(OverlayPositions.HIKING_LAYER)
+        }
+    }
+
+    private fun answerTestHikingLayer() {
+        val file = osmConfiguration.getHikingLayerFile().also {
+            it.copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
+        }
+        coEvery { hikingLayerRepository.getHikingLayerFile() } returns file
     }
 
     private fun answerNullHikingLayer() {

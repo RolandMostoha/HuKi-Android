@@ -12,12 +12,16 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.ServiceModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
-import hu.mostoha.mobile.android.huki.model.domain.*
+import hu.mostoha.mobile.android.huki.model.domain.Geometry
+import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.OverlayPositions
 import hu.mostoha.mobile.android.huki.util.espresso.*
@@ -30,9 +34,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.Polygon
-import org.osmdroid.views.overlay.Polyline
-import org.osmdroid.views.overlay.TilesOverlay
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -72,22 +73,13 @@ class MapPlacesUseCaseTest {
     }
 
     @Test
-    fun givenTuraReteg1000_whenMapOpens_thenHikingLayerDisplays() {
-        answerTestHikingLayer()
-
-        launch<HomeActivity> {
-            R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(OverlayPositions.HIKING_LAYER)
-        }
-    }
-
-    @Test
-    fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplayOnBottomSheet() {
+    fun givenPlaces_whenClickInSearchResults_thenPlaceDisplaysOnBottomSheet() {
         answerTestHikingLayer()
         answerTestPlaces()
-        answerTestPlaceDetails()
+        answerTestGeometries()
 
         launch<HomeActivity> {
-            val searchText = "Mecsek"
+            val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
 
@@ -100,13 +92,13 @@ class MapPlacesUseCaseTest {
     }
 
     @Test
-    fun givenPlacePrediction_whenClick_thenPlaceDetailsDisplayOnMap() {
+    fun givenNodePlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
         answerTestHikingLayer()
         answerTestPlaces()
-        answerTestPlaceDetails()
+        answerTestGeometries()
 
         launch<HomeActivity> {
-            val searchText = "Mecsek"
+            val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
@@ -116,16 +108,16 @@ class MapPlacesUseCaseTest {
     }
 
     @Test
-    fun givenPlaceDetails_whenCloseClick_thenBottomSheetIsHidden() {
+    fun givenNodePlace_whenCloseClickOnBottomSheet_thenBottomSheetIsHidden() {
         answerTestHikingLayer()
         answerTestPlaces()
-        answerTestPlaceDetails()
+        answerTestGeometries()
 
         launch<HomeActivity> {
-            val searchText = "Mecsek"
+            val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homeSearchBarInput.typeText(searchText)
-            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
             R.id.placeDetailsCloseButton.click()
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -133,79 +125,55 @@ class MapPlacesUseCaseTest {
     }
 
     @Test
-    fun givenPlaceDetails_whenCloseClick_thenMarkerRemoved() {
+    fun givenWayPlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
         answerTestHikingLayer()
         answerTestPlaces()
-        answerTestPlaceDetails()
+        answerTestGeometries()
 
         launch<HomeActivity> {
-            val searchText = "Mecsek"
+            val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Polyline>(OverlayPositions.PLACE)
-
-            R.id.placeDetailsCloseButton.click()
-
-            R.id.homeMapView.hasNotOverlayInPosition<Polyline>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
         }
     }
 
     @Test
-    fun givenOpenWay_whenGetPlaceDetails_thenPolylineDisplays() {
+    fun givenRelationPlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
         answerTestHikingLayer()
-        coEvery { placesRepository.getPlacesBy(any()) } returns listOf(DEFAULT_PLACE_WAY)
-        coEvery { placesRepository.getPlaceDetails(any(), any()) } returns (DEFAULT_PLACE_DETAILS_WAY)
+        answerTestPlaces()
+        answerTestGeometries()
 
         launch<HomeActivity> {
-            val searchText = "Mecsek"
+            val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homeSearchBarInput.typeText(searchText)
-            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Polyline>(OverlayPositions.PLACE)
-        }
-    }
-
-    @Test
-    fun givenClosedWay_whenGetPlaceDetails_thenPolygonDisplays() {
-        answerTestHikingLayer()
-        coEvery { placesRepository.getPlacesBy(any()) } returns listOf(DEFAULT_PLACE_WAY)
-        coEvery { placesRepository.getPlaceDetails(any(), any()) } returns DEFAULT_PLACE_DETAILS_WAY.copy(
-            payload = (DEFAULT_PLACE_DETAILS_WAY.payload as Payload.Way).copy(
-                locations = listOf(
-                    Location(47.123, 19.124),
-                    Location(47.124, 19.125),
-                    Location(47.123, 19.124)
-                )
-            )
-        )
-
-        launch<HomeActivity> {
-            val searchText = "Mecsek"
-
-            R.id.homeSearchBarInput.typeText(searchText)
-            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
-
-            R.id.homeMapView.hasOverlayInPosition<Polygon>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
         }
     }
 
     private fun answerTestPlaces() {
         coEvery { placesRepository.getPlacesBy(any()) } returns listOf(
             DEFAULT_PLACE_WAY,
-            DEFAULT_PLACE_NODE
+            DEFAULT_PLACE_NODE,
+            DEFAULT_PLACE_RELATION
         )
     }
 
-    private fun answerTestPlaceDetails() {
+    private fun answerTestGeometries() {
         coEvery {
-            placesRepository.getPlaceDetails(DEFAULT_PLACE_DETAILS_WAY.osmId, any())
-        } returns DEFAULT_PLACE_DETAILS_WAY
+            placesRepository.getGeometry(DEFAULT_PLACE_NODE.osmId, any())
+        } returns DEFAULT_GEOMETRY_NODE
         coEvery {
-            placesRepository.getPlaceDetails(DEFAULT_PLACE_DETAILS_NODE.osmId, any())
-        } returns DEFAULT_PLACE_DETAILS_NODE
+            placesRepository.getGeometry(DEFAULT_PLACE_WAY.osmId, any())
+        } returns DEFAULT_GEOMETRY_WAY
+        coEvery {
+            placesRepository.getGeometry(DEFAULT_PLACE_RELATION.osmId, any())
+        } returns DEFAULT_GEOMETRY_RELATION
     }
 
     private fun answerTestHikingLayer() {
@@ -216,33 +184,48 @@ class MapPlacesUseCaseTest {
     }
 
     companion object {
-        private val DEFAULT_PLACE_WAY = Place(
-            osmId = "1",
-            name = "Mecseki Kéktúra",
-            placeType = PlaceType.WAY,
-            location = Location(47.0983397, 17.7575106)
-        )
-        private val DEFAULT_PLACE_DETAILS_WAY = PlaceDetails(
-            osmId = DEFAULT_PLACE_WAY.osmId,
-            payload = Payload.Way(
-                osmId = DEFAULT_PLACE_WAY.osmId,
-                locations = listOf(
-                    Location(47.123, 19.124),
-                    Location(47.124, 19.126),
-                    Location(47.125, 19.127)
-                ),
-                distance = 100
-            )
-        )
+        private const val DEFAULT_SEARCH_TEXT = "Dobogoko"
         private val DEFAULT_PLACE_NODE = Place(
-            osmId = "2",
-            name = "Mecsek hegy",
+            osmId = DEFAULT_NODE_OSM_ID,
+            name = DEFAULT_NODE_NAME,
             placeType = PlaceType.NODE,
-            location = Location(47.0982297, 17.7578106)
+            location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE)
         )
-        private val DEFAULT_PLACE_DETAILS_NODE = PlaceDetails(
+        private val DEFAULT_GEOMETRY_NODE = Geometry.Node(
             osmId = DEFAULT_PLACE_NODE.osmId,
-            payload = Payload.Node(DEFAULT_PLACE_NODE.location)
+            location = DEFAULT_PLACE_NODE.location
+        )
+        private val DEFAULT_PLACE_WAY = Place(
+            osmId = DEFAULT_WAY_OSM_ID,
+            name = DEFAULT_WAY_NAME,
+            placeType = PlaceType.WAY,
+            location = Location(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE)
+        )
+        private val DEFAULT_GEOMETRY_WAY = Geometry.Way(
+            osmId = DEFAULT_PLACE_WAY.osmId,
+            locations = DEFAULT_WAY_GEOMETRY.map { Location(it.first, it.second) },
+            distance = 100
+        )
+        private val DEFAULT_PLACE_RELATION = Place(
+            osmId = DEFAULT_RELATION_OSM_ID,
+            name = DEFAULT_RELATION_NAME,
+            placeType = PlaceType.RELATION,
+            location = Location(DEFAULT_RELATION_CENTER_LATITUDE, DEFAULT_RELATION_CENTER_LONGITUDE)
+        )
+        private val DEFAULT_GEOMETRY_RELATION = Geometry.Relation(
+            osmId = DEFAULT_PLACE_RELATION.osmId,
+            ways = listOf(
+                Geometry.Way(
+                    osmId = DEFAULT_RELATION_WAY_1_OSM_ID,
+                    locations = DEFAULT_RELATION_WAY_1_GEOMETRY.map { Location(it.first, it.second) },
+                    distance = 1500
+                ),
+                Geometry.Way(
+                    osmId = DEFAULT_RELATION_WAY_2_OSM_ID,
+                    locations = DEFAULT_RELATION_WAY_2_GEOMETRY.map { Location(it.first, it.second) },
+                    distance = 2000
+                )
+            )
         )
     }
 

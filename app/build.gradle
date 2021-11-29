@@ -118,6 +118,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.4'
 
     // Unit tests
+    testImplementation project(':test-data')
+
     def mockKVersion = '1.11.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation "com.google.truth:truth:1.1.3"
@@ -126,10 +128,13 @@ dependencies {
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9'
 
     // Instrumentation tests
+    androidTestImplementation project(':test-data')
+
     def androidXTestVersion = '1.4.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "com.google.truth:truth:1.1.3"
     androidTestImplementation "androidx.test:core-ktx:$androidXTestVersion"
     androidTestImplementation "androidx.test:rules:$androidXTestVersion"
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9'

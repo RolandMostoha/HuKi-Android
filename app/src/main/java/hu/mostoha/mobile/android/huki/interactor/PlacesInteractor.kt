@@ -26,10 +26,10 @@ class PlacesInteractor @Inject constructor(
         }
     }
 
-    suspend fun requestGetPlaceDetails(osmId: String, placeType: PlaceType): TaskResult<PlaceDetails> {
+    suspend fun requestGetGeometry(osmId: String, placeType: PlaceType): TaskResult<Geometry> {
         return taskExecutor.runOnBackground {
             try {
-                val response = placesRepository.getPlaceDetails(osmId, placeType)
+                val response = placesRepository.getGeometry(osmId, placeType)
 
                 TaskResult.Success(response)
             } catch (exception: Exception) {

@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.ui.utils
+package hu.mostoha.mobile.android.huki.ui.util
 
 import androidx.annotation.StringRes
 
@@ -8,7 +8,7 @@ sealed class Message {
 
     data class Res(
         @StringRes val res: Int,
-        val formatArgs: List<String> = emptyList()
+        val formatArgs: List<Any> = emptyList()
     ) : Message()
 
 }

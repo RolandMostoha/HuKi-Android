@@ -18,6 +18,7 @@ import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
@@ -62,20 +63,17 @@ class MapSearchBarUseCaseTest {
     }
 
     @Test
-    fun givenSearchText_whenTyping_thenPlacePredictionsDisplay() {
+    fun givenPlaces_whenTypingInSearchBar_thenPlacesSearchResultDisplays() {
         answerTestHikingLayer()
-        coEvery { placesRepository.getPlacesBy(any()) } returns listOf(
-            Place("1", "Mecseki Kéktúra", PlaceType.WAY, Location(47.0983397, 17.7575106)),
-            Place("2", "Mecseknádasdi Piroska", PlaceType.NODE, Location(47.0982297, 17.7546106))
-        )
+        answerTestPlaces()
 
         launch<HomeActivity> {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
 
-            "Mecseki Kéktúra".isPopupTextDisplayed()
-            "Mecseknádasdi Piroska".isPopupTextDisplayed()
+            DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
+            DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
         }
     }
 
@@ -111,6 +109,28 @@ class MapSearchBarUseCaseTest {
         coEvery { hikingLayerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
             copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
         }
+    }
+
+    private fun answerTestPlaces() {
+        coEvery { placesRepository.getPlacesBy(any()) } returns listOf(
+            DEFAULT_PLACE_NODE,
+            DEFAULT_PLACE_WAY
+        )
+    }
+
+    companion object {
+        private val DEFAULT_PLACE_NODE = Place(
+            osmId = DEFAULT_NODE_OSM_ID,
+            name = DEFAULT_NODE_NAME,
+            placeType = PlaceType.NODE,
+            location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE)
+        )
+        private val DEFAULT_PLACE_WAY = Place(
+            osmId = DEFAULT_WAY_OSM_ID,
+            name = DEFAULT_WAY_NAME,
+            placeType = PlaceType.WAY,
+            location = Location(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE)
+        )
     }
 
 }

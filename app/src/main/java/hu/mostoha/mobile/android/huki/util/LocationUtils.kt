@@ -4,7 +4,6 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 import kotlin.math.*
 import android.location.Location as AndroidLocation
 
-
 private const val EARTH_RADIUS = 6_372_800
 
 /**
@@ -24,10 +23,20 @@ fun Location.distanceBetween(other: Location): Int {
 
 fun List<Location>.calculateDistance(): Int {
     var distance = 0
-    this.forEachIndexed { index, location ->
+    forEachIndexed { index, location ->
         distance += location.distanceBetween(this[min(size - 1, index + 1)])
     }
     return distance
+}
+
+/**
+ * Calculates the center of the given [Location]s. It does not accurate for flat 180/-180 degrees.
+ */
+fun List<Location>.calculateCenter(): Location {
+    return Location(
+        latitude = this.sumOf { it.latitude } / this.size,
+        longitude = this.sumOf { it.longitude } / this.size
+    )
 }
 
 private const val ZOOM_LEVEL_MAP_SCALE = 591_657_550
