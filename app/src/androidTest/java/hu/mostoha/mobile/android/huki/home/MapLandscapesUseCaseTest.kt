@@ -24,7 +24,7 @@ import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.OverlayPositions
+import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed

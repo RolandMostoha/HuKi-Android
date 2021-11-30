@@ -2,7 +2,9 @@ package hu.mostoha.mobile.android.huki.osmdroid
 
 import android.graphics.Bitmap
 import android.location.Location
+import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
+import hu.mostoha.mobile.android.huki.extensions.toBitmap
 import hu.mostoha.mobile.android.huki.util.calculateZoomLevel
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -25,6 +27,13 @@ class MyLocationOverlay(
     }
 
     var onFollowLocationDisabled: (() -> Unit)? = null
+
+    init {
+        setDirectionArrow(
+            R.drawable.ic_marker_my_location.toBitmap(mapView.context),
+            R.drawable.ic_marker_my_location_compass.toBitmap(mapView.context)
+        )
+    }
 
     override fun setLocation(location: Location) {
         val zoomLevel = location.calculateZoomLevel().toDouble()

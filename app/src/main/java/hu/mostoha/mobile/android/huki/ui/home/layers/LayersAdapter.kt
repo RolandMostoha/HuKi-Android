@@ -9,7 +9,7 @@ import hu.mostoha.mobile.android.huki.databinding.ItemLayersBaseBinding
 import hu.mostoha.mobile.android.huki.extensions.inflater
 
 class LayersAdapter(
-    val onItemClick: (BaseLayer) -> Unit,
+    val onItemClick: (BaseLayer) -> Unit
 ) : ListAdapter<BaseLayer, LayersAdapter.ViewHolderItem>(LayersComparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderItem {

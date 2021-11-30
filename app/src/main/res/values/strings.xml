@@ -15,6 +15,7 @@
 
     <string name="home_bottom_sheet_directions_button">Navigation</string>
     <string name="home_bottom_sheet_hiking_trails_button">Hiking trails</string>
+    <string name="home_bottom_sheet_show_points_button">All points</string>
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>
 
     <string name="map_place_name_routes_nearby">Hiking trails in map</string>

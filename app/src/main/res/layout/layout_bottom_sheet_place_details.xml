@@ -79,7 +79,7 @@
         app:icon="@drawable/ic_home_bottom_sheet_directions"
         app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/placeDetailsHikingTrailsButton" />
+        app:layout_constraintEnd_toStartOf="@id/placeDetailsShowPointsButton" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/placeDetailsHikingTrailsButton"
@@ -93,5 +93,18 @@
         app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/placeDetailsShowPointsButton"
+        style="@style/DefaultButton.Contained.Shadowless.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginEnd="@dimen/space_extra_large"
+        android:text="@string/home_bottom_sheet_show_points_button"
+        app:icon="@drawable/ic_place_details_show_points"
+        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/placeDetailsHikingTrailsButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

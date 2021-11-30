@@ -23,7 +23,7 @@ import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.OverlayPositions
+import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
 import hu.mostoha.mobile.android.huki.util.espresso.*
 import hu.mostoha.mobile.android.huki.util.launch
 import hu.mostoha.mobile.android.huki.util.testContext
@@ -34,6 +34,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -73,7 +74,7 @@ class MapPlacesUseCaseTest {
     }
 
     @Test
-    fun givenPlaces_whenClickInSearchResults_thenPlaceDisplaysOnBottomSheet() {
+    fun givenNodePlace_whenClickInSearchResults_thenPlaceDisplaysOnBottomSheet() {
         answerTestHikingLayer()
         answerTestPlaces()
         answerTestGeometries()
@@ -84,15 +85,15 @@ class MapPlacesUseCaseTest {
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
 
             R.id.homeSearchBarInput.typeText(searchText)
-            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
 
             R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
-            DEFAULT_PLACE_WAY.name.isTextDisplayed()
+            DEFAULT_PLACE_NODE.name.isTextDisplayed()
         }
     }
 
     @Test
-    fun givenNodePlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
+    fun givenNodePlace_whenClickInSearchResults_thenDirectionsAndHikingTrailsButtonsDisplayedOnBottomSheet() {
         answerTestHikingLayer()
         answerTestPlaces()
         answerTestGeometries()
@@ -100,10 +101,14 @@ class MapPlacesUseCaseTest {
         launch<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
+            R.string.home_bottom_sheet_directions_button.isTextDisplayed()
+            R.string.home_bottom_sheet_hiking_trails_button.isTextDisplayed()
+            R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
         }
     }
 
@@ -125,6 +130,22 @@ class MapPlacesUseCaseTest {
     }
 
     @Test
+    fun givenNodePlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
+        answerTestHikingLayer()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launch<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
+        }
+    }
+
+    @Test
     fun givenWayPlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
         answerTestHikingLayer()
         answerTestPlaces()
@@ -141,6 +162,66 @@ class MapPlacesUseCaseTest {
     }
 
     @Test
+    fun givenWayPlace_whenClickInSearchResults_thenBottomSheetButtonsDisplay() {
+        answerTestHikingLayer()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launch<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+
+            R.string.home_bottom_sheet_directions_button.isTextDisplayed()
+            R.string.home_bottom_sheet_show_points_button.isTextDisplayed()
+            R.string.home_bottom_sheet_hiking_trails_button.isTextNotDisplayed()
+        }
+    }
+
+    @Test
+    fun givenWayPlace_whenClickOnShowPointsButton_thenHikingTrailsButtonDisplaysOnBottomSheet() {
+        answerTestHikingLayer()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launch<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            R.string.home_bottom_sheet_show_points_button.clickWithText()
+
+            R.string.home_bottom_sheet_directions_button.isTextNotDisplayed()
+            R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
+            R.string.home_bottom_sheet_hiking_trails_button.isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenWayPlace_whenClickOnShowPointsButton_thenPlaceDetailsDisplayOnMap() {
+        answerTestHikingLayer()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launch<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            R.string.home_bottom_sheet_show_points_button.clickWithText()
+
+            R.id.homeMapView.hasOverlayInPosition<Polyline>(OverlayPositions.PLACE)
+        }
+    }
+
+    @Test
     fun givenRelationPlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
         answerTestHikingLayer()
         answerTestPlaces()
@@ -153,6 +234,46 @@ class MapPlacesUseCaseTest {
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
 
             R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
+        }
+    }
+
+    @Test
+    fun givenRelationPlace_whenClickOnShowPointsButton_thenHikingTrailsButtonDisplaysOnBottomSheet() {
+        answerTestHikingLayer()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launch<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
+            R.string.home_bottom_sheet_show_points_button.clickWithText()
+
+            R.string.home_bottom_sheet_directions_button.isTextNotDisplayed()
+            R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
+            R.string.home_bottom_sheet_hiking_trails_button.isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenRelationPlace_whenClickOnShowPointsButton_thenPlaceDetailsDisplayOnMap() {
+        answerTestHikingLayer()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launch<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
+            R.string.home_bottom_sheet_show_points_button.clickWithText()
+
+            R.id.homeMapView.hasOverlayInPosition<Polyline>(OverlayPositions.PLACE)
         }
     }
 
