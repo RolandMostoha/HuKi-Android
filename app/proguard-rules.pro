@@ -28,3 +28,11 @@
 -dontwarn org.openjsse.javax.net.ssl.SSLParameters
 -dontwarn org.openjsse.javax.net.ssl.SSLSocket
 -dontwarn org.openjsse.net.ssl.OpenJSSE
+
+-dontwarn org.jetbrains.annotations.**
+-keep class kotlin.Metadata { *; }
+
+-keepclassmembers class hu.mostoha.mobile.android.huki.model.** {
+  <init>(...);
+  <fields>;
+}
