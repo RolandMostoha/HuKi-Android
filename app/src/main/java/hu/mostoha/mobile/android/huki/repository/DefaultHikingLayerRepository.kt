@@ -19,6 +19,7 @@ class DefaultHikingLayerRepository @Inject constructor(
 
     override suspend fun getHikingLayerFile(): File? {
         val file = osmConfiguration.getHikingLayerFile()
+
         return if (file.exists()) file else null
     }
 

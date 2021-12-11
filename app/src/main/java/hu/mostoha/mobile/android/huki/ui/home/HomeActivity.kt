@@ -58,6 +58,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private lateinit var binding: ActivityHomeBinding
 
+    private val homeContainer by lazy { binding.homeContainer }
     private val homeMapView by lazy { binding.homeMapView }
     private val homeSearchBarContainer by lazy { binding.homeSearchBarContainer }
     private val homeSearchBarInputLayout by lazy { binding.homeSearchBarInputLayout }
@@ -262,7 +263,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initObservers() {
         viewModel.liveEvents.observe(this, { event ->
             when (event) {
-                is ErrorOccurred -> showToast(event.message)
+                is ErrorOccurred -> showSnackbar(homeContainer, event.message)
                 is LayerLoading -> homeLayersFab.inProgress = event.inProgress
                 is SearchBarLoading -> binding.homeSearchBarProgress.visibleOrGone(event.inProgress)
                 is PlacesResult -> initPlaces(event.places)

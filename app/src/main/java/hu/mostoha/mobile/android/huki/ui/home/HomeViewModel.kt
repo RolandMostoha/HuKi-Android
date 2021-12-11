@@ -4,8 +4,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.architecture.BaseViewModel
 import hu.mostoha.mobile.android.huki.executor.TaskExecutor
+import hu.mostoha.mobile.android.huki.interactor.HikingLayerInteractor
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
-import hu.mostoha.mobile.android.huki.interactor.LayerInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.TaskResult
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     taskExecutor: TaskExecutor,
-    private val layerInteractor: LayerInteractor,
+    private val hikingLayerInteractor: HikingLayerInteractor,
     private val placesInteractor: PlacesInteractor,
     private val landscapeInteractor: LandscapeInteractor,
     private val generator: HomeUiModelGenerator
@@ -34,7 +34,7 @@ class HomeViewModel @Inject constructor(
     fun loadHikingLayer() = launch {
         postEvent(LayerLoading(true))
 
-        val result = layerInteractor.requestGetHikingLayer()
+        val result = hikingLayerInteractor.requestGetHikingLayerFile()
 
         postEvent(LayerLoading(false))
 
@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(
     fun downloadHikingLayer() = launch {
         postEvent(LayerLoading(true))
 
-        when (val result = layerInteractor.requestDownloadHikingLayer()) {
+        when (val result = hikingLayerInteractor.requestDownloadHikingLayerFile()) {
             is TaskResult.Error -> {
                 postEvent(LayerLoading(false))
                 postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
@@ -62,7 +62,7 @@ class HomeViewModel @Inject constructor(
     fun loadDownloadedFile(downloadId: Long) = launch {
         postEvent(LayerLoading(true))
 
-        when (val result = layerInteractor.requestSaveHikingLayer(downloadId)) {
+        when (val result = hikingLayerInteractor.requestSaveHikingLayerFile(downloadId)) {
             is TaskResult.Success -> {
                 loadHikingLayer()
             }

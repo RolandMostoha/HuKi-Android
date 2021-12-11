@@ -156,12 +156,7 @@ class HomeUiModelGeneratorTest {
 
     @Test
     fun `Given landscape domain models, when generateLandscapes, then correct PlaceDetailsUiModel returns`() {
-        val landscape = Landscape(
-            osmId = DEFAULT_LANDSCAPE_OSM_ID,
-            name = DEFAULT_LANDSCAPE_NAME,
-            type = LandscapeType.MOUNTAIN_RANGE_LOW,
-            center = Location(DEFAULT_LANDSCAPE_LATITUDE, DEFAULT_LANDSCAPE_LONGITUDE)
-        )
+        val landscape = DEFAULT_LANDSCAPE
 
         val places = generator.generateLandscapes(listOf(landscape))
 
@@ -320,6 +315,12 @@ class HomeUiModelGeneratorTest {
             iconRes = 0,
             geoPoint = GeoPoint(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
             boundingBox = null
+        )
+        private val DEFAULT_LANDSCAPE = Landscape(
+            osmId = DEFAULT_LANDSCAPE_OSM_ID,
+            name = DEFAULT_LANDSCAPE_NAME,
+            type = LandscapeType.MOUNTAIN_RANGE_LOW,
+            center = Location(DEFAULT_LANDSCAPE_LATITUDE, DEFAULT_LANDSCAPE_LONGITUDE)
         )
     }
 

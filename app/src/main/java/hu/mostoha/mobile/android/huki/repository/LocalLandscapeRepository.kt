@@ -6,8 +6,6 @@ import javax.inject.Inject
 
 class LocalLandscapeRepository @Inject constructor() : LandscapeRepository {
 
-    override suspend fun getLandscapes(): List<Landscape> {
-        return landscapes
-    }
+    override suspend fun getLandscapes(): List<Landscape> = landscapes
 
 }

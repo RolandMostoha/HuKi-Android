@@ -47,7 +47,7 @@ class OsmConfiguration @Inject constructor(@ApplicationContext private val conte
 
     private fun getOsmDroidBaseDirectory(): File {
         return if (osmDroidBasePath == null) {
-            val storage = StorageUtils.getStorage(context)
+            val storage = StorageUtils.getBestWritableStorage(context)
             val path = storage.path
 
             val file = getOrCreateDirectory(path, DIRECTORY_NAME_OSM_DROID)

@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.huki.interactor
 
 import androidx.annotation.StringRes
 
-open class DomainException(
+data class DomainException(
     @StringRes val messageRes: Int,
-    throwable: Throwable? = null
+    val throwable: Throwable? = null
 ) : Exception(throwable)
