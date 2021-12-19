@@ -7,6 +7,7 @@ import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.network.overpass.*
 import hu.mostoha.mobile.android.huki.model.network.photon.*
 import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -76,7 +77,7 @@ class PlacesDomainModelGeneratorTest {
             generator.generateGeometryByNode(photonQueryResponse, osmId)
         }
 
-        assertThat(exception.messageRes).isEqualTo(R.string.error_message_missing_osm_id)
+        assertThat(exception.messageRes).isEqualTo(R.string.error_message_missing_osm_id.toMessage())
     }
 
     @Test
@@ -105,7 +106,7 @@ class PlacesDomainModelGeneratorTest {
             generator.generateGeometryByWay(photonQueryResponse, osmId)
         }
 
-        assertThat(exception.messageRes).isEqualTo(R.string.error_message_missing_osm_id)
+        assertThat(exception.messageRes).isEqualTo(R.string.error_message_missing_osm_id.toMessage())
     }
 
     @Test
@@ -140,7 +141,7 @@ class PlacesDomainModelGeneratorTest {
             generator.generateGeometryByRelation(photonQueryResponse, osmId)
         }
 
-        assertThat(exception.messageRes).isEqualTo(R.string.error_message_missing_osm_id)
+        assertThat(exception.messageRes).isEqualTo(R.string.error_message_missing_osm_id.toMessage())
     }
 
     @Test

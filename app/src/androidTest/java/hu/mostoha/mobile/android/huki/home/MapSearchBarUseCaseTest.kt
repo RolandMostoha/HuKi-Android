@@ -26,10 +26,13 @@ import hu.mostoha.mobile.android.huki.util.launch
 import hu.mostoha.mobile.android.huki.util.testContext
 import io.mockk.coEvery
 import io.mockk.mockk
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import retrofit2.HttpException
+import retrofit2.Response
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -78,7 +81,7 @@ class MapSearchBarUseCaseTest {
     }
 
     @Test
-    fun givenEmptyResult_whenTyping_thenEmptyViewDisplay() {
+    fun givenEmptyResult_whenTyping_thenEmptyViewDisplays() {
         answerTestHikingLayer()
         coEvery { placesRepository.getPlacesBy(any()) } returns emptyList()
 
@@ -92,7 +95,7 @@ class MapSearchBarUseCaseTest {
     }
 
     @Test
-    fun givenErrorResult_whenTyping_thenErrorViewDisplay() {
+    fun givenIllegalStateException_whenTyping_thenErrorViewDisplaysWithMessageAndDetailsButton() {
         answerTestHikingLayer()
         coEvery { placesRepository.getPlacesBy(any()) } throws IllegalStateException("Error")
 
@@ -102,6 +105,22 @@ class MapSearchBarUseCaseTest {
             R.id.homeSearchBarInput.typeText(searchText)
 
             R.string.error_message_unknown.isPopupTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenTooManyRequestsException_whenTyping_thenErrorViewDisplaysWithMessageOnly() {
+        answerTestHikingLayer()
+        coEvery {
+            placesRepository.getPlacesBy(any())
+        } throws HttpException(Response.error<Unit>(429, "".toResponseBody()))
+
+        launch<HomeActivity> {
+            val searchText = "QWER"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            R.string.error_message_too_many_requests.isPopupTextDisplayed()
         }
     }
 

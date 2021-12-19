@@ -63,6 +63,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeSearchBarContainer by lazy { binding.homeSearchBarContainer }
     private val homeSearchBarInputLayout by lazy { binding.homeSearchBarInputLayout }
     private val homeSearchBarInput by lazy { binding.homeSearchBarInput }
+    private val homeSearchBarPopupAnchor by lazy { binding.homeSearchBarPopupAnchor }
     private val homeMyLocationButton by lazy { binding.homeMyLocationButton }
     private val homeRoutesNearbyFab by lazy { binding.homeRoutesNearbyFab }
     private val homeLayersFab by lazy { binding.homeLayersFab }
@@ -141,7 +142,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
         }
         searchBarPopup = ListPopupWindow(this).apply {
-            anchorView = homeSearchBarInput
+            anchorView = homeSearchBarPopupAnchor
             height = resources.getDimensionPixelSize(R.dimen.home_layers_popup_height)
             setBackgroundDrawable(
                 ContextCompat.getDrawable(
@@ -263,10 +264,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initObservers() {
         viewModel.liveEvents.observe(this, { event ->
             when (event) {
-                is ErrorOccurred -> showSnackbar(homeContainer, event.message)
+                is ErrorResult -> showSnackbar(homeContainer, event.message)
                 is LayerLoading -> homeLayersFab.inProgress = event.inProgress
                 is SearchBarLoading -> binding.homeSearchBarProgress.visibleOrGone(event.inProgress)
-                is PlacesResult -> initPlaces(event.places)
+                is PlacesResult -> initPlaces(event.placeItems)
                 is PlacesErrorResult -> initPlacesErrorResult(event)
                 is PlaceResult -> initPlace(event.place)
                 is LandscapesResult -> initLandscapeResult(event.landscapes)
@@ -288,21 +289,19 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         })
     }
 
-    private fun initPlaces(places: List<PlaceUiModel>) {
-        searchBarAdapter.submitList(places.map { placeUiModel -> SearchBarItem.Place(placeUiModel) })
+    private fun initPlaces(placeItems: List<SearchBarItem.Place>) {
+        searchBarAdapter.submitList(placeItems)
         searchBarPopup.apply {
-            width = binding.homeSearchBarInputLayout.width
+            width = homeSearchBarPopupAnchor.width
             height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
             show()
         }
     }
 
     private fun initPlacesErrorResult(placesErrorResult: PlacesErrorResult) {
-        searchBarAdapter.submitList(
-            listOf(SearchBarItem.Info(placesErrorResult.messageRes, placesErrorResult.drawableRes))
-        )
+        searchBarAdapter.submitList(listOf(placesErrorResult.errorItem))
         searchBarPopup.apply {
-            width = binding.homeSearchBarInputLayout.width
+            width = homeSearchBarPopupAnchor.width
             height = ListPopupWindow.WRAP_CONTENT
             show()
         }

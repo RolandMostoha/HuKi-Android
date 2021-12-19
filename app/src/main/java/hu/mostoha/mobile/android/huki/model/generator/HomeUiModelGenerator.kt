@@ -3,9 +3,11 @@ package hu.mostoha.mobile.android.huki.model.generator
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatShortDate
 import hu.mostoha.mobile.android.huki.extensions.toLocalDateTime
+import hu.mostoha.mobile.android.huki.interactor.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.ui.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
+import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.util.Message
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
@@ -15,7 +17,13 @@ import javax.inject.Inject
 
 class HomeUiModelGenerator @Inject constructor() {
 
-    fun generatePlaces(places: List<Place>): List<PlaceUiModel> {
+    fun generatePlaceAdapterItems(places: List<Place>): List<SearchBarItem.Place> {
+        val placeUiModels = generatePlaces(places)
+
+        return placeUiModels.map { placeUiModel -> SearchBarItem.Place(placeUiModel) }
+    }
+
+    private fun generatePlaces(places: List<Place>): List<PlaceUiModel> {
         return places.map { place ->
             PlaceUiModel(
                 osmId = place.osmId,
@@ -39,6 +47,20 @@ class HomeUiModelGenerator @Inject constructor() {
             place.city ?: place.country,
             place.street
         ).joinToString(" ")
+    }
+
+    fun generatePlacesEmptyItem(): SearchBarItem.Error {
+        return SearchBarItem.Error(
+            messageRes = R.string.search_bar_empty_message.toMessage(),
+            drawableRes = R.drawable.ic_search_bar_empty_result
+        )
+    }
+
+    fun generatePlacesErrorItem(domainException: DomainException): SearchBarItem.Error {
+        return SearchBarItem.Error(
+            messageRes = domainException.messageRes,
+            drawableRes = R.drawable.ic_search_bar_error
+        )
     }
 
     fun generatePlaceDetails(placeUiModel: PlaceUiModel, geometry: Geometry): PlaceDetailsUiModel {

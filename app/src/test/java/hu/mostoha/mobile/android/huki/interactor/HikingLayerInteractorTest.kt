@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.executor.TestTaskExecutor
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
+import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -112,7 +113,12 @@ class HikingLayerInteractorTest {
             val taskResult = hikingLayerInteractor.requestSaveHikingLayerFile(12345L)
 
             assertThat(taskResult).isEqualTo(
-                TaskResult.Error(DomainException(R.string.download_layer_missing_downloaded_file, exception))
+                TaskResult.Error(
+                    DomainException(
+                        throwable = exception,
+                        messageRes = R.string.download_layer_missing_downloaded_file.toMessage()
+                    )
+                )
             )
         }
     }

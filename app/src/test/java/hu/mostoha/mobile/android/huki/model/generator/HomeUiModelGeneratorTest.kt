@@ -2,11 +2,13 @@ package hu.mostoha.mobile.android.huki.model.generator
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.interactor.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.*
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
+import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.util.Message
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
@@ -21,43 +23,73 @@ class HomeUiModelGeneratorTest {
     private val generator = HomeUiModelGenerator()
 
     @Test
-    fun `Given place domain models, when generatePlaces, then correct list of PlaceUiModel returns`() {
+    fun `Given place domain models, when generatePlaceItems, then correct list of PlaceUiModel returns`() {
         val places = listOf(DEFAULT_PLACE_WAY)
 
-        val placeUiModels = generator.generatePlaces(places)
+        val searchBarPlaceItems = generator.generatePlaceAdapterItems(places)
 
-        assertThat(
+        assertThat(searchBarPlaceItems).isEqualTo(
             listOf(
-                PlaceUiModel(
-                    osmId = DEFAULT_PLACE_WAY.osmId,
-                    placeType = PlaceType.WAY,
-                    primaryText = DEFAULT_PLACE_WAY.name,
-                    secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.city}"),
-                    iconRes = R.drawable.ic_home_search_bar_type_way,
-                    geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
-                    boundingBox = DEFAULT_PLACE_WAY.boundingBox,
+                SearchBarItem.Place(
+                    PlaceUiModel(
+                        osmId = DEFAULT_PLACE_WAY.osmId,
+                        placeType = PlaceType.WAY,
+                        primaryText = DEFAULT_PLACE_WAY.name,
+                        secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.city}"),
+                        iconRes = R.drawable.ic_home_search_bar_type_way,
+                        geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
+                        boundingBox = DEFAULT_PLACE_WAY.boundingBox,
+                    )
                 )
             )
-        ).isEqualTo(placeUiModels)
+        )
     }
 
     @Test
-    fun `Given place domain models without city, when generatePlaces, then secondaryText contains the country`() {
+    fun `Given place domain models without city, when generatePlaceItems, then secondaryText contains the country`() {
         val places = listOf(DEFAULT_PLACE_WAY.copy(city = null))
 
-        val placeUiModels = generator.generatePlaces(places)
+        val searchBarPlaceItems = generator.generatePlaceAdapterItems(places)
 
-        assertThat(placeUiModels).isEqualTo(
+        assertThat(searchBarPlaceItems).isEqualTo(
             listOf(
-                PlaceUiModel(
-                    osmId = DEFAULT_PLACE_WAY.osmId,
-                    placeType = PlaceType.WAY,
-                    primaryText = DEFAULT_PLACE_WAY.name,
-                    secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.country}"),
-                    iconRes = R.drawable.ic_home_search_bar_type_way,
-                    geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
-                    boundingBox = DEFAULT_PLACE_WAY.boundingBox,
+                SearchBarItem.Place(
+                    PlaceUiModel(
+                        osmId = DEFAULT_PLACE_WAY.osmId,
+                        placeType = PlaceType.WAY,
+                        primaryText = DEFAULT_PLACE_WAY.name,
+                        secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.country}"),
+                        iconRes = R.drawable.ic_home_search_bar_type_way,
+                        geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
+                        boundingBox = DEFAULT_PLACE_WAY.boundingBox,
+                    )
                 )
+            )
+        )
+    }
+
+    @Test
+    fun `When generatePlacesEmptyItem, then proper error SearchBarItem returns`() {
+        val searchBarErrorItem = generator.generatePlacesEmptyItem()
+
+        assertThat(searchBarErrorItem).isEqualTo(
+            SearchBarItem.Error(
+                messageRes = R.string.search_bar_empty_message.toMessage(),
+                drawableRes = R.drawable.ic_search_bar_empty_result
+            )
+        )
+    }
+
+    @Test
+    fun `Given DomainException, when generatePlacesErrorItem, then proper error SearchBarItem returns`() {
+        val domainException = DomainException(messageRes = R.string.error_message_too_many_requests.toMessage())
+
+        val searchBarErrorItem = generator.generatePlacesErrorItem(domainException)
+
+        assertThat(searchBarErrorItem).isEqualTo(
+            SearchBarItem.Error(
+                messageRes = domainException.messageRes,
+                drawableRes = R.drawable.ic_search_bar_error
             )
         )
     }

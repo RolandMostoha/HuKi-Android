@@ -78,7 +78,7 @@ class MapLandscapesUseCaseTest {
 
     @Test
     fun givenLandscapes_whenClickOnLandscape_thenPlaceDetailsDisplayOnBottomSheet() {
-        val landscape = landscapes.first { it.name == DEFAULT_LANDSCAPE_NAME }
+        val landscape = landscapes.first { it.name == DEFAULT_LANDSCAPE.name }
         answerTestHikingLayer()
         answerTestWayGeometry(landscape.osmId)
 
@@ -94,7 +94,7 @@ class MapLandscapesUseCaseTest {
 
     @Test
     fun givenLandscapes_whenClickOnLandscape_thenPolygonDisplaysOnMap() {
-        val landscape = landscapes.first { it.name == DEFAULT_LANDSCAPE_NAME }
+        val landscape = landscapes.first { it.name == DEFAULT_LANDSCAPE.name }
         answerTestHikingLayer()
         answerTestWayGeometry(landscape.osmId)
 

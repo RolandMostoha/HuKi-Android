@@ -1,7 +1,6 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.architecture.BaseViewModel
 import hu.mostoha.mobile.android.huki.executor.TaskExecutor
 import hu.mostoha.mobile.android.huki.interactor.HikingLayerInteractor
@@ -15,7 +14,6 @@ import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.ui.home.HomeLiveEvents.*
-import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import javax.inject.Inject
@@ -43,7 +41,7 @@ class HomeViewModel @Inject constructor(
                 postState(HomeViewState(generator.generateHikingLayerDetails(result.data)))
             }
             is TaskResult.Error -> {
-                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+                postEvent(ErrorResult(result.domainException.messageRes))
             }
         }
     }
@@ -54,7 +52,10 @@ class HomeViewModel @Inject constructor(
         when (val result = hikingLayerInteractor.requestDownloadHikingLayerFile()) {
             is TaskResult.Error -> {
                 postEvent(LayerLoading(false))
-                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+                postEvent(ErrorResult(result.domainException.messageRes))
+            }
+            is TaskResult.Success -> {
+                // No-op, successfully downloaded layer will be handled via LocalBroadcast
             }
         }
     }
@@ -68,7 +69,7 @@ class HomeViewModel @Inject constructor(
             }
             is TaskResult.Error -> {
                 postEvent(LayerLoading(false))
-                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+                postEvent(ErrorResult(result.domainException.messageRes))
             }
         }
     }
@@ -88,26 +89,16 @@ class HomeViewModel @Inject constructor(
             when (val result = placesInteractor.requestGetPlacesBy(searchText)) {
                 is TaskResult.Success -> {
                     postEvent(SearchBarLoading(false))
-                    val searchResults = generator.generatePlaces(result.data)
+                    val searchResults = generator.generatePlaceAdapterItems(result.data)
                     if (searchResults.isEmpty()) {
-                        postEvent(
-                            PlacesErrorResult(
-                                messageRes = R.string.search_bar_empty_message,
-                                drawableRes = R.drawable.ic_search_bar_empty_result
-                            )
-                        )
+                        postEvent(PlacesErrorResult(generator.generatePlacesEmptyItem()))
                     } else {
                         postEvent(PlacesResult(searchResults))
                     }
                 }
                 is TaskResult.Error -> {
                     postEvent(SearchBarLoading(false))
-                    postEvent(
-                        PlacesErrorResult(
-                            messageRes = result.domainException.messageRes,
-                            drawableRes = R.drawable.ic_search_bar_error
-                        )
-                    )
+                    postEvent(PlacesErrorResult(generator.generatePlacesErrorItem(result.domainException)))
                 }
             }
         }
@@ -138,7 +129,7 @@ class HomeViewModel @Inject constructor(
             }
             is TaskResult.Error -> {
                 postEvent(SearchBarLoading(false))
-                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+                postEvent(ErrorResult(result.domainException.messageRes))
             }
         }
     }
@@ -154,7 +145,7 @@ class HomeViewModel @Inject constructor(
             }
             is TaskResult.Error -> {
                 postEvent(SearchBarLoading(false))
-                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+                postEvent(ErrorResult(result.domainException.messageRes))
             }
         }
     }
@@ -170,7 +161,7 @@ class HomeViewModel @Inject constructor(
             }
             is TaskResult.Error -> {
                 postEvent(SearchBarLoading(false))
-                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+                postEvent(ErrorResult(result.domainException.messageRes))
             }
         }
     }
@@ -186,7 +177,7 @@ class HomeViewModel @Inject constructor(
             }
             is TaskResult.Error -> {
                 postEvent(SearchBarLoading(false))
-                postEvent(ErrorOccurred(result.domainException.messageRes.toMessage()))
+                postEvent(ErrorResult(result.domainException.messageRes))
             }
         }
     }

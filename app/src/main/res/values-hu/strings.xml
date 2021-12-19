@@ -3,15 +3,16 @@
     <string name="app_name">HuKi</string>
     <string name="app_name_debug">HuKi-Debug</string>
 
-    <string name="error_message_unknown">Nem várt hiba történt!</string>
-    <string name="error_message_missing_osm_id">A hely nem létezik a megadott OSM ID-vel.</string>
+    <string name="error_message_unknown">Nem várt hiba történt!\nAz eset továbbítva lett fejlesztői kivizsgálásra.</string>
+    <string name="error_message_missing_osm_id">Az OSM ID-hez kapcsolódó hely nem létezik.</string>
     <string name="error_message_missing_relation_bounding_box">Nem sikerült lekérdezni az OSM kapcsolat koordinátáit.</string>
+    <string name="error_message_too_many_requests">Túl sok kérés indult az eszközről!\nKérjük próbálkozz később.</string>
 
     <string name="default_distance_template_m">%d m</string>
     <string name="default_distance_template_km">%.2f km</string>
 
-    <string name="search_bar_hint">Túraútvonal, hely keresése</string>
     <string name="search_bar_empty_message">Nincs találat</string>
+    <string name="search_bar_hint">Túraútvonal, hely keresése</string>
 
     <string name="home_bottom_sheet_directions_button">Navigáció</string>
     <string name="home_bottom_sheet_hiking_trails_button">Túrautak</string>

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import hu.mostoha.mobile.android.huki.databinding.ItemHomeSearchBarInfoBinding
+import hu.mostoha.mobile.android.huki.databinding.ItemHomeSearchBarErrorBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeSearchBarPlaceBinding
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
@@ -41,10 +41,10 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchBarItem>(context, 
                 holder.secondaryText.setMessageOrGone(searchBarItem.placeUiModel.secondaryText)
                 holder.iconImage.setImageResource(searchBarItem.placeUiModel.iconRes)
             }
-            is SearchBarItem.Info -> {
-                val binding = ItemHomeSearchBarInfoBinding.inflate(parent.context.inflater, parent, false)
-                binding.searchBarInfoView.text = parent.context.getString(searchBarItem.messageRes)
-                binding.searchBarInfoView.setDrawableTop(searchBarItem.drawableRes)
+            is SearchBarItem.Error -> {
+                val binding = ItemHomeSearchBarErrorBinding.inflate(parent.context.inflater, parent, false)
+                binding.searchBarErrorText.text = parent.context.getString(searchBarItem.messageRes.res)
+                binding.searchBarErrorText.setDrawableTop(searchBarItem.drawableRes)
 
                 view = binding.root
             }

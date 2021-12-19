@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.interactor
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.executor.TaskExecutor
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
+import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import java.io.File
 import java.io.FileNotFoundException
 import javax.inject.Inject
@@ -25,7 +26,7 @@ class HikingLayerInteractor @Inject constructor(
             request = { hikingLayerRepository.saveHikingLayerFile(downloadId) },
             domainExceptionMapper = { exception ->
                 if (exception is FileNotFoundException) {
-                    DomainException(R.string.download_layer_missing_downloaded_file, exception)
+                    DomainException(exception, R.string.download_layer_missing_downloaded_file.toMessage())
                 } else {
                     GeneralDomainExceptionMapper.map(exception)
                 }
