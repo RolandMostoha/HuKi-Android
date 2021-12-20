@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.interactor
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.executor.TestTaskExecutor
+import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
 import hu.mostoha.mobile.android.huki.model.domain.Location
@@ -11,6 +12,7 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -23,10 +25,13 @@ class LandscapeInteractorTest {
     private lateinit var landscapeInteractor: LandscapeInteractor
 
     private val landscapeRepository = mockk<LandscapeRepository>()
+    private val exceptionLogger = mockk<ExceptionLogger>()
 
     @Before
     fun setUp() {
-        landscapeInteractor = LandscapeInteractor(TestTaskExecutor(), landscapeRepository)
+        landscapeInteractor = LandscapeInteractor(TestTaskExecutor(), exceptionLogger, landscapeRepository)
+
+        every { exceptionLogger.recordException(any()) } returns Unit
     }
 
     @Test
@@ -50,7 +55,7 @@ class LandscapeInteractorTest {
             val taskResult = landscapeInteractor.requestGetLandscapes()
 
             assertThat(taskResult).isEqualTo(
-                TaskResult.Error(GeneralDomainExceptionMapper.map(exception))
+                TaskResult.Error(DomainExceptionMapper.map(exception))
             )
         }
     }

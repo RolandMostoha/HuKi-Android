@@ -3,7 +3,11 @@ package hu.mostoha.mobile.android.huki.ui.home
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.executor.TestTaskExecutor
-import hu.mostoha.mobile.android.huki.interactor.*
+import hu.mostoha.mobile.android.huki.interactor.HikingLayerInteractor
+import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
+import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
+import hu.mostoha.mobile.android.huki.interactor.TaskResult
+import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
@@ -75,7 +79,7 @@ class HomeViewModelTest {
         val errorRes = R.string.error_message_unknown.toMessage()
         coEvery {
             layerInteractor.requestGetHikingLayerFile()
-        } returns TaskResult.Error(DomainException(messageRes = errorRes))
+        } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.loadHikingLayer()
 
@@ -105,7 +109,7 @@ class HomeViewModelTest {
         val errorRes = R.string.error_message_unknown.toMessage()
         coEvery {
             layerInteractor.requestDownloadHikingLayerFile()
-        } returns TaskResult.Error(DomainException(messageRes = errorRes))
+        } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.downloadHikingLayer()
 
@@ -146,7 +150,7 @@ class HomeViewModelTest {
         val errorRes = R.string.download_layer_missing_downloaded_file.toMessage()
         coEvery {
             layerInteractor.requestSaveHikingLayerFile(downloadId)
-        } returns TaskResult.Error(DomainException(messageRes = errorRes))
+        } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.loadDownloadedFile(downloadId)
 
@@ -204,7 +208,7 @@ class HomeViewModelTest {
     @Test
     fun `Given Error TaskResult, when loadPlacesBy, then PlacesErrorResult posted`() {
         val errorRes = R.string.error_message_unknown.toMessage()
-        val domainException = DomainException(messageRes = errorRes)
+        val domainException = DomainException(errorRes)
         val searchBarErrorItem = SearchBarItem.Error(
             messageRes = domainException.messageRes,
             drawableRes = R.drawable.ic_search_bar_error
@@ -256,7 +260,7 @@ class HomeViewModelTest {
         val placeUiModel = DEFAULT_PLACE_UI_MODEL
         val errorRes = R.string.error_message_unknown.toMessage()
         coEvery { placesInteractor.requestGetGeometry(any(), any()) } returns TaskResult.Error(
-            DomainException(messageRes = errorRes)
+            DomainException(errorRes)
         )
 
         homeViewModel.loadPlaceDetails(placeUiModel)
@@ -292,7 +296,7 @@ class HomeViewModelTest {
         val errorRes = R.string.error_message_unknown.toMessage()
         coEvery {
             landscapeInteractor.requestGetLandscapes()
-        } returns TaskResult.Error(DomainException(messageRes = errorRes))
+        } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.loadLandscapes()
 
@@ -330,7 +334,7 @@ class HomeViewModelTest {
         val errorRes = R.string.error_message_unknown.toMessage()
         coEvery {
             placesInteractor.requestGetHikingRoutes(boundingBox)
-        } returns TaskResult.Error(DomainException(messageRes = errorRes))
+        } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.loadHikingRoutes("Bükk", boundingBox)
 
@@ -368,7 +372,7 @@ class HomeViewModelTest {
         val errorRes = R.string.error_message_unknown.toMessage()
         coEvery {
             placesInteractor.requestGetGeometry(any(), any())
-        } returns TaskResult.Error(DomainException(messageRes = errorRes))
+        } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.loadHikingRouteDetails(hikingRouteUiModel)
 

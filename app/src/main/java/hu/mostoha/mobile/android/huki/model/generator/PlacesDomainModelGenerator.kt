@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.huki.model.generator
 
 import androidx.annotation.VisibleForTesting
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.interactor.DomainException
+import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.network.*
 import hu.mostoha.mobile.android.huki.model.network.overpass.ElementType
@@ -58,7 +58,7 @@ class PlacesDomainModelGenerator @Inject constructor() {
     fun generateGeometryByNode(response: OverpassQueryResponse, osmId: String): Geometry {
         val nodeElement = response.elements.firstOrNull { element ->
             element.type == ElementType.NODE && element.id.toString() == osmId
-        } ?: throw DomainException(messageRes = R.string.error_message_missing_osm_id.toMessage())
+        } ?: throw DomainException(R.string.error_message_missing_osm_id.toMessage())
 
         return Geometry.Node(
             osmId = osmId,
@@ -69,7 +69,7 @@ class PlacesDomainModelGenerator @Inject constructor() {
     fun generateGeometryByWay(response: OverpassQueryResponse, osmId: String): Geometry {
         val wayElement = response.elements.firstOrNull { element ->
             element.type == ElementType.WAY && element.id.toString() == osmId
-        } ?: throw DomainException(messageRes = R.string.error_message_missing_osm_id.toMessage())
+        } ?: throw DomainException(R.string.error_message_missing_osm_id.toMessage())
 
         return generateWayGeometry(wayElement.id.toString(), wayElement.geometry ?: emptyList())
     }
@@ -77,7 +77,7 @@ class PlacesDomainModelGenerator @Inject constructor() {
     fun generateGeometryByRelation(response: OverpassQueryResponse, osmId: String): Geometry {
         val relationElement = response.elements.firstOrNull { element ->
             element.type == ElementType.RELATION && element.id.toString() == osmId
-        } ?: throw DomainException(messageRes = R.string.error_message_missing_osm_id.toMessage())
+        } ?: throw DomainException(R.string.error_message_missing_osm_id.toMessage())
 
         val ways = relationElement.members?.mapNotNull { member ->
             val geometry = member.geometry

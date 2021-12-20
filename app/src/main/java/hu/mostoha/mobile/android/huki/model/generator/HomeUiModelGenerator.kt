@@ -3,7 +3,7 @@ package hu.mostoha.mobile.android.huki.model.generator
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatShortDate
 import hu.mostoha.mobile.android.huki.extensions.toLocalDateTime
-import hu.mostoha.mobile.android.huki.interactor.DomainException
+import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.ui.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem

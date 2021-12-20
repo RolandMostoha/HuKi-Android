@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.huki.model.generator
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.interactor.DomainException
+import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.*
@@ -82,7 +82,7 @@ class HomeUiModelGeneratorTest {
 
     @Test
     fun `Given DomainException, when generatePlacesErrorItem, then proper error SearchBarItem returns`() {
-        val domainException = DomainException(messageRes = R.string.error_message_too_many_requests.toMessage())
+        val domainException = DomainException(R.string.error_message_too_many_requests.toMessage())
 
         val searchBarErrorItem = generator.generatePlacesErrorItem(domainException)
 

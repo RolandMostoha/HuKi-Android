@@ -2,11 +2,13 @@ package hu.mostoha.mobile.android.huki.interactor
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.executor.TestTaskExecutor
+import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.testdata.*
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -19,10 +21,13 @@ class PlacesInteractorTest {
     private lateinit var placesInteractor: PlacesInteractor
 
     private val placesRepository = mockk<PlacesRepository>()
+    private val exceptionLogger = mockk<ExceptionLogger>()
 
     @Before
     fun setUp() {
-        placesInteractor = PlacesInteractor(TestTaskExecutor(), placesRepository)
+        placesInteractor = PlacesInteractor(TestTaskExecutor(), exceptionLogger, placesRepository)
+
+        every { exceptionLogger.recordException(any()) } returns Unit
     }
 
     @Test
@@ -48,7 +53,7 @@ class PlacesInteractorTest {
             val taskResult = placesInteractor.requestGetPlacesBy(searchText)
 
             assertThat(taskResult).isEqualTo(
-                TaskResult.Error(GeneralDomainExceptionMapper.map(exception))
+                TaskResult.Error(DomainExceptionMapper.map(exception))
             )
         }
     }
@@ -77,7 +82,7 @@ class PlacesInteractorTest {
             val taskResult = placesInteractor.requestGetGeometry(osmId, placeType)
 
             assertThat(taskResult).isEqualTo(
-                TaskResult.Error(GeneralDomainExceptionMapper.map(exception))
+                TaskResult.Error(DomainExceptionMapper.map(exception))
             )
         }
     }
@@ -105,7 +110,7 @@ class PlacesInteractorTest {
             val taskResult = placesInteractor.requestGetHikingRoutes(boundingBox)
 
             assertThat(taskResult).isEqualTo(
-                TaskResult.Error(GeneralDomainExceptionMapper.map(exception))
+                TaskResult.Error(DomainExceptionMapper.map(exception))
             )
         }
     }

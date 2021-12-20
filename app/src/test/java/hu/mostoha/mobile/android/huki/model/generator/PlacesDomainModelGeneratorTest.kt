@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.huki.model.generator
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.interactor.DomainException
+import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.network.overpass.*
 import hu.mostoha.mobile.android.huki.model.network.photon.*
