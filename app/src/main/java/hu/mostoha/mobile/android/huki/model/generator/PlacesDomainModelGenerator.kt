@@ -24,10 +24,10 @@ class PlacesDomainModelGenerator @Inject constructor() {
     }
 
     fun generatePlace(response: PhotonQueryResponse): List<Place> {
-        return response.features.map {
+        return response.features.mapNotNull {
             Place(
                 osmId = it.properties.osmId.toString(),
-                name = it.properties.name,
+                name = it.properties.name ?: return@mapNotNull null,
                 placeType = when (it.properties.osmType) {
                     OsmType.RELATION -> PlaceType.RELATION
                     OsmType.WAY -> PlaceType.WAY

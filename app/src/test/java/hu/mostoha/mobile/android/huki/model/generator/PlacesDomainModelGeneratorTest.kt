@@ -30,7 +30,7 @@ class PlacesDomainModelGeneratorTest {
             listOf(
                 Place(
                     osmId = expectedProperties.osmId.toString(),
-                    name = expectedProperties.name,
+                    name = expectedProperties.name!!,
                     placeType = PlaceType.WAY,
                     location = Location(
                         DEFAULT_PHOTON_FEATURE_ITEM.geometry.coordinates[1],
@@ -51,6 +51,24 @@ class PlacesDomainModelGeneratorTest {
                 )
             )
         )
+    }
+
+    @Test
+    fun `Given a feature item without name, when generatePlace, then empty list returns`() {
+        val photonQueryResponse = PhotonQueryResponse(
+            features = listOf(
+                DEFAULT_PHOTON_FEATURE_ITEM.copy(
+                    properties = DEFAULT_PHOTON_FEATURE_ITEM.properties.copy(
+                        name = null
+                    )
+                )
+            ),
+            type = "FeatureCollection"
+        )
+
+        val places = generator.generatePlace(photonQueryResponse)
+
+        assertThat(places).isEmpty()
     }
 
     @Test

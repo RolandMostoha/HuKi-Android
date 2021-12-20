@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Properties(
     @Json(name = "name")
-    val name: String,
+    val name: String? = null,
 
     @Json(name = "osm_id")
     val osmId: Long,
