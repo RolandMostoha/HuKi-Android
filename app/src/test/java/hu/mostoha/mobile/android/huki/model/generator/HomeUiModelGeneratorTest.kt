@@ -113,11 +113,7 @@ class HomeUiModelGeneratorTest {
 
     @Test
     fun `Given way geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
-        val geometry = Geometry.Way(
-            osmId = DEFAULT_WAY_OSM_ID,
-            locations = DEFAULT_WAY_GEOMETRY.map { Location(it.first, it.second) },
-            distance = 100
-        )
+        val geometry = DEFAULT_OPEN_WAY_GEOMETRY
 
         val placeDetails = generator.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
@@ -135,11 +131,7 @@ class HomeUiModelGeneratorTest {
 
     @Test
     fun `Given closed way geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
-        val geometry = Geometry.Way(
-            osmId = DEFAULT_WAY_OSM_ID,
-            locations = DEFAULT_WAY_GEOMETRY_CLOSED.map { Location(it.first, it.second) },
-            distance = 100
-        )
+        val geometry = DEFAULT_CLOSED_WAY_GEOMETRY
 
         val placeDetails = generator.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
@@ -157,16 +149,7 @@ class HomeUiModelGeneratorTest {
 
     @Test
     fun `Given relation geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
-        val geometry = Geometry.Relation(
-            osmId = DEFAULT_RELATION_OSM_ID,
-            ways = listOf(
-                Geometry.Way(
-                    osmId = DEFAULT_WAY_OSM_ID,
-                    locations = DEFAULT_WAY_GEOMETRY_CLOSED.map { Location(it.first, it.second) },
-                    distance = 100
-                )
-            )
-        )
+        val geometry = DEFAULT_CLOSED_RELATION_GEOMETRY
 
         val placeDetails = generator.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
@@ -178,7 +161,7 @@ class HomeUiModelGeneratorTest {
                         GeometryUiModel.Way(
                             osmId = geometry.osmId,
                             geoPoints = way.locations.map { it.toGeoPoint() },
-                            isClosed = true
+                            isClosed = way.locations.first() == way.locations.last()
                         )
                     }
                 )
@@ -338,6 +321,26 @@ class HomeUiModelGeneratorTest {
             postCode = DEFAULT_WAY_POST_CODE,
             city = DEFAULT_WAY_CITY,
             street = null
+        )
+        private val DEFAULT_OPEN_WAY_GEOMETRY = Geometry.Way(
+            osmId = DEFAULT_WAY_OSM_ID,
+            locations = DEFAULT_WAY_GEOMETRY.map { Location(it.first, it.second) },
+            distance = (500..1000).random()
+        )
+        private val DEFAULT_CLOSED_WAY_GEOMETRY = Geometry.Way(
+            osmId = DEFAULT_WAY_OSM_ID,
+            locations = DEFAULT_WAY_GEOMETRY_CLOSED.map { Location(it.first, it.second) },
+            distance = (500..1000).random()
+        )
+        private val DEFAULT_CLOSED_RELATION_GEOMETRY = Geometry.Relation(
+            osmId = DEFAULT_RELATION_OSM_ID,
+            ways = DEFAULT_RELATION_GEOMETRY.map { osmIdToGeometry ->
+                Geometry.Way(
+                    osmId = osmIdToGeometry.first,
+                    locations = osmIdToGeometry.second.map { Location(it.first, it.second) },
+                    distance = (500..1000).random()
+                )
+            }
         )
         private val DEFAULT_PLACE_UI_MODEL = PlaceUiModel(
             osmId = DEFAULT_NODE_OSM_ID,

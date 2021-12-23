@@ -398,7 +398,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         val boundingBox = BoundingBox
             .fromGeoPoints(relation.ways.flatMap { it.geoPoints })
             .withDefaultOffset()
+
         val overlays = mutableListOf<Overlay>()
+
         relation.ways.forEach { way ->
             val geoPoints = way.geoPoints
             val overlay = homeMapView.addPolyline(geoPoints, onClick = {
