@@ -39,4 +39,7 @@
     <string name="layers_hiking_download_label">Download (350MB)</string>
     <string name="layers_hiking_update_label">Update (350MB)</string>
 
+    <string name="accessibility_home_fab_routes_nearby">Routes nearby</string>
+    <string name="accessibility_home_fab_my_location">My location</string>
+
 </resources>

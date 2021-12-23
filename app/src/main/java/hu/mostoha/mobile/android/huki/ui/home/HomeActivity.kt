@@ -216,7 +216,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun showMyLocation() {
         if (myLocationOverlay == null) {
-            homeMyLocationButton.setImageResource(R.drawable.ic_anim_my_location_not_fixed)
+            homeMyLocationButton.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
             homeMyLocationButton.startDrawableAnimation()
 
             val provider = GpsMyLocationProvider(applicationContext).apply {
@@ -225,15 +225,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
             myLocationOverlay = MyLocationOverlay(provider, homeMapView).apply {
                 runOnFirstFix {
-                    homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_fixed)
+                    homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
                 }
                 onFollowLocationDisabled = {
-                    homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_not_fixed)
+                    homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
                 }
                 homeMapView.addOverlay(OverlayPositions.MY_LOCATION, this)
             }
         } else {
-            homeMyLocationButton.setImageResource(R.drawable.ic_action_my_location_fixed)
+            homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
         }
 
         myLocationOverlay?.apply {
