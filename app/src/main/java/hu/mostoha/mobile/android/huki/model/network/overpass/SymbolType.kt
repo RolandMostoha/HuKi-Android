@@ -9,7 +9,7 @@ enum class SymbolType : IconEnum {
 
     UNHANDLED {
         @DrawableRes
-        override fun getIconRes(): Int = R.drawable.ic_symbol_empty
+        override fun getIconRes(): Int = R.drawable.ic_symbol_unhandled
     },
 
     @Json(name = "k")
