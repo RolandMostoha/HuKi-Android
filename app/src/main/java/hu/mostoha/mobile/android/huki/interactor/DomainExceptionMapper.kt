@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.huki.interactor
 
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
-import hu.mostoha.mobile.android.huki.interactor.exception.HikingLayerFileSaveFailedException
+import hu.mostoha.mobile.android.huki.interactor.exception.HikingLayerFileDownloadFailedException
 import hu.mostoha.mobile.android.huki.interactor.exception.TooManyRequestsException
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import retrofit2.HttpException
@@ -17,7 +17,7 @@ object DomainExceptionMapper {
                 TooManyRequestsException(exception)
             }
             exception is FileNotFoundException -> {
-                HikingLayerFileSaveFailedException(exception)
+                HikingLayerFileDownloadFailedException(exception)
             }
             else -> UnknownException(exception)
         }

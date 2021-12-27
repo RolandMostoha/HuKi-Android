@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.interactor
 
+import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.executor.TaskExecutor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
@@ -27,7 +28,7 @@ open class BaseInteractor @Inject constructor(
                     DomainExceptionMapper.map(exception)
                 }
 
-                if (mappedException is UnknownException) {
+                if (!BuildConfig.DEBUG && mappedException is UnknownException) {
                     exceptionLogger.recordException(exception)
                 }
 
