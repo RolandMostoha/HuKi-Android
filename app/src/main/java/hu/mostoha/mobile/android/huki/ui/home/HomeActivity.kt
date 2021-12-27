@@ -197,9 +197,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             )
         }
 
-        homeLayersFab.setOnClickListener {
-            showLayersDialog()
-        }
+        homeLayersFab.setOnClickListener { layersPopupWindow.show(it) }
     }
 
     private fun initBottomSheets() {
