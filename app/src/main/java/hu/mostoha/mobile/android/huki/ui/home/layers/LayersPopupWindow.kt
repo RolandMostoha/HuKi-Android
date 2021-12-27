@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.ui.home.layers
 
 import android.content.Context
 import android.graphics.drawable.InsetDrawable
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
@@ -11,9 +12,9 @@ import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.visible
-import hu.mostoha.mobile.android.huki.model.ui.HikingLayerDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.HikingLayerState
 
-class LayersPopupWindow(context: Context) : PopupWindow(context) {
+class LayersPopupWindow(val context: Context) : PopupWindow(context) {
 
     private var binding = WindowPopupLayersBinding.inflate(context.inflater, null, false)
 
@@ -35,28 +36,45 @@ class LayersPopupWindow(context: Context) : PopupWindow(context) {
         elevation = context.resources.getDimension(R.dimen.default_elevation)
     }
 
-    fun updateDialog(uiModel: HikingLayerDetailsUiModel, onDownloadButtonClick: () -> Unit) {
+    fun updateDialog(hikingLayerState: HikingLayerState, onDownloadButtonClick: () -> Unit) {
         val layersAdapter = LayersAdapter(onItemClick = { })
         layersAdapter.submitList(BaseLayer.values().toList())
         binding.popupLayersBaseLayersList.adapter = layersAdapter
 
         with(binding.popupLayersHikingLayerContainer) {
-            if (uiModel.isHikingLayerFileDownloaded) {
-                itemLayersHikingCard.strokeColor = ContextCompat.getColor(root.context, R.color.colorPrimary)
-                itemLayersSelectedImage.visible()
-                itemLayersLastUpdatedText.setTextOrGone(uiModel.lastUpdatedText)
-                itemLayersHikingDownloadButton.setText(R.string.layers_hiking_update_label)
-            } else {
-                itemLayersHikingCard.strokeColor = ContextCompat.getColor(root.context, R.color.colorStroke)
-                itemLayersSelectedImage.gone()
-                itemLayersLastUpdatedText.gone()
-                itemLayersHikingDownloadButton.setText(R.string.layers_hiking_download_label)
+            when (hikingLayerState) {
+                is HikingLayerState.NotDownloaded -> {
+                    itemLayersHikingCard.strokeColor = ContextCompat.getColor(root.context, R.color.colorStroke)
+                    itemLayersSelectedImage.gone()
+                    itemLayersLastUpdatedText.gone()
+                    itemLayersHikingDownloadButton.setText(R.string.layers_hiking_not_download_label)
+                    itemLayersHikingDownloadButton.isEnabled = true
+                    itemLayersHikingDownloadButton.inProgress = false
+                }
+                is HikingLayerState.Downloading -> {
+                    itemLayersHikingCard.strokeColor = ContextCompat.getColor(root.context, R.color.colorStroke)
+                    itemLayersHikingDownloadButton.setText(R.string.layers_hiking_downloading_label)
+                    itemLayersHikingDownloadButton.isEnabled = false
+                    itemLayersHikingDownloadButton.inProgress = true
+                }
+                is HikingLayerState.Downloaded -> {
+                    itemLayersHikingCard.strokeColor = ContextCompat.getColor(root.context, R.color.colorPrimary)
+                    itemLayersSelectedImage.visible()
+                    itemLayersLastUpdatedText.setTextOrGone(hikingLayerState.lastUpdatedText)
+                    itemLayersHikingDownloadButton.setText(R.string.layers_hiking_downloaded_label)
+                    itemLayersHikingDownloadButton.isEnabled = true
+                    itemLayersHikingDownloadButton.inProgress = false
+                }
             }
 
             itemLayersHikingDownloadButton.setOnClickListener {
                 onDownloadButtonClick.invoke()
             }
         }
+    }
+
+    fun show(anchorView: View) {
+        showAsDropDown(anchorView, 0, context.resources.getDimensionPixelSize(R.dimen.space_small))
     }
 
 }

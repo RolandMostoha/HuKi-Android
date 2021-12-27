@@ -11,7 +11,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/homeSearchBarContainer"
@@ -119,16 +120,18 @@
 
         </HorizontalScrollView>
 
-        <hu.mostoha.mobile.android.huki.views.ProgressFloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/homeLayersFab"
+            style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_large"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_fab_my_location"
             android:elevation="@dimen/default_elevation_on_map"
+            android:src="@drawable/ic_layers"
             app:fabSize="mini"
-            app:iconSrc="@drawable/ic_layers"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeLandscapeContainer" />
 

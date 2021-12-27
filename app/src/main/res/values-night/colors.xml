@@ -6,6 +6,7 @@
     <color name="colorPrimaryIcon">#B3ffffff</color>
     <color name="colorPrimaryIconStrong">#ffffff</color>
     <color name="colorPrimaryText">#DEffffff</color>
+    <color name="colorPrimaryTextDisabled">#80ffffff</color>
     <color name="colorSecondaryText">#B3ffffff</color>
     <color name="colorBackground">#2D2D2D</color>
     <color name="colorError">#c62828</color>

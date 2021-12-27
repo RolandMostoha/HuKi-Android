@@ -6,4 +6,8 @@
         <attr name="fabSize" />
     </declare-styleable>
 
+    <declare-styleable name="ProgressMaterialButton">
+        <attr name="iconRes" format="integer" />
+    </declare-styleable>
+
 </resources>

@@ -3,11 +3,14 @@ package hu.mostoha.mobile.android.huki.ui.home
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.executor.TestTaskExecutor
+import hu.mostoha.mobile.android.huki.extensions.formatShortDate
+import hu.mostoha.mobile.android.huki.extensions.toLocalDateTime
 import hu.mostoha.mobile.android.huki.interactor.HikingLayerInteractor
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.TaskResult
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
+import hu.mostoha.mobile.android.huki.interactor.exception.HikingLayerFileDownloadFailedException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
@@ -55,69 +58,57 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Given null TaskResult, when loadHikingLayer, then Loading and HikingLayerDetails with null layer file posted`() {
-        val hikingLayerDetails = HikingLayerDetailsUiModel(
-            isHikingLayerFileDownloaded = false,
-            hikingLayerFile = null,
-            lastUpdatedText = null
-        )
+    fun `Given null TaskResult, when loadHikingLayer, then NotDownloaded state is posted`() {
         coEvery { layerInteractor.requestGetHikingLayerFile() } returns TaskResult.Success(null)
-        coEvery { generator.generateHikingLayerDetails(null) } returns hikingLayerDetails
+        coEvery { generator.generateHikingLayerState(null) } returns HikingLayerState.NotDownloaded
 
         homeViewModel.loadHikingLayer()
 
         coVerifyOrder {
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
             layerInteractor.requestGetHikingLayerFile()
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
-            homeViewModel.postState(HomeViewState(hikingLayerDetails))
+            homeViewModel.postState(HomeViewState(HikingLayerState.NotDownloaded))
         }
     }
 
     @Test
-    fun `Given Error TaskResult, when loadHikingLayer, then Loading and ErrorOccurred posted`() {
+    fun `Given Error TaskResult, when loadHikingLayer, then ErrorResult is posted`() {
         val errorRes = R.string.error_message_unknown.toMessage()
-        coEvery {
-            layerInteractor.requestGetHikingLayerFile()
-        } returns TaskResult.Error(DomainException(errorRes))
+        coEvery { layerInteractor.requestGetHikingLayerFile() } returns TaskResult.Error(DomainException(errorRes))
 
         homeViewModel.loadHikingLayer()
 
         coVerifyOrder {
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
             layerInteractor.requestGetHikingLayerFile()
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorResult(errorRes))
         }
     }
 
     @Test
-    fun `Given Success TaskResult, when downloadHikingLayer, then Loading posted`() {
+    fun `Given Success TaskResult, when downloadHikingLayer, then Downloading state is posted`() {
         val requestId: Long = 12345
         coEvery { layerInteractor.requestDownloadHikingLayerFile() } returns TaskResult.Success(requestId)
 
         homeViewModel.downloadHikingLayer()
 
         coVerifyOrder {
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
+            homeViewModel.postState(HomeViewState(HikingLayerState.Downloading))
             layerInteractor.requestDownloadHikingLayerFile()
         }
     }
 
     @Test
-    fun `Given Error TaskResult, when downloadHikingLayer, then ErrorOccurred posted`() {
+    fun `Given Error TaskResult, when downloadHikingLayer, then ErrorResult is posted and hiking layer file is requested`() {
         val errorRes = R.string.error_message_unknown.toMessage()
-        coEvery {
-            layerInteractor.requestDownloadHikingLayerFile()
-        } returns TaskResult.Error(DomainException(errorRes))
+        coEvery { layerInteractor.requestDownloadHikingLayerFile() } returns TaskResult.Error(DomainException(errorRes))
+        coEvery { layerInteractor.requestGetHikingLayerFile() } returns TaskResult.Success(null)
+        coEvery { generator.generateHikingLayerState(null) } returns HikingLayerState.NotDownloaded
 
         homeViewModel.downloadHikingLayer()
 
         coVerifyOrder {
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
             layerInteractor.requestDownloadHikingLayerFile()
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
             homeViewModel.postEvent(HomeLiveEvents.ErrorResult(errorRes))
+            layerInteractor.requestGetHikingLayerFile()
         }
     }
 
@@ -125,40 +116,38 @@ class HomeViewModelTest {
     fun `Given Success TaskResult, when loadDownloadedFile, then HomeViewState posted`() {
         val downloadId: Long = 12345
         val file = File("path")
-        val hikingLayerDetails = HikingLayerDetailsUiModel(
-            isHikingLayerFileDownloaded = false,
-            hikingLayerFile = null,
-            lastUpdatedText = null
+        val downloadedState = HikingLayerState.Downloaded(
+            hikingLayerFile = file,
+            lastUpdatedText = file.lastModified().toLocalDateTime().formatShortDate()
         )
         coEvery { layerInteractor.requestSaveHikingLayerFile(downloadId) } returns TaskResult.Success(Unit)
         coEvery { layerInteractor.requestGetHikingLayerFile() } returns TaskResult.Success(file)
-        coEvery { generator.generateHikingLayerDetails(any()) } returns hikingLayerDetails
+        coEvery { generator.generateHikingLayerState(any()) } returns downloadedState
 
         homeViewModel.loadDownloadedFile(downloadId)
 
         coVerifyOrder {
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
+            homeViewModel.postState(HomeViewState(HikingLayerState.Downloading))
             layerInteractor.requestSaveHikingLayerFile(downloadId)
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
-            homeViewModel.postState(HomeViewState(hikingLayerDetails))
+            homeViewModel.postState(HomeViewState(downloadedState))
         }
     }
 
     @Test
     fun `Given Error TaskResult, when loadDownloadedFile, then ErrorOccurred posted`() {
         val downloadId = 1L
-        val errorRes = R.string.download_layer_missing_downloaded_file.toMessage()
-        coEvery {
-            layerInteractor.requestSaveHikingLayerFile(downloadId)
-        } returns TaskResult.Error(DomainException(errorRes))
+        val exception = HikingLayerFileDownloadFailedException(IllegalStateException("Failed to download!"))
+        coEvery { layerInteractor.requestSaveHikingLayerFile(downloadId) } returns TaskResult.Error(exception)
+        coEvery { layerInteractor.requestGetHikingLayerFile() } returns TaskResult.Success(null)
+        coEvery { generator.generateHikingLayerState(null) } returns HikingLayerState.NotDownloaded
 
         homeViewModel.loadDownloadedFile(downloadId)
 
         coVerifyOrder {
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(true))
+            homeViewModel.postState(HomeViewState(HikingLayerState.Downloading))
             layerInteractor.requestSaveHikingLayerFile(downloadId)
-            homeViewModel.postEvent(HomeLiveEvents.LayerLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.ErrorResult(errorRes))
+            homeViewModel.postEvent(HomeLiveEvents.ErrorResult(exception.messageRes))
+            layerInteractor.requestGetHikingLayerFile()
         }
     }
 

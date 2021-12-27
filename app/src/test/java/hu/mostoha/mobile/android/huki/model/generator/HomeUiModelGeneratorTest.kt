@@ -276,29 +276,22 @@ class HomeUiModelGeneratorTest {
     }
 
     @Test
-    fun `Given null hiking layer file, when generateHikingLayerDetails, then correct HikingLayerDetailsUiModel returns`() {
+    fun `Given null hiking layer file, when generateHikingLayerDetails, then NotDownloaded state returns`() {
         val hikingLayerFile = null
 
-        val placeDetailsUiModel = generator.generateHikingLayerDetails(hikingLayerFile)
+        val placeDetailsUiModel = generator.generateHikingLayerState(hikingLayerFile)
 
-        assertThat(placeDetailsUiModel).isEqualTo(
-            HikingLayerDetailsUiModel(
-                isHikingLayerFileDownloaded = false,
-                hikingLayerFile = null,
-                lastUpdatedText = null
-            )
-        )
+        assertThat(placeDetailsUiModel).isEqualTo(HikingLayerState.NotDownloaded)
     }
 
     @Test
-    fun `Given hiking layer file, when generateHikingLayerDetails, then correct HikingLayerDetailsUiModel returns`() {
+    fun `Given hiking layer file, when generateHikingLayerDetails, then Downloaded state returns`() {
         val hikingLayerFile = File("")
 
-        val placeDetailsUiModel = generator.generateHikingLayerDetails(hikingLayerFile)
+        val placeDetailsUiModel = generator.generateHikingLayerState(hikingLayerFile)
 
         assertThat(placeDetailsUiModel).isEqualTo(
-            HikingLayerDetailsUiModel(
-                isHikingLayerFileDownloaded = true,
+            HikingLayerState.Downloaded(
                 hikingLayerFile = hikingLayerFile,
                 lastUpdatedText = "Jan 1, 1970"
             )

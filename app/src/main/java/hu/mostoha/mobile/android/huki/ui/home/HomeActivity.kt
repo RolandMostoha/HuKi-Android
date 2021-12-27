@@ -22,7 +22,7 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
-import hu.mostoha.mobile.android.huki.model.ui.HikingLayerDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.HikingLayerState
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.osmdroid.MyLocationOverlay
@@ -210,10 +210,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         hikingRoutesSheet.hide()
     }
 
-    private fun showLayersDialog() {
-        layersPopupWindow.showAsDropDown(homeLayersFab, 0, resources.getDimensionPixelSize(R.dimen.space_small))
-    }
-
     private fun showMyLocation() {
         if (myLocationOverlay == null) {
             homeMyLocationButton.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
@@ -265,7 +261,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         viewModel.liveEvents.observe(this, { event ->
             when (event) {
                 is ErrorResult -> showSnackbar(homeContainer, event.message)
-                is LayerLoading -> homeLayersFab.inProgress = event.inProgress
                 is SearchBarLoading -> binding.homeSearchBarProgress.visibleOrGone(event.inProgress)
                 is PlacesResult -> initPlaces(event.placeItems)
                 is PlacesErrorResult -> initPlacesErrorResult(event)
@@ -277,14 +272,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
         })
         viewModel.viewState.observe(this, {
-            val hikingLayerDetails = it.hikingLayerDetails
+            val hikingLayerState = it.hikingLayerState
 
-            updateLayersDialog(hikingLayerDetails)
+            layersPopupWindow.updateDialog(
+                hikingLayerState = hikingLayerState,
+                onDownloadButtonClick = { viewModel.downloadHikingLayer() }
+            )
 
-            if (hikingLayerDetails.isHikingLayerFileDownloaded) {
-                initOfflineLayer(hikingLayerDetails.hikingLayerFile!!)
-            } else {
-                showLayersDialog()
+            if (hikingLayerState is HikingLayerState.NotDownloaded) {
+                layersPopupWindow.show(homeLayersFab)
+            } else if (hikingLayerState is HikingLayerState.Downloaded) {
+                initOfflineLayer(hikingLayerState.hikingLayerFile)
             }
         })
     }
@@ -498,13 +496,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             }
         }
-    }
-
-    private fun updateLayersDialog(hikingLayerDetails: HikingLayerDetailsUiModel) {
-        layersPopupWindow.updateDialog(
-            uiModel = hikingLayerDetails,
-            onDownloadButtonClick = { viewModel.downloadHikingLayer() }
-        )
     }
 
     private fun initReceivers() {

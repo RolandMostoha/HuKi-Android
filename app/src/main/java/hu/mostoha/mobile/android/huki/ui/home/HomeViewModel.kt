@@ -10,6 +10,7 @@ import hu.mostoha.mobile.android.huki.interactor.TaskResult
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
+import hu.mostoha.mobile.android.huki.model.ui.HikingLayerState
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
@@ -30,29 +31,24 @@ class HomeViewModel @Inject constructor(
     private var searchJob: Job? = null
 
     fun loadHikingLayer() = launch {
-        postEvent(LayerLoading(true))
-
-        val result = hikingLayerInteractor.requestGetHikingLayerFile()
-
-        postEvent(LayerLoading(false))
-
-        when (result) {
+        when (val result = hikingLayerInteractor.requestGetHikingLayerFile()) {
             is TaskResult.Success -> {
-                postState(HomeViewState(generator.generateHikingLayerDetails(result.data)))
+                postState(HomeViewState(generator.generateHikingLayerState(result.data)))
             }
             is TaskResult.Error -> {
+                postState(HomeViewState(HikingLayerState.NotDownloaded))
                 postEvent(ErrorResult(result.domainException.messageRes))
             }
         }
     }
 
     fun downloadHikingLayer() = launch {
-        postEvent(LayerLoading(true))
+        postState(HomeViewState(HikingLayerState.Downloading))
 
         when (val result = hikingLayerInteractor.requestDownloadHikingLayerFile()) {
             is TaskResult.Error -> {
-                postEvent(LayerLoading(false))
                 postEvent(ErrorResult(result.domainException.messageRes))
+                loadHikingLayer()
             }
             is TaskResult.Success -> {
                 // No-op, successfully downloaded layer will be handled via LocalBroadcast
@@ -61,17 +57,15 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadDownloadedFile(downloadId: Long) = launch {
-        postEvent(LayerLoading(true))
+        postState(HomeViewState(HikingLayerState.Downloading))
 
-        when (val result = hikingLayerInteractor.requestSaveHikingLayerFile(downloadId)) {
-            is TaskResult.Success -> {
-                loadHikingLayer()
-            }
-            is TaskResult.Error -> {
-                postEvent(LayerLoading(false))
-                postEvent(ErrorResult(result.domainException.messageRes))
-            }
+        val result = hikingLayerInteractor.requestSaveHikingLayerFile(downloadId)
+
+        if (result is TaskResult.Error) {
+            postEvent(ErrorResult(result.domainException.messageRes))
         }
+
+        loadHikingLayer()
     }
 
     fun loadPlacesBy(searchText: String) {

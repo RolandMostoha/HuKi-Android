@@ -101,7 +101,7 @@ class MapLayersUseCaseTest {
                 putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 1L)
             })
 
-            R.string.layers_hiking_update_label.isPopupTextDisplayed()
+            R.string.layers_hiking_downloaded_label.isPopupTextDisplayed()
         }
     }
 

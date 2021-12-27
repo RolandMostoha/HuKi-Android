@@ -11,8 +11,6 @@ sealed class HomeLiveEvents : LiveEvents {
 
     data class ErrorResult(val message: Message.Res) : HomeLiveEvents()
 
-    data class LayerLoading(val inProgress: Boolean) : HomeLiveEvents()
-
     data class SearchBarLoading(val inProgress: Boolean) : HomeLiveEvents()
 
     data class PlacesResult(val placeItems: List<SearchBarItem.Place>) : HomeLiveEvents()

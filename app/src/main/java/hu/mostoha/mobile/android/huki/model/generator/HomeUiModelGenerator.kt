@@ -142,16 +142,15 @@ class HomeUiModelGenerator @Inject constructor() {
         )
     }
 
-    fun generateHikingLayerDetails(hikingLayerFile: File?): HikingLayerDetailsUiModel {
-        return HikingLayerDetailsUiModel(
-            isHikingLayerFileDownloaded = hikingLayerFile != null,
-            hikingLayerFile = hikingLayerFile,
-            lastUpdatedText = if (hikingLayerFile?.lastModified() != null) {
-                hikingLayerFile.lastModified().toLocalDateTime().formatShortDate()
-            } else {
-                null
-            }
-        )
+    fun generateHikingLayerState(hikingLayerFile: File?): HikingLayerState {
+        return if (hikingLayerFile == null) {
+            HikingLayerState.NotDownloaded
+        } else {
+            HikingLayerState.Downloaded(
+                hikingLayerFile = hikingLayerFile,
+                lastUpdatedText = hikingLayerFile.lastModified().toLocalDateTime().formatShortDate()
+            )
+        }
     }
 
 }

@@ -9,7 +9,7 @@
 
         <path
             android:name="triangle"
-            android:fillColor="@color/color_gradient_my_location"
+            android:fillColor="@color/gradient_my_location"
             android:pathData="
             M28,80
             L72,80

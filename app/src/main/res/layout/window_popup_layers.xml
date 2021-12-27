@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:orientation="vertical"
-    android:paddingVertical="@dimen/space_extra_small"
-    android:paddingHorizontal="@dimen/space_medium">
+    android:paddingHorizontal="@dimen/space_large"
+    android:paddingVertical="@dimen/space_small">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
-        android:textAllCaps="true"
         android:layout_marginTop="@dimen/space_medium"
-        android:text="@string/layers_base_layers_title" />
+        android:text="@string/layers_base_layers_title"
+        android:textAllCaps="true"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/popupLayersBaseLayersList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginHorizontal="@dimen/space_small"
+        android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_layers_base"
-        tools:itemCount="3" />
+        tools:itemCount="3"
+        tools:listitem="@layout/item_layers_base" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
-        android:textAllCaps="true"
         android:layout_marginTop="@dimen/space_small"
-        android:text="@string/layers_hiking_layers_title" />
+        android:text="@string/layers_hiking_layers_title"
+        android:textAllCaps="true"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
 
     <include
         android:id="@+id/popupLayersHikingLayerContainer"

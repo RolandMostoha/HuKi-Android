@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="@dimen/space_medium"
-    android:gravity="center_horizontal">
+    android:padding="@dimen/space_medium">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/itemLayersHikingCard"
@@ -20,16 +20,18 @@
             android:id="@+id/itemLayersImage"
             android:layout_width="@dimen/home_layers_hiking_layer_image_width"
             android:layout_height="@dimen/home_layers_hiking_layer_image_height"
+            android:importantForAccessibility="no"
             android:src="@drawable/ic_layers_hiking" />
 
         <ImageView
             android:id="@+id/itemLayersSelectedImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_layers_selected"
+            android:layout_gravity="bottom|end"
             android:layout_marginEnd="@dimen/space_small"
             android:layout_marginBottom="@dimen/space_small"
-            android:layout_gravity="bottom|end" />
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_layers_selected" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -37,27 +39,27 @@
         android:id="@+id/itemLayersName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
-        android:gravity="center_vertical"
         android:drawablePadding="@dimen/space_large"
-        android:text="@string/layers_hiking_hungarian_title" />
+        android:gravity="center_vertical"
+        android:text="@string/layers_hiking_hungarian_title"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/itemLayersLastUpdatedText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/DefaultTextAppearance.Regular.Secondary.Small"
         android:layout_marginTop="@dimen/space_extra_small"
+        android:drawablePadding="@dimen/space_large"
         android:gravity="center_vertical"
-        android:drawablePadding="@dimen/space_large" />
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Secondary.Small" />
 
-    <com.google.android.material.button.MaterialButton
+    <hu.mostoha.mobile.android.huki.views.ProgressMaterialButton
         android:id="@+id/itemLayersHikingDownloadButton"
         style="@style/DefaultButton.Contained.Shadowless.Secondary.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_small"
-        app:icon="@drawable/ic_layers_download"
-        tools:text="@string/layers_hiking_download_label" />
+        app:iconRes="@drawable/ic_layers_download"
+        tools:text="@string/layers_hiking_not_download_label" />
 
 </LinearLayout>
