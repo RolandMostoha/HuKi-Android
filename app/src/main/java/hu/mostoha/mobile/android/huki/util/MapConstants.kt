@@ -3,7 +3,7 @@ package hu.mostoha.mobile.android.huki.util
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 
 const val MAP_DEFAULT_ZOOM_LEVEL = 15.0
-const val MAP_TILES_SCALE_FACTOR = 1.6f
+const val MAP_TILES_SCALE_FACTOR = 1.4f
 const val MAP_ZOOM_THRESHOLD_ROUTES_NEARBY = 8.5
 
 const val MY_LOCATION_MIN_TIME_MS = 3000L

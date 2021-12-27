@@ -192,8 +192,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         homeRoutesNearbyFab.setOnClickListener {
             viewModel.loadHikingRoutes(
-                getString(R.string.map_place_name_routes_nearby),
-                homeMapView.boundingBox.toDomainBoundingBox()
+                placeName = getString(R.string.map_place_name_routes_nearby),
+                boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
             )
         }
 
@@ -349,12 +349,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initPlaceDetails(placeDetails: PlaceDetailsUiModel) {
-        when (placeDetails.geometryUiModel) {
-            is GeometryUiModel.Way -> initWayDetails(placeDetails)
-            is GeometryUiModel.Relation -> initRelationDetails(placeDetails)
-            else -> {
-                // No-op: place details is not an option for Nodes
-            }
+        if (placeDetails.geometryUiModel is GeometryUiModel.Way) {
+            initWayDetails(placeDetails)
+        } else if (placeDetails.geometryUiModel is GeometryUiModel.Relation) {
+            initRelationDetails(placeDetails)
         }
     }
 
@@ -463,8 +461,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 placeDetailsHikingTrailsButton.setOnClickListener {
                     placeDetailsSheet.hide()
                     viewModel.loadHikingRoutes(
-                        getString(R.string.map_place_name_node_routes_nearby, placeUiModel.primaryText),
-                        homeMapView.boundingBox.toDomainBoundingBox()
+                        placeName = getString(R.string.map_place_name_node_routes_nearby, placeUiModel.primaryText),
+                        boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
                     )
                 }
             }
@@ -485,7 +483,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             placeDetailsHikingTrailsButton.visible()
             placeDetailsHikingTrailsButton.setOnClickListener {
                 placeDetailsSheet.hide()
-                viewModel.loadHikingRoutes(placeUiModel.primaryText, boundingBox.toDomainBoundingBox())
+                viewModel.loadHikingRoutes(
+                    placeName = placeUiModel.primaryText,
+                    boundingBox = boundingBox.toDomainBoundingBox()
+                )
             }
             placeDetailsCloseButton.setOnClickListener {
                 placeDetailsSheet.hide()
