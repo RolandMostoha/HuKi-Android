@@ -49,17 +49,28 @@ class HomeUiModelGenerator @Inject constructor() {
         ).joinToString(" ")
     }
 
-    fun generatePlacesEmptyItem(): SearchBarItem.Error {
-        return SearchBarItem.Error(
-            messageRes = R.string.search_bar_empty_message.toMessage(),
-            drawableRes = R.drawable.ic_search_bar_empty_result
+    fun generatePlacesEmptyItem(): List<SearchBarItem> {
+        return listOf(
+            SearchBarItem.Error(
+                messageRes = R.string.search_bar_empty_message.toMessage(),
+                drawableRes = R.drawable.ic_search_bar_empty_result
+            )
         )
     }
 
-    fun generatePlacesErrorItem(domainException: DomainException): SearchBarItem.Error {
-        return SearchBarItem.Error(
-            messageRes = domainException.messageRes,
-            drawableRes = R.drawable.ic_search_bar_error
+    fun generatePlacesErrorItem(domainException: DomainException): List<SearchBarItem> {
+        return listOf(
+            SearchBarItem.Error(
+                messageRes = domainException.messageRes,
+                drawableRes = R.drawable.ic_search_bar_error
+            )
+        )
+    }
+
+    fun generatePlaceDetails(placeUiModel: PlaceUiModel): PlaceDetailsUiModel {
+        return generatePlaceDetails(
+            placeUiModel = placeUiModel,
+            geometry = Geometry.Node(placeUiModel.osmId, placeUiModel.geoPoint.toLocation())
         )
     }
 

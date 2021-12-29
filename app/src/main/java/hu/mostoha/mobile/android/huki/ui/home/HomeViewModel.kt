@@ -13,7 +13,6 @@ import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
 import hu.mostoha.mobile.android.huki.model.ui.HikingLayerState
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
-import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.ui.home.HomeLiveEvents.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -27,6 +26,10 @@ class HomeViewModel @Inject constructor(
     private val landscapeInteractor: LandscapeInteractor,
     private val generator: HomeUiModelGenerator
 ) : BaseViewModel<HomeLiveEvents, HomeViewState>(taskExecutor) {
+
+    companion object {
+        private const val SEARCH_QUERY_DELAY_MS = 800L
+    }
 
     private var searchJob: Job? = null
 
@@ -76,7 +79,7 @@ class HomeViewModel @Inject constructor(
             }
         }
         searchJob = launchCancellable {
-            delay(NetworkConfig.SEARCH_QUERY_DELAY_MS)
+            delay(SEARCH_QUERY_DELAY_MS)
 
             postEvent(SearchBarLoading(true))
 
@@ -85,14 +88,14 @@ class HomeViewModel @Inject constructor(
                     postEvent(SearchBarLoading(false))
                     val searchResults = generator.generatePlaceAdapterItems(result.data)
                     if (searchResults.isEmpty()) {
-                        postEvent(PlacesErrorResult(generator.generatePlacesEmptyItem()))
+                        postEvent(SearchBarResult(generator.generatePlacesEmptyItem()))
                     } else {
-                        postEvent(PlacesResult(searchResults))
+                        postEvent(SearchBarResult(searchResults))
                     }
                 }
                 is TaskResult.Error -> {
                     postEvent(SearchBarLoading(false))
-                    postEvent(PlacesErrorResult(generator.generatePlacesErrorItem(result.domainException)))
+                    postEvent(SearchBarResult(generator.generatePlacesErrorItem(result.domainException)))
                 }
             }
         }
@@ -109,7 +112,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadPlace(placeUiModel: PlaceUiModel) = launch {
-        postEvent(PlaceResult(placeUiModel))
+        postEvent(PlaceDetailsResult(generator.generatePlaceDetails(placeUiModel)))
     }
 
     fun loadPlaceDetails(placeUiModel: PlaceUiModel) = launch {
@@ -167,7 +170,7 @@ class HomeViewModel @Inject constructor(
             is TaskResult.Success -> {
                 postEvent(SearchBarLoading(false))
                 val placeDetails = generator.generateHikingRouteDetails(hikingRoute, result.data)
-                postEvent(HikingRouteDetailsResult(placeDetails))
+                postEvent(PlaceDetailsResult(placeDetails))
             }
             is TaskResult.Error -> {
                 postEvent(SearchBarLoading(false))

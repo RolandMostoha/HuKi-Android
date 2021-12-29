@@ -73,9 +73,11 @@ class HomeUiModelGeneratorTest {
         val searchBarErrorItem = generator.generatePlacesEmptyItem()
 
         assertThat(searchBarErrorItem).isEqualTo(
-            SearchBarItem.Error(
-                messageRes = R.string.search_bar_empty_message.toMessage(),
-                drawableRes = R.drawable.ic_search_bar_empty_result
+            listOf(
+                SearchBarItem.Error(
+                    messageRes = R.string.search_bar_empty_message.toMessage(),
+                    drawableRes = R.drawable.ic_search_bar_empty_result
+                )
             )
         )
     }
@@ -87,9 +89,25 @@ class HomeUiModelGeneratorTest {
         val searchBarErrorItem = generator.generatePlacesErrorItem(domainException)
 
         assertThat(searchBarErrorItem).isEqualTo(
-            SearchBarItem.Error(
-                messageRes = domainException.messageRes,
-                drawableRes = R.drawable.ic_search_bar_error
+            listOf(
+                SearchBarItem.Error(
+                    messageRes = domainException.messageRes,
+                    drawableRes = R.drawable.ic_search_bar_error
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `Given node place UI model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
+        val placeUiModel = DEFAULT_PLACE_UI_MODEL
+
+        val placeDetails = generator.generatePlaceDetails(placeUiModel)
+
+        assertThat(placeDetails).isEqualTo(
+            PlaceDetailsUiModel(
+                placeUiModel = placeUiModel,
+                geometryUiModel = GeometryUiModel.Node(placeUiModel.geoPoint)
             )
         )
     }

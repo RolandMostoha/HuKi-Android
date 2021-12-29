@@ -166,7 +166,7 @@ class HomeViewModelTest {
             placesInteractor.requestGetPlacesBy(searchText)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             generator.generatePlaceAdapterItems(places)
-            homeViewModel.postEvent(HomeLiveEvents.PlacesResult(searchBarItems))
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarResult(searchBarItems))
         }
     }
 
@@ -175,13 +175,15 @@ class HomeViewModelTest {
         val searchText = "Mecs"
         val predictions = emptyList<Place>()
         val placeUiModels = emptyList<SearchBarItem.Place>()
-        val searchBarErrorItem = SearchBarItem.Error(
-            messageRes = R.string.search_bar_empty_message.toMessage(),
-            drawableRes = R.drawable.ic_search_bar_empty_result
+        val searchBarItems = listOf(
+            SearchBarItem.Error(
+                messageRes = R.string.search_bar_empty_message.toMessage(),
+                drawableRes = R.drawable.ic_search_bar_empty_result
+            )
         )
         coEvery { placesInteractor.requestGetPlacesBy(searchText) } returns TaskResult.Success(predictions)
         coEvery { generator.generatePlaceAdapterItems(any()) } returns placeUiModels
-        coEvery { generator.generatePlacesEmptyItem() } returns searchBarErrorItem
+        coEvery { generator.generatePlacesEmptyItem() } returns searchBarItems
 
         homeViewModel.loadPlacesBy(searchText)
 
@@ -190,7 +192,7 @@ class HomeViewModelTest {
             placesInteractor.requestGetPlacesBy(searchText)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             generator.generatePlaceAdapterItems(predictions)
-            homeViewModel.postEvent(HomeLiveEvents.PlacesErrorResult(searchBarErrorItem))
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarResult(searchBarItems))
         }
     }
 
@@ -198,12 +200,14 @@ class HomeViewModelTest {
     fun `Given Error TaskResult, when loadPlacesBy, then PlacesErrorResult posted`() {
         val errorRes = R.string.error_message_unknown.toMessage()
         val domainException = DomainException(errorRes)
-        val searchBarErrorItem = SearchBarItem.Error(
-            messageRes = domainException.messageRes,
-            drawableRes = R.drawable.ic_search_bar_error
+        val searchBarItems = listOf(
+            SearchBarItem.Error(
+                messageRes = domainException.messageRes,
+                drawableRes = R.drawable.ic_search_bar_error
+            )
         )
         coEvery { placesInteractor.requestGetPlacesBy(any()) } returns TaskResult.Error(domainException)
-        coEvery { generator.generatePlacesErrorItem(domainException) } returns searchBarErrorItem
+        coEvery { generator.generatePlacesErrorItem(domainException) } returns searchBarItems
 
         homeViewModel.loadPlacesBy("")
 
@@ -211,17 +215,22 @@ class HomeViewModelTest {
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(true))
             placesInteractor.requestGetPlacesBy(any())
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
-            homeViewModel.postEvent(HomeLiveEvents.PlacesErrorResult(searchBarErrorItem))
+            homeViewModel.postEvent(HomeLiveEvents.SearchBarResult(searchBarItems))
         }
     }
 
     @Test
     fun `Given place, when loadPlace, then PlaceResult posted`() {
-        val place = DEFAULT_PLACE_UI_MODEL
+        val placeUiModel = DEFAULT_PLACE_UI_MODEL
+        val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
+        coEvery { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
 
-        homeViewModel.loadPlace(place)
+        homeViewModel.loadPlace(placeUiModel)
 
-        coVerifyOrder { homeViewModel.postEvent(HomeLiveEvents.PlaceResult(place)) }
+        coVerifyOrder {
+            generator.generatePlaceDetails(placeUiModel)
+            homeViewModel.postEvent(HomeLiveEvents.PlaceDetailsResult(placeDetailsUiModel))
+        }
     }
 
     @Test
@@ -351,7 +360,7 @@ class HomeViewModelTest {
             placesInteractor.requestGetGeometry(osmId, PlaceType.RELATION)
             homeViewModel.postEvent(HomeLiveEvents.SearchBarLoading(false))
             generator.generateHikingRouteDetails(hikingRouteUiModel, geometry)
-            homeViewModel.postEvent(HomeLiveEvents.HikingRouteDetailsResult(placeDetailsUiModel))
+            homeViewModel.postEvent(HomeLiveEvents.PlaceDetailsResult(placeDetailsUiModel))
         }
     }
 

@@ -5,7 +5,6 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.views.MapView
 import org.osmdroid.views.Projection
 
-
 fun BoundingBox.withOffset(
     mapView: MapView,
     @DimenRes top: Int,

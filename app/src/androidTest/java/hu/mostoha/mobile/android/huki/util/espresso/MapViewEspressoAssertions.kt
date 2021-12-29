@@ -14,6 +14,7 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import kotlin.math.abs
 
 inline fun <reified T> @receiver:IdRes Int.hasOverlayInPosition(position: Int) {
     onView(withId(this)).check(matches(hasOverlayMatcher<T>(position)))
@@ -53,12 +54,16 @@ fun hasCenterAndZoomMatcher(center: GeoPoint, zoom: Double): BoundedMatcher<View
             val actualCenter = mapView.mapCenter
             val actualZoom = mapView.zoomLevelDouble
 
-            return center == actualCenter && zoom == actualZoom
+            return center.latitude.equalsDelta(actualCenter.latitude) &&
+                    center.longitude.equalsDelta(actualCenter.longitude) &&
+                    zoom.equalsDelta(actualZoom)
         }
 
         override fun describeTo(description: Description) {
             description.appendText("Failed: has center: $center and zoom: $zoom")
         }
+
+        private fun Double.equalsDelta(other: Double) = abs(this - other) < 0.000001
     }
 }
 
