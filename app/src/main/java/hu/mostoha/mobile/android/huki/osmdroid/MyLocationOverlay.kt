@@ -11,6 +11,10 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
+/**
+ * [MyLocationNewOverlay] implementation that supports follow location callbacks and fixes
+ * my location button misalignment on map.
+ */
 class MyLocationOverlay(
     provider: IMyLocationProvider,
     private val mapView: MapView

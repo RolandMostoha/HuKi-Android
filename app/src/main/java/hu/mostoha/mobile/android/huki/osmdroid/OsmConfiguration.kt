@@ -13,12 +13,12 @@ import javax.inject.Inject
 class OsmConfiguration @Inject constructor(@ApplicationContext private val context: Context) {
 
     companion object {
-        private const val URL_HIKING_LAYER_FILE = "https://data2.openstreetmap.hu/tt.mbtiles"
+        private const val URL_HIKING_LAYER_FILE = "https://data2.openstreetmap.hu/TuraReteg.sqlitedb"
 
         private const val DIRECTORY_NAME_OSM_DROID = "osmdroid"
         private const val DIRECTORY_NAME_CACHE = "tiles"
         private const val DIRECTORY_NAME_LAYERS = "layers"
-        private const val FILE_NAME_HIKING_LAYER = "TuraReteg.mbtiles"
+        private const val FILE_NAME_HIKING_LAYER = "TuraReteg.sqlite"
 
         private const val KEY_GLOBAL_SHARED_PREFERENCES = "KEY_GLOBAL_SHARED_PREFERENCES"
     }
@@ -27,7 +27,7 @@ class OsmConfiguration @Inject constructor(@ApplicationContext private val conte
     private val osmDroidCachePath: String? = null
     private val osmDroidLayerPath: String? = null
 
-    private val isDebug = false
+    private val isDebug = true
 
     fun getHikingLayerFileUrl() = URL_HIKING_LAYER_FILE
 
@@ -52,7 +52,7 @@ class OsmConfiguration @Inject constructor(@ApplicationContext private val conte
             val path = storage.path
 
             val file = getOrCreateDirectory(path, DIRECTORY_NAME_OSM_DROID)
-                ?: dirCreationError("$path/$DIRECTORY_NAME_OSM_DROID")
+                ?: throwDirCreationError("$path/$DIRECTORY_NAME_OSM_DROID")
             logDirCreated("Base dir: ${file.path}")
 
             file
@@ -65,7 +65,7 @@ class OsmConfiguration @Inject constructor(@ApplicationContext private val conte
         return if (osmDroidCachePath == null) {
             val basePath = getOsmDroidBaseDirectory().path
             val file = getOrCreateDirectory(basePath, DIRECTORY_NAME_CACHE)
-                ?: dirCreationError("$basePath/$DIRECTORY_NAME_CACHE")
+                ?: throwDirCreationError("$basePath/$DIRECTORY_NAME_CACHE")
             logDirCreated("Cache dir: ${file.path}")
 
             file
@@ -80,7 +80,7 @@ class OsmConfiguration @Inject constructor(@ApplicationContext private val conte
         return if (osmDroidLayerPath == null) {
             val basePath = getOsmDroidBaseDirectory().path
             val file = getOrCreateDirectory(basePath, DIRECTORY_NAME_LAYERS)
-                ?: dirCreationError("$basePath/$DIRECTORY_NAME_LAYERS")
+                ?: throwDirCreationError("$basePath/$DIRECTORY_NAME_LAYERS")
             logDirCreated("Layer dir: ${file.path}")
 
             file
@@ -89,7 +89,7 @@ class OsmConfiguration @Inject constructor(@ApplicationContext private val conte
         }
     }
 
-    private fun dirCreationError(path: String): Nothing = error("OSM directory creation error: $path")
+    private fun throwDirCreationError(path: String): Nothing = error("OSM directory creation error: $path")
 
     private fun logDirCreated(pathText: String) = Timber.i("Using OSM $pathText")
 

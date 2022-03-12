@@ -239,13 +239,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initOfflineLayer(file: File) {
         with(homeMapView) {
-            val offlineProvider = OfflineTileProvider(
-                SimpleRegisterReceiver(this@HomeActivity),
-                arrayOf(file)
-            ).apply {
+            val offlineProvider = OsmAndOfflineTileProvider(SimpleRegisterReceiver(this@HomeActivity), file)
+
+            offlineProvider.tileRequestCompleteHandlers.apply {
                 // Issue: https://github.com/osmdroid/osmdroid/issues/690
-                tileRequestCompleteHandlers.clear()
-                tileRequestCompleteHandlers.add(tileRequestCompleteHandler)
+                clear()
+                add(tileRequestCompleteHandler)
             }
             val overlay = TilesOverlay(offlineProvider, applicationContext).apply {
                 loadingBackgroundColor = Color.TRANSPARENT
