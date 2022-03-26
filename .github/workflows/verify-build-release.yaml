@@ -47,7 +47,7 @@ jobs:
           echo "ARTIFACT_PATHNAME_TEST_APK=${ARTIFACT_PATHNAME_TEST_APK}" >> $GITHUB_ENV
 
       - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           project_id: huki-c8bc7
           service_account_key: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT }}
