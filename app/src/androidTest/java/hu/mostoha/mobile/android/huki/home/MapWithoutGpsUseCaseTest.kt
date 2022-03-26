@@ -71,13 +71,13 @@ class MapWithoutGpsUseCaseTest {
         }
     }
 
+    private fun answerNullHikingLayer() {
+        coEvery { hikingLayerRepository.getHikingLayerFile() } returns null
+    }
+
     companion object {
         private const val HUNGARY_BOUNDING_BOX_ZOOM = 7.227610802851414
         private val HUNGARY_BOUNDING_BOX_CENTER = GeoPoint(47.31885723983627, 19.45407265979361)
-    }
-
-    private fun answerNullHikingLayer() {
-        coEvery { hikingLayerRepository.getHikingLayerFile() } returns null
     }
 
 }

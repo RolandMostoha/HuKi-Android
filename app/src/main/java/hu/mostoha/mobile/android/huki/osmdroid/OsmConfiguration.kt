@@ -27,7 +27,7 @@ class OsmConfiguration @Inject constructor(@ApplicationContext private val conte
     private val osmDroidCachePath: String? = null
     private val osmDroidLayerPath: String? = null
 
-    private val isDebug = true
+    private val isDebug = false
 
     fun getHikingLayerFileUrl() = URL_HIKING_LAYER_FILE
 

@@ -12,7 +12,7 @@ import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.visible
-import hu.mostoha.mobile.android.huki.model.ui.HikingLayerState
+import hu.mostoha.mobile.android.huki.model.ui.HikingLayerUiModel
 
 class LayersPopupWindow(val context: Context) : PopupWindow(context) {
 
@@ -36,14 +36,14 @@ class LayersPopupWindow(val context: Context) : PopupWindow(context) {
         elevation = context.resources.getDimension(R.dimen.default_elevation)
     }
 
-    fun updateDialog(hikingLayerState: HikingLayerState, onDownloadButtonClick: () -> Unit) {
+    fun updateDialog(hikingLayerState: HikingLayerUiModel, onDownloadButtonClick: () -> Unit) {
         val layersAdapter = LayersAdapter(onItemClick = { })
         layersAdapter.submitList(BaseLayer.values().toList())
         binding.popupLayersBaseLayersList.adapter = layersAdapter
 
         with(binding.popupLayersHikingLayerContainer) {
             when (hikingLayerState) {
-                is HikingLayerState.NotDownloaded -> {
+                is HikingLayerUiModel.NotDownloaded -> {
                     itemLayersHikingCard.strokeColor = ContextCompat.getColor(root.context, R.color.colorStroke)
                     itemLayersSelectedImage.gone()
                     itemLayersLastUpdatedText.gone()
@@ -51,19 +51,22 @@ class LayersPopupWindow(val context: Context) : PopupWindow(context) {
                     itemLayersHikingDownloadButton.isEnabled = true
                     itemLayersHikingDownloadButton.inProgress = false
                 }
-                is HikingLayerState.Downloading -> {
+                is HikingLayerUiModel.Downloading -> {
                     itemLayersHikingCard.strokeColor = ContextCompat.getColor(root.context, R.color.colorStroke)
                     itemLayersHikingDownloadButton.setText(R.string.layers_hiking_downloading_label)
                     itemLayersHikingDownloadButton.isEnabled = false
                     itemLayersHikingDownloadButton.inProgress = true
                 }
-                is HikingLayerState.Downloaded -> {
+                is HikingLayerUiModel.Downloaded -> {
                     itemLayersHikingCard.strokeColor = ContextCompat.getColor(root.context, R.color.colorPrimary)
                     itemLayersSelectedImage.visible()
                     itemLayersLastUpdatedText.setTextOrGone(hikingLayerState.lastUpdatedText)
                     itemLayersHikingDownloadButton.setText(R.string.layers_hiking_downloaded_label)
                     itemLayersHikingDownloadButton.isEnabled = true
                     itemLayersHikingDownloadButton.inProgress = false
+                }
+                else -> {
+                    // no-op
                 }
             }
 

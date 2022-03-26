@@ -1,24 +1,24 @@
 package hu.mostoha.mobile.android.huki.interactor
 
 import hu.mostoha.mobile.android.huki.BuildConfig
-import hu.mostoha.mobile.android.huki.executor.TaskExecutor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import javax.inject.Inject
 
 open class BaseInteractor @Inject constructor(
-    private val taskExecutor: TaskExecutor,
     private val exceptionLogger: ExceptionLogger
 ) {
 
-    suspend fun <T> processRequest(request: suspend () -> T): TaskResult<T> {
-        return taskExecutor.runOnBackground {
+    suspend fun <T> getRequestFlow(request: suspend () -> T): Flow<T> {
+        return flow {
             try {
                 val result = request.invoke()
 
-                TaskResult.Success(result)
+                emit(result)
             } catch (exception: Exception) {
                 Timber.w(exception)
 
@@ -32,7 +32,7 @@ open class BaseInteractor @Inject constructor(
                     exceptionLogger.recordException(exception)
                 }
 
-                TaskResult.Error(mappedException)
+                throw mappedException
             }
         }
     }

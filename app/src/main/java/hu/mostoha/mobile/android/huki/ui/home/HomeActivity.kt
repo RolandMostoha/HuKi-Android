@@ -11,6 +11,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,18 +24,20 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
-import hu.mostoha.mobile.android.huki.model.ui.HikingLayerState
+import hu.mostoha.mobile.android.huki.model.ui.HikingLayerUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.osmdroid.MyLocationOverlay
-import hu.mostoha.mobile.android.huki.ui.home.HomeLiveEvents.*
+import hu.mostoha.mobile.android.huki.osmdroid.OsmAndOfflineTileProvider
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesAdapter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersPopupWindow
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarAdapter
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.util.*
-import org.osmdroid.tileprovider.modules.OfflineTileProvider
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
 import org.osmdroid.util.BoundingBox
@@ -84,7 +88,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         initWindow()
         initViews()
-        initObservers()
         initReceivers()
 
         viewModel.loadLandscapes()
@@ -110,6 +113,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
             addOnFirstLayoutListener { _, _, _, _, _ ->
+                initFlows()
+
                 viewModel.loadHikingLayer()
 
                 zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toOsmBoundingBox().withDefaultOffset(), false)
@@ -144,12 +149,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         searchBarPopup = ListPopupWindow(this).apply {
             anchorView = homeSearchBarPopupAnchor
             height = resources.getDimensionPixelSize(R.dimen.home_layers_popup_height)
-            setBackgroundDrawable(
-                ContextCompat.getDrawable(
-                    this@HomeActivity,
-                    R.drawable.background_dialog
-                )
-            )
+            setBackgroundDrawable(ContextCompat.getDrawable(this@HomeActivity, R.drawable.background_dialog))
             setAdapter(searchBarAdapter)
             setOnItemClickListener { _, _, position, _ ->
                 val place = searchBarAdapter.getItem(position)
@@ -173,9 +173,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initFabs() {
         homeMyLocationButton.setOnClickListener {
             checkLocationPermissions(
-                onPermissionsChecked = {
-                    showMyLocation()
-                },
+                onPermissionsChecked = { showMyLocation() },
                 onPermissionRationaleShouldBeShown = {
                     MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
                         .setTitle(R.string.my_location_rationale_title)
@@ -254,33 +252,82 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initObservers() {
-        viewModel.liveEvents.observe(this, { event ->
-            when (event) {
-                is ErrorResult -> showSnackbar(homeContainer, event.message)
-                is SearchBarLoading -> binding.homeSearchBarProgress.visibleOrGone(event.inProgress)
-                is SearchBarResult -> initSearchBarItems(event.searchBarItems)
-                is LandscapesResult -> initLandscapeResult(event.landscapes)
-                is PlaceDetailsResult -> initPlaceDetails(event.placeDetails)
-                is HikingRoutesResult -> initHikingRoutesResult(event.hikingRoutes)
-            }
-        })
-        viewModel.viewState.observe(this, {
-            initHikingLayerState(it.hikingLayerState)
-        })
+    private fun initFlows() {
+        lifecycleScope.launch {
+            viewModel.errorMessage
+                .flowWithLifecycle(lifecycle)
+                .collect { errorMessage ->
+                    showSnackbar(homeContainer, errorMessage)
+                }
+        }
+        lifecycleScope.launch {
+            viewModel.loading
+                .flowWithLifecycle(lifecycle)
+                .collect { isLoading ->
+                    binding.homeSearchBarProgress.visibleOrGone(isLoading)
+                }
+        }
+        lifecycleScope.launch {
+            viewModel.hikingLayer
+                .flowWithLifecycle(lifecycle)
+                .distinctUntilChanged()
+                .collect { hikingLayerUiState ->
+                    initHikingLayerState(hikingLayerUiState)
+                }
+        }
+        lifecycleScope.launch {
+            viewModel.placeDetails
+                .flowWithLifecycle(lifecycle)
+                .distinctUntilChanged()
+                .collect { placeDetailsUiModel ->
+                    placeDetailsUiModel?.let { initPlaceDetails(it) }
+                }
+        }
+        lifecycleScope.launch {
+            viewModel.searchBarItems
+                .flowWithLifecycle(lifecycle)
+                .distinctUntilChanged()
+                .collect { searchBarItems ->
+                    searchBarItems?.let { initSearchBarItems(it) }
+                }
+        }
+        lifecycleScope.launch {
+            viewModel.landscapes
+                .flowWithLifecycle(lifecycle)
+                .distinctUntilChanged()
+                .collect { landscapes ->
+                    landscapes?.let { initLandscapes(it) }
+                }
+        }
+        lifecycleScope.launch {
+            viewModel.hikingRoutes
+                .flowWithLifecycle(lifecycle)
+                .distinctUntilChanged()
+                .collect { hikingRoutes ->
+                    hikingRoutes?.let { initHikingRoutes(it) }
+                }
+        }
     }
 
-    private fun initHikingLayerState(hikingLayerState: HikingLayerState) {
-        layersPopupWindow.updateDialog(
-            hikingLayerState = hikingLayerState,
+    private fun initHikingLayerState(hikingLayerState: HikingLayerUiModel) {
+        when (hikingLayerState) {
+            is HikingLayerUiModel.NotDownloaded -> {
+                homeLayersFab.visible()
+                layersPopupWindow.show(homeLayersFab)
+            }
+            is HikingLayerUiModel.Downloaded -> {
+                homeLayersFab.visible()
+                initOfflineLayer(hikingLayerState.hikingLayerFile)
+            }
+            is HikingLayerUiModel.Loading -> homeLayersFab.gone()
+            else -> {
+                // No-op
+            }
+        }
+
+        layersPopupWindow.updateDialog(hikingLayerState,
             onDownloadButtonClick = { viewModel.downloadHikingLayer() }
         )
-
-        if (hikingLayerState is HikingLayerState.NotDownloaded) {
-            layersPopupWindow.show(homeLayersFab)
-        } else if (hikingLayerState is HikingLayerState.Downloaded) {
-            initOfflineLayer(hikingLayerState.hikingLayerFile)
-        }
     }
 
     private fun initSearchBarItems(placeItems: List<SearchBarItem>) {
@@ -304,7 +351,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initLandscapeResult(landscapes: List<PlaceUiModel>) {
+    private fun initLandscapes(landscapes: List<PlaceUiModel>) {
         landscapes.forEach { landscape ->
             val chipBinding = ItemHomeLandscapesChipBinding.inflate(
                 layoutInflater,
@@ -365,14 +412,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         val geoPoints = geometryUiModel.geoPoints
         val boundingBox = BoundingBox.fromGeoPoints(geoPoints)
-        val boundingBoxWithDefaultOffset = boundingBox.withDefaultOffset()
+        val boundingBoxWithOffset = boundingBox.withDefaultOffset()
         val polyOverlay = if (geometryUiModel.isClosed) {
             homeMapView.addPolygon(
                 geoPoints = geoPoints,
                 onClick = { polygon ->
                     initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polygon))
                     placeDetailsSheet.collapse()
-                    homeMapView.zoomToBoundingBox(boundingBoxWithDefaultOffset, true)
+                    homeMapView.zoomToBoundingBox(boundingBoxWithOffset, true)
                 }
             )
         } else {
@@ -381,7 +428,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 onClick = { polyline ->
                     initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polyline))
                     placeDetailsSheet.collapse()
-                    homeMapView.zoomToBoundingBox(boundingBoxWithDefaultOffset, true)
+                    homeMapView.zoomToBoundingBox(boundingBoxWithOffset, true)
                 }
             )
         }
@@ -389,7 +436,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polyOverlay))
         placeDetailsSheet.collapse()
 
-        homeMapView.zoomToBoundingBox(boundingBoxWithDefaultOffset, true)
+        homeMapView.zoomToBoundingBox(boundingBoxWithOffset, true)
     }
 
     private fun initRelationDetails(placeDetails: PlaceDetailsUiModel) {
@@ -417,7 +464,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(), true)
     }
 
-    private fun initHikingRoutesResult(hikingRoutes: List<HikingRoutesItem>) {
+    private fun initHikingRoutes(hikingRoutes: List<HikingRoutesItem>) {
         with(binding.homeHikingRoutesBottomSheetContainer) {
             val hikingRoutesAdapter = HikingRoutesAdapter(
                 onItemClick = { hikingRoute ->
@@ -503,7 +550,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         val intentFilter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         layerDownloadReceiver = registerReceiver(intentFilter) { intent ->
             val downloadId = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) ?: -1
-            viewModel.loadDownloadedFile(downloadId)
+            viewModel.saveHikingLayer(downloadId)
         }
     }
 

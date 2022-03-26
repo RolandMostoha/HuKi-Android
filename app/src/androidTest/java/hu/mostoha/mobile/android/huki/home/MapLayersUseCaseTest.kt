@@ -115,8 +115,8 @@ class MapLayersUseCaseTest {
     }
 
     private fun answerTestHikingLayer() {
-        val file = osmConfiguration.getHikingLayerFile().also {
-            it.copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
+        val file = osmConfiguration.getHikingLayerFile().apply {
+            copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
         }
         coEvery { hikingLayerRepository.getHikingLayerFile() } returns file
     }

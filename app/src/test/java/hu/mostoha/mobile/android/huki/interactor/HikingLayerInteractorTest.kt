@@ -1,8 +1,9 @@
 package hu.mostoha.mobile.android.huki.interactor
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import hu.mostoha.mobile.android.huki.executor.TestTaskExecutor
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import io.mockk.coEvery
 import io.mockk.every
@@ -19,76 +20,86 @@ class HikingLayerInteractorTest {
     private lateinit var hikingLayerInteractor: HikingLayerInteractor
 
     private val hikingLayerRepository = mockk<HikingLayerRepository>()
+
     private val exceptionLogger = mockk<ExceptionLogger>()
 
     @Before
     fun setUp() {
-        hikingLayerInteractor = HikingLayerInteractor(TestTaskExecutor(), exceptionLogger, hikingLayerRepository)
+        hikingLayerInteractor = HikingLayerInteractor(exceptionLogger, hikingLayerRepository)
 
         every { exceptionLogger.recordException(any()) } returns Unit
     }
 
     @Test
-    fun `Given file, when requestGetHikingLayer, then success task result returns`() {
+    fun `Given hiking layer file, when requestHikingLayerFileFlow, then file is emitted`() {
         runBlockingTest {
             val expectedFile = File("pathName")
             coEvery { hikingLayerRepository.getHikingLayerFile() } returns expectedFile
 
-            val taskResult = hikingLayerInteractor.requestGetHikingLayerFile()
+            val flow = hikingLayerInteractor.requestHikingLayerFileFlow()
 
-            assertThat(taskResult).isEqualTo(TaskResult.Success(expectedFile))
+            flow.test {
+                assertThat(awaitItem()).isEqualTo(expectedFile)
+                awaitComplete()
+            }
         }
     }
 
     @Test
-    fun `Given IllegalStateException, when requestGetHikingLayer, then error task result returns with mapped exception`() {
+    fun `Given IllegalStateException, when requestHikingLayerFileFlow, then unknown domain exception is emitted`() {
         runBlockingTest {
             val exception = IllegalStateException("Unknown exception")
             coEvery { hikingLayerRepository.getHikingLayerFile() } throws exception
 
-            val taskResult = hikingLayerInteractor.requestGetHikingLayerFile()
+            val flow = hikingLayerInteractor.requestHikingLayerFileFlow()
 
-            assertThat(taskResult).isEqualTo(
-                TaskResult.Error(DomainExceptionMapper.map(exception))
-            )
+            flow.test {
+                assertThat(awaitError()).isEqualTo(UnknownException(exception))
+            }
         }
     }
 
     @Test
-    fun `Given hiking layer file ID, when requestDownloadHikingLayer, then success task result returns`() {
+    fun `Given hiking layer file ID, when requestDownloadHikingLayerFileFlow, then download id is emitted`() {
         runBlockingTest {
-            val expectedId = 12345L
-            coEvery { hikingLayerRepository.downloadHikingLayerFile() } returns expectedId
+            val downloadId = 12345L
+            coEvery { hikingLayerRepository.downloadHikingLayerFile() } returns downloadId
 
-            val taskResult = hikingLayerInteractor.requestDownloadHikingLayerFile()
+            val flow = hikingLayerInteractor.requestDownloadHikingLayerFileFlow()
 
-            assertThat(taskResult).isEqualTo(TaskResult.Success(expectedId))
+            flow.test {
+                assertThat(awaitItem()).isEqualTo(downloadId)
+                awaitComplete()
+            }
         }
     }
 
     @Test
-    fun `Given IllegalStateException, when downloadHikingLayerFile, then error task result returns with mapped exception`() {
+    fun `Given IllegalStateException, when requestDownloadHikingLayerFileFlow, then unknown domain exception is emitted`() {
         runBlockingTest {
             val exception = IllegalStateException("Unknown exception")
             coEvery { hikingLayerRepository.downloadHikingLayerFile() } throws exception
 
-            val taskResult = hikingLayerInteractor.requestDownloadHikingLayerFile()
+            val flow = hikingLayerInteractor.requestDownloadHikingLayerFileFlow()
 
-            assertThat(taskResult).isEqualTo(
-                TaskResult.Error(DomainExceptionMapper.map(exception))
-            )
+            flow.test {
+                assertThat(awaitError()).isEqualTo(UnknownException(exception))
+            }
         }
     }
 
     @Test
     fun `Given hiking layer file ID, when requestSaveHikingLayerFile, then success task result returns`() {
         runBlockingTest {
-            val expectedId = 12345L
-            coEvery { hikingLayerRepository.saveHikingLayerFile(expectedId) } returns Unit
+            val downloadId = 12345L
+            coEvery { hikingLayerRepository.saveHikingLayerFile(downloadId) } returns Unit
 
-            val taskResult = hikingLayerInteractor.requestSaveHikingLayerFile(expectedId)
+            val flow = hikingLayerInteractor.requestSaveHikingLayerFileFlow(downloadId)
 
-            assertThat(taskResult).isEqualTo(TaskResult.Success(Unit))
+            flow.test {
+                assertThat(awaitItem()).isEqualTo(Unit)
+                awaitComplete()
+            }
         }
     }
 
@@ -98,11 +109,11 @@ class HikingLayerInteractorTest {
             val exception = IllegalStateException("Unknown exception")
             coEvery { hikingLayerRepository.saveHikingLayerFile(any()) } throws exception
 
-            val taskResult = hikingLayerInteractor.requestSaveHikingLayerFile(12345L)
+            val flow = hikingLayerInteractor.requestSaveHikingLayerFileFlow(12345L)
 
-            assertThat(taskResult).isEqualTo(
-                TaskResult.Error(DomainExceptionMapper.map(exception))
-            )
+            flow.test {
+                assertThat(awaitError()).isEqualTo(UnknownException(exception))
+            }
         }
     }
 

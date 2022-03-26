@@ -8,8 +8,8 @@ class ExceptionLogger @Inject constructor() {
 
     private val crashlytics = Firebase.crashlytics
 
-    fun recordException(exception: Exception) {
-        crashlytics.recordException(exception)
+    fun recordException(throwable: Throwable) {
+        crashlytics.recordException(throwable)
     }
 
 }

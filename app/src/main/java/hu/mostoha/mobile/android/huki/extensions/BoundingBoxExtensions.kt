@@ -20,17 +20,25 @@ fun BoundingBox.withOffset(
     val width = mapView.width
     val height = mapView.height
 
+    if (width == 0 || height == 0) {
+        return this
+    }
+
     val nextZoom = MapView.getTileSystem().getBoundingBoxZoom(
         this,
         width - (leftPx + rightPx),
         height - (topPx + bottomPx)
     )
     val projection = Projection(
-        nextZoom, width, height,
+        nextZoom,
+        width,
+        height,
         centerWithDateLine,
         mapView.mapOrientation,
-        mapView.isHorizontalMapRepetitionEnabled, mapView.isVerticalMapRepetitionEnabled,
-        mapView.mapCenterOffsetX, mapView.mapCenterOffsetY
+        mapView.isHorizontalMapRepetitionEnabled,
+        mapView.isVerticalMapRepetitionEnabled,
+        mapView.mapCenterOffsetX,
+        mapView.mapCenterOffsetY
     )
 
     val northWest = projection.fromPixels(0, 0)

@@ -17,10 +17,17 @@ import javax.inject.Inject
 
 class HomeUiModelGenerator @Inject constructor() {
 
-    fun generatePlaceAdapterItems(places: List<Place>): List<SearchBarItem.Place> {
-        val placeUiModels = generatePlaces(places)
-
-        return placeUiModels.map { placeUiModel -> SearchBarItem.Place(placeUiModel) }
+    fun generateSearchBarItems(places: List<Place>): List<SearchBarItem> {
+        return if (places.isEmpty()) {
+            listOf(
+                SearchBarItem.Error(
+                    messageRes = R.string.search_bar_empty_message.toMessage(),
+                    drawableRes = R.drawable.ic_search_bar_empty_result
+                )
+            )
+        } else {
+            generatePlaces(places).map { placeUiModel -> SearchBarItem.Place(placeUiModel) }
+        }
     }
 
     private fun generatePlaces(places: List<Place>): List<PlaceUiModel> {
@@ -47,15 +54,6 @@ class HomeUiModelGenerator @Inject constructor() {
             place.city ?: place.country,
             place.street
         ).joinToString(" ")
-    }
-
-    fun generatePlacesEmptyItem(): List<SearchBarItem> {
-        return listOf(
-            SearchBarItem.Error(
-                messageRes = R.string.search_bar_empty_message.toMessage(),
-                drawableRes = R.drawable.ic_search_bar_empty_result
-            )
-        )
     }
 
     fun generatePlacesErrorItem(domainException: DomainException): List<SearchBarItem> {
@@ -153,11 +151,11 @@ class HomeUiModelGenerator @Inject constructor() {
         )
     }
 
-    fun generateHikingLayerState(hikingLayerFile: File?): HikingLayerState {
+    fun generateHikingLayerState(hikingLayerFile: File?): HikingLayerUiModel {
         return if (hikingLayerFile == null) {
-            HikingLayerState.NotDownloaded
+            HikingLayerUiModel.NotDownloaded
         } else {
-            HikingLayerState.Downloaded(
+            HikingLayerUiModel.Downloaded(
                 hikingLayerFile = hikingLayerFile,
                 lastUpdatedText = hikingLayerFile.lastModified().toLocalDateTime().formatShortDate()
             )

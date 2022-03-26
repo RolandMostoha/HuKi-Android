@@ -1,8 +1,9 @@
 package hu.mostoha.mobile.android.huki.interactor
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import hu.mostoha.mobile.android.huki.executor.TestTaskExecutor
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
 import hu.mostoha.mobile.android.huki.model.domain.Location
@@ -25,38 +26,42 @@ class LandscapeInteractorTest {
     private lateinit var landscapeInteractor: LandscapeInteractor
 
     private val landscapeRepository = mockk<LandscapeRepository>()
+
     private val exceptionLogger = mockk<ExceptionLogger>()
 
     @Before
     fun setUp() {
-        landscapeInteractor = LandscapeInteractor(TestTaskExecutor(), exceptionLogger, landscapeRepository)
+        landscapeInteractor = LandscapeInteractor(exceptionLogger, landscapeRepository)
 
         every { exceptionLogger.recordException(any()) } returns Unit
     }
 
     @Test
-    fun `Given landscapes list, when requestGetLandscapes, then success task result returns`() {
+    fun `Given landscapes list, when requestGetLandscapes, then landscapes are emitted`() {
         runBlockingTest {
             val landscapes = listOf(DEFAULT_LANDSCAPE)
             coEvery { landscapeRepository.getLandscapes() } returns landscapes
 
-            val taskResult = landscapeInteractor.requestGetLandscapes()
+            val flow = landscapeInteractor.requestGetLandscapesFlow()
 
-            assertThat(taskResult).isEqualTo(TaskResult.Success(landscapes))
+            flow.test {
+                assertThat(awaitItem()).isEqualTo(landscapes)
+                awaitComplete()
+            }
         }
     }
 
     @Test
-    fun `Given IllegalStateException, when requestGetLandscapes, then error task result returns with mapped exception`() {
+    fun `Given IllegalStateException, when requestGetLandscapes, then unknown domain exception is emitted`() {
         runBlockingTest {
             val exception = IllegalStateException("Unknown exception")
             coEvery { landscapeRepository.getLandscapes() } throws exception
 
-            val taskResult = landscapeInteractor.requestGetLandscapes()
+            val flow = landscapeInteractor.requestGetLandscapesFlow()
 
-            assertThat(taskResult).isEqualTo(
-                TaskResult.Error(DomainExceptionMapper.map(exception))
-            )
+            flow.test {
+                assertThat(awaitError()).isEqualTo(UnknownException(exception))
+            }
         }
     }
 

@@ -23,10 +23,26 @@ class HomeUiModelGeneratorTest {
     private val generator = HomeUiModelGenerator()
 
     @Test
-    fun `Given place domain models, when generatePlaceItems, then correct list of PlaceUiModel returns`() {
+    fun `Given empty place domain models, when generateSearchBarItems, then error item returns`() {
+        val places = emptyList<Place>()
+
+        val searchBarPlaceItems = generator.generateSearchBarItems(places)
+
+        assertThat(searchBarPlaceItems).isEqualTo(
+            listOf(
+                SearchBarItem.Error(
+                    messageRes = R.string.search_bar_empty_message.toMessage(),
+                    drawableRes = R.drawable.ic_search_bar_empty_result
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `Given place domain models, when generateSearchBarItems, then correct list of search bar items return`() {
         val places = listOf(DEFAULT_PLACE_WAY)
 
-        val searchBarPlaceItems = generator.generatePlaceAdapterItems(places)
+        val searchBarPlaceItems = generator.generateSearchBarItems(places)
 
         assertThat(searchBarPlaceItems).isEqualTo(
             listOf(
@@ -46,10 +62,10 @@ class HomeUiModelGeneratorTest {
     }
 
     @Test
-    fun `Given place domain models without city, when generatePlaceItems, then secondaryText contains the country`() {
+    fun `Given place domain models without city, when generateSearchBarItems, then secondaryText contains the country`() {
         val places = listOf(DEFAULT_PLACE_WAY.copy(city = null))
 
-        val searchBarPlaceItems = generator.generatePlaceAdapterItems(places)
+        val searchBarPlaceItems = generator.generateSearchBarItems(places)
 
         assertThat(searchBarPlaceItems).isEqualTo(
             listOf(
@@ -63,20 +79,6 @@ class HomeUiModelGeneratorTest {
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
                     )
-                )
-            )
-        )
-    }
-
-    @Test
-    fun `When generatePlacesEmptyItem, then proper error SearchBarItem returns`() {
-        val searchBarErrorItem = generator.generatePlacesEmptyItem()
-
-        assertThat(searchBarErrorItem).isEqualTo(
-            listOf(
-                SearchBarItem.Error(
-                    messageRes = R.string.search_bar_empty_message.toMessage(),
-                    drawableRes = R.drawable.ic_search_bar_empty_result
                 )
             )
         )
@@ -299,7 +301,7 @@ class HomeUiModelGeneratorTest {
 
         val placeDetailsUiModel = generator.generateHikingLayerState(hikingLayerFile)
 
-        assertThat(placeDetailsUiModel).isEqualTo(HikingLayerState.NotDownloaded)
+        assertThat(placeDetailsUiModel).isEqualTo(HikingLayerUiModel.NotDownloaded)
     }
 
     @Test
@@ -309,7 +311,7 @@ class HomeUiModelGeneratorTest {
         val placeDetailsUiModel = generator.generateHikingLayerState(hikingLayerFile)
 
         assertThat(placeDetailsUiModel).isEqualTo(
-            HikingLayerState.Downloaded(
+            HikingLayerUiModel.Downloaded(
                 hikingLayerFile = hikingLayerFile,
                 lastUpdatedText = "Jan 1, 1970"
             )

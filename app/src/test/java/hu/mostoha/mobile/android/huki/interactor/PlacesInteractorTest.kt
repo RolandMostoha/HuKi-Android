@@ -1,8 +1,9 @@
 package hu.mostoha.mobile.android.huki.interactor
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import hu.mostoha.mobile.android.huki.executor.TestTaskExecutor
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
@@ -21,97 +22,107 @@ class PlacesInteractorTest {
     private lateinit var placesInteractor: PlacesInteractor
 
     private val placesRepository = mockk<PlacesRepository>()
+
     private val exceptionLogger = mockk<ExceptionLogger>()
 
     @Before
     fun setUp() {
-        placesInteractor = PlacesInteractor(TestTaskExecutor(), exceptionLogger, placesRepository)
+        placesInteractor = PlacesInteractor(exceptionLogger, placesRepository)
 
         every { exceptionLogger.recordException(any()) } returns Unit
     }
 
     @Test
-    fun `Given search text, when requestGetPlacesBy, then success task result returns`() {
+    fun `Given search text, when requestGetPlacesByFlow, then places are emitted`() {
         runBlockingTest {
             val searchText = "Mecsek"
             val places = listOf(DEFAULT_PLACE)
             coEvery { placesRepository.getPlacesBy(searchText) } returns places
 
-            val taskResult = placesInteractor.requestGetPlacesBy(searchText)
+            val flow = placesInteractor.requestGetPlacesByFlow(searchText)
 
-            assertThat(taskResult).isEqualTo(TaskResult.Success(places))
+            flow.test {
+                assertThat(awaitItem()).isEqualTo(places)
+                awaitComplete()
+            }
         }
     }
 
     @Test
-    fun `Given IllegalStateException, when requestGetPlacesBy, then error task result returns with mapped exception`() {
+    fun `Given IllegalStateException, when requestGetPlacesByFlow, then unknown domain exception is emitted`() {
         runBlockingTest {
             val searchText = "Mecsek"
             val exception = IllegalStateException("Unknown exception")
             coEvery { placesRepository.getPlacesBy(searchText) } throws exception
 
-            val taskResult = placesInteractor.requestGetPlacesBy(searchText)
+            val flow = placesInteractor.requestGetPlacesByFlow(searchText)
 
-            assertThat(taskResult).isEqualTo(
-                TaskResult.Error(DomainExceptionMapper.map(exception))
-            )
+            flow.test {
+                assertThat(awaitError()).isEqualTo(UnknownException(exception))
+            }
         }
     }
 
     @Test
-    fun `Given osmId and placeType, when requestGetGeometry, then success task result returns`() {
+    fun `Given osmId and placeType, when requestGeometryFlow, then geometry is emitted`() {
         runBlockingTest {
             val osmId = DEFAULT_PLACE.osmId
             val placeType = DEFAULT_PLACE.placeType
             coEvery { placesRepository.getGeometry(osmId, placeType) } returns DEFAULT_GEOMETRY
 
-            val taskResult = placesInteractor.requestGetGeometry(osmId, placeType)
+            val flow = placesInteractor.requestGeometryFlow(osmId, placeType)
 
-            assertThat(taskResult).isEqualTo(TaskResult.Success(DEFAULT_GEOMETRY))
+            flow.test {
+                assertThat(awaitItem()).isEqualTo(DEFAULT_GEOMETRY)
+                awaitComplete()
+            }
         }
     }
 
     @Test
-    fun `Given IllegalStateException, when requestGetGeometry, then error task result returns with mapped exception`() {
+    fun `Given IllegalStateException, when requestGeometryFlow, then unknown domain exception is emitted`() {
         runBlockingTest {
             val osmId = DEFAULT_PLACE.osmId
             val placeType = DEFAULT_PLACE.placeType
             val exception = IllegalStateException("Unknown exception")
             coEvery { placesRepository.getGeometry(osmId, placeType) } throws exception
 
-            val taskResult = placesInteractor.requestGetGeometry(osmId, placeType)
+            val flow = placesInteractor.requestGeometryFlow(osmId, placeType)
 
-            assertThat(taskResult).isEqualTo(
-                TaskResult.Error(DomainExceptionMapper.map(exception))
-            )
+            flow.test {
+                assertThat(awaitError()).isEqualTo(UnknownException(exception))
+            }
         }
     }
 
     @Test
-    fun `Given bounding box, when requestGetHikingRoutes, then success task result returns`() {
+    fun `Given bounding box, when requestGetHikingRoutesFlow, then hiking routes are emitted`() {
         runBlockingTest {
             val boundingBox = DEFAULT_BOUNDING_BOX
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             coEvery { placesRepository.getHikingRoutes(boundingBox) } returns hikingRoutes
 
-            val taskResult = placesInteractor.requestGetHikingRoutes(boundingBox)
+            val flow = placesInteractor.requestGetHikingRoutesFlow(boundingBox)
 
-            assertThat(taskResult).isEqualTo(TaskResult.Success(hikingRoutes))
+            flow.test {
+                assertThat(awaitItem()).isEqualTo(hikingRoutes)
+                awaitComplete()
+            }
         }
     }
 
     @Test
-    fun `Given IllegalStateException, when requestGetHikingRoutes, then error task result returns with mapped exception`() {
+    fun `Given IllegalStateException, when requestGetHikingRoutesFlow, then unknown domain exception is emitted`() {
         runBlockingTest {
             val boundingBox = DEFAULT_BOUNDING_BOX
             val exception = IllegalStateException("Unknown exception")
             coEvery { placesRepository.getHikingRoutes(boundingBox) } throws exception
 
-            val taskResult = placesInteractor.requestGetHikingRoutes(boundingBox)
+            val flow = placesInteractor.requestGetHikingRoutesFlow(boundingBox)
 
-            assertThat(taskResult).isEqualTo(
-                TaskResult.Error(DomainExceptionMapper.map(exception))
-            )
+            flow.test {
+                assertThat(awaitError()).isEqualTo(UnknownException(exception))
+            }
         }
     }
 

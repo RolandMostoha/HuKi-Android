@@ -3,14 +3,17 @@ package hu.mostoha.mobile.android.huki.util.espresso
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
 
@@ -62,6 +65,14 @@ fun @receiver:StringRes Int.isPopupTextNotDisplayed() {
 
 fun @receiver:IdRes Int.click() {
     onView(withId(this)).perform(ViewActions.click())
+}
+
+fun @receiver:StringRes Int.isToastTextDisplayed(activityScenario: ActivityScenario<HomeActivity>) {
+    activityScenario.onActivity { activity ->
+        onView(withText(this))
+            .inRoot(withDecorView(not(activity.window.decorView)))
+            .check(matches(ViewMatchers.isDisplayed()))
+    }
 }
 
 fun @receiver:StringRes Int.clickWithText() {
