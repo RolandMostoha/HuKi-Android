@@ -4,7 +4,6 @@ import androidx.annotation.VisibleForTesting
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
-import hu.mostoha.mobile.android.huki.model.network.*
 import hu.mostoha.mobile.android.huki.model.network.overpass.ElementType
 import hu.mostoha.mobile.android.huki.model.network.overpass.Geom
 import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse

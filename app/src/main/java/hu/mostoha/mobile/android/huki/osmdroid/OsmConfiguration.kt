@@ -10,7 +10,9 @@ import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
-class OsmConfiguration @Inject constructor(@ApplicationContext private val context: Context) {
+class OsmConfiguration @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     companion object {
         private const val URL_HIKING_LAYER_FILE = "https://data2.openstreetmap.hu/TuraReteg.sqlitedb"

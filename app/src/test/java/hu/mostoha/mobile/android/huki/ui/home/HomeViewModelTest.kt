@@ -243,9 +243,10 @@ class HomeViewModelTest {
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             coEvery { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
 
-            viewModel.loadPlace(placeUiModel)
-
             viewModel.placeDetails.test {
+                viewModel.loadPlace(placeUiModel)
+
+                assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(placeDetailsUiModel)
             }
         }

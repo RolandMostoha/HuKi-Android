@@ -5,7 +5,7 @@ import java.util.Set;
 
 class OverpassQueryBuilderImpl implements OverpassQueryBuilder {
     private static final Locale LOCALE = Locale.US;
-    private StringBuilder builder;
+    private final StringBuilder builder;
 
     public OverpassQueryBuilderImpl() {
         builder = new StringBuilder();
@@ -27,13 +27,7 @@ class OverpassQueryBuilderImpl implements OverpassQueryBuilder {
 
         String pattern = "[\"%s\"%s%s,%s]";
 
-        return append(
-                String.format(
-                        LOCALE,
-                        pattern,
-                        name, rel, quotedValue, commaValue
-                )
-        );
+        return append(String.format(LOCALE, pattern, name, rel, quotedValue, commaValue));
     }
 
     private OverpassQueryBuilder paramRel(String name, String rel, String value, boolean useQuote) {

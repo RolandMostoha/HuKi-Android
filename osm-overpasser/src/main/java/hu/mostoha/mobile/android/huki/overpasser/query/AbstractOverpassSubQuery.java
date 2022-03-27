@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.huki.overpasser.query;
 
 abstract class AbstractOverpassSubQuery extends AbstractOverpassQuery {
-    private OverpassQuery parent;
+    private final OverpassQuery parent;
 
     public AbstractOverpassSubQuery(OverpassQuery parent) {
         super();

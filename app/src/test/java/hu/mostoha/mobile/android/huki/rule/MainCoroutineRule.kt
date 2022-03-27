@@ -8,8 +8,8 @@ import org.junit.runner.Description
 
 @ExperimentalCoroutinesApi
 class MainCoroutineRule(
-    val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
-) : TestWatcher(), TestCoroutineScope by TestCoroutineScope(testDispatcher) {
+    val testDispatcher: TestDispatcher = StandardTestDispatcher()
+) : TestWatcher() {
 
     override fun starting(description: Description?) {
         super.starting(description)
@@ -19,14 +19,13 @@ class MainCoroutineRule(
     override fun finished(description: Description?) {
         super.finished(description)
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 
 }
 
 @ExperimentalCoroutinesApi
-fun MainCoroutineRule.runBlockingTest(block: suspend TestCoroutineScope.() -> Unit) {
-    this.testDispatcher.runBlockingTest {
+fun MainCoroutineRule.runBlockingTest(block: suspend TestScope.() -> Unit) {
+    runTest(testDispatcher) {
         block()
     }
 }
