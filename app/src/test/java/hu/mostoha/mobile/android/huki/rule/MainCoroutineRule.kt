@@ -24,7 +24,7 @@ class MainCoroutineRule(
 }
 
 @ExperimentalCoroutinesApi
-fun MainCoroutineRule.runBlockingTest(block: suspend TestScope.() -> Unit) {
+fun MainCoroutineRule.runTest(block: suspend TestScope.() -> Unit) {
     runTest(testDispatcher) {
         block()
     }

@@ -15,12 +15,13 @@ import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.*
 import hu.mostoha.mobile.android.huki.rule.MainCoroutineRule
-import hu.mostoha.mobile.android.huki.rule.runBlockingTest
+import hu.mostoha.mobile.android.huki.rule.runTest
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.flowOfError
+import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -50,6 +51,9 @@ class HomeViewModelTest {
 
     @Before
     fun setUp() {
+        every { exceptionLogger.recordException(any()) } returns Unit
+        mockLandscapes()
+
         viewModel = spyk(
             HomeViewModel(
                 TestTaskExecutor(),
@@ -60,13 +64,59 @@ class HomeViewModelTest {
                 generator
             )
         )
+    }
 
-        every { exceptionLogger.recordException(any()) } returns Unit
+    @Test
+    fun `When ViewModel initialization, then loading is emitted`() {
+        mainCoroutineRule.runTest {
+            val hikingLayerFile = null
+            coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(hikingLayerFile)
+            coEvery { generator.generateHikingLayerState(hikingLayerFile) } returns HikingLayerUiModel.NotDownloaded
+
+            viewModel.loading.test {
+                viewModel.loadHikingLayer()
+
+                assertThat(awaitItem()).isTrue()
+                assertThat(awaitItem()).isFalse()
+            }
+        }
+    }
+
+    @Test
+    fun `Given location, when loadLandscapes, then landscapes are emitted`() {
+        mainCoroutineRule.runTest {
+            val landscapes = listOf(DEFAULT_LANDSCAPE)
+            val landscapesUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
+
+            coEvery { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
+            coEvery { generator.generateLandscapes(any()) } returns landscapesUiModels
+
+            viewModel.landscapes.test {
+                viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(landscapesUiModels)
+            }
+        }
+    }
+
+    @Test
+    fun `Given unknown error, when loadLandscapes, then error message is emitted`() {
+        mainCoroutineRule.runTest {
+            val exception = UnknownException(Exception(""))
+            coEvery { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(exception)
+
+            viewModel.errorMessage.test {
+                viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
+
+                assertThat(awaitItem()).isEqualTo(R.string.error_message_unknown.toMessage())
+            }
+        }
     }
 
     @Test
     fun `Given null hiking layer file, when loadHikingLayer, then loading is emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val hikingLayerFile = null
             coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(hikingLayerFile)
             coEvery { generator.generateHikingLayerState(hikingLayerFile) } returns HikingLayerUiModel.NotDownloaded
@@ -82,7 +132,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given null hiking layer file, when loadHikingLayer, then Loading and NotDownloaded hiking layer is emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val hikingLayerFile = null
             coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(hikingLayerFile)
             coEvery { generator.generateHikingLayerState(hikingLayerFile) } returns HikingLayerUiModel.NotDownloaded
@@ -98,7 +148,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given valid hiking layer file, when loadHikingLayer, then Loading and NotDownloaded hiking layer is emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val hikingLayerFile = File("")
             val hikingLayerUiModel = HikingLayerUiModel.Downloaded(hikingLayerFile, "2022.03.31")
             coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(hikingLayerFile)
@@ -115,7 +165,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given unknown error, when loadHikingLayer, then error message is emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val exception = UnknownException(Exception(""))
             coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOfError(exception)
 
@@ -129,7 +179,7 @@ class HomeViewModelTest {
 
     @Test
     fun `When downloadHikingLayer, then hiking layer is in downloading state`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val downloadId = 12345L
             coEvery { layerInteractor.requestDownloadHikingLayerFileFlow() } returns flowOf(downloadId)
 
@@ -144,7 +194,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given error, when downloadHikingLayer, then error message is emitted and request for hiking layer file is initiated`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val exception = UnknownException(Exception(""))
             coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(File(""))
             coEvery { layerInteractor.requestDownloadHikingLayerFileFlow() } returns flowOfError(exception)
@@ -161,7 +211,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given download id, when saveHikingLayer, then Loading and Downloading hiking layer is emitted and request for hiking layer file is initiated`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val downloadId = 12345L
             coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(File(""))
             coEvery { layerInteractor.requestSaveHikingLayerFileFlow(downloadId) } returns flowOf(Unit)
@@ -179,7 +229,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given error, when saveHikingLayer, then error message is emitted and request for hiking layer file is initiated`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val downloadId = 12345L
             val exception = UnknownException(Exception(""))
             coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(File(""))
@@ -197,7 +247,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given search text, when loadPlacesBy, then search bar items are emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val searchText = "Mecs"
             val places = listOf(DEFAULT_PLACE)
             val searchBarItems = listOf(SearchBarItem.Place(DEFAULT_PLACE_UI_MODEL))
@@ -215,7 +265,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given error, when loadPlacesBy, then error search bar item is emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val errorRes = R.string.error_message_unknown.toMessage()
             val domainException = DomainException(errorRes)
             val searchBarItems = listOf(
@@ -238,7 +288,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given place, when loadPlace, then place details is posted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             coEvery { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
@@ -254,7 +304,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given place, when loadPlaceDetails, then place details is emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val osmId = DEFAULT_PLACE.osmId
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
@@ -273,7 +323,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given error, when loadPlaceDetails, then error message is emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val errorRes = R.string.error_message_too_many_requests.toMessage()
             coEvery {
@@ -289,39 +339,8 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `When loadLandscapes, then landscapes are emitted`() {
-        mainCoroutineRule.runBlockingTest {
-            val landscapes = listOf(DEFAULT_LANDSCAPE)
-            val landscapesUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
-            coEvery { landscapeInteractor.requestGetLandscapesFlow() } returns flowOf(landscapes)
-            coEvery { generator.generateLandscapes(landscapes) } returns landscapesUiModels
-
-            viewModel.landscapes.test {
-                viewModel.loadLandscapes()
-
-                assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(landscapesUiModels)
-            }
-        }
-    }
-
-    @Test
-    fun `Given error, when loadLandscapes, then error message is emitted`() {
-        mainCoroutineRule.runBlockingTest {
-            val errorRes = R.string.error_message_too_many_requests.toMessage()
-            coEvery { landscapeInteractor.requestGetLandscapesFlow() } returns flowOfError(DomainException(errorRes))
-
-            viewModel.errorMessage.test {
-                viewModel.loadLandscapes()
-
-                assertThat(awaitItem()).isEqualTo(R.string.error_message_too_many_requests.toMessage())
-            }
-        }
-    }
-
-    @Test
     fun `Given place name and bounding box, when loadHikingRoutes, then hiking routes are emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
@@ -340,7 +359,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given error, when loadHikingRoutes, then error message is emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
             val errorRes = R.string.error_message_too_many_requests.toMessage()
@@ -358,7 +377,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given hiking route, when loadHikingRouteDetails, then hiking routes are emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
@@ -377,7 +396,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given error, when loadHikingRouteDetails, then error message is emitted`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val errorRes = R.string.error_message_too_many_requests.toMessage()
@@ -395,7 +414,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given unexpected exception, when loadHikingRouteDetails, then exception logger is called`() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val exception = IllegalStateException("Unexpected")
@@ -411,7 +430,19 @@ class HomeViewModelTest {
         }
     }
 
+    private fun mockLandscapes() {
+        val landscapes = listOf(DEFAULT_LANDSCAPE)
+        val landscapeUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
+
+        coEvery { landscapeInteractor.requestGetLandscapesFlow() } returns flowOf(landscapes)
+        coEvery { generator.generateLandscapes(any()) } returns landscapeUiModels
+    }
+
     companion object {
+        private val DEFAULT_MY_LOCATION = Location(
+            DEFAULT_MY_LOCATION_LATITUDE,
+            DEFAULT_MY_LOCATION_LONGITUDE
+        )
         private val DEFAULT_PLACE = Place(
             osmId = DEFAULT_NODE_OSM_ID,
             name = DEFAULT_NODE_NAME,

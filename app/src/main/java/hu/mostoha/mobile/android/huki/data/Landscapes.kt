@@ -1,12 +1,11 @@
 package hu.mostoha.mobile.android.huki.data
 
-
 import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
 import hu.mostoha.mobile.android.huki.model.domain.Location
 
 @Suppress("MagicNumber")
-val landscapes = listOf(
+val localLandscapes = listOf(
     Landscape(
         osmId = "279573777",
         name = "Bükk",

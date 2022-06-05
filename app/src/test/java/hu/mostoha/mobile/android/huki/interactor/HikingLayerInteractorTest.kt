@@ -9,7 +9,7 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import java.io.File
@@ -32,7 +32,7 @@ class HikingLayerInteractorTest {
 
     @Test
     fun `Given hiking layer file, when requestHikingLayerFileFlow, then file is emitted`() {
-        runBlockingTest {
+        runTest {
             val expectedFile = File("pathName")
             coEvery { hikingLayerRepository.getHikingLayerFile() } returns expectedFile
 
@@ -47,7 +47,7 @@ class HikingLayerInteractorTest {
 
     @Test
     fun `Given IllegalStateException, when requestHikingLayerFileFlow, then unknown domain exception is emitted`() {
-        runBlockingTest {
+        runTest {
             val exception = IllegalStateException("Unknown exception")
             coEvery { hikingLayerRepository.getHikingLayerFile() } throws exception
 
@@ -61,7 +61,7 @@ class HikingLayerInteractorTest {
 
     @Test
     fun `Given hiking layer file ID, when requestDownloadHikingLayerFileFlow, then download id is emitted`() {
-        runBlockingTest {
+        runTest {
             val downloadId = 12345L
             coEvery { hikingLayerRepository.downloadHikingLayerFile() } returns downloadId
 
@@ -76,7 +76,7 @@ class HikingLayerInteractorTest {
 
     @Test
     fun `Given IllegalStateException, when requestDownloadHikingLayerFileFlow, then unknown domain exception is emitted`() {
-        runBlockingTest {
+        runTest {
             val exception = IllegalStateException("Unknown exception")
             coEvery { hikingLayerRepository.downloadHikingLayerFile() } throws exception
 
@@ -90,7 +90,7 @@ class HikingLayerInteractorTest {
 
     @Test
     fun `Given hiking layer file ID, when requestSaveHikingLayerFile, then success task result returns`() {
-        runBlockingTest {
+        runTest {
             val downloadId = 12345L
             coEvery { hikingLayerRepository.saveHikingLayerFile(downloadId) } returns Unit
 
@@ -105,7 +105,7 @@ class HikingLayerInteractorTest {
 
     @Test
     fun `Given IllegalStateException, when requestSaveHikingLayerFile, then error task result returns with mapped exception`() {
-        runBlockingTest {
+        runTest {
             val exception = IllegalStateException("Unknown exception")
             coEvery { hikingLayerRepository.saveHikingLayerFile(any()) } throws exception
 

@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
+import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +12,7 @@ import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
 import hu.mostoha.mobile.android.huki.model.ui.HikingLayerUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
@@ -43,10 +45,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private val _isLoading = MutableSharedFlow<Boolean>()
-    val loading: SharedFlow<Boolean> = _isLoading
+    val loading: SharedFlow<Boolean> = _isLoading.asSharedFlow()
 
     private val _errorMessage = MutableSharedFlow<Message.Res>()
-    val errorMessage: SharedFlow<Message.Res> = _errorMessage
+    val errorMessage: SharedFlow<Message.Res> = _errorMessage.asSharedFlow()
 
     private val _hikingLayer = MutableStateFlow<HikingLayerUiModel>(HikingLayerUiModel.Loading)
     val hikingLayer: StateFlow<HikingLayerUiModel> = _hikingLayer
@@ -69,6 +71,10 @@ class HomeViewModel @Inject constructor(
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     private var searchPlacesJob: Job? = null
+
+    init {
+        loadDefaultLandscapes()
+    }
 
     fun loadHikingLayer() = launch(taskExecutor) {
         hikingLayerInteractor.requestHikingLayerFileFlow()
@@ -149,16 +155,6 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadLandscapes() = launch(taskExecutor) {
-        landscapeInteractor.requestGetLandscapesFlow()
-            .map { generator.generateLandscapes(it) }
-            .onEach { _landscapes.emit(it) }
-            .onStart { _isLoading.emit(true) }
-            .onCompletion { _isLoading.emit(false) }
-            .catch { emitError(it) }
-            .collect()
-    }
-
     fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = launch(taskExecutor) {
         placesInteractor.requestGetHikingRoutesFlow(boundingBox)
             .map { generator.generateHikingRoutes(placeName, it) }
@@ -175,6 +171,22 @@ class HomeViewModel @Inject constructor(
             .onEach { _placeDetails.emit(it) }
             .onStart { _isLoading.emit(true) }
             .onCompletion { _isLoading.emit(false) }
+            .catch { emitError(it) }
+            .collect()
+    }
+
+    fun loadLandscapes(location: Location) = launch(taskExecutor) {
+        landscapeInteractor.requestGetLandscapesFlow(location.toLocation())
+            .map { generator.generateLandscapes(it) }
+            .onEach { _landscapes.emit(it) }
+            .catch { emitError(it) }
+            .collect()
+    }
+
+    private fun loadDefaultLandscapes() = launch(taskExecutor) {
+        landscapeInteractor.requestGetLandscapesFlow()
+            .map { generator.generateLandscapes(it) }
+            .onEach { _landscapes.emit(it) }
             .catch { emitError(it) }
             .collect()
     }

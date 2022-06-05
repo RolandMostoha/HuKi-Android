@@ -21,7 +21,7 @@ import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
-import hu.mostoha.mobile.android.huki.util.launch
+import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testContext
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -71,7 +71,7 @@ class MapMyLocationUseCaseTest {
     fun whenMyLocationClicked_thenMyLocationOverlayDisplays() {
         answerTestHikingLayer()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.id.homeMyLocationButton.click()
 
             R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(1)

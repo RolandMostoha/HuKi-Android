@@ -27,6 +27,7 @@ import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingLayerUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.osmdroid.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.OsmAndOfflineTileProvider
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesAdapter
@@ -37,6 +38,7 @@ import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.util.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver
@@ -46,8 +48,8 @@ import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.TilesOverlay
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import java.io.File
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(R.layout.activity_home) {
@@ -55,6 +57,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     companion object {
         private const val SEARCH_BAR_MIN_TRIGGER_LENGTH = 3
     }
+
+    @Inject
+    lateinit var asyncMyLocationProvider: AsyncMyLocationProvider
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -89,8 +94,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initWindow()
         initViews()
         initReceivers()
-
-        viewModel.loadLandscapes()
     }
 
     private fun initWindow() {
@@ -211,11 +214,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeMyLocationButton.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
             homeMyLocationButton.startDrawableAnimation()
 
-            val provider = GpsMyLocationProvider(applicationContext).apply {
-                locationUpdateMinTime = MY_LOCATION_MIN_TIME_MS
-                locationUpdateMinDistance = MY_LOCATION_MIN_DISTANCE_METER
-            }
-            myLocationOverlay = MyLocationOverlay(provider, homeMapView).apply {
+            myLocationOverlay = MyLocationOverlay(asyncMyLocationProvider, homeMapView).apply {
                 runOnFirstFix {
                     homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
                 }
@@ -228,10 +227,22 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
         }
 
+        enableMyLocationMonitoring()
+
         myLocationOverlay?.apply {
-            enableMyLocation()
             enableFollowLocation()
             enableAutoStop = true
+        }
+    }
+
+    private fun enableMyLocationMonitoring() {
+        myLocationOverlay?.apply {
+            lifecycleScope.launch {
+                enableMyLocationFlow()
+                    .distinctUntilChanged()
+                    .onEach { viewModel.loadLandscapes(it) }
+                    .collect()
+            }
         }
     }
 
@@ -352,6 +363,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initLandscapes(landscapes: List<PlaceUiModel>) {
+        binding.homeLandscapeChipGroup.removeAllViews()
+
         landscapes.forEach { landscape ->
             val chipBinding = ItemHomeLandscapesChipBinding.inflate(
                 layoutInflater,
@@ -557,7 +570,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     override fun onResume() {
         super.onResume()
 
-        myLocationOverlay?.enableMyLocation()
+        enableMyLocationMonitoring()
         homeMapView.onResume()
     }
 

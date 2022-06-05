@@ -9,7 +9,8 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.data.landscapes
+import hu.mostoha.mobile.android.huki.data.localLandscapes
+import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.ServiceModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
@@ -17,6 +18,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.osmdroid.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
@@ -25,14 +27,17 @@ import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
+import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
-import hu.mostoha.mobile.android.huki.util.launch
+import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testContext
+import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -43,7 +48,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class, ServiceModule::class)
+@UninstallModules(RepositoryModule::class, ServiceModule::class, LocationModule::class)
 class MapLandscapesUseCaseTest {
 
     @get:Rule
@@ -68,6 +73,10 @@ class MapLandscapesUseCaseTest {
 
     @BindValue
     @JvmField
+    val asyncMyLocationProvider: AsyncMyLocationProvider = mockk(relaxed = true)
+
+    @BindValue
+    @JvmField
     val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @Before
@@ -78,11 +87,12 @@ class MapLandscapesUseCaseTest {
 
     @Test
     fun givenLandscapes_whenClickOnLandscape_thenPlaceDetailsDisplayOnBottomSheet() {
-        val landscape = landscapes.first { it.name == DEFAULT_LANDSCAPE.name }
+        val landscape = DEFAULT_CLOSE_LANDSCAPE
+        answerTestLocationProvider()
         answerTestHikingLayer()
         answerTestWayGeometry(landscape.osmId)
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
@@ -94,11 +104,12 @@ class MapLandscapesUseCaseTest {
 
     @Test
     fun givenLandscapes_whenClickOnLandscape_thenPolygonDisplaysOnMap() {
-        val landscape = landscapes.first { it.name == DEFAULT_LANDSCAPE.name }
+        val landscape = DEFAULT_CLOSE_LANDSCAPE
+        answerTestLocationProvider()
         answerTestHikingLayer()
         answerTestWayGeometry(landscape.osmId)
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
@@ -106,6 +117,10 @@ class MapLandscapesUseCaseTest {
 
             R.id.homeMapView.hasOverlayInPosition<Polygon>(OverlayPositions.PLACE)
         }
+    }
+
+    private fun answerTestLocationProvider() {
+        coEvery { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
     }
 
     private fun answerTestWayGeometry(id: String) {
@@ -119,6 +134,12 @@ class MapLandscapesUseCaseTest {
     }
 
     companion object {
+        private val DEFAULT_MY_LOCATION = Location(
+            DEFAULT_MY_LOCATION_LATITUDE,
+            DEFAULT_MY_LOCATION_LONGITUDE
+        )
+        private val DEFAULT_CLOSE_LANDSCAPE = localLandscapes
+            .minByOrNull { DEFAULT_MY_LOCATION.distanceBetween(it.center) }!!
         private val DEFAULT_LANDSCAPE = Place(
             osmId = DEFAULT_LANDSCAPE_OSM_ID,
             name = DEFAULT_LANDSCAPE_NAME,

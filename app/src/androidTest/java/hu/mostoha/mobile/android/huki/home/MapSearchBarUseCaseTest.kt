@@ -22,7 +22,7 @@ import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
-import hu.mostoha.mobile.android.huki.util.launch
+import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testContext
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -70,7 +70,7 @@ class MapSearchBarUseCaseTest {
         answerTestHikingLayer()
         answerTestPlaces()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
@@ -85,7 +85,7 @@ class MapSearchBarUseCaseTest {
         answerTestHikingLayer()
         coEvery { placesRepository.getPlacesBy(any()) } returns emptyList()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = "QWER"
 
             R.id.homeSearchBarInput.typeText(searchText)
@@ -99,7 +99,7 @@ class MapSearchBarUseCaseTest {
         answerTestHikingLayer()
         coEvery { placesRepository.getPlacesBy(any()) } throws IllegalStateException("Error")
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = "QWER"
 
             R.id.homeSearchBarInput.typeText(searchText)
@@ -115,7 +115,7 @@ class MapSearchBarUseCaseTest {
             placesRepository.getPlacesBy(any())
         } throws HttpException(Response.error<Unit>(429, "".toResponseBody()))
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = "QWER"
 
             R.id.homeSearchBarInput.typeText(searchText)

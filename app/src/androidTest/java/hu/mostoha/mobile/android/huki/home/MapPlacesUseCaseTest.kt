@@ -25,7 +25,7 @@ import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
 import hu.mostoha.mobile.android.huki.util.espresso.*
-import hu.mostoha.mobile.android.huki.util.launch
+import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testContext
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -79,7 +79,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -98,7 +98,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -118,7 +118,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homeSearchBarInput.typeText(searchText)
@@ -135,7 +135,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homeSearchBarInput.typeText(searchText)
@@ -151,7 +151,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homeSearchBarInput.typeText(searchText)
@@ -167,7 +167,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -187,7 +187,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -208,7 +208,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -227,7 +227,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homeSearchBarInput.typeText(searchText)
@@ -243,7 +243,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -264,7 +264,7 @@ class MapPlacesUseCaseTest {
         answerTestPlaces()
         answerTestGeometries()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()

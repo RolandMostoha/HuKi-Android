@@ -17,7 +17,7 @@ import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.hasCenterAndZoom
-import hu.mostoha.mobile.android.huki.util.launch
+import hu.mostoha.mobile.android.huki.util.launchScenario
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Before
@@ -61,7 +61,7 @@ class MapWithoutGpsUseCaseTest {
     fun givenNullHikingLayer_whenMapOpens_thenItIsCenteredAndZoomedToHungary() {
         answerNullHikingLayer()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             Espresso.pressBack()
 
             R.id.homeMapView.hasCenterAndZoom(

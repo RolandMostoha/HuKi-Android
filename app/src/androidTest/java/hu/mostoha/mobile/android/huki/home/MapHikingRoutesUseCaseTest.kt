@@ -25,7 +25,7 @@ import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
 import hu.mostoha.mobile.android.huki.util.espresso.*
-import hu.mostoha.mobile.android.huki.util.launch
+import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testContext
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -75,7 +75,7 @@ class MapHikingRoutesUseCaseTest {
     fun givenZoomLevelInThreshold_whenZoomOut_thenRoutesNearbyIsNotVisible() {
         answerTestHikingLayer()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY - 1)
             waitForFabAnimation()
 
@@ -93,7 +93,7 @@ class MapHikingRoutesUseCaseTest {
         answerTestHikingLayer()
         answerTestHikingRoute()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
 
             waitForFabAnimation()
@@ -109,7 +109,7 @@ class MapHikingRoutesUseCaseTest {
         answerTestHikingLayer()
         coEvery { placesRepository.getHikingRoutes(any()) } returns emptyList()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
             waitForFabAnimation()
             R.id.homeRoutesNearbyFab.click()
@@ -124,7 +124,7 @@ class MapHikingRoutesUseCaseTest {
         answerTestGeometries()
         answerTestHikingRoute()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
 
             waitForFabAnimation()
@@ -154,7 +154,7 @@ class MapHikingRoutesUseCaseTest {
     }
 
     private fun waitForFabAnimation() {
-        waitFor(300)
+        waitFor(400)
     }
 
     companion object {

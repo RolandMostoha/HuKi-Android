@@ -24,7 +24,7 @@ import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
 import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
-import hu.mostoha.mobile.android.huki.util.launch
+import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
 import io.mockk.coEvery
@@ -76,7 +76,7 @@ class MapLayersUseCaseTest {
     fun givenNullLayerFile_whenScreenStarts_thenLayersPopupWindowShouldShown() {
         answerNullHikingLayer()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.string.layers_base_layers_title.isPopupTextDisplayed()
         }
     }
@@ -94,7 +94,7 @@ class MapLayersUseCaseTest {
         coEvery { hikingLayerRepository.downloadHikingLayerFile() } returns 1
         coEvery { hikingLayerRepository.saveHikingLayerFile(1) } returns Unit
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.id.itemLayersHikingDownloadButton.clickInPopup()
 
             testAppContext.sendBroadcast(Intent(DownloadManager.ACTION_DOWNLOAD_COMPLETE).apply {
@@ -109,7 +109,7 @@ class MapLayersUseCaseTest {
     fun givenTuraReteg1000_whenMapOpens_thenHikingLayerDisplays() {
         answerTestHikingLayer()
 
-        launch<HomeActivity> {
+        launchScenario<HomeActivity> {
             R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(OverlayPositions.HIKING_LAYER)
         }
     }

@@ -12,7 +12,7 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
@@ -34,7 +34,7 @@ class PlacesInteractorTest {
 
     @Test
     fun `Given search text, when requestGetPlacesByFlow, then places are emitted`() {
-        runBlockingTest {
+        runTest {
             val searchText = "Mecsek"
             val places = listOf(DEFAULT_PLACE)
             coEvery { placesRepository.getPlacesBy(searchText) } returns places
@@ -50,7 +50,7 @@ class PlacesInteractorTest {
 
     @Test
     fun `Given IllegalStateException, when requestGetPlacesByFlow, then unknown domain exception is emitted`() {
-        runBlockingTest {
+        runTest {
             val searchText = "Mecsek"
             val exception = IllegalStateException("Unknown exception")
             coEvery { placesRepository.getPlacesBy(searchText) } throws exception
@@ -65,7 +65,7 @@ class PlacesInteractorTest {
 
     @Test
     fun `Given osmId and placeType, when requestGeometryFlow, then geometry is emitted`() {
-        runBlockingTest {
+        runTest {
             val osmId = DEFAULT_PLACE.osmId
             val placeType = DEFAULT_PLACE.placeType
             coEvery { placesRepository.getGeometry(osmId, placeType) } returns DEFAULT_GEOMETRY
@@ -81,7 +81,7 @@ class PlacesInteractorTest {
 
     @Test
     fun `Given IllegalStateException, when requestGeometryFlow, then unknown domain exception is emitted`() {
-        runBlockingTest {
+        runTest {
             val osmId = DEFAULT_PLACE.osmId
             val placeType = DEFAULT_PLACE.placeType
             val exception = IllegalStateException("Unknown exception")
@@ -97,7 +97,7 @@ class PlacesInteractorTest {
 
     @Test
     fun `Given bounding box, when requestGetHikingRoutesFlow, then hiking routes are emitted`() {
-        runBlockingTest {
+        runTest {
             val boundingBox = DEFAULT_BOUNDING_BOX
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             coEvery { placesRepository.getHikingRoutes(boundingBox) } returns hikingRoutes
@@ -113,7 +113,7 @@ class PlacesInteractorTest {
 
     @Test
     fun `Given IllegalStateException, when requestGetHikingRoutesFlow, then unknown domain exception is emitted`() {
-        runBlockingTest {
+        runTest {
             val boundingBox = DEFAULT_BOUNDING_BOX
             val exception = IllegalStateException("Unknown exception")
             coEvery { placesRepository.getHikingRoutes(boundingBox) } throws exception
