@@ -36,7 +36,7 @@ class FusedLocationProvider @Inject constructor(
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-    private lateinit var fusedLocationCallback: LocationCallback
+    private var fusedLocationCallback: LocationCallback? = null
 
     @SuppressLint("MissingPermission")
     private val _locationFlow = callbackFlow {
@@ -44,7 +44,7 @@ class FusedLocationProvider @Inject constructor(
             trySend(lastKnownLocation)
         }
 
-        fusedLocationCallback = object : LocationCallback() {
+        val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val lastLocation = locationResult.lastLocation
 
@@ -62,8 +62,11 @@ class FusedLocationProvider @Inject constructor(
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
-        fusedLocationClient.requestLocationUpdates(locationRequest, fusedLocationCallback, Looper.getMainLooper())
-            .addOnSuccessListener { Timber.d("Started location updates") }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+            .addOnSuccessListener {
+                Timber.d("Started location updates")
+                fusedLocationCallback = locationCallback
+            }
             .addOnFailureListener { exception ->
                 Timber.d(exception, "Failure on requesting location updates")
                 close(exception)
@@ -71,7 +74,7 @@ class FusedLocationProvider @Inject constructor(
 
         awaitClose {
             Timber.d("Location Flow stream is closed, stopping location monitoring")
-            fusedLocationClient.removeLocationUpdates(fusedLocationCallback)
+            fusedLocationClient.removeLocationUpdates(locationCallback)
         }
     }
 
@@ -94,12 +97,12 @@ class FusedLocationProvider @Inject constructor(
 
     override fun stopLocationProvider() {
         Timber.d("Stopping location monitoring")
-        fusedLocationClient.removeLocationUpdates(fusedLocationCallback)
+        fusedLocationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
     }
 
     override fun destroy() {
         Timber.d("Destroying location provider, stopping location monitoring")
-        fusedLocationClient.removeLocationUpdates(fusedLocationCallback)
+        fusedLocationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
     }
 
 }

@@ -26,7 +26,7 @@
     <string name="download_layer_notification_title">HuKi - Hiking Layer Download</string>
 
     <string name="my_location_rationale_title">Location permission</string>
-    <string name="my_location_rationale_message">Device\'s location is needed for current location!</string>
+    <string name="my_location_rationale_message">Device\'s location is needed for current location function!</string>
     <string name="my_location_rationale_positive_button">Allow</string>
     <string name="my_location_rationale_negative_button">Cancel</string>
 

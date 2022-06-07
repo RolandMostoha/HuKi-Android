@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
+import android.Manifest
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
@@ -7,8 +8,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ListPopupWindow
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.flowWithLifecycle
@@ -82,8 +86,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var layersPopupWindow: LayersPopupWindow
     private lateinit var placeDetailsSheet: BottomSheetBehavior<View>
     private lateinit var hikingRoutesSheet: BottomSheetBehavior<View>
-
     private var myLocationOverlay: MyLocationOverlay? = null
+
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +98,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         initWindow()
         initViews()
+        initPermissions()
         initReceivers()
     }
 
@@ -175,20 +181,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initFabs() {
         homeMyLocationButton.setOnClickListener {
-            checkLocationPermissions(
-                onPermissionsChecked = { showMyLocation() },
-                onPermissionRationaleShouldBeShown = {
-                    MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
-                        .setTitle(R.string.my_location_rationale_title)
-                        .setMessage(R.string.my_location_rationale_message)
-                        .setNegativeButton(R.string.my_location_rationale_negative_button) { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .setPositiveButton(R.string.my_location_rationale_positive_button) { _, _ ->
-                            it.continuePermissionRequest()
-                        }
-                        .show()
-                })
+            when {
+                isLocationPermissionsGranted() -> showMyLocation()
+                shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) -> {
+                    showLocationRationaleDialog()
+                }
+                else -> requestPermissionLauncher.launch(locationPermissions)
+            }
         }
 
         homeRoutesNearbyFab.setOnClickListener {
@@ -201,12 +200,38 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeLayersFab.setOnClickListener { layersPopupWindow.show(it) }
     }
 
+    private fun showLocationRationaleDialog() {
+        MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
+            .setTitle(R.string.my_location_rationale_title)
+            .setMessage(R.string.my_location_rationale_message)
+            .setNegativeButton(R.string.my_location_rationale_negative_button) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(R.string.my_location_rationale_positive_button) { _, _ ->
+                requestPermissionLauncher.launch(locationPermissions)
+            }
+            .show()
+    }
+
     private fun initBottomSheets() {
         placeDetailsSheet = BottomSheetBehavior.from(binding.homePlaceDetailsBottomSheetContainer.root)
         placeDetailsSheet.hide()
 
         hikingRoutesSheet = BottomSheetBehavior.from(binding.homeHikingRoutesBottomSheetContainer.root)
         hikingRoutesSheet.hide()
+    }
+
+    private fun initPermissions() {
+        requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
+                        permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                    showMyLocation()
+                }
+            }
+        }
     }
 
     private fun showMyLocation() {
