@@ -56,7 +56,7 @@ fun hasCenterAndZoomMatcher(center: GeoPoint, zoom: Double): BoundedMatcher<View
 
             return center.latitude.equalsDelta(actualCenter.latitude) &&
                     center.longitude.equalsDelta(actualCenter.longitude) &&
-                    zoom.equalsDelta(actualZoom)
+                    zoom.toInt() == actualZoom.toInt()
         }
 
         override fun describeTo(description: Description) {
