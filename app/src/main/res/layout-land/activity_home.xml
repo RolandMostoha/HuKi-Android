@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homeContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:focusableInTouchMode="true"
+    tools:context=".ui.home.HomeActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/homeSearchBarContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginTop="@dimen/space_small"
+            android:layout_marginEnd="@dimen/space_large"
+            app:cardBackgroundColor="@color/colorBackground"
+            app:cardElevation="@dimen/default_elevation_on_map"
+            app:layout_constraintEnd_toStartOf="@id/homeLayersFab"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearance="@style/DefaultShapeAppearance.InputField"
+            app:strokeColor="@color/colorStrokeOnMap"
+            app:strokeWidth="@dimen/home_search_bar_stroke_width">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/home_search_bar_height"
+                android:layout_marginStart="@dimen/space_large"
+                android:animateLayoutChanges="true">
+
+                <ImageView
+                    android:id="@+id/homeSearchBarAppIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_hiking"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/homeSearchBarInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_small"
+                    android:layout_marginEnd="@dimen/space_small"
+                    android:hint="@string/search_bar_hint"
+                    android:textColorHint="@color/colorSecondaryText"
+                    app:boxBackgroundColor="@color/colorBackground"
+                    app:boxStrokeColor="@color/selector_search_bar_box"
+                    app:endIconDrawable="@drawable/ic_input_clear"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorPrimaryIcon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/homeSearchBarProgress"
+                    app:layout_constraintStart_toEndOf="@id/homeSearchBarAppIcon"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/homeSearchBarInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/DefaultTextAppearance.Regular.Large" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/homeSearchBarProgress"
+                    style="@style/DefaultCircularProgressIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_large"
+                    android:visibility="gone"
+                    app:indicatorSize="@dimen/home_search_bar_progress_size"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/homeSearchBarInputLayout"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/homeSearchBarPopupAnchor"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/homeSearchBarInputLayout"
+                    app:layout_constraintTop_toBottomOf="@id/homeSearchBarInputLayout" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homeLayersFab"
+            style="@style/DefaultFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginEnd="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_fab_my_location"
+            android:elevation="@dimen/default_elevation_on_map"
+            android:src="@drawable/ic_layers"
+            app:fabSize="mini"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/homeSearchBarContainer"
+            app:layout_constraintBottom_toBottomOf="@id/homeSearchBarContainer" />
+
+        <HorizontalScrollView
+            android:id="@+id/homeLandscapeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_small"
+            android:elevation="@dimen/default_elevation_on_map"
+            android:scrollbars="none"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/homeSearchBarContainer">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/homeLandscapeChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingStart="@dimen/space_large"
+                android:paddingEnd="@dimen/space_large"
+                app:singleLine="true" />
+
+        </HorizontalScrollView>
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/homeMapView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:orientation="vertical"
+        app:layout_behavior="@string/fab_transformation_sheet_behavior">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homeRoutesNearbyFab"
+            style="@style/DefaultFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginEnd="@dimen/space_large"
+            android:layout_marginBottom="@dimen/space_medium"
+            android:contentDescription="@string/accessibility_home_fab_routes_nearby"
+            android:elevation="@dimen/default_elevation_on_map"
+            android:src="@drawable/ic_home_fab_hiking_routes"
+            android:visibility="invisible" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homeMyLocationButton"
+            style="@style/DefaultFloatingActionButton.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginEnd="@dimen/space_large"
+            android:layout_marginBottom="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_fab_my_location"
+            android:elevation="@dimen/default_elevation_on_map"
+            android:src="@drawable/ic_anim_home_fab_my_location_not_fixed" />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/homePlaceDetailsBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_place_details" />
+
+    <include
+        android:id="@+id/homeHikingRoutesBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_hiking_routes" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
