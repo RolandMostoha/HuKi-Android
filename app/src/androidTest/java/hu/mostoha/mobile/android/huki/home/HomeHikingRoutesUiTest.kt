@@ -39,7 +39,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
-class MapHikingRoutesUseCaseTest {
+class HomeHikingRoutesUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -134,6 +134,26 @@ class MapHikingRoutesUseCaseTest {
             DEFAULT_HIKING_ROUTE.name.clickWithText()
 
             R.id.homeRoutesNearbyFab.isDisplayed()
+        }
+    }
+
+    @Test
+    fun givenHikingRoutes_whenRecreate_thenHikingRoutesDisplayOnBottomSheetAgain() {
+        answerTestHikingLayer()
+        answerTestHikingRoute()
+
+        launchScenario<HomeActivity> { scenario ->
+            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
+
+            waitForFabAnimation()
+
+            R.id.homeRoutesNearbyFab.click()
+
+            DEFAULT_HIKING_ROUTE.name.isTextDisplayed()
+
+            scenario.recreate()
+
+            DEFAULT_HIKING_ROUTE.name.isTextDisplayed()
         }
     }
 

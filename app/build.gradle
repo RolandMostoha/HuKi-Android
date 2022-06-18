@@ -78,6 +78,7 @@ dependencies {
     implementation project(':osm-overpasser')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
     implementation "androidx.appcompat:appcompat:1.4.1"
 
     // DI

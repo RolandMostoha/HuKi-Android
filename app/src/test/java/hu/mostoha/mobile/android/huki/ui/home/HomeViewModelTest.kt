@@ -83,38 +83,6 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Given location, when loadLandscapes, then landscapes are emitted`() {
-        mainCoroutineRule.runTest {
-            val landscapes = listOf(DEFAULT_LANDSCAPE)
-            val landscapesUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
-
-            coEvery { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
-            coEvery { generator.generateLandscapes(any()) } returns landscapesUiModels
-
-            viewModel.landscapes.test {
-                viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
-
-                assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(landscapesUiModels)
-            }
-        }
-    }
-
-    @Test
-    fun `Given unknown error, when loadLandscapes, then error message is emitted`() {
-        mainCoroutineRule.runTest {
-            val exception = UnknownException(Exception(""))
-            coEvery { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(exception)
-
-            viewModel.errorMessage.test {
-                viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
-
-                assertThat(awaitItem()).isEqualTo(R.string.error_message_unknown.toMessage())
-            }
-        }
-    }
-
-    @Test
     fun `Given null hiking layer file, when loadHikingLayer, then loading is emitted`() {
         mainCoroutineRule.runTest {
             val hikingLayerFile = null
@@ -246,7 +214,39 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Given search text, when loadPlacesBy, then search bar items are emitted`() {
+    fun `Given location, when loadLandscapes, then landscapes are emitted`() {
+        mainCoroutineRule.runTest {
+            val landscapes = listOf(DEFAULT_LANDSCAPE)
+            val landscapesUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
+
+            coEvery { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
+            coEvery { generator.generateLandscapes(any()) } returns landscapesUiModels
+
+            viewModel.landscapes.test {
+                viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(landscapesUiModels)
+            }
+        }
+    }
+
+    @Test
+    fun `Given unknown error, when loadLandscapes, then error message is emitted`() {
+        mainCoroutineRule.runTest {
+            val exception = UnknownException(Exception(""))
+            coEvery { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(exception)
+
+            viewModel.errorMessage.test {
+                viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
+
+                assertThat(awaitItem()).isEqualTo(R.string.error_message_unknown.toMessage())
+            }
+        }
+    }
+
+    @Test
+    fun `Given search text, when loadSearchBarPlaces, then search bar items are emitted`() {
         mainCoroutineRule.runTest {
             val searchText = "Mecs"
             val places = listOf(DEFAULT_PLACE)
@@ -255,7 +255,7 @@ class HomeViewModelTest {
             coEvery { generator.generateSearchBarItems(places) } returns searchBarItems
 
             viewModel.searchBarItems.test {
-                viewModel.loadPlacesBy(searchText)
+                viewModel.loadSearchBarPlaces(searchText)
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(searchBarItems)
@@ -264,7 +264,27 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Given error, when loadPlacesBy, then error search bar item is emitted`() {
+    fun `When cancelSearch, then search bar items are cleared`() {
+        mainCoroutineRule.runTest {
+            val searchText = "Mecs"
+            val places = listOf(DEFAULT_PLACE)
+            val searchBarItems = listOf(SearchBarItem.Place(DEFAULT_PLACE_UI_MODEL))
+            coEvery { placesInteractor.requestGetPlacesByFlow(searchText) } returns flowOf(places)
+            coEvery { generator.generateSearchBarItems(places) } returns searchBarItems
+
+            viewModel.searchBarItems.test {
+                viewModel.loadSearchBarPlaces(searchText)
+                viewModel.cancelSearch()
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(searchBarItems)
+                assertThat(awaitItem()).isNull()
+            }
+        }
+    }
+
+    @Test
+    fun `Given error, when loadSearchBarPlaces, then error search bar item is emitted`() {
         mainCoroutineRule.runTest {
             val errorRes = R.string.error_message_unknown.toMessage()
             val domainException = DomainException(errorRes)
@@ -278,7 +298,7 @@ class HomeViewModelTest {
             coEvery { generator.generatePlacesErrorItem(domainException) } returns searchBarItems
 
             viewModel.searchBarItems.test {
-                viewModel.loadPlacesBy("")
+                viewModel.loadSearchBarPlaces("")
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(searchBarItems)
@@ -303,6 +323,42 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `Given place, when loadPlace, then follow location is disabled`() {
+        mainCoroutineRule.runTest {
+            val placeUiModel = DEFAULT_PLACE_UI_MODEL
+            val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
+            coEvery { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+
+            viewModel.myLocationUiModel.test {
+                viewModel.loadPlace(placeUiModel)
+
+                assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
+                assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
+            }
+        }
+    }
+
+    @Test
+    fun `Given place, when loadPlace, then searchbar items are cleared`() {
+        mainCoroutineRule.runTest {
+            val placeUiModel = DEFAULT_PLACE_UI_MODEL
+            val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
+            coEvery { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+            coEvery { placesInteractor.requestGetPlacesByFlow(any()) } returns flowOf(emptyList())
+            coEvery { generator.generateSearchBarItems(any()) } returns emptyList()
+
+            viewModel.searchBarItems.test {
+                viewModel.loadSearchBarPlaces("")
+                viewModel.loadPlace(placeUiModel)
+
+                assertThat(awaitItem()).isEqualTo(null)
+                assertThat(awaitItem()).isEqualTo(emptyList<SearchBarItem>())
+                assertThat(awaitItem()).isEqualTo(null)
+            }
+        }
+    }
+
+    @Test
     fun `Given place, when loadPlaceDetails, then place details is emitted`() {
         mainCoroutineRule.runTest {
             val osmId = DEFAULT_PLACE.osmId
@@ -317,6 +373,25 @@ class HomeViewModelTest {
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(placeDetailsUiModel)
+            }
+        }
+    }
+
+    @Test
+    fun `When loadPlaceDetails, then follow location should be disabled`() {
+        mainCoroutineRule.runTest {
+            val osmId = DEFAULT_PLACE.osmId
+            val placeUiModel = DEFAULT_PLACE_UI_MODEL
+            val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
+            val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
+            coEvery { placesInteractor.requestGeometryFlow(osmId, PlaceType.NODE) } returns flowOf(geometry)
+            coEvery { generator.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
+
+            viewModel.myLocationUiModel.test {
+                viewModel.loadPlaceDetails(placeUiModel)
+
+                assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
+                assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
             }
         }
     }
@@ -395,6 +470,52 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `When loadHikingRouteDetails, then follow location should be disabled`() {
+        mainCoroutineRule.runTest {
+            val osmId = DEFAULT_HIKING_ROUTE.osmId
+            val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
+            val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
+            val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
+            coEvery { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
+            coEvery { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
+
+            viewModel.myLocationUiModel.test {
+                viewModel.loadHikingRouteDetails(hikingRouteUiModel)
+
+                assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
+                assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
+            }
+        }
+    }
+
+    @Test
+    fun `When loadHikingRouteDetails, then hiking routes should be cleared`() {
+        mainCoroutineRule.runTest {
+            val osmId = DEFAULT_HIKING_ROUTE.osmId
+            val placeName = DEFAULT_HIKING_ROUTE.name
+            val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
+            val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
+            val hikingRouteUiModels = listOf(HikingRoutesItem.Item(DEFAULT_HIKING_ROUTE_UI_MODEL))
+            val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
+            val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
+            val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
+            coEvery { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
+            coEvery { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
+            coEvery { placesInteractor.requestGetHikingRoutesFlow(any()) } returns flowOf(hikingRoutes)
+            coEvery { generator.generateHikingRoutes(any(), any()) } returns hikingRouteUiModels
+
+            viewModel.hikingRoutes.test {
+                viewModel.loadHikingRoutes(placeName, boundingBox)
+                viewModel.loadHikingRouteDetails(hikingRouteUiModel)
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(hikingRouteUiModels)
+                assertThat(awaitItem()).isNull()
+            }
+        }
+    }
+
+    @Test
     fun `Given error, when loadHikingRouteDetails, then error message is emitted`() {
         mainCoroutineRule.runTest {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
@@ -426,6 +547,73 @@ class HomeViewModelTest {
 
             verify {
                 exceptionLogger.recordException(exception)
+            }
+        }
+    }
+
+    @Test
+    fun `When updateMyLocationConfig, then my location UI model should be updated`() {
+        mainCoroutineRule.runTest {
+            viewModel.myLocationUiModel.test {
+                viewModel.updateMyLocationConfig(isFollowLocationEnabled = false)
+
+                assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
+                assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
+            }
+        }
+    }
+
+    @Test
+    fun `When saveBoundingBox, then map UI model should be updated with the given bounding box`() {
+        mainCoroutineRule.runTest {
+            val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
+
+            viewModel.mapUiModel.test {
+                viewModel.saveBoundingBox(boundingBox)
+
+                assertThat(awaitItem()).isEqualTo(MapUiModel())
+                assertThat(awaitItem()).isEqualTo(MapUiModel(boundingBox))
+            }
+        }
+    }
+
+    @Test
+    fun `When clearPlaceDetails, then place details UI model should be cleared`() {
+        mainCoroutineRule.runTest {
+            val placeUiModel = DEFAULT_PLACE_UI_MODEL
+            val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
+            val geometry = Geometry.Node(placeUiModel.osmId, Location(47.7193842, 18.8962014))
+            coEvery { placesInteractor.requestGeometryFlow(any(), any()) } returns flowOf(geometry)
+            coEvery { generator.generatePlaceDetails(any(), any()) } returns placeDetailsUiModel
+
+            viewModel.placeDetails.test {
+                viewModel.loadPlaceDetails(placeUiModel)
+                viewModel.clearPlaceDetails()
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(placeDetailsUiModel)
+                assertThat(awaitItem()).isNull()
+            }
+        }
+    }
+
+    @Test
+    fun `When clearHikingRoutes, then hiking route UI models should be cleared`() {
+        mainCoroutineRule.runTest {
+            val placeName = DEFAULT_HIKING_ROUTE.name
+            val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
+            val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
+            val hikingRouteUiModels = listOf(HikingRoutesItem.Item(DEFAULT_HIKING_ROUTE_UI_MODEL))
+            coEvery { placesInteractor.requestGetHikingRoutesFlow(boundingBox) } returns flowOf(hikingRoutes)
+            coEvery { generator.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
+
+            viewModel.hikingRoutes.test {
+                viewModel.loadHikingRoutes(placeName, boundingBox)
+                viewModel.clearHikingRoutes()
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(hikingRouteUiModels)
+                assertThat(awaitItem()).isNull()
             }
         }
     }

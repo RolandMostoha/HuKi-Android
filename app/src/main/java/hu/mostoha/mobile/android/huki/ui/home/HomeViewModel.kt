@@ -14,10 +14,7 @@ import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
-import hu.mostoha.mobile.android.huki.model.ui.HikingLayerUiModel
-import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
-import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
-import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.model.ui.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.Message
@@ -44,15 +41,17 @@ class HomeViewModel @Inject constructor(
         private const val SEARCH_QUERY_DELAY_MS = 800L
     }
 
-    private val _isLoading = MutableSharedFlow<Boolean>()
-    val loading: SharedFlow<Boolean> = _isLoading.asSharedFlow()
-
-    private val _errorMessage = MutableSharedFlow<Message.Res>()
-    val errorMessage: SharedFlow<Message.Res> = _errorMessage.asSharedFlow()
+    private val _mapUiModel = MutableStateFlow(MapUiModel())
+    val mapUiModel: StateFlow<MapUiModel> = _mapUiModel
+        .stateIn(viewModelScope, WhileViewSubscribed, MapUiModel())
 
     private val _hikingLayer = MutableStateFlow<HikingLayerUiModel>(HikingLayerUiModel.Loading)
     val hikingLayer: StateFlow<HikingLayerUiModel> = _hikingLayer
         .stateIn(viewModelScope, WhileViewSubscribed, HikingLayerUiModel.Loading)
+
+    private val _myLocationUiModel = MutableStateFlow(MyLocationUiModel())
+    val myLocationUiModel: StateFlow<MyLocationUiModel> = _myLocationUiModel
+        .stateIn(viewModelScope, WhileViewSubscribed, MyLocationUiModel())
 
     private val _placeDetails = MutableStateFlow<PlaceDetailsUiModel?>(null)
     val placeDetails: StateFlow<PlaceDetailsUiModel?> = _placeDetails
@@ -70,6 +69,12 @@ class HomeViewModel @Inject constructor(
     val hikingRoutes: StateFlow<List<HikingRoutesItem>?> = _hikingRoutes
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
+    private val _isLoading = MutableSharedFlow<Boolean>()
+    val loading: SharedFlow<Boolean> = _isLoading.asSharedFlow()
+
+    private val _errorMessage = MutableSharedFlow<Message.Res>()
+    val errorMessage: SharedFlow<Message.Res> = _errorMessage.asSharedFlow()
+
     private var searchPlacesJob: Job? = null
 
     init {
@@ -80,9 +85,9 @@ class HomeViewModel @Inject constructor(
         hikingLayerInteractor.requestHikingLayerFileFlow()
             .map { generator.generateHikingLayerState(it) }
             .onEach { _hikingLayer.emit(it) }
-            .catch { emitError(it) }
-            .onStart { _isLoading.emit(true) }
-            .onCompletion { _isLoading.emit(false) }
+            .catch { showError(it) }
+            .onStart { showLoading(true) }
+            .onCompletion { showLoading(false) }
             .collect()
     }
 
@@ -90,7 +95,7 @@ class HomeViewModel @Inject constructor(
         hikingLayerInteractor.requestDownloadHikingLayerFileFlow()
             .onStart { _hikingLayer.emit(HikingLayerUiModel.Downloading) }
             .catch { throwable ->
-                emitError(throwable)
+                showError(throwable)
 
                 loadHikingLayer()
             }
@@ -100,16 +105,24 @@ class HomeViewModel @Inject constructor(
     fun saveHikingLayer(downloadId: Long) = launch(taskExecutor) {
         hikingLayerInteractor.requestSaveHikingLayerFileFlow(downloadId)
             .onStart { _hikingLayer.emit(HikingLayerUiModel.Downloading) }
-            .catch { emitError(it) }
+            .catch { showError(it) }
             .onCompletion { loadHikingLayer() }
             .collect()
     }
 
-    fun loadPlacesBy(searchText: String) = launch(taskExecutor) {
+    fun loadLandscapes(location: Location) = launch(taskExecutor) {
+        landscapeInteractor.requestGetLandscapesFlow(location.toLocation())
+            .map { generator.generateLandscapes(it) }
+            .onEach { _landscapes.emit(it) }
+            .catch { showError(it) }
+            .collect()
+    }
+
+    fun loadSearchBarPlaces(searchText: String) = launch(taskExecutor) {
         searchPlacesJob?.let { job ->
             if (job.isActive) {
                 job.cancel()
-                _isLoading.emit(false)
+                showLoading(false)
             }
         }
         searchPlacesJob = launchCancellable(taskExecutor) {
@@ -122,26 +135,31 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 .onStart {
-                    _isLoading.emit(true)
+                    showLoading(true)
 
                     delay(SEARCH_QUERY_DELAY_MS)
                 }
-                .onCompletion { _isLoading.emit(false) }
+                .onCompletion { showLoading(false) }
                 .collect()
         }
     }
 
     fun cancelSearch() = launch(taskExecutor) {
-        _isLoading.emit(false)
-
         searchPlacesJob?.let { job ->
             if (job.isActive) {
                 job.cancel()
             }
         }
+
+        clearSearchBarItems()
+
+        showLoading(false)
     }
 
     fun loadPlace(placeUiModel: PlaceUiModel) = launch(taskExecutor) {
+        clearSearchBarItems()
+        clearFollowLocation()
+
         _placeDetails.emit(generator.generatePlaceDetails(placeUiModel))
     }
 
@@ -149,9 +167,13 @@ class HomeViewModel @Inject constructor(
         placesInteractor.requestGeometryFlow(placeUiModel.osmId, placeUiModel.placeType)
             .map { generator.generatePlaceDetails(placeUiModel, it) }
             .onEach { _placeDetails.emit(it) }
-            .onStart { _isLoading.emit(true) }
-            .onCompletion { _isLoading.emit(false) }
-            .catch { emitError(it) }
+            .onStart {
+                clearFollowLocation()
+
+                showLoading(true)
+            }
+            .onCompletion { showLoading(false) }
+            .catch { showError(it) }
             .collect()
     }
 
@@ -159,9 +181,9 @@ class HomeViewModel @Inject constructor(
         placesInteractor.requestGetHikingRoutesFlow(boundingBox)
             .map { generator.generateHikingRoutes(placeName, it) }
             .onEach { _hikingRoutes.emit(it) }
-            .onStart { _isLoading.emit(true) }
-            .onCompletion { _isLoading.emit(false) }
-            .catch { emitError(it) }
+            .onStart { showLoading(true) }
+            .onCompletion { showLoading(false) }
+            .catch { showError(it) }
             .collect()
     }
 
@@ -169,29 +191,57 @@ class HomeViewModel @Inject constructor(
         placesInteractor.requestGeometryFlow(hikingRoute.osmId, PlaceType.RELATION)
             .map { generator.generateHikingRouteDetails(hikingRoute, it) }
             .onEach { _placeDetails.emit(it) }
-            .onStart { _isLoading.emit(true) }
-            .onCompletion { _isLoading.emit(false) }
-            .catch { emitError(it) }
+            .onStart {
+                clearFollowLocation()
+
+                showLoading(true)
+            }
+            .onCompletion {
+                clearHikingRoutes()
+
+                showLoading(false)
+            }
+            .catch { showError(it) }
             .collect()
     }
 
-    fun loadLandscapes(location: Location) = launch(taskExecutor) {
-        landscapeInteractor.requestGetLandscapesFlow(location.toLocation())
-            .map { generator.generateLandscapes(it) }
-            .onEach { _landscapes.emit(it) }
-            .catch { emitError(it) }
-            .collect()
+    fun updateMyLocationConfig(isFollowLocationEnabled: Boolean) = launch(taskExecutor) {
+        _myLocationUiModel.update { it.copy(isFollowLocationEnabled = isFollowLocationEnabled) }
+    }
+
+    fun saveBoundingBox(boundingBox: BoundingBox) = launch(taskExecutor) {
+        _mapUiModel.update { it.copy(boundingBox = boundingBox) }
+    }
+
+    fun clearPlaceDetails() = launch(taskExecutor) {
+        _placeDetails.emit(null)
+    }
+
+    fun clearHikingRoutes() = launch(taskExecutor) {
+        _hikingRoutes.emit(null)
+    }
+
+    private fun clearFollowLocation() {
+        updateMyLocationConfig(isFollowLocationEnabled = false)
     }
 
     private fun loadDefaultLandscapes() = launch(taskExecutor) {
         landscapeInteractor.requestGetLandscapesFlow()
             .map { generator.generateLandscapes(it) }
             .onEach { _landscapes.emit(it) }
-            .catch { emitError(it) }
+            .catch { showError(it) }
             .collect()
     }
 
-    private suspend fun emitError(throwable: Throwable) {
+    private suspend fun clearSearchBarItems() {
+        _searchBarItems.emit(null)
+    }
+
+    private suspend fun showLoading(isLoading: Boolean) {
+        _isLoading.emit(isLoading)
+    }
+
+    private suspend fun showError(throwable: Throwable) {
         if (throwable is DomainException) {
             _errorMessage.emit(throwable.messageRes)
         } else {

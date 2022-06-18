@@ -41,7 +41,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
-class MapPlacesUseCaseTest {
+class HomePlacesUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -255,6 +255,26 @@ class MapPlacesUseCaseTest {
             R.string.home_bottom_sheet_directions_button.isTextNotDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
             R.string.home_bottom_sheet_hiking_trails_button.isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenNodePlace_whenRecreate_thenPlaceDetailsDisplayOnMapAgain() {
+        answerTestHikingLayer()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launchScenario<HomeActivity> { scenario ->
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
+
+            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
+
+            scenario.recreate()
+
+            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
         }
     }
 

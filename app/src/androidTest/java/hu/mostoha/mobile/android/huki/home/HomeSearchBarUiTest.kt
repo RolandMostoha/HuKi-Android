@@ -39,7 +39,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
-class MapSearchBarUseCaseTest {
+class HomeSearchBarUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -121,6 +121,26 @@ class MapSearchBarUseCaseTest {
             R.id.homeSearchBarInput.typeText(searchText)
 
             R.string.error_message_too_many_requests.isPopupTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenPlaces_whenRecreate_thenPlacesSearchResultDisplaysAgain() {
+        answerTestHikingLayer()
+        answerTestPlaces()
+
+        launchScenario<HomeActivity> { scenario ->
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
+            DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
+
+            scenario.recreate()
+
+            DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
+            DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
         }
     }
 

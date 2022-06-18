@@ -28,10 +28,7 @@ import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
 import hu.mostoha.mobile.android.huki.util.distanceBetween
-import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
-import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
-import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
-import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.*
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -49,7 +46,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class, LocationModule::class)
-class MapLandscapesUseCaseTest {
+class HomeLandscapesUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -116,6 +113,25 @@ class MapLandscapesUseCaseTest {
             landscape.name.clickWithText()
 
             R.id.homeMapView.hasOverlayInPosition<Polygon>(OverlayPositions.PLACE)
+        }
+    }
+
+    @Test
+    fun whenRecreate_thenLandscapesAreDisplayedAgain() {
+        val landscape = DEFAULT_CLOSE_LANDSCAPE
+        answerTestLocationProvider()
+        answerTestHikingLayer()
+        answerTestWayGeometry(landscape.osmId)
+
+        launchScenario<HomeActivity> { scenario ->
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+            R.id.homeLandscapeChipGroup.isDisplayed()
+
+            landscape.name.isTextDisplayed()
+
+            scenario.recreate()
+
+            landscape.name.isTextDisplayed()
         }
     }
 

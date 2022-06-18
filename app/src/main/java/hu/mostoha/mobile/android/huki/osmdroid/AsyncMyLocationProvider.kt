@@ -16,4 +16,9 @@ interface AsyncMyLocationProvider : IMyLocationProvider {
      */
     fun getLocationFlow(): Flow<Location>
 
+    /**
+     * Returns the last known location via suspending function.
+     */
+    suspend fun getLastKnownLocationCoroutine(): Location?
+
 }

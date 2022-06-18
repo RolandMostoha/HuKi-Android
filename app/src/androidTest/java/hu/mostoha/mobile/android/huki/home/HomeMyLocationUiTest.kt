@@ -1,8 +1,9 @@
 package hu.mostoha.mobile.android.huki.home
 
-import androidx.test.espresso.Espresso
+import android.Manifest
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.rule.GrantPermissionRule
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -10,31 +11,40 @@ import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.ServiceModule
+import hu.mostoha.mobile.android.huki.extensions.copyFrom
+import hu.mostoha.mobile.android.huki.osmdroid.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.espresso.hasCenterAndZoom
+import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
 import hu.mostoha.mobile.android.huki.util.launchScenario
+import hu.mostoha.mobile.android.huki.util.testContext
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, ServiceModule::class)
-class MapWithoutGpsUseCaseTest {
+class HomeMyLocationUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
@@ -45,7 +55,7 @@ class MapWithoutGpsUseCaseTest {
 
     @BindValue
     @JvmField
-    val placesRepository: PlacesRepository = mockk()
+    val placeRepository: PlacesRepository = mockk()
 
     @BindValue
     @JvmField
@@ -58,26 +68,34 @@ class MapWithoutGpsUseCaseTest {
     }
 
     @Test
-    fun givenNullHikingLayer_whenMapOpens_thenItIsCenteredAndZoomedToHungary() {
-        answerNullHikingLayer()
+    fun whenMyLocationClicked_thenMyLocationOverlayDisplays() {
+        answerTestHikingLayer()
 
         launchScenario<HomeActivity> {
-            Espresso.pressBack()
+            R.id.homeMyLocationButton.click()
 
-            R.id.homeMapView.hasCenterAndZoom(
-                center = HUNGARY_BOUNDING_BOX_CENTER,
-                zoom = HUNGARY_BOUNDING_BOX_ZOOM
-            )
+            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(1)
         }
     }
 
-    private fun answerNullHikingLayer() {
-        coEvery { hikingLayerRepository.getHikingLayerFile() } returns null
+    @Test
+    fun givenMyLocation_whenRecreate_thenMyLocationOverlayDisplaysAgain() {
+        answerTestHikingLayer()
+
+        launchScenario<HomeActivity> { scenario ->
+            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(1)
+
+            scenario.recreate()
+
+            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(1)
+        }
     }
 
-    companion object {
-        private const val HUNGARY_BOUNDING_BOX_ZOOM = 7.227610802851414
-        private val HUNGARY_BOUNDING_BOX_CENTER = GeoPoint(47.31885723983627, 19.45407265979361)
+    private fun answerTestHikingLayer() {
+        val file = osmConfiguration.getHikingLayerFile().also {
+            it.copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
+        }
+        coEvery { hikingLayerRepository.getHikingLayerFile() } returns file
     }
 
 }

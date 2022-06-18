@@ -11,7 +11,6 @@ import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.util.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.huki.util.MY_LOCATION_TIME_MS
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -27,7 +26,6 @@ import kotlin.coroutines.resumeWithException
  * OSMDroid's [IMyLocationProvider] implementation that uses Google's Fused Location Provider
  * and provides the location updates via coroutines and [Flow].
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 class FusedLocationProvider @Inject constructor(
     @ApplicationContext val context: Context
 ) : AsyncMyLocationProvider {
@@ -40,6 +38,8 @@ class FusedLocationProvider @Inject constructor(
 
     @SuppressLint("MissingPermission")
     private val _locationFlow = callbackFlow {
+        Timber.d("Requesting location updates")
+
         getLastKnownLocationCoroutine()?.let { lastKnownLocation ->
             trySend(lastKnownLocation)
         }
@@ -64,7 +64,7 @@ class FusedLocationProvider @Inject constructor(
 
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
             .addOnSuccessListener {
-                Timber.d("Started location updates")
+                Timber.d("Starting location updates")
                 fusedLocationCallback = locationCallback
             }
             .addOnFailureListener { exception ->
@@ -85,7 +85,7 @@ class FusedLocationProvider @Inject constructor(
     }
 
     @SuppressLint("MissingPermission")
-    private suspend fun getLastKnownLocationCoroutine(): Location? {
+    override suspend fun getLastKnownLocationCoroutine(): Location? {
         return suspendCancellableCoroutine { continuation ->
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { continuation.resume(it) }
@@ -98,11 +98,15 @@ class FusedLocationProvider @Inject constructor(
     override fun stopLocationProvider() {
         Timber.d("Stopping location monitoring")
         fusedLocationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
+        fusedLocationCallback = null
+        myLocationConsumer = null
     }
 
     override fun destroy() {
         Timber.d("Destroying location provider, stopping location monitoring")
         fusedLocationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
+        fusedLocationCallback = null
+        myLocationConsumer = null
     }
 
 }

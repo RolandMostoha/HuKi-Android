@@ -2,11 +2,13 @@ package hu.mostoha.mobile.android.huki.osmdroid
 
 import android.graphics.Bitmap
 import android.location.Location
+import androidx.lifecycle.LifecycleCoroutineScope
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
 import hu.mostoha.mobile.android.huki.extensions.toBitmap
 import hu.mostoha.mobile.android.huki.util.calculateZoomLevel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
@@ -17,6 +19,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
  * monitoring via [AsyncMyLocationProvider].
  */
 class MyLocationOverlay(
+    private val lifecycleScope: LifecycleCoroutineScope,
     private val provider: AsyncMyLocationProvider,
     private val mapView: MapView
 ) : MyLocationNewOverlay(provider, mapView) {
@@ -34,22 +37,13 @@ class MyLocationOverlay(
     private var isLocationEnabled = false
 
     var onFollowLocationDisabled: (() -> Unit)? = null
+    var onFollowLocationFirstFix: (() -> Unit)? = null
 
     init {
         setDirectionArrow(
             R.drawable.ic_marker_my_location.toBitmap(mapView.context),
             R.drawable.ic_marker_my_location_compass.toBitmap(mapView.context)
         )
-    }
-
-    override fun setLocation(location: Location) {
-        val zoomLevel = location.calculateZoomLevel().toDouble()
-
-        if (mIsFollowing && mMapView.zoomLevelDouble != zoomLevel) {
-            mapView.animateCenterAndZoom(GeoPoint(location), zoomLevel)
-        }
-
-        super.setLocation(location)
     }
 
     fun enableMyLocationFlow(): Flow<Location> {
@@ -62,6 +56,32 @@ class MyLocationOverlay(
         mapView.postInvalidate()
 
         return locationFlow
+    }
+
+    override fun enableFollowLocation() {
+        mIsFollowing = true
+        enableAutoStop = true
+
+        if (isMyLocationEnabled) {
+            lifecycleScope.launch {
+                provider.getLastKnownLocationCoroutine()?.let { location ->
+                    onFollowLocationFirstFix?.invoke()
+                    setLocation(location)
+                }
+            }
+        }
+
+        mapView.postInvalidate()
+    }
+
+    override fun setLocation(location: Location) {
+        val zoomLevel = location.calculateZoomLevel().toDouble()
+
+        if (mIsFollowing && !mapView.isAnimating && mapView.zoomLevelDouble != zoomLevel) {
+            mapView.animateCenterAndZoom(GeoPoint(location), zoomLevel)
+        }
+
+        super.setLocation(location)
     }
 
     override fun disableMyLocation() {
