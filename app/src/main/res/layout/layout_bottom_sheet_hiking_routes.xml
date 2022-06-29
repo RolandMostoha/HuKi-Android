@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/DefaultBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    app:behavior_saveFlags="all"
     app:behavior_hideable="true"
     app:behavior_peekHeight="@dimen/hiking_routes_bottom_sheet_peek_height">
 
@@ -26,4 +26,4 @@
         android:padding="@dimen/space_extra_large"
         android:text="@string/hiking_routes_empty_text" />
 
-</LinearLayout>
+</FrameLayout>

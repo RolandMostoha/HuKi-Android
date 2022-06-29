@@ -564,7 +564,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `When saveBoundingBox, then map UI model should be updated with the given bounding box`() {
+    fun `When saveBoundingBox, then map UI model should be updated with the given bounding box with the default offset`() {
         mainCoroutineRule.runTest {
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
 
@@ -572,7 +572,7 @@ class HomeViewModelTest {
                 viewModel.saveBoundingBox(boundingBox)
 
                 assertThat(awaitItem()).isEqualTo(MapUiModel())
-                assertThat(awaitItem()).isEqualTo(MapUiModel(boundingBox))
+                assertThat(awaitItem()).isEqualTo(MapUiModel(boundingBox, withDefaultOffset = true))
             }
         }
     }

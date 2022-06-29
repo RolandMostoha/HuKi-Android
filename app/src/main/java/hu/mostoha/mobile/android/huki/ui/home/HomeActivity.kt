@@ -99,6 +99,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initReceivers()
     }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        // BottomSheet-RecyclerView state restoration bug
+        viewModel.clearHikingRoutes()
+        hikingRoutesSheet.hide()
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -127,12 +135,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initWindow() {
         setStatusBarColor(android.R.color.transparent)
         homeSearchBarContainer.applyTopMarginForStatusBar(this)
+        layersPopupWindow = LayersPopupWindow(this)
     }
 
     private fun initViews() {
         initMapView()
         initSearchBar()
-        initLayersPopupWindow()
         initFabs()
         initBottomSheets()
     }
@@ -187,10 +195,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             }
         }
-    }
-
-    private fun initLayersPopupWindow() {
-        layersPopupWindow = LayersPopupWindow(this)
     }
 
     private fun initFabs() {
@@ -313,7 +317,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .distinctUntilChanged()
                 .collect { mapUiModel ->
-                    homeMapView.zoomToBoundingBox(mapUiModel.boundingBox.toOsmBoundingBox(), false)
+                    homeMapView.zoomToBoundingBox(
+                        if (mapUiModel.withDefaultOffset) {
+                            mapUiModel.boundingBox.toOsmBoundingBox()
+                        } else {
+                            mapUiModel.boundingBox.toOsmBoundingBox().withDefaultOffset()
+                        },
+                        false
+                    )
                 }
         }
         lifecycleScope.launch {
@@ -550,8 +561,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             )
             hikingRoutesList.setHasFixedSize(true)
             hikingRoutesList.adapter = hikingRoutesAdapter
-            hikingRoutesAdapter.submitList(hikingRoutes)
+            hikingRoutesList.visibleOrGone(hikingRoutes.size > 1)
             hikingRoutesEmptyView.visibleOrGone(hikingRoutes.size <= 1)
+            hikingRoutesAdapter.submitList(hikingRoutes)
 
             placeDetailsSheet.hide()
             hikingRoutesSheet.collapse()

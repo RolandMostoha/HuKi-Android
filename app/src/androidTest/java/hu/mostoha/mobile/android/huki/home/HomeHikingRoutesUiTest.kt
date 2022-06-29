@@ -137,26 +137,6 @@ class HomeHikingRoutesUiTest {
         }
     }
 
-    @Test
-    fun givenHikingRoutes_whenRecreate_thenHikingRoutesDisplayOnBottomSheetAgain() {
-        answerTestHikingLayer()
-        answerTestHikingRoute()
-
-        launchScenario<HomeActivity> { scenario ->
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
-
-            waitForFabAnimation()
-
-            R.id.homeRoutesNearbyFab.click()
-
-            DEFAULT_HIKING_ROUTE.name.isTextDisplayed()
-
-            scenario.recreate()
-
-            DEFAULT_HIKING_ROUTE.name.isTextDisplayed()
-        }
-    }
-
     private fun answerTestHikingRoute() {
         coEvery { placesRepository.getHikingRoutes(any()) } returns listOf(DEFAULT_HIKING_ROUTE)
     }

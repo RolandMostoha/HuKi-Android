@@ -169,6 +169,7 @@ class HomeViewModel @Inject constructor(
             .onEach { _placeDetails.emit(it) }
             .onStart {
                 clearFollowLocation()
+                clearHikingRoutes()
 
                 showLoading(true)
             }
@@ -210,7 +211,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun saveBoundingBox(boundingBox: BoundingBox) = launch(taskExecutor) {
-        _mapUiModel.update { it.copy(boundingBox = boundingBox) }
+        _mapUiModel.update { it.copy(boundingBox = boundingBox, withDefaultOffset = true) }
     }
 
     fun clearPlaceDetails() = launch(taskExecutor) {
