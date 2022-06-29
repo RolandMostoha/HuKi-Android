@@ -20,7 +20,7 @@ class OsmPlacesRepository @Inject constructor(
 
     companion object {
         const val PHOTON_SEARCH_QUERY_LIMIT = 20
-        const val OSM_HIKING_ROUTES_QUERY_LIMIT = 50
+        const val OSM_HIKING_ROUTES_QUERY_LIMIT = 30
     }
 
     override suspend fun getPlacesBy(searchText: String): List<Place> {
