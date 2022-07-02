@@ -8,6 +8,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.util.MY_LOCATION_MIN_TIME_MS
 import hu.mostoha.mobile.android.huki.util.MY_LOCATION_TIME_MS
@@ -46,11 +47,11 @@ class FusedLocationProvider @Inject constructor(
 
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                val lastLocation = locationResult.lastLocation
+                val lastLocation = locationResult.lastLocation ?: return
 
                 myLocationConsumer?.onLocationChanged(lastLocation, this@FusedLocationProvider)
 
-                trySend(locationResult.lastLocation)
+                trySend(lastLocation)
 
                 Timber.d("Location update: ${locationResult.lastLocation}")
             }
@@ -59,7 +60,7 @@ class FusedLocationProvider @Inject constructor(
         val locationRequest = LocationRequest.create().apply {
             interval = MY_LOCATION_TIME_MS
             fastestInterval = MY_LOCATION_MIN_TIME_MS
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            priority = PRIORITY_HIGH_ACCURACY
         }
 
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())

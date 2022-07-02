@@ -4,16 +4,16 @@ buildscript {
         mavenCentral()
     }
     ext {
-        kotlinVersion = '1.6.21'
-        hiltVersion = '2.41'
+        kotlinVersion = '1.7.0'
+        hiltVersion = '2.42'
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:7.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.18.1"
-        classpath 'com.google.gms:google-services:4.3.10'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath 'com.google.gms:google-services:4.3.13'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
     }
 }
 
