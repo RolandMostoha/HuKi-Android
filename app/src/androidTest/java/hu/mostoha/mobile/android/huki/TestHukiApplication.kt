@@ -4,10 +4,10 @@ import android.app.Application
 import dagger.hilt.android.testing.CustomTestApplication
 import timber.log.Timber
 
-@CustomTestApplication(TestHikingRoutesApplication::class)
+@CustomTestApplication(TestHukiApplication::class)
 interface HiltTestApplication
 
-open class TestHikingRoutesApplication : Application() {
+open class TestHukiApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

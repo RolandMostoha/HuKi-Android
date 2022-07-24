@@ -11,7 +11,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
-class HikingRoutesApplication : Application() {
+class HukiApplication : Application() {
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration

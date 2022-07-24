@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="hu.mostoha.mobile.android.huki.HikingRoutesApplication"
+        android:name="hu.mostoha.mobile.android.huki.HukiApplication"
         android:allowBackup="false"
         android:icon="${appIcon}"
         android:label="${appName}"
