@@ -31,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Import AWS configuration files
+      - name: Copy AWS configuration files to raw folder
         env:
           AWS_AMPLIFY_CONFIGURATION: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           AWS_CONFIGURATION: ${{ secrets.AWS_CONFIGURATION }}
