@@ -130,7 +130,7 @@ dependencies {
     // Unit tests
     testImplementation project(":test-data")
 
-    def mockKVersion = '1.12.4'
+    def mockKVersion = '1.12.3'
     def kotlinCoroutineTestVersion = '1.6.4'
     testImplementation "junit:junit:4.13.2"
     testImplementation "com.google.truth:truth:1.1.3"
