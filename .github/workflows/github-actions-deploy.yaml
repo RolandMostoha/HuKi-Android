@@ -72,6 +72,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Copy AWS configuration files to raw folder
+        env:
+          AWS_AMPLIFY_CONFIGURATION: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
+          AWS_CONFIGURATION: ${{ secrets.AWS_CONFIGURATION }}
+        run: |
+          echo AWS_AMPLIFY_CONFIGURATION > app/src/main/res/raw/amplifyconfiguration.json
+          echo AWS_CONFIGURATION > app/src/main/res/raw/awsconfiguration.json
+
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease
 
