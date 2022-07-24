@@ -11,7 +11,6 @@ jobs:
     steps:
       - name: Static code analysis
         uses: actions/checkout@v2
-
         run: ./gradlew lint detekt
 
   unit_tests:
@@ -19,7 +18,6 @@ jobs:
     steps:
       - name: Unit tests
         uses: actions/checkout@v2
-
         run: ./gradlew test
 
   android_tests:
