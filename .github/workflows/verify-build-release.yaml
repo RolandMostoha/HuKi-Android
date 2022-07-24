@@ -9,15 +9,17 @@ jobs:
   lint:
     runs-on: [ ubuntu-latest ]
     steps:
+      - uses: actions/checkout@v2
+
       - name: Static code analysis
-        uses: actions/checkout@v2
         run: ./gradlew lint detekt
 
   unit_tests:
     runs-on: [ ubuntu-latest ]
     steps:
+      - uses: actions/checkout@v2
+
       - name: Unit tests
-        uses: actions/checkout@v2
         run: ./gradlew test
 
   android_tests:
@@ -28,6 +30,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Import AWS configuration files
         env:
           AWS_AMPLIFY_CONFIGURATION: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           AWS_CONFIGURATION: ${{ secrets.AWS_CONFIGURATION }}
@@ -67,12 +71,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-        env:
-          AWS_AMPLIFY_CONFIGURATION: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
-          AWS_CONFIGURATION: ${{ secrets.AWS_CONFIGURATION }}
-        run: |
-          echo AWS_AMPLIFY_CONFIGURATION > app/src/main/res/raw/amplifyconfiguration.json
-          echo AWS_CONFIGURATION > app/src/main/res/raw/awsconfiguration.json
 
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease
