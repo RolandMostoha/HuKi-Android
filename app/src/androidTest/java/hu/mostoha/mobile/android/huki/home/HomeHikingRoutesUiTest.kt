@@ -10,23 +10,18 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
-import hu.mostoha.mobile.android.huki.di.module.ServiceModule
-import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
-import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.repository.*
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
 import hu.mostoha.mobile.android.huki.util.espresso.*
 import hu.mostoha.mobile.android.huki.util.launchScenario
-import hu.mostoha.mobile.android.huki.util.testContext
+import hu.mostoha.mobile.android.huki.util.testAppContext
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Before
@@ -38,7 +33,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class, ServiceModule::class)
+@UninstallModules(RepositoryModule::class)
 class HomeHikingRoutesUiTest {
 
     @get:Rule
@@ -55,7 +50,7 @@ class HomeHikingRoutesUiTest {
 
     @BindValue
     @JvmField
-    val hikingLayerRepository: HikingLayerRepository = mockk()
+    val hikingLayerRepository: HikingLayerRepository = FileBasedHikingLayerRepository(testAppContext)
 
     @BindValue
     @JvmField
@@ -73,7 +68,6 @@ class HomeHikingRoutesUiTest {
 
     @Test
     fun givenZoomLevelInThreshold_whenZoomOut_thenRoutesNearbyIsNotVisible() {
-        answerTestHikingLayer()
 
         launchScenario<HomeActivity> {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY - 1)
@@ -90,7 +84,6 @@ class HomeHikingRoutesUiTest {
 
     @Test
     fun givenHikingRoutes_whenClickRoutesNearby_thenHikingRoutesDisplayOnBottomSheet() {
-        answerTestHikingLayer()
         answerTestHikingRoute()
 
         launchScenario<HomeActivity> {
@@ -106,7 +99,6 @@ class HomeHikingRoutesUiTest {
 
     @Test
     fun givenEmptyHikingRoutes_whenClickRoutesNearby_thenEmptyViewDisplayOnBottomSheet() {
-        answerTestHikingLayer()
         coEvery { placesRepository.getHikingRoutes(any()) } returns emptyList()
 
         launchScenario<HomeActivity> {
@@ -120,7 +112,6 @@ class HomeHikingRoutesUiTest {
 
     @Test
     fun givenHikingRoute_whenClickOnRouteInBottomSheet_thenHikingRouteDetailsDisplayOnBottomSheet() {
-        answerTestHikingLayer()
         answerTestGeometries()
         answerTestHikingRoute()
 
@@ -145,12 +136,6 @@ class HomeHikingRoutesUiTest {
         coEvery {
             placesRepository.getGeometry(DEFAULT_HIKING_ROUTE.osmId, any())
         } returns DEFAULT_HIKING_ROUTE_GEOMETRY
-    }
-
-    private fun answerTestHikingLayer() {
-        coEvery { hikingLayerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
-            copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
-        }
     }
 
     private fun waitForFabAnimation() {

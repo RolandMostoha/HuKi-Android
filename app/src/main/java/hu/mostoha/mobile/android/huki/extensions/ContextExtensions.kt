@@ -25,12 +25,12 @@ val Context.screenHeightPx: Int
         return resources.displayMetrics.heightPixels
     }
 
-fun Context.showToast(message: Message) {
+fun Context.showToast(message: Message, length: Int = Toast.LENGTH_LONG) {
     val resolved = when (message) {
         is Message.Text -> message.text
         is Message.Res -> getString(message.res)
     }
-    Toast.makeText(this, resolved, Toast.LENGTH_LONG).show()
+    Toast.makeText(this, resolved, length).show()
 }
 
 fun Context.showSnackbar(view: View, message: Message) {

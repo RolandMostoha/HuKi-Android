@@ -8,22 +8,17 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
-import hu.mostoha.mobile.android.huki.di.module.ServiceModule
-import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
-import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.repository.*
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.launchScenario
-import hu.mostoha.mobile.android.huki.util.testContext
+import hu.mostoha.mobile.android.huki.util.testAppContext
 import io.mockk.coEvery
 import io.mockk.mockk
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -38,7 +33,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class, ServiceModule::class)
+@UninstallModules(RepositoryModule::class)
 class HomeSearchBarUiTest {
 
     @get:Rule
@@ -49,7 +44,7 @@ class HomeSearchBarUiTest {
 
     @BindValue
     @JvmField
-    val hikingLayerRepository: HikingLayerRepository = mockk()
+    val hikingLayerRepository: HikingLayerRepository = FileBasedHikingLayerRepository(testAppContext)
 
     @BindValue
     @JvmField
@@ -67,7 +62,6 @@ class HomeSearchBarUiTest {
 
     @Test
     fun givenPlaces_whenTypingInSearchBar_thenPlacesSearchResultDisplays() {
-        answerTestHikingLayer()
         answerTestPlaces()
 
         launchScenario<HomeActivity> {
@@ -82,7 +76,6 @@ class HomeSearchBarUiTest {
 
     @Test
     fun givenEmptyResult_whenTyping_thenEmptyViewDisplays() {
-        answerTestHikingLayer()
         coEvery { placesRepository.getPlacesBy(any()) } returns emptyList()
 
         launchScenario<HomeActivity> {
@@ -96,7 +89,6 @@ class HomeSearchBarUiTest {
 
     @Test
     fun givenIllegalStateException_whenTyping_thenErrorViewDisplaysWithMessageAndDetailsButton() {
-        answerTestHikingLayer()
         coEvery { placesRepository.getPlacesBy(any()) } throws IllegalStateException("Error")
 
         launchScenario<HomeActivity> {
@@ -110,7 +102,6 @@ class HomeSearchBarUiTest {
 
     @Test
     fun givenTooManyRequestsException_whenTyping_thenErrorViewDisplaysWithMessageOnly() {
-        answerTestHikingLayer()
         coEvery {
             placesRepository.getPlacesBy(any())
         } throws HttpException(Response.error<Unit>(429, "".toResponseBody()))
@@ -126,7 +117,6 @@ class HomeSearchBarUiTest {
 
     @Test
     fun givenPlaces_whenRecreate_thenPlacesSearchResultDisplaysAgain() {
-        answerTestHikingLayer()
         answerTestPlaces()
 
         launchScenario<HomeActivity> { scenario ->
@@ -141,12 +131,6 @@ class HomeSearchBarUiTest {
 
             DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
             DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
-        }
-    }
-
-    private fun answerTestHikingLayer() {
-        coEvery { hikingLayerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
-            copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
         }
     }
 

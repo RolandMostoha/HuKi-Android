@@ -12,6 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.osmdroid.tileprovider.tilesource.ITileSource
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import kotlin.math.abs
@@ -37,6 +38,25 @@ inline fun <reified T> hasOverlayMatcher(position: Int): BoundedMatcher<View, Ma
 
         override fun describeTo(description: Description) {
             description.appendText("Has overlay with position $position")
+        }
+    }
+}
+
+fun @receiver:IdRes Int.hasBaseTileSource(tileSource: ITileSource) {
+    onView(withId(this)).check(matches(hasBaseTileSourceMatcher(tileSource)))
+}
+
+fun hasBaseTileSourceMatcher(tileSource: ITileSource): BoundedMatcher<View, MapView> {
+    return object : BoundedMatcher<View, MapView>(MapView::class.java) {
+
+        override fun matchesSafely(mapView: MapView?): Boolean {
+            if (mapView == null) return false
+
+            return mapView.tileProvider.tileSource == tileSource
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("Has base tile source: $tileSource")
         }
     }
 }

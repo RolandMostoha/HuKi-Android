@@ -13,7 +13,7 @@ open class BaseInteractor @Inject constructor(
     private val exceptionLogger: ExceptionLogger
 ) {
 
-    suspend fun <T> getRequestFlow(request: suspend () -> T): Flow<T> {
+    fun <T> getRequestFlow(request: suspend () -> T): Flow<T> {
         return flow {
             try {
                 val result = request.invoke()

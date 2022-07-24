@@ -6,7 +6,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.osmdroid.MyLocationOverlay
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
@@ -29,11 +28,6 @@ fun MapView.removeOverlay(overlay: List<Overlay>) {
     overlay.forEach {
         overlays.remove(it)
     }
-    invalidate()
-}
-
-fun MapView.removePlaceOverlays() {
-    overlays.removeIf { it !is TilesOverlay && it !is MyLocationOverlay }
     invalidate()
 }
 

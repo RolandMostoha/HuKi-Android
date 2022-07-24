@@ -4,8 +4,7 @@ import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.mostoha.mobile.android.huki.executor.TaskExecutor
-import hu.mostoha.mobile.android.huki.interactor.HikingLayerInteractor
+import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
@@ -19,22 +18,21 @@ import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.Message
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
-import hu.mostoha.mobile.android.huki.util.launch
-import hu.mostoha.mobile.android.huki.util.launchCancellable
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val taskExecutor: TaskExecutor,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val exceptionLogger: ExceptionLogger,
-    private val hikingLayerInteractor: HikingLayerInteractor,
     private val placesInteractor: PlacesInteractor,
     private val landscapeInteractor: LandscapeInteractor,
-    private val generator: HomeUiModelGenerator
+    private val uiModelGenerator: HomeUiModelGenerator
 ) : ViewModel() {
 
     companion object {
@@ -44,10 +42,6 @@ class HomeViewModel @Inject constructor(
     private val _mapUiModel = MutableStateFlow(MapUiModel())
     val mapUiModel: StateFlow<MapUiModel> = _mapUiModel
         .stateIn(viewModelScope, WhileViewSubscribed, MapUiModel())
-
-    private val _hikingLayer = MutableStateFlow<HikingLayerUiModel>(HikingLayerUiModel.Loading)
-    val hikingLayer: StateFlow<HikingLayerUiModel> = _hikingLayer
-        .stateIn(viewModelScope, WhileViewSubscribed, HikingLayerUiModel.Loading)
 
     private val _myLocationUiModel = MutableStateFlow(MyLocationUiModel())
     val myLocationUiModel: StateFlow<MyLocationUiModel> = _myLocationUiModel
@@ -78,60 +72,39 @@ class HomeViewModel @Inject constructor(
     private var searchPlacesJob: Job? = null
 
     init {
-        loadDefaultLandscapes()
+        viewModelScope.launch(dispatcher) {
+            landscapeInteractor.requestGetLandscapesFlow()
+                .map { uiModelGenerator.generateLandscapes(it) }
+                .onEach { _landscapes.emit(it) }
+                .catch { showError(it) }
+                .collect()
+        }
     }
 
-    fun loadHikingLayer() = launch(taskExecutor) {
-        hikingLayerInteractor.requestHikingLayerFileFlow()
-            .map { generator.generateHikingLayerState(it) }
-            .onEach { _hikingLayer.emit(it) }
-            .catch { showError(it) }
-            .onStart { showLoading(true) }
-            .onCompletion { showLoading(false) }
-            .collect()
-    }
-
-    fun downloadHikingLayer() = launch(taskExecutor) {
-        hikingLayerInteractor.requestDownloadHikingLayerFileFlow()
-            .onStart { _hikingLayer.emit(HikingLayerUiModel.Downloading) }
-            .catch { throwable ->
-                showError(throwable)
-
-                loadHikingLayer()
-            }
-            .collect()
-    }
-
-    fun saveHikingLayer(downloadId: Long) = launch(taskExecutor) {
-        hikingLayerInteractor.requestSaveHikingLayerFileFlow(downloadId)
-            .onStart { _hikingLayer.emit(HikingLayerUiModel.Downloading) }
-            .catch { showError(it) }
-            .onCompletion { loadHikingLayer() }
-            .collect()
-    }
-
-    fun loadLandscapes(location: Location) = launch(taskExecutor) {
+    fun loadLandscapes(location: Location) = viewModelScope.launch(dispatcher) {
         landscapeInteractor.requestGetLandscapesFlow(location.toLocation())
-            .map { generator.generateLandscapes(it) }
+            .map { uiModelGenerator.generateLandscapes(it) }
             .onEach { _landscapes.emit(it) }
             .catch { showError(it) }
             .collect()
     }
 
-    fun loadSearchBarPlaces(searchText: String) = launch(taskExecutor) {
+    fun loadSearchBarPlaces(searchText: String) {
         searchPlacesJob?.let { job ->
             if (job.isActive) {
                 job.cancel()
-                showLoading(false)
+                viewModelScope.launch {
+                    showLoading(false)
+                }
             }
         }
-        searchPlacesJob = launchCancellable(taskExecutor) {
+        searchPlacesJob = viewModelScope.launch(dispatcher) {
             placesInteractor.requestGetPlacesByFlow(searchText)
-                .map { generator.generateSearchBarItems(it) }
+                .map { uiModelGenerator.generateSearchBarItems(it) }
                 .onEach { _searchBarItems.emit(it) }
                 .catch { throwable ->
                     if (throwable is DomainException) {
-                        _searchBarItems.emit(generator.generatePlacesErrorItem(throwable))
+                        _searchBarItems.emit(uiModelGenerator.generatePlacesErrorItem(throwable))
                     }
                 }
                 .onStart {
@@ -144,28 +117,30 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun cancelSearch() = launch(taskExecutor) {
+    fun cancelSearch() {
         searchPlacesJob?.let { job ->
             if (job.isActive) {
                 job.cancel()
             }
         }
 
-        clearSearchBarItems()
+        viewModelScope.launch(dispatcher) {
+            clearSearchBarItems()
 
-        showLoading(false)
+            showLoading(false)
+        }
     }
 
-    fun loadPlace(placeUiModel: PlaceUiModel) = launch(taskExecutor) {
+    fun loadPlace(placeUiModel: PlaceUiModel) = viewModelScope.launch(dispatcher) {
         clearSearchBarItems()
         clearFollowLocation()
 
-        _placeDetails.emit(generator.generatePlaceDetails(placeUiModel))
+        _placeDetails.emit(uiModelGenerator.generatePlaceDetails(placeUiModel))
     }
 
-    fun loadPlaceDetails(placeUiModel: PlaceUiModel) = launch(taskExecutor) {
+    fun loadPlaceDetails(placeUiModel: PlaceUiModel) = viewModelScope.launch(dispatcher) {
         placesInteractor.requestGeometryFlow(placeUiModel.osmId, placeUiModel.placeType)
-            .map { generator.generatePlaceDetails(placeUiModel, it) }
+            .map { uiModelGenerator.generatePlaceDetails(placeUiModel, it) }
             .onEach { _placeDetails.emit(it) }
             .onStart {
                 clearFollowLocation()
@@ -178,9 +153,9 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = launch(taskExecutor) {
+    fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = viewModelScope.launch(dispatcher) {
         placesInteractor.requestGetHikingRoutesFlow(boundingBox)
-            .map { generator.generateHikingRoutes(placeName, it) }
+            .map { uiModelGenerator.generateHikingRoutes(placeName, it) }
             .onEach { _hikingRoutes.emit(it) }
             .onStart { showLoading(true) }
             .onCompletion { showLoading(false) }
@@ -188,9 +163,9 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = launch(taskExecutor) {
+    fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = viewModelScope.launch(dispatcher) {
         placesInteractor.requestGeometryFlow(hikingRoute.osmId, PlaceType.RELATION)
-            .map { generator.generateHikingRouteDetails(hikingRoute, it) }
+            .map { uiModelGenerator.generateHikingRouteDetails(hikingRoute, it) }
             .onEach { _placeDetails.emit(it) }
             .onStart {
                 clearFollowLocation()
@@ -206,32 +181,24 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun updateMyLocationConfig(isFollowLocationEnabled: Boolean) = launch(taskExecutor) {
+    fun updateMyLocationConfig(isFollowLocationEnabled: Boolean) = viewModelScope.launch(dispatcher) {
         _myLocationUiModel.update { it.copy(isFollowLocationEnabled = isFollowLocationEnabled) }
     }
 
-    fun saveBoundingBox(boundingBox: BoundingBox) = launch(taskExecutor) {
+    fun saveBoundingBox(boundingBox: BoundingBox) = viewModelScope.launch(dispatcher) {
         _mapUiModel.update { it.copy(boundingBox = boundingBox, withDefaultOffset = true) }
     }
 
-    fun clearPlaceDetails() = launch(taskExecutor) {
+    fun clearPlaceDetails() = viewModelScope.launch(dispatcher) {
         _placeDetails.emit(null)
     }
 
-    fun clearHikingRoutes() = launch(taskExecutor) {
+    fun clearHikingRoutes() = viewModelScope.launch(dispatcher) {
         _hikingRoutes.emit(null)
     }
 
     private fun clearFollowLocation() {
         updateMyLocationConfig(isFollowLocationEnabled = false)
-    }
-
-    private fun loadDefaultLandscapes() = launch(taskExecutor) {
-        landscapeInteractor.requestGetLandscapesFlow()
-            .map { generator.generateLandscapes(it) }
-            .onEach { _landscapes.emit(it) }
-            .catch { showError(it) }
-            .collect()
     }
 
     private suspend fun clearSearchBarItems() {

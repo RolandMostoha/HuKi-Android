@@ -4,14 +4,14 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
-import hu.mostoha.mobile.android.huki.osmdroid.AsyncMyLocationProvider
-import hu.mostoha.mobile.android.huki.osmdroid.FusedLocationProvider
+import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.osmdroid.location.FusedLocationProvider
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
 abstract class LocationModule {
 
     @Binds
-    abstract fun bindAsyncMyLocationProvider(taskExecutor: FusedLocationProvider): AsyncMyLocationProvider
+    abstract fun bindAsyncMyLocationProvider(asyncMyLocationProvider: FusedLocationProvider): AsyncMyLocationProvider
 
 }

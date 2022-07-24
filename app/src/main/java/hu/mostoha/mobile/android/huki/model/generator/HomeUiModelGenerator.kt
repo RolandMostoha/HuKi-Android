@@ -1,18 +1,18 @@
 package hu.mostoha.mobile.android.huki.model.generator
 
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.extensions.formatShortDate
-import hu.mostoha.mobile.android.huki.extensions.toLocalDateTime
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
-import hu.mostoha.mobile.android.huki.model.ui.*
+import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
+import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.util.Message
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateCenter
-import java.io.File
 import javax.inject.Inject
 
 class HomeUiModelGenerator @Inject constructor() {
@@ -149,17 +149,6 @@ class HomeUiModelGenerator @Inject constructor() {
             ),
             geometry = geometry
         )
-    }
-
-    fun generateHikingLayerState(hikingLayerFile: File?): HikingLayerUiModel {
-        return if (hikingLayerFile == null) {
-            HikingLayerUiModel.NotDownloaded
-        } else {
-            HikingLayerUiModel.Downloaded(
-                hikingLayerFile = hikingLayerFile,
-                lastUpdatedText = hikingLayerFile.lastModified().toLocalDateTime().formatShortDate()
-            )
-        }
     }
 
 }

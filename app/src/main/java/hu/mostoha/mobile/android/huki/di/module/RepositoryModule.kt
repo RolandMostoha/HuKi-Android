@@ -13,11 +13,11 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindLayerRepository(layerRepository: DefaultHikingLayerRepository): HikingLayerRepository
+    abstract fun bindLayerRepository(layerRepository: FileBasedHikingLayerRepository): HikingLayerRepository
 
     @Singleton
     @Binds
-    abstract fun bindPlacesRepository(placesRepositoryImpl: OsmPlacesRepository): PlacesRepository
+    abstract fun bindPlacesRepository(placesRepository: OsmPlacesRepository): PlacesRepository
 
     @Singleton
     @Binds

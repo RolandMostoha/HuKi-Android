@@ -11,15 +11,15 @@ class PlacesInteractor @Inject constructor(
     private val placesRepository: PlacesRepository
 ) : BaseInteractor(exceptionLogger) {
 
-    suspend fun requestGetPlacesByFlow(searchText: String): Flow<List<Place>> {
+    fun requestGetPlacesByFlow(searchText: String): Flow<List<Place>> {
         return getRequestFlow { placesRepository.getPlacesBy(searchText) }
     }
 
-    suspend fun requestGeometryFlow(osmId: String, placeType: PlaceType): Flow<Geometry> {
+    fun requestGeometryFlow(osmId: String, placeType: PlaceType): Flow<Geometry> {
         return getRequestFlow { placesRepository.getGeometry(osmId, placeType) }
     }
 
-    suspend fun requestGetHikingRoutesFlow(boundingBox: BoundingBox): Flow<List<HikingRoute>> {
+    fun requestGetHikingRoutesFlow(boundingBox: BoundingBox): Flow<List<HikingRoute>> {
         return getRequestFlow { placesRepository.getHikingRoutes(boundingBox) }
     }
 

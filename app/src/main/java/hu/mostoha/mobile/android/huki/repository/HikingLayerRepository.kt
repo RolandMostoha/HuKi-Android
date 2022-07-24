@@ -1,13 +1,9 @@
 package hu.mostoha.mobile.android.huki.repository
 
-import java.io.File
+import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
 
 interface HikingLayerRepository {
 
-    suspend fun getHikingLayerFile(): File?
-
-    suspend fun downloadHikingLayerFile(): Long
-
-    suspend fun saveHikingLayerFile(downloadId: Long)
+    suspend fun getHikingLayerZoomRanges(): List<TileZoomRange>
 
 }

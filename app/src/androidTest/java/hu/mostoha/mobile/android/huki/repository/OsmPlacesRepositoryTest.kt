@@ -5,15 +5,13 @@ import androidx.test.filters.MediumTest
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
-import hu.mostoha.mobile.android.huki.di.module.ServiceModule
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.testdata.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -24,7 +22,6 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 @HiltAndroidTest
-@UninstallModules(ServiceModule::class)
 class OsmPlacesRepositoryTest {
 
     @get:Rule
@@ -39,14 +36,14 @@ class OsmPlacesRepositoryTest {
     lateinit var repository: OsmPlacesRepository
 
     @Test
-    fun givenSearchText_whenGetPlacesBy_thenResultIsNotNull() = runBlocking {
+    fun givenSearchText_whenGetPlacesBy_thenResultIsNotNull() = runTest {
         val places = repository.getPlacesBy("Mecsek")
 
         assertThat(places).isNotEmpty()
     }
 
     @Test
-    fun givenNodeOsmId_whenGetGeometry_thenLocationIsPresent() = runBlocking {
+    fun givenNodeOsmId_whenGetGeometry_thenLocationIsPresent() = runTest {
         val osmId = DEFAULT_NODE_OSM_ID
 
         val geometry = repository.getGeometry(osmId, PlaceType.NODE)
@@ -57,7 +54,7 @@ class OsmPlacesRepositoryTest {
     }
 
     @Test
-    fun givenWayOsmId_whenGetGeometry_thenLocationListIsNotEmpty() = runBlocking {
+    fun givenWayOsmId_whenGetGeometry_thenLocationListIsNotEmpty() = runTest {
         val osmId = DEFAULT_WAY_OSM_ID
 
         val geometry = repository.getGeometry(osmId, PlaceType.WAY)
@@ -68,7 +65,7 @@ class OsmPlacesRepositoryTest {
     }
 
     @Test
-    fun givenRelationOsmId_whenGetGeometry_thenWaysListIsNotEmpty() = runBlocking {
+    fun givenRelationOsmId_whenGetGeometry_thenWaysListIsNotEmpty() = runTest {
         val osmId = DEFAULT_RELATION_OSM_ID
 
         val geometry = repository.getGeometry(osmId, PlaceType.RELATION)
@@ -79,7 +76,7 @@ class OsmPlacesRepositoryTest {
     }
 
     @Test
-    fun givenBoundingBox_whenGetHikingRoutes_thenHikingRouteListIsNotEmpty() = runBlocking {
+    fun givenBoundingBox_whenGetHikingRoutes_thenHikingRouteListIsNotEmpty() = runTest {
         val hikingRoutes = repository.getHikingRoutes(DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES)
 
         assertThat(hikingRoutes).isNotEmpty()

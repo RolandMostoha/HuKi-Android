@@ -3,8 +3,6 @@ package hu.mostoha.mobile.android.huki.ui.home
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.executor.TestTaskExecutor
-import hu.mostoha.mobile.android.huki.interactor.HikingLayerInteractor
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
@@ -14,29 +12,29 @@ import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.*
-import hu.mostoha.mobile.android.huki.rule.MainCoroutineRule
-import hu.mostoha.mobile.android.huki.rule.runTest
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
+import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.flowOfError
+import hu.mostoha.mobile.android.huki.util.runTestDefault
 import hu.mostoha.mobile.android.huki.util.toMockLocation
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.osmdroid.util.GeoPoint
-import java.io.File
 
 @ExperimentalCoroutinesApi
 class HomeViewModelTest {
 
     private lateinit var viewModel: HomeViewModel
-
-    private val layerInteractor = mockk<HikingLayerInteractor>()
 
     private val placesInteractor = mockk<PlacesInteractor>()
 
@@ -54,173 +52,23 @@ class HomeViewModelTest {
         every { exceptionLogger.recordException(any()) } returns Unit
         mockLandscapes()
 
-        viewModel = spyk(
-            HomeViewModel(
-                TestTaskExecutor(),
-                exceptionLogger,
-                layerInteractor,
-                placesInteractor,
-                landscapeInteractor,
-                generator
-            )
+        viewModel = HomeViewModel(
+            dispatcher = mainCoroutineRule.testDispatcher,
+            exceptionLogger = exceptionLogger,
+            placesInteractor = placesInteractor,
+            landscapeInteractor = landscapeInteractor,
+            uiModelGenerator = generator
         )
     }
 
     @Test
-    fun `When ViewModel initialization, then loading is emitted`() {
-        mainCoroutineRule.runTest {
-            val hikingLayerFile = null
-            coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(hikingLayerFile)
-            coEvery { generator.generateHikingLayerState(hikingLayerFile) } returns HikingLayerUiModel.NotDownloaded
-
-            viewModel.loading.test {
-                viewModel.loadHikingLayer()
-
-                assertThat(awaitItem()).isTrue()
-                assertThat(awaitItem()).isFalse()
-            }
-        }
-    }
-
-    @Test
-    fun `Given null hiking layer file, when loadHikingLayer, then loading is emitted`() {
-        mainCoroutineRule.runTest {
-            val hikingLayerFile = null
-            coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(hikingLayerFile)
-            coEvery { generator.generateHikingLayerState(hikingLayerFile) } returns HikingLayerUiModel.NotDownloaded
-
-            viewModel.loading.test {
-                viewModel.loadHikingLayer()
-
-                assertThat(awaitItem()).isTrue()
-                assertThat(awaitItem()).isFalse()
-            }
-        }
-    }
-
-    @Test
-    fun `Given null hiking layer file, when loadHikingLayer, then Loading and NotDownloaded hiking layer is emitted`() {
-        mainCoroutineRule.runTest {
-            val hikingLayerFile = null
-            coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(hikingLayerFile)
-            coEvery { generator.generateHikingLayerState(hikingLayerFile) } returns HikingLayerUiModel.NotDownloaded
-
-            viewModel.hikingLayer.test {
-                viewModel.loadHikingLayer()
-
-                assertThat(awaitItem()).isEqualTo(HikingLayerUiModel.Loading)
-                assertThat(awaitItem()).isEqualTo(HikingLayerUiModel.NotDownloaded)
-            }
-        }
-    }
-
-    @Test
-    fun `Given valid hiking layer file, when loadHikingLayer, then Loading and NotDownloaded hiking layer is emitted`() {
-        mainCoroutineRule.runTest {
-            val hikingLayerFile = File("")
-            val hikingLayerUiModel = HikingLayerUiModel.Downloaded(hikingLayerFile, "2022.03.31")
-            coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(hikingLayerFile)
-            coEvery { generator.generateHikingLayerState(hikingLayerFile) } returns hikingLayerUiModel
-
-            viewModel.hikingLayer.test {
-                viewModel.loadHikingLayer()
-
-                assertThat(awaitItem()).isEqualTo(HikingLayerUiModel.Loading)
-                assertThat(awaitItem()).isEqualTo(hikingLayerUiModel)
-            }
-        }
-    }
-
-    @Test
-    fun `Given unknown error, when loadHikingLayer, then error message is emitted`() {
-        mainCoroutineRule.runTest {
-            val exception = UnknownException(Exception(""))
-            coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOfError(exception)
-
-            viewModel.errorMessage.test {
-                viewModel.loadHikingLayer()
-
-                assertThat(awaitItem()).isEqualTo(R.string.error_message_unknown.toMessage())
-            }
-        }
-    }
-
-    @Test
-    fun `When downloadHikingLayer, then hiking layer is in downloading state`() {
-        mainCoroutineRule.runTest {
-            val downloadId = 12345L
-            coEvery { layerInteractor.requestDownloadHikingLayerFileFlow() } returns flowOf(downloadId)
-
-            viewModel.hikingLayer.test {
-                viewModel.downloadHikingLayer()
-
-                assertThat(awaitItem()).isEqualTo(HikingLayerUiModel.Loading)
-                assertThat(awaitItem()).isEqualTo(HikingLayerUiModel.Downloading)
-            }
-        }
-    }
-
-    @Test
-    fun `Given error, when downloadHikingLayer, then error message is emitted and request for hiking layer file is initiated`() {
-        mainCoroutineRule.runTest {
-            val exception = UnknownException(Exception(""))
-            coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(File(""))
-            coEvery { layerInteractor.requestDownloadHikingLayerFileFlow() } returns flowOfError(exception)
-
-            viewModel.errorMessage.test {
-                viewModel.downloadHikingLayer()
-
-                assertThat(awaitItem()).isEqualTo(R.string.error_message_unknown.toMessage())
-            }
-
-            coVerify { layerInteractor.requestHikingLayerFileFlow() }
-        }
-    }
-
-    @Test
-    fun `Given download id, when saveHikingLayer, then Loading and Downloading hiking layer is emitted and request for hiking layer file is initiated`() {
-        mainCoroutineRule.runTest {
-            val downloadId = 12345L
-            coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(File(""))
-            coEvery { layerInteractor.requestSaveHikingLayerFileFlow(downloadId) } returns flowOf(Unit)
-
-            viewModel.hikingLayer.test {
-                viewModel.saveHikingLayer(downloadId)
-
-                assertThat(awaitItem()).isEqualTo(HikingLayerUiModel.Loading)
-                assertThat(awaitItem()).isEqualTo(HikingLayerUiModel.Downloading)
-            }
-
-            coVerify { layerInteractor.requestHikingLayerFileFlow() }
-        }
-    }
-
-    @Test
-    fun `Given error, when saveHikingLayer, then error message is emitted and request for hiking layer file is initiated`() {
-        mainCoroutineRule.runTest {
-            val downloadId = 12345L
-            val exception = UnknownException(Exception(""))
-            coEvery { layerInteractor.requestHikingLayerFileFlow() } returns flowOf(File(""))
-            coEvery { layerInteractor.requestSaveHikingLayerFileFlow(downloadId) } returns flowOfError(exception)
-
-            viewModel.errorMessage.test {
-                viewModel.saveHikingLayer(downloadId)
-
-                assertThat(awaitItem()).isEqualTo(R.string.error_message_unknown.toMessage())
-            }
-
-            coVerify { layerInteractor.requestHikingLayerFileFlow() }
-        }
-    }
-
-    @Test
-    fun `Given location, when loadLandscapes, then landscapes are emitted`() {
-        mainCoroutineRule.runTest {
+    fun `Given location, when loadLandscapes, then landscapes are emitted`() =
+        runTestDefault {
             val landscapes = listOf(DEFAULT_LANDSCAPE)
             val landscapesUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
 
-            coEvery { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
-            coEvery { generator.generateLandscapes(any()) } returns landscapesUiModels
+            every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
+            every { generator.generateLandscapes(any()) } returns landscapesUiModels
 
             viewModel.landscapes.test {
                 viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
@@ -229,30 +77,39 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(landscapesUiModels)
             }
         }
-    }
 
     @Test
-    fun `Given unknown error, when loadLandscapes, then error message is emitted`() {
-        mainCoroutineRule.runTest {
-            val exception = UnknownException(Exception(""))
-            coEvery { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(exception)
+    fun `Given domain error, when init landscapes, then error message is emitted`() =
+        runTestDefault {
+            val domainException = UnknownException(Exception(""))
+            every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(domainException)
 
             viewModel.errorMessage.test {
-                viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
-
                 assertThat(awaitItem()).isEqualTo(R.string.error_message_unknown.toMessage())
             }
         }
-    }
 
     @Test
-    fun `Given search text, when loadSearchBarPlaces, then search bar items are emitted`() {
-        mainCoroutineRule.runTest {
+    fun `Given unexpected error, when init landscapes, then exception logger is called`() =
+        runTestDefault {
+            val unexpectedException = IllegalStateException(Exception(""))
+            every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(unexpectedException)
+
+            advanceUntilIdle()
+
+            verify {
+                exceptionLogger.recordException(any())
+            }
+        }
+
+    @Test
+    fun `Given search text, when loadSearchBarPlaces, then search bar items are emitted`() =
+        runTestDefault {
             val searchText = "Mecs"
             val places = listOf(DEFAULT_PLACE)
             val searchBarItems = listOf(SearchBarItem.Place(DEFAULT_PLACE_UI_MODEL))
-            coEvery { placesInteractor.requestGetPlacesByFlow(searchText) } returns flowOf(places)
-            coEvery { generator.generateSearchBarItems(places) } returns searchBarItems
+            every { placesInteractor.requestGetPlacesByFlow(searchText) } returns flowOf(places)
+            every { generator.generateSearchBarItems(places) } returns searchBarItems
 
             viewModel.searchBarItems.test {
                 viewModel.loadSearchBarPlaces(searchText)
@@ -261,31 +118,29 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(searchBarItems)
             }
         }
-    }
 
     @Test
-    fun `When cancelSearch, then search bar items are cleared`() {
-        mainCoroutineRule.runTest {
+    fun `When cancelSearch, then search bar items are cleared`() =
+        runTestDefault {
             val searchText = "Mecs"
             val places = listOf(DEFAULT_PLACE)
             val searchBarItems = listOf(SearchBarItem.Place(DEFAULT_PLACE_UI_MODEL))
-            coEvery { placesInteractor.requestGetPlacesByFlow(searchText) } returns flowOf(places)
-            coEvery { generator.generateSearchBarItems(places) } returns searchBarItems
+            every { placesInteractor.requestGetPlacesByFlow(searchText) } returns flowOf(places)
+            every { generator.generateSearchBarItems(places) } returns searchBarItems
 
             viewModel.searchBarItems.test {
                 viewModel.loadSearchBarPlaces(searchText)
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(searchBarItems)
+
                 viewModel.cancelSearch()
-
-                assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(searchBarItems)
                 assertThat(awaitItem()).isNull()
             }
         }
-    }
 
     @Test
-    fun `Given error, when loadSearchBarPlaces, then error search bar item is emitted`() {
-        mainCoroutineRule.runTest {
+    fun `Given domain error, when loadSearchBarPlaces, then error search bar item is emitted`() =
+        runTestDefault {
             val errorRes = R.string.error_message_unknown.toMessage()
             val domainException = DomainException(errorRes)
             val searchBarItems = listOf(
@@ -294,8 +149,8 @@ class HomeViewModelTest {
                     drawableRes = R.drawable.ic_search_bar_error
                 )
             )
-            coEvery { placesInteractor.requestGetPlacesByFlow(any()) } returns flowOfError(domainException)
-            coEvery { generator.generatePlacesErrorItem(domainException) } returns searchBarItems
+            every { placesInteractor.requestGetPlacesByFlow(any()) } returns flowOfError(domainException)
+            every { generator.generatePlacesErrorItem(domainException) } returns searchBarItems
 
             viewModel.searchBarItems.test {
                 viewModel.loadSearchBarPlaces("")
@@ -304,14 +159,13 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(searchBarItems)
             }
         }
-    }
 
     @Test
-    fun `Given place, when loadPlace, then place details is posted`() {
-        mainCoroutineRule.runTest {
+    fun `Given place, when loadPlace, then place details is posted`() =
+        runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
-            coEvery { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+            every { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadPlace(placeUiModel)
@@ -320,14 +174,13 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(placeDetailsUiModel)
             }
         }
-    }
 
     @Test
-    fun `Given place, when loadPlace, then follow location is disabled`() {
-        mainCoroutineRule.runTest {
+    fun `Given place, when loadPlace, then follow location is disabled`() =
+        runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
-            coEvery { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+            every { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
 
             viewModel.myLocationUiModel.test {
                 viewModel.loadPlace(placeUiModel)
@@ -336,37 +189,35 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
             }
         }
-    }
 
     @Test
-    fun `Given place, when loadPlace, then searchbar items are cleared`() {
-        mainCoroutineRule.runTest {
+    fun `Given place, when loadPlace, then searchbar items are cleared`() =
+        runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
-            coEvery { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
-            coEvery { placesInteractor.requestGetPlacesByFlow(any()) } returns flowOf(emptyList())
-            coEvery { generator.generateSearchBarItems(any()) } returns emptyList()
+            every { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+            every { placesInteractor.requestGetPlacesByFlow(any()) } returns flowOf(emptyList())
+            every { generator.generateSearchBarItems(any()) } returns emptyList()
 
             viewModel.searchBarItems.test {
                 viewModel.loadSearchBarPlaces("")
-                viewModel.loadPlace(placeUiModel)
-
                 assertThat(awaitItem()).isEqualTo(null)
                 assertThat(awaitItem()).isEqualTo(emptyList<SearchBarItem>())
+
+                viewModel.loadPlace(placeUiModel)
                 assertThat(awaitItem()).isEqualTo(null)
             }
         }
-    }
 
     @Test
-    fun `Given place, when loadPlaceDetails, then place details is emitted`() {
-        mainCoroutineRule.runTest {
+    fun `Given place, when loadPlaceDetails, then place details is emitted`() =
+        runTestDefault {
             val osmId = DEFAULT_PLACE.osmId
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
-            coEvery { placesInteractor.requestGeometryFlow(osmId, PlaceType.NODE) } returns flowOf(geometry)
-            coEvery { generator.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
+            every { placesInteractor.requestGeometryFlow(osmId, PlaceType.NODE) } returns flowOf(geometry)
+            every { generator.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadPlaceDetails(placeUiModel)
@@ -375,17 +226,16 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(placeDetailsUiModel)
             }
         }
-    }
 
     @Test
-    fun `When loadPlaceDetails, then follow location should be disabled`() {
-        mainCoroutineRule.runTest {
+    fun `When loadPlaceDetails, then follow location should be disabled`() =
+        runTestDefault {
             val osmId = DEFAULT_PLACE.osmId
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
-            coEvery { placesInteractor.requestGeometryFlow(osmId, PlaceType.NODE) } returns flowOf(geometry)
-            coEvery { generator.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
+            every { placesInteractor.requestGeometryFlow(osmId, PlaceType.NODE) } returns flowOf(geometry)
+            every { generator.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
 
             viewModel.myLocationUiModel.test {
                 viewModel.loadPlaceDetails(placeUiModel)
@@ -394,14 +244,13 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
             }
         }
-    }
 
     @Test
-    fun `Given error, when loadPlaceDetails, then error message is emitted`() {
-        mainCoroutineRule.runTest {
+    fun `Given domain error, when loadPlaceDetails, then error message is emitted`() =
+        runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val errorRes = R.string.error_message_too_many_requests.toMessage()
-            coEvery {
+            every {
                 placesInteractor.requestGeometryFlow(placeUiModel.osmId, placeUiModel.placeType)
             } returns flowOfError(DomainException(errorRes))
 
@@ -411,17 +260,16 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(R.string.error_message_too_many_requests.toMessage())
             }
         }
-    }
 
     @Test
-    fun `Given place name and bounding box, when loadHikingRoutes, then hiking routes are emitted`() {
-        mainCoroutineRule.runTest {
+    fun `Given place name and bounding box, when loadHikingRoutes, then hiking routes are emitted`() =
+        runTestDefault {
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             val hikingRouteUiModels = listOf(HikingRoutesItem.Item(DEFAULT_HIKING_ROUTE_UI_MODEL))
-            coEvery { placesInteractor.requestGetHikingRoutesFlow(boundingBox) } returns flowOf(hikingRoutes)
-            coEvery { generator.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
+            every { placesInteractor.requestGetHikingRoutesFlow(boundingBox) } returns flowOf(hikingRoutes)
+            every { generator.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
 
             viewModel.hikingRoutes.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
@@ -430,15 +278,14 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(hikingRouteUiModels)
             }
         }
-    }
 
     @Test
-    fun `Given error, when loadHikingRoutes, then error message is emitted`() {
-        mainCoroutineRule.runTest {
+    fun `Given domain error, when loadHikingRoutes, then error message is emitted`() =
+        runTestDefault {
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
             val errorRes = R.string.error_message_too_many_requests.toMessage()
-            coEvery {
+            every {
                 placesInteractor.requestGetHikingRoutesFlow(boundingBox)
             } returns flowOfError(DomainException(errorRes))
 
@@ -448,17 +295,16 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(R.string.error_message_too_many_requests.toMessage())
             }
         }
-    }
 
     @Test
-    fun `Given hiking route, when loadHikingRouteDetails, then hiking routes are emitted`() {
-        mainCoroutineRule.runTest {
+    fun `Given hiking route, when loadHikingRouteDetails, then hiking routes are emitted`() =
+        runTestDefault {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
-            coEvery { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
-            coEvery { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
+            every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
+            every { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadHikingRouteDetails(hikingRouteUiModel)
@@ -467,17 +313,16 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(placeDetailsUiModel)
             }
         }
-    }
 
     @Test
-    fun `When loadHikingRouteDetails, then follow location should be disabled`() {
-        mainCoroutineRule.runTest {
+    fun `When loadHikingRouteDetails, then follow location should be disabled`() =
+        runTestDefault {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
-            coEvery { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
-            coEvery { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
+            every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
+            every { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
 
             viewModel.myLocationUiModel.test {
                 viewModel.loadHikingRouteDetails(hikingRouteUiModel)
@@ -486,11 +331,10 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
             }
         }
-    }
 
     @Test
-    fun `When loadHikingRouteDetails, then hiking routes should be cleared`() {
-        mainCoroutineRule.runTest {
+    fun `When loadHikingRouteDetails, then hiking routes should be cleared`() =
+        runTestDefault {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
@@ -499,31 +343,28 @@ class HomeViewModelTest {
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
-            coEvery { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
-            coEvery { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
-            coEvery { placesInteractor.requestGetHikingRoutesFlow(any()) } returns flowOf(hikingRoutes)
-            coEvery { generator.generateHikingRoutes(any(), any()) } returns hikingRouteUiModels
+            every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
+            every { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
+            every { placesInteractor.requestGetHikingRoutesFlow(any()) } returns flowOf(hikingRoutes)
+            every { generator.generateHikingRoutes(any(), any()) } returns hikingRouteUiModels
 
             viewModel.hikingRoutes.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
-                viewModel.loadHikingRouteDetails(hikingRouteUiModel)
-
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(hikingRouteUiModels)
+
+                viewModel.loadHikingRouteDetails(hikingRouteUiModel)
                 assertThat(awaitItem()).isNull()
             }
         }
-    }
 
     @Test
-    fun `Given error, when loadHikingRouteDetails, then error message is emitted`() {
-        mainCoroutineRule.runTest {
+    fun `Given domain error, when loadHikingRouteDetails, then error message is emitted`() =
+        runTestDefault {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val errorRes = R.string.error_message_too_many_requests.toMessage()
-            coEvery {
-                placesInteractor.requestGeometryFlow(osmId, any())
-            } returns flowOfError(DomainException(errorRes))
+            every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOfError(DomainException(errorRes))
 
             viewModel.errorMessage.test {
                 viewModel.loadHikingRouteDetails(hikingRouteUiModel)
@@ -531,29 +372,10 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(R.string.error_message_too_many_requests.toMessage())
             }
         }
-    }
 
     @Test
-    fun `Given unexpected exception, when loadHikingRouteDetails, then exception logger is called`() {
-        mainCoroutineRule.runTest {
-            val osmId = DEFAULT_HIKING_ROUTE.osmId
-            val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
-            val exception = IllegalStateException("Unexpected")
-            coEvery {
-                placesInteractor.requestGeometryFlow(osmId, any())
-            } returns flowOfError(exception)
-
-            viewModel.loadHikingRouteDetails(hikingRouteUiModel)
-
-            verify {
-                exceptionLogger.recordException(exception)
-            }
-        }
-    }
-
-    @Test
-    fun `When updateMyLocationConfig, then my location UI model should be updated`() {
-        mainCoroutineRule.runTest {
+    fun `When updateMyLocationConfig, then my location UI model should be updated`() =
+        runTestDefault {
             viewModel.myLocationUiModel.test {
                 viewModel.updateMyLocationConfig(isFollowLocationEnabled = false)
 
@@ -561,11 +383,10 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
             }
         }
-    }
 
     @Test
-    fun `When saveBoundingBox, then map UI model should be updated with the given bounding box with the default offset`() {
-        mainCoroutineRule.runTest {
+    fun `When saveBoundingBox, then map UI model should be updated with the given bounding box with the default offset`() =
+        runTestDefault {
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
 
             viewModel.mapUiModel.test {
@@ -575,55 +396,52 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isEqualTo(MapUiModel(boundingBox, withDefaultOffset = true))
             }
         }
-    }
 
     @Test
-    fun `When clearPlaceDetails, then place details UI model should be cleared`() {
-        mainCoroutineRule.runTest {
+    fun `When clearPlaceDetails, then place details UI model should be cleared`() =
+        runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             val geometry = Geometry.Node(placeUiModel.osmId, Location(47.7193842, 18.8962014))
-            coEvery { placesInteractor.requestGeometryFlow(any(), any()) } returns flowOf(geometry)
-            coEvery { generator.generatePlaceDetails(any(), any()) } returns placeDetailsUiModel
+            every { placesInteractor.requestGeometryFlow(any(), any()) } returns flowOf(geometry)
+            every { generator.generatePlaceDetails(any(), any()) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadPlaceDetails(placeUiModel)
-                viewModel.clearPlaceDetails()
-
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(placeDetailsUiModel)
+
+                viewModel.clearPlaceDetails()
                 assertThat(awaitItem()).isNull()
             }
         }
-    }
 
     @Test
-    fun `When clearHikingRoutes, then hiking route UI models should be cleared`() {
-        mainCoroutineRule.runTest {
+    fun `When clearHikingRoutes, then hiking route UI models should be cleared`() =
+        runTestDefault {
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             val hikingRouteUiModels = listOf(HikingRoutesItem.Item(DEFAULT_HIKING_ROUTE_UI_MODEL))
-            coEvery { placesInteractor.requestGetHikingRoutesFlow(boundingBox) } returns flowOf(hikingRoutes)
-            coEvery { generator.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
+            every { placesInteractor.requestGetHikingRoutesFlow(boundingBox) } returns flowOf(hikingRoutes)
+            every { generator.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
 
             viewModel.hikingRoutes.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
-                viewModel.clearHikingRoutes()
-
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(hikingRouteUiModels)
+
+                viewModel.clearHikingRoutes()
                 assertThat(awaitItem()).isNull()
             }
         }
-    }
 
     private fun mockLandscapes() {
         val landscapes = listOf(DEFAULT_LANDSCAPE)
         val landscapeUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
 
-        coEvery { landscapeInteractor.requestGetLandscapesFlow() } returns flowOf(landscapes)
-        coEvery { generator.generateLandscapes(any()) } returns landscapeUiModels
+        every { landscapeInteractor.requestGetLandscapesFlow() } returns flowOf(landscapes)
+        every { generator.generateLandscapes(any()) } returns landscapeUiModels
     }
 
     companion object {

@@ -9,29 +9,24 @@ import org.osmdroid.tileprovider.util.StorageUtils
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class OsmConfiguration @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
     companion object {
-        private const val URL_HIKING_LAYER_FILE = "https://data2.openstreetmap.hu/TuraReteg.sqlitedb"
-
         private const val DIRECTORY_NAME_OSM_DROID = "osmdroid"
         private const val DIRECTORY_NAME_CACHE = "tiles"
-        private const val DIRECTORY_NAME_LAYERS = "layers"
-        private const val FILE_NAME_HIKING_LAYER = "TuraReteg.sqlite"
 
         private const val KEY_GLOBAL_SHARED_PREFERENCES = "KEY_GLOBAL_SHARED_PREFERENCES"
     }
 
     private val osmDroidBasePath: String? = null
     private val osmDroidCachePath: String? = null
-    private val osmDroidLayerPath: String? = null
 
     private val isDebug = false
-
-    fun getHikingLayerFileUrl() = URL_HIKING_LAYER_FILE
 
     fun init() {
         Configuration.getInstance().apply {
@@ -49,50 +44,41 @@ class OsmConfiguration @Inject constructor(
     }
 
     private fun getOsmDroidBaseDirectory(): File {
-        return if (osmDroidBasePath == null) {
+        val baseDirectory = if (osmDroidBasePath != null) {
+            File(osmDroidBasePath)
+        } else {
             val storage = StorageUtils.getBestWritableStorage(context)
             val path = storage.path
 
-            val file = getOrCreateDirectory(path, DIRECTORY_NAME_OSM_DROID)
-                ?: throwDirCreationError("$path/$DIRECTORY_NAME_OSM_DROID")
-            logDirCreated("Base dir: ${file.path}")
+            val file = getOrCreateDirectory(
+                parent = path,
+                child = DIRECTORY_NAME_OSM_DROID
+            ) ?: error("OSM directory creation error: $path/$DIRECTORY_NAME_OSM_DROID")
 
             file
-        } else {
-            File(osmDroidBasePath)
         }
+
+        Timber.i("Using OSM Base DIR: ${baseDirectory.path}")
+
+        return baseDirectory
     }
 
     private fun getOsmDroidCacheDirectory(): File {
-        return if (osmDroidCachePath == null) {
-            val basePath = getOsmDroidBaseDirectory().path
-            val file = getOrCreateDirectory(basePath, DIRECTORY_NAME_CACHE)
-                ?: throwDirCreationError("$basePath/$DIRECTORY_NAME_CACHE")
-            logDirCreated("Cache dir: ${file.path}")
-
-            file
-        } else {
+        val cacheDirectory = if (osmDroidCachePath != null) {
             File(osmDroidCachePath)
-        }
-    }
-
-    fun getHikingLayerFile(): File = File(getOsmDroidLayerDirectory(), FILE_NAME_HIKING_LAYER)
-
-    private fun getOsmDroidLayerDirectory(): File {
-        return if (osmDroidLayerPath == null) {
+        } else {
             val basePath = getOsmDroidBaseDirectory().path
-            val file = getOrCreateDirectory(basePath, DIRECTORY_NAME_LAYERS)
-                ?: throwDirCreationError("$basePath/$DIRECTORY_NAME_LAYERS")
-            logDirCreated("Layer dir: ${file.path}")
+            val file = getOrCreateDirectory(
+                parent = basePath,
+                child = DIRECTORY_NAME_CACHE
+            ) ?: error("OSM directory creation error: $basePath/$DIRECTORY_NAME_CACHE")
 
             file
-        } else {
-            File(osmDroidLayerPath)
         }
+
+        Timber.i("Using OSM Cache DIR: ${cacheDirectory.path}")
+
+        return cacheDirectory
     }
-
-    private fun throwDirCreationError(path: String): Nothing = error("OSM directory creation error: $path")
-
-    private fun logDirCreated(pathText: String) = Timber.i("Using OSM $pathText")
 
 }

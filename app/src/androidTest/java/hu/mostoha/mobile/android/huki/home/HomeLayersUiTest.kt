@@ -1,8 +1,10 @@
 package hu.mostoha.mobile.android.huki.home
 
 import android.Manifest
-import android.app.DownloadManager
-import android.content.Intent
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -12,34 +14,27 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
-import hu.mostoha.mobile.android.huki.di.module.ServiceModule
-import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
-import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.repository.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
-import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
-import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
-import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.*
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
-import hu.mostoha.mobile.android.huki.util.testContext
-import io.mockk.coEvery
 import io.mockk.mockk
+import org.hamcrest.Matchers.allOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.views.overlay.TilesOverlay
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class, ServiceModule::class)
+@UninstallModules(RepositoryModule::class)
 class HomeLayersUiTest {
 
     @get:Rule
@@ -56,7 +51,7 @@ class HomeLayersUiTest {
 
     @BindValue
     @JvmField
-    val hikingLayerRepository: HikingLayerRepository = mockk()
+    val hikingLayerRepository: HikingLayerRepository = FileBasedHikingLayerRepository(testAppContext)
 
     @BindValue
     @JvmField
@@ -73,56 +68,58 @@ class HomeLayersUiTest {
     }
 
     @Test
-    fun givenNullLayerFile_whenScreenStarts_thenLayersPopupWindowShouldShown() {
-        answerNullHikingLayer()
-
+    fun whenLayersButtonClick_thenLayersBottomSheetDialogShouldShown() {
         launchScenario<HomeActivity> {
-            R.string.layers_base_layers_title.isPopupTextDisplayed()
+            R.id.homeLayersFab.click()
+
+            R.string.layers_base_layers_header.isTextDisplayed()
+            R.string.layers_hiking_layers_header.isTextDisplayed()
         }
     }
 
     @Test
-    fun givenNullLayerFile_whenLayerIsDownloaded_thenLayersPopupWindowShouldUpdate() {
-        coEvery {
-            hikingLayerRepository.getHikingLayerFile()
-        } returnsMany listOf(
-            null,
-            osmConfiguration.getHikingLayerFile().apply {
-                copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
-            }
-        )
-        coEvery { hikingLayerRepository.downloadHikingLayerFile() } returns 1
-        coEvery { hikingLayerRepository.saveHikingLayerFile(1) } returns Unit
-
+    fun whenSelectOpenTopoMap_thenOpenTopoLayerDisplays() {
         launchScenario<HomeActivity> {
-            R.id.itemLayersHikingDownloadButton.clickInPopup()
+            R.id.homeMapView.hasBaseTileSource(TileSourceFactory.MAPNIK)
 
-            testAppContext.sendBroadcast(Intent(DownloadManager.ACTION_DOWNLOAD_COMPLETE).apply {
-                putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 1L)
-            })
+            R.id.homeLayersFab.click()
 
-            R.string.layers_hiking_downloaded_label.isPopupTextDisplayed()
+            onView(
+                allOf(
+                    withId(R.id.itemLayersImageCard),
+                    hasSibling(withText(R.string.layers_open_topo_title))
+                )
+            ).perform(click())
+
+            Espresso.pressBack()
+
+            R.id.homeMapView.hasBaseTileSource(TileSourceFactory.OpenTopo)
         }
     }
 
     @Test
-    fun givenTuraReteg1000_whenMapOpens_thenHikingLayerDisplays() {
-        answerTestHikingLayer()
-
+    fun whenMapOpens_thenHikingLayerDisplays() {
         launchScenario<HomeActivity> {
             R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(OverlayPositions.HIKING_LAYER)
         }
     }
 
-    private fun answerTestHikingLayer() {
-        val file = osmConfiguration.getHikingLayerFile().apply {
-            copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
-        }
-        coEvery { hikingLayerRepository.getHikingLayerFile() } returns file
-    }
+    @Test
+    fun whenDeselectHikingLayer_thenHikingLayerDoesNotDisplay() {
+        launchScenario<HomeActivity> {
+            R.id.homeLayersFab.click()
 
-    private fun answerNullHikingLayer() {
-        coEvery { hikingLayerRepository.getHikingLayerFile() } returns null
+            onView(
+                allOf(
+                    withId(R.id.itemLayersImageCard),
+                    hasSibling(withText(R.string.layers_hiking_hungarian_title))
+                )
+            ).perform(click())
+
+            Espresso.pressBack()
+
+            R.id.homeMapView.hasNotOverlayInPosition<TilesOverlay>(OverlayPositions.HIKING_LAYER)
+        }
     }
 
 }

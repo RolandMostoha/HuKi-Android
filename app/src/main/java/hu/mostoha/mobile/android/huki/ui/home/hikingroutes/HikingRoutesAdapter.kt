@@ -12,32 +12,20 @@ import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 class HikingRoutesAdapter(
     val onItemClick: (HikingRouteUiModel) -> Unit,
     val onCloseClick: () -> Unit
-) : ListAdapter<HikingRoutesItem, RecyclerView.ViewHolder>(HikingRoutesComparator) {
+) : ListAdapter<HikingRoutesItem, RecyclerView.ViewHolder>(HikingRoutesDiffUtilCallback) {
 
     companion object {
         private const val TYPE_HEADER = 0
         private const val TYPE_ITEM = 1
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
-            is HikingRoutesItem.Header -> TYPE_HEADER
-            is HikingRoutesItem.Item -> TYPE_ITEM
-            else -> throw IllegalArgumentException("Not handled ItemViewType")
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_HEADER -> {
-                ViewHolderHeader(
-                    ItemHomeHikingRoutesHeaderBinding.inflate(parent.context.inflater, parent, false)
-                )
+                ViewHolderHeader(ItemHomeHikingRoutesHeaderBinding.inflate(parent.context.inflater, parent, false))
             }
             TYPE_ITEM -> {
-                ViewHolderItem(
-                    ItemHomeHikingRoutesBinding.inflate(parent.context.inflater, parent, false)
-                )
+                ViewHolderItem(ItemHomeHikingRoutesBinding.inflate(parent.context.inflater, parent, false))
             }
             else -> throw IllegalArgumentException("Not supported viewType")
         }
@@ -46,11 +34,18 @@ class HikingRoutesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ViewHolderHeader -> {
-                holder.bind((getItem(position) as HikingRoutesItem.Header).text)
+                holder.bind((getItem(position) as HikingRoutesItem.Header).title)
             }
             is ViewHolderItem -> {
                 holder.bind((getItem(position) as HikingRoutesItem.Item).hikingRouteUiModel)
             }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is HikingRoutesItem.Header -> TYPE_HEADER
+            is HikingRoutesItem.Item -> TYPE_ITEM
         }
     }
 

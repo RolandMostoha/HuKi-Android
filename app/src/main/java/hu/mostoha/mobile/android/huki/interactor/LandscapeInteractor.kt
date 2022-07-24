@@ -14,7 +14,7 @@ class LandscapeInteractor @Inject constructor(
     private val landscapeRepository: LandscapeRepository
 ) : BaseInteractor(exceptionLogger) {
 
-    suspend fun requestGetLandscapesFlow(location: Location? = null): Flow<List<Landscape>> {
+    fun requestGetLandscapesFlow(location: Location? = null): Flow<List<Landscape>> {
         val landscapesFlow = getRequestFlow { landscapeRepository.getLandscapes() }
 
         return if (location == null) {

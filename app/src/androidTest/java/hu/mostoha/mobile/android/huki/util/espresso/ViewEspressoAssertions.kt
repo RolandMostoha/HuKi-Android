@@ -75,12 +75,18 @@ fun @receiver:StringRes Int.isToastTextDisplayed(activityScenario: ActivityScena
     }
 }
 
+fun @receiver:IdRes Int.clickInPopup() {
+    onView(withId(this))
+        .inRoot(RootMatchers.isPlatformPopup())
+        .perform(ViewActions.click())
+}
+
 fun @receiver:StringRes Int.clickWithText() {
     onView(withText(this)).perform(ViewActions.click())
 }
 
-fun @receiver:IdRes Int.clickInPopup() {
-    onView(withId(this))
+fun @receiver:StringRes Int.clickWithTextInPopup() {
+    onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
         .perform(ViewActions.click())
 }

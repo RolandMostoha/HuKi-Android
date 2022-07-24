@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
+import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import io.mockk.coEvery
 import io.mockk.every
@@ -12,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import java.io.File
 
 @ExperimentalCoroutinesApi
 class HikingLayerInteractorTest {
@@ -31,15 +31,15 @@ class HikingLayerInteractorTest {
     }
 
     @Test
-    fun `Given hiking layer file, when requestHikingLayerFileFlow, then file is emitted`() {
+    fun `Given tile zoom range list, when requestHikingLayerZoomRanges, then zoom ranges are emitted`() {
         runTest {
-            val expectedFile = File("pathName")
-            coEvery { hikingLayerRepository.getHikingLayerFile() } returns expectedFile
+            val zoomRanges = listOf(TileZoomRange(10, 50, 100, 30, 70))
+            coEvery { hikingLayerRepository.getHikingLayerZoomRanges() } returns zoomRanges
 
-            val flow = hikingLayerInteractor.requestHikingLayerFileFlow()
+            val flow = hikingLayerInteractor.requestHikingLayerZoomRanges()
 
             flow.test {
-                assertThat(awaitItem()).isEqualTo(expectedFile)
+                assertThat(awaitItem()).isEqualTo(zoomRanges)
                 awaitComplete()
             }
         }
@@ -49,67 +49,9 @@ class HikingLayerInteractorTest {
     fun `Given IllegalStateException, when requestHikingLayerFileFlow, then unknown domain exception is emitted`() {
         runTest {
             val exception = IllegalStateException("Unknown exception")
-            coEvery { hikingLayerRepository.getHikingLayerFile() } throws exception
+            coEvery { hikingLayerRepository.getHikingLayerZoomRanges() } throws exception
 
-            val flow = hikingLayerInteractor.requestHikingLayerFileFlow()
-
-            flow.test {
-                assertThat(awaitError()).isEqualTo(UnknownException(exception))
-            }
-        }
-    }
-
-    @Test
-    fun `Given hiking layer file ID, when requestDownloadHikingLayerFileFlow, then download id is emitted`() {
-        runTest {
-            val downloadId = 12345L
-            coEvery { hikingLayerRepository.downloadHikingLayerFile() } returns downloadId
-
-            val flow = hikingLayerInteractor.requestDownloadHikingLayerFileFlow()
-
-            flow.test {
-                assertThat(awaitItem()).isEqualTo(downloadId)
-                awaitComplete()
-            }
-        }
-    }
-
-    @Test
-    fun `Given IllegalStateException, when requestDownloadHikingLayerFileFlow, then unknown domain exception is emitted`() {
-        runTest {
-            val exception = IllegalStateException("Unknown exception")
-            coEvery { hikingLayerRepository.downloadHikingLayerFile() } throws exception
-
-            val flow = hikingLayerInteractor.requestDownloadHikingLayerFileFlow()
-
-            flow.test {
-                assertThat(awaitError()).isEqualTo(UnknownException(exception))
-            }
-        }
-    }
-
-    @Test
-    fun `Given hiking layer file ID, when requestSaveHikingLayerFile, then success task result returns`() {
-        runTest {
-            val downloadId = 12345L
-            coEvery { hikingLayerRepository.saveHikingLayerFile(downloadId) } returns Unit
-
-            val flow = hikingLayerInteractor.requestSaveHikingLayerFileFlow(downloadId)
-
-            flow.test {
-                assertThat(awaitItem()).isEqualTo(Unit)
-                awaitComplete()
-            }
-        }
-    }
-
-    @Test
-    fun `Given IllegalStateException, when requestSaveHikingLayerFile, then error task result returns with mapped exception`() {
-        runTest {
-            val exception = IllegalStateException("Unknown exception")
-            coEvery { hikingLayerRepository.saveHikingLayerFile(any()) } throws exception
-
-            val flow = hikingLayerInteractor.requestSaveHikingLayerFileFlow(12345L)
+            val flow = hikingLayerInteractor.requestHikingLayerZoomRanges()
 
             flow.test {
                 assertThat(awaitError()).isEqualTo(UnknownException(exception))

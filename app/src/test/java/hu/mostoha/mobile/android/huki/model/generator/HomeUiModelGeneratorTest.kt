@@ -5,7 +5,10 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.*
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
-import hu.mostoha.mobile.android.huki.model.ui.*
+import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
+import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
@@ -16,7 +19,6 @@ import hu.mostoha.mobile.android.huki.util.calculateCenter
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.osmdroid.util.GeoPoint
-import java.io.File
 
 class HomeUiModelGeneratorTest {
 
@@ -291,29 +293,6 @@ class HomeUiModelGeneratorTest {
                     boundingBox = null
                 ),
                 geometry
-            )
-        )
-    }
-
-    @Test
-    fun `Given null hiking layer file, when generateHikingLayerDetails, then NotDownloaded state returns`() {
-        val hikingLayerFile = null
-
-        val placeDetailsUiModel = generator.generateHikingLayerState(hikingLayerFile)
-
-        assertThat(placeDetailsUiModel).isEqualTo(HikingLayerUiModel.NotDownloaded)
-    }
-
-    @Test
-    fun `Given hiking layer file, when generateHikingLayerDetails, then Downloaded state returns`() {
-        val hikingLayerFile = File("")
-
-        val placeDetailsUiModel = generator.generateHikingLayerState(hikingLayerFile)
-
-        assertThat(placeDetailsUiModel).isEqualTo(
-            HikingLayerUiModel.Downloaded(
-                hikingLayerFile = hikingLayerFile,
-                lastUpdatedText = "Jan 1, 1970"
             )
         )
     }

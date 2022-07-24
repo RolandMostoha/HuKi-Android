@@ -88,7 +88,9 @@ dependencies {
 
     // KTX
     implementation "androidx.core:core-ktx:1.8.0"
-    implementation "androidx.activity:activity-ktx:1.4.0"
+    def controllerKtxVersion = "1.5.0"
+    implementation "androidx.activity:activity-ktx:$controllerKtxVersion"
+    implementation "androidx.fragment:fragment-ktx:$controllerKtxVersion"
     def lifecycleVersion = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
@@ -106,6 +108,12 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6"
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+
+    // AWS
+    def awsVersion = "1.36.0"
+    implementation "com.amplifyframework:core:$awsVersion"
+    implementation "com.amplifyframework:aws-storage-s3:$awsVersion"
+    implementation "com.amplifyframework:aws-auth-cognito:$awsVersion"
 
     // Design
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"

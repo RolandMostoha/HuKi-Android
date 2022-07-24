@@ -8,7 +8,6 @@
     <string name="error_message_missing_relation_bounding_box">Nem sikerült lekérdezni az OSM kapcsolat koordinátáit.</string>
     <string name="error_message_too_many_requests">Túl sok kérés indult az eszközről! Kérjük próbálkozz később.</string>
     <string name="error_message_gateway_timeout">Openstreetmap időtúllépés! Kérjük próbáld újra.</string>
-    <string name="error_message_hiking_layer_file_download_failed">Porbléma lépett fel a letöltött túraréteg fájl mentése közben!</string>
 
     <string name="default_distance_template_m">%d m</string>
     <string name="default_distance_template_km">%.2f km</string>
@@ -24,8 +23,6 @@
     <string name="map_place_name_routes_nearby">Túraútvonalak a térképen</string>
     <string name="map_place_name_node_routes_nearby">%s közelében</string>
 
-    <string name="download_layer_notification_title">HuKi - Túra réteg letöltése</string>
-
     <string name="my_location_rationale_title">Helyadatok engedélyezése</string>
     <string name="my_location_rationale_message">Az aktuális pozíció megjelenítéséhez szükséges az engedély!</string>
     <string name="my_location_rationale_positive_button">Engedélyezés</string>
@@ -33,13 +30,11 @@
 
     <string name="hiking_routes_empty_text">Nincs találat</string>
 
-    <string name="layers_base_layers_title">Alap rétegek</string>
-    <string name="layers_mapnik_name">Mapnik</string>
-    <string name="layers_hiking_layers_title">Túra réteg</string>
+    <string name="layers_base_layers_header">Alap rétegek</string>
+    <string name="layers_mapnik_title">Mapnik</string>
+    <string name="layers_open_topo_title">Open Topo</string>
+    <string name="layers_hiking_layers_header">Túra réteg</string>
     <string name="layers_hiking_hungarian_title">Magyar Túraréteg</string>
-    <string name="layers_hiking_downloading_label">Letöltés…(350MB)</string>
-    <string name="layers_hiking_not_download_label">Letöltés (350MB)</string>
-    <string name="layers_hiking_downloaded_label">Frissítés (350MB)</string>
 
     <string name="accessibility_home_fab_layers">Rétegek</string>
     <string name="accessibility_home_fab_routes_nearby">Túrautak a közelben</string>

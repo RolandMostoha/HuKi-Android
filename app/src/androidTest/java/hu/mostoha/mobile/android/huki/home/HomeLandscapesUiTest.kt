@@ -12,25 +12,20 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.localLandscapes
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
-import hu.mostoha.mobile.android.huki.di.module.ServiceModule
-import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
-import hu.mostoha.mobile.android.huki.osmdroid.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
-import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.repository.*
 import hu.mostoha.mobile.android.huki.testdata.*
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.espresso.*
 import hu.mostoha.mobile.android.huki.util.launchScenario
-import hu.mostoha.mobile.android.huki.util.testContext
+import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -45,7 +40,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class, ServiceModule::class, LocationModule::class)
+@UninstallModules(RepositoryModule::class, LocationModule::class)
 class HomeLandscapesUiTest {
 
     @get:Rule
@@ -62,7 +57,7 @@ class HomeLandscapesUiTest {
 
     @BindValue
     @JvmField
-    val hikingLayerRepository: HikingLayerRepository = mockk()
+    val hikingLayerRepository: HikingLayerRepository = FileBasedHikingLayerRepository(testAppContext)
 
     @BindValue
     @JvmField
@@ -86,7 +81,6 @@ class HomeLandscapesUiTest {
     fun givenLandscapes_whenClickOnLandscape_thenPlaceDetailsDisplayOnBottomSheet() {
         val landscape = DEFAULT_CLOSE_LANDSCAPE
         answerTestLocationProvider()
-        answerTestHikingLayer()
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
@@ -103,7 +97,6 @@ class HomeLandscapesUiTest {
     fun givenLandscapes_whenClickOnLandscape_thenPolygonDisplaysOnMap() {
         val landscape = DEFAULT_CLOSE_LANDSCAPE
         answerTestLocationProvider()
-        answerTestHikingLayer()
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
@@ -120,7 +113,6 @@ class HomeLandscapesUiTest {
     fun whenRecreate_thenLandscapesAreDisplayedAgain() {
         val landscape = DEFAULT_CLOSE_LANDSCAPE
         answerTestLocationProvider()
-        answerTestHikingLayer()
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> { scenario ->
@@ -141,12 +133,6 @@ class HomeLandscapesUiTest {
 
     private fun answerTestWayGeometry(id: String) {
         coEvery { placesRepository.getGeometry(id, any()) } returns DEFAULT_GEOMETRY_LANDSCAPE
-    }
-
-    private fun answerTestHikingLayer() {
-        coEvery { hikingLayerRepository.getHikingLayerFile() } returns osmConfiguration.getHikingLayerFile().apply {
-            copyFrom(testContext.assets.open("TuraReteg_1000.mbtiles"))
-        }
     }
 
     companion object {

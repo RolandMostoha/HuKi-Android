@@ -1,8 +1,10 @@
 package hu.mostoha.mobile.android.huki.interactor
 
-import hu.mostoha.mobile.android.huki.interactor.exception.*
+import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
+import hu.mostoha.mobile.android.huki.interactor.exception.GatewayTimeoutException
+import hu.mostoha.mobile.android.huki.interactor.exception.TooManyRequestsException
+import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import retrofit2.HttpException
-import java.io.FileNotFoundException
 
 object DomainExceptionMapper {
 
@@ -16,9 +18,6 @@ object DomainExceptionMapper {
             }
             exception is HttpException && exception.code() == HTTP_CODE_GATEWAY_TIMEOUT -> {
                 GatewayTimeoutException(exception)
-            }
-            exception is FileNotFoundException -> {
-                HikingLayerFileDownloadFailedException(exception)
             }
             else -> UnknownException(exception)
         }
