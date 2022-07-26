@@ -98,7 +98,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-        searchPlacesJob = viewModelScope.launch(dispatcher) {
+        searchPlacesJob = viewModelScope.launch {
             placesInteractor.requestGetPlacesByFlow(searchText)
                 .map { uiModelGenerator.generateSearchBarItems(it) }
                 .onEach { _searchBarItems.emit(it) }
