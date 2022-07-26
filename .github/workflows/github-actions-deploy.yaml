@@ -31,13 +31,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Copy AWS configuration files to raw folder
-        env:
-          AWS_AMPLIFY_CONFIGURATION: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
-          AWS_CONFIGURATION: ${{ secrets.AWS_CONFIGURATION }}
-        run: |
-          echo AWS_AMPLIFY_CONFIGURATION > app/src/main/res/raw/amplifyconfiguration.json
-          echo AWS_CONFIGURATION > app/src/main/res/raw/awsconfiguration.json
+      - name: Copy Amplify configuration file to raw folder
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "amplifyconfiguration.json"
+          json: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
+          dir: 'app/src/main/res/raw/'
+
+      - name: Copy AWS configuration file to raw folder
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "awsconfiguration.json"
+          json: ${{ secrets.AWS_CONFIGURATION }}
+          dir: 'app/src/main/res/raw/'
 
       - name: Create test apks
         run: |
@@ -72,13 +78,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Copy AWS configuration files to raw folder
-        env:
-          AWS_AMPLIFY_CONFIGURATION: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
-          AWS_CONFIGURATION: ${{ secrets.AWS_CONFIGURATION }}
-        run: |
-          echo AWS_AMPLIFY_CONFIGURATION > app/src/main/res/raw/amplifyconfiguration.json
-          echo AWS_CONFIGURATION > app/src/main/res/raw/awsconfiguration.json
+      - name: Copy Amplify configuration file to raw folder
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "amplifyconfiguration.json"
+          json: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
+          dir: 'app/src/main/res/raw/'
+
+      - name: Copy AWS configuration file to raw folder
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "awsconfiguration.json"
+          json: ${{ secrets.AWS_CONFIGURATION }}
+          dir: 'app/src/main/res/raw/'
 
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease

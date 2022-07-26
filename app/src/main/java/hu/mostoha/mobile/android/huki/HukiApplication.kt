@@ -6,6 +6,7 @@ import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin
 import dagger.hilt.android.HiltAndroidApp
+import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import timber.log.Timber
 import javax.inject.Inject
@@ -15,6 +16,9 @@ class HukiApplication : Application() {
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
+
+    @Inject
+    lateinit var exceptionLogger: ExceptionLogger
 
     override fun onCreate() {
         super.onCreate()
@@ -32,6 +36,8 @@ class HukiApplication : Application() {
             Amplify.configure(applicationContext)
         } catch (exception: AmplifyException) {
             Timber.e(exception)
+
+            exceptionLogger.recordException(exception)
         }
     }
 
