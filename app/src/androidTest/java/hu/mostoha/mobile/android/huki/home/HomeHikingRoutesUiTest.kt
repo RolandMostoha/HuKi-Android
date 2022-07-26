@@ -74,7 +74,6 @@ class HomeHikingRoutesUiTest {
 
     @Test
     fun givenZoomLevelInThreshold_whenZoomOut_thenRoutesNearbyIsNotVisible() {
-
         launchScenario<HomeActivity> {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY - 1)
             waitForFabAnimation()
