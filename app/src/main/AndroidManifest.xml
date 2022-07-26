@@ -11,9 +11,11 @@
     <application
         android:name="hu.mostoha.mobile.android.huki.HukiApplication"
         android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="${appIcon}"
         android:label="${appName}"
-        android:supportsRtl="true"
+        android:supportsRtl="false"
         android:theme="@style/BaseTheme.HuKiTheme">
 
         <activity
