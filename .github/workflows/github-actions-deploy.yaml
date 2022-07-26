@@ -57,8 +57,10 @@ jobs:
           ARTIFACT_NAME_APK=$(basename $ARTIFACT_PATHNAME_APK)
           ARTIFACT_PATHNAME_TEST_APK=$(ls app/build/outputs/apk/androidTest/debug/*.apk | head -n 1)
           echo "ARTIFACT_PATHNAME_APK is " ${ARTIFACT_PATHNAME_APK}
+          echo "ARTIFACT_NAME_APK is " ${ARTIFACT_NAME_APK}
           echo "ARTIFACT_PATHNAME_TEST_APK is " ${ARTIFACT_PATHNAME_TEST_APK}
           echo "ARTIFACT_PATHNAME_APK=${ARTIFACT_PATHNAME_APK}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME_APK=${ARTIFACT_NAME_APK}" >> $GITHUB_ENV
           echo "ARTIFACT_PATHNAME_TEST_APK=${ARTIFACT_PATHNAME_TEST_APK}" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@master
