@@ -18,7 +18,30 @@ import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeLandscapesChipBinding
-import hu.mostoha.mobile.android.huki.extensions.*
+import hu.mostoha.mobile.android.huki.extensions.addMarker
+import hu.mostoha.mobile.android.huki.extensions.addOverlay
+import hu.mostoha.mobile.android.huki.extensions.addPolygon
+import hu.mostoha.mobile.android.huki.extensions.addPolyline
+import hu.mostoha.mobile.android.huki.extensions.addZoomListener
+import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
+import hu.mostoha.mobile.android.huki.extensions.applyTopMarginForStatusBar
+import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
+import hu.mostoha.mobile.android.huki.extensions.collapse
+import hu.mostoha.mobile.android.huki.extensions.gone
+import hu.mostoha.mobile.android.huki.extensions.hide
+import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
+import hu.mostoha.mobile.android.huki.extensions.locationPermissions
+import hu.mostoha.mobile.android.huki.extensions.removeMarker
+import hu.mostoha.mobile.android.huki.extensions.removeOverlay
+import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
+import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
+import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
+import hu.mostoha.mobile.android.huki.extensions.showSnackbar
+import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
+import hu.mostoha.mobile.android.huki.extensions.toDrawable
+import hu.mostoha.mobile.android.huki.extensions.visible
+import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
+import hu.mostoha.mobile.android.huki.extensions.withOffset
 import hu.mostoha.mobile.android.huki.model.domain.LayerSpec
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
@@ -39,7 +62,11 @@ import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_TILES_SCALE_FACTOR
 import hu.mostoha.mobile.android.huki.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
 import hu.mostoha.mobile.android.huki.util.startGoogleDirections
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.util.BoundingBox
@@ -106,7 +133,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         super.onResume()
 
         if (isLocationPermissionGranted()) {
-            enableMyLocationMonitoring()
+            homeViewModel.updateMyLocationConfig(isLocationPermissionEnabled = true)
         }
 
         homeMapView.onResume()
@@ -185,7 +212,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initFabs() {
         homeMyLocationButton.setOnClickListener {
             when {
-                isLocationPermissionGranted() -> homeViewModel.updateMyLocationConfig(isFollowLocationEnabled = true)
+                isLocationPermissionGranted() -> {
+                    homeViewModel.updateMyLocationConfig(
+                        isLocationPermissionEnabled = true,
+                        isFollowLocationEnabled = true
+                    )
+                }
                 shouldShowLocationRationale() -> showLocationRationaleDialog()
                 else -> permissionLauncher.launch(locationPermissions)
             }
@@ -230,33 +262,22 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         ) { permissions ->
             when {
                 permissions.isLocationPermissionGranted() -> {
-                    homeViewModel.updateMyLocationConfig(isFollowLocationEnabled = true)
+                    homeViewModel.updateMyLocationConfig(
+                        isLocationPermissionEnabled = true,
+                        isFollowLocationEnabled = true
+                    )
                 }
             }
         }
     }
 
-    private fun updateMyLocationConfig(myLocationUiModel: MyLocationUiModel) {
-        val locationOverlay = myLocationOverlay ?: return
-
-        when {
-            myLocationUiModel.isFollowLocationEnabled && !locationOverlay.isFollowLocationEnabled -> {
-                locationOverlay.enableFollowLocation()
-            }
-            !myLocationUiModel.isFollowLocationEnabled && locationOverlay.isFollowLocationEnabled -> {
-                myLocationOverlay?.disableFollowLocation()
-            }
-        }
-    }
-
     private fun enableMyLocationMonitoring() {
-        homeMyLocationButton.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
-        homeMyLocationButton.startDrawableAnimation()
-
         if (myLocationOverlay == null) {
             myLocationOverlay = MyLocationOverlay(lifecycleScope, myLocationProvider, homeMapView).apply {
                 runOnFirstFix {
-                    if (!isFollowLocationEnabled) {
+                    if (isFollowLocationEnabled) {
+                        homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
+                    } else {
                         homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
                     }
                 }
@@ -280,12 +301,31 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
+    private fun updateFollowingLocation(myLocationUiModel: MyLocationUiModel) {
+        val locationOverlay = myLocationOverlay
+
+        if (locationOverlay == null || !myLocationUiModel.isLocationPermissionEnabled) {
+            return
+        }
+
+        when {
+            myLocationUiModel.isFollowLocationEnabled && !locationOverlay.isFollowLocationEnabled -> {
+                homeMyLocationButton.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
+                homeMyLocationButton.startDrawableAnimation()
+
+                locationOverlay.enableFollowLocation()
+            }
+            !myLocationUiModel.isFollowLocationEnabled && locationOverlay.isFollowLocationEnabled -> {
+                locationOverlay.disableFollowLocation()
+            }
+        }
+    }
+
     @Suppress("LongMethod")
     private fun initFlows() {
         lifecycleScope.launch {
             homeViewModel.mapUiModel
                 .flowWithLifecycle(lifecycle)
-                .distinctUntilChanged()
                 .collect { mapUiModel ->
                     homeMapView.zoomToBoundingBox(
                         if (mapUiModel.withDefaultOffset) {
@@ -302,7 +342,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .filterNotNull()
                 .map { it.baseLayer }
-                .distinctUntilChanged()
                 .collect { homeMapView.setTileSource(it.tileSource) }
         }
         lifecycleScope.launch {
@@ -310,7 +349,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .filterNotNull()
                 .map { it.hikingLayer }
-                .distinctUntilChanged()
                 .collect { layerSpec ->
                     if (layerSpec == null) {
                         removeHikingLayer()
@@ -322,15 +360,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         lifecycleScope.launch {
             homeViewModel.myLocationUiModel
                 .flowWithLifecycle(lifecycle)
-                .distinctUntilChanged()
                 .collect { myLocationUiModel ->
-                    updateMyLocationConfig(myLocationUiModel)
+                    if (myLocationUiModel.isLocationPermissionEnabled) {
+                        enableMyLocationMonitoring()
+                    }
+
+                    updateFollowingLocation(myLocationUiModel)
                 }
         }
         lifecycleScope.launch {
             homeViewModel.placeDetails
                 .flowWithLifecycle(lifecycle)
-                .distinctUntilChanged()
                 .collect { placeDetailsUiModel ->
                     placeDetailsUiModel?.let { initPlaceDetails(it) }
                 }
@@ -338,7 +378,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         lifecycleScope.launch {
             homeViewModel.searchBarItems
                 .flowWithLifecycle(lifecycle)
-                .distinctUntilChanged()
                 .collect { searchBarItems ->
                     searchBarItems?.let { initSearchBarItems(it) }
                 }
@@ -346,7 +385,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         lifecycleScope.launch {
             homeViewModel.landscapes
                 .flowWithLifecycle(lifecycle)
-                .distinctUntilChanged()
                 .collect { landscapes ->
                     landscapes?.let { initLandscapes(it) }
                 }
@@ -354,7 +392,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         lifecycleScope.launch {
             homeViewModel.hikingRoutes
                 .flowWithLifecycle(lifecycle)
-                .distinctUntilChanged()
                 .collect { hikingRoutes ->
                     hikingRoutes?.let { initHikingRoutes(it) }
                 }

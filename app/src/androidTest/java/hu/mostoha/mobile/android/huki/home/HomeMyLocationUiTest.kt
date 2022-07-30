@@ -19,6 +19,8 @@ import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
+import hu.mostoha.mobile.android.huki.util.espresso.isFollowLocationEnabled
+import hu.mostoha.mobile.android.huki.util.espresso.swipeDown
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import io.mockk.mockk
 import org.junit.Before
@@ -64,16 +66,34 @@ class HomeMyLocationUiTest {
     }
 
     @Test
-    fun whenMyLocationClicked_thenMyLocationOverlayDisplays() {
+    fun whenLocationPermissionEnabled_thenMyLocationOverlayDisplaysAndFollowLocationIsEnabled() {
         launchScenario<HomeActivity> {
-            R.id.homeMyLocationButton.click()
-
             R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(0)
+            R.id.homeMapView.isFollowLocationEnabled(true)
         }
     }
 
     @Test
-    fun givenMyLocation_whenRecreate_thenMyLocationOverlayDisplaysAgain() {
+    fun whenMapViewIsScrolled_thenFollowLocationIsDisabled() {
+        launchScenario<HomeActivity> {
+            R.id.homeMapView.swipeDown()
+
+            R.id.homeMapView.isFollowLocationEnabled(false)
+        }
+    }
+
+    @Test
+    fun whenMyLocationClicked_thenFollowLocationIsEnabled() {
+        launchScenario<HomeActivity> {
+            R.id.homeMapView.swipeDown()
+            R.id.homeMyLocationButton.click()
+
+            R.id.homeMapView.isFollowLocationEnabled(true)
+        }
+    }
+
+    @Test
+    fun whenRecreate_thenMyLocationOverlayDisplaysAgain() {
         launchScenario<HomeActivity> { scenario ->
             R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(0)
 

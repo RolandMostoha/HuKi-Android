@@ -8,11 +8,44 @@ import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
-import hu.mostoha.mobile.android.huki.model.domain.*
+import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.Geometry
+import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.Landscape
+import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
+import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
-import hu.mostoha.mobile.android.huki.model.ui.*
-import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
+import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
+import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_WEST
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_JEL
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_START_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_START_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_WAY_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_WAY_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
@@ -377,10 +410,18 @@ class HomeViewModelTest {
     fun `When updateMyLocationConfig, then my location UI model should be updated`() =
         runTestDefault {
             viewModel.myLocationUiModel.test {
-                viewModel.updateMyLocationConfig(isFollowLocationEnabled = false)
+                viewModel.updateMyLocationConfig(
+                    isLocationPermissionEnabled = true,
+                    isFollowLocationEnabled = false
+                )
 
                 assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
-                assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
+                assertThat(awaitItem()).isEqualTo(
+                    MyLocationUiModel(
+                        isLocationPermissionEnabled = true,
+                        isFollowLocationEnabled = false
+                    )
+                )
             }
         }
 

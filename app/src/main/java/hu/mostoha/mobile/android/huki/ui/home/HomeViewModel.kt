@@ -13,7 +13,11 @@ import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
-import hu.mostoha.mobile.android.huki.model.ui.*
+import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
+import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.Message
@@ -21,7 +25,19 @@ import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -181,8 +197,18 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun updateMyLocationConfig(isFollowLocationEnabled: Boolean) = viewModelScope.launch(dispatcher) {
-        _myLocationUiModel.update { it.copy(isFollowLocationEnabled = isFollowLocationEnabled) }
+    fun updateMyLocationConfig(
+        isLocationPermissionEnabled: Boolean? = null,
+        isFollowLocationEnabled: Boolean? = null
+    ) = viewModelScope.launch(dispatcher) {
+        _myLocationUiModel.update { locationUiModel ->
+            var model = locationUiModel
+
+            isLocationPermissionEnabled?.let { model = model.copy(isLocationPermissionEnabled = it) }
+            isFollowLocationEnabled?.let { model = model.copy(isFollowLocationEnabled = it) }
+
+            model
+        }
     }
 
     fun saveBoundingBox(boundingBox: BoundingBox) = viewModelScope.launch(dispatcher) {
