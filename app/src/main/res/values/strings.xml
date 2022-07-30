@@ -13,7 +13,7 @@
     <string name="default_distance_template_km">%.2f km</string>
 
     <string name="search_bar_empty_message">No results found</string>
-    <string name="search_bar_hint">Search hiking route, place</string>
+    <string name="search_bar_hint">Search for places</string>
 
     <string name="home_bottom_sheet_directions_button">Navigation</string>
     <string name="home_bottom_sheet_hiking_trails_button">Hiking trails</string>

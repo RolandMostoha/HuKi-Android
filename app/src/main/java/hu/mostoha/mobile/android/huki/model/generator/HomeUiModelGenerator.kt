@@ -2,7 +2,14 @@ package hu.mostoha.mobile.android.huki.model.generator
 
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
-import hu.mostoha.mobile.android.huki.model.domain.*
+import hu.mostoha.mobile.android.huki.model.domain.Geometry
+import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.Landscape
+import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
+import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
@@ -117,17 +124,23 @@ class HomeUiModelGenerator @Inject constructor() {
     }
 
     fun generateHikingRoutes(placeName: String, hikingRoutes: List<HikingRoute>): List<HikingRoutesItem> {
-        return mutableListOf<HikingRoutesItem>()
-            .plus(HikingRoutesItem.Header(placeName))
-            .plus(hikingRoutes.map { hikingRoute ->
-                HikingRoutesItem.Item(
-                    HikingRouteUiModel(
-                        osmId = hikingRoute.osmId,
-                        name = hikingRoute.name,
-                        symbolIcon = hikingRoute.symbolType.getIconRes()
+        return if (hikingRoutes.isEmpty()) {
+            mutableListOf<HikingRoutesItem>()
+                .plus(HikingRoutesItem.Header(placeName))
+                .plus(HikingRoutesItem.Empty)
+        } else {
+            mutableListOf<HikingRoutesItem>()
+                .plus(HikingRoutesItem.Header(placeName))
+                .plus(hikingRoutes.map { hikingRoute ->
+                    HikingRoutesItem.Item(
+                        HikingRouteUiModel(
+                            osmId = hikingRoute.osmId,
+                            name = hikingRoute.name,
+                            symbolIcon = hikingRoute.symbolType.getIconRes()
+                        )
                     )
-                )
-            })
+                })
+        }
     }
 
     fun generateHikingRouteDetails(hikingRoute: HikingRouteUiModel, geometry: Geometry): PlaceDetailsUiModel {

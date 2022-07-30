@@ -33,7 +33,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/home_search_bar_height"
-                android:layout_marginStart="@dimen/space_large"
+                android:layout_marginStart="@dimen/space_extra_large"
                 android:animateLayoutChanges="true">
 
                 <ImageView
@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_hiking"
+                    android:src="@drawable/ic_search_bar_icon"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +51,6 @@
                     android:id="@+id/homeSearchBarInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/space_small"
                     android:layout_marginEnd="@dimen/space_small"
                     android:hint="@string/search_bar_hint"
                     android:textColorHint="@color/colorSecondaryText"

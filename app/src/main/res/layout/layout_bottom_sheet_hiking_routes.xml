@@ -5,9 +5,9 @@
     style="@style/DefaultBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:behavior_saveFlags="all"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="@dimen/hiking_routes_bottom_sheet_peek_height">
+    app:behavior_peekHeight="@dimen/hiking_routes_bottom_sheet_peek_height"
+    app:behavior_saveFlags="all">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hikingRoutesList"
@@ -15,15 +15,5 @@
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_home_hiking_routes" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/hikingRoutesEmptyView"
-        style="@style/InfoViewTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:drawableTop="@drawable/ic_hiking_routes_empty"
-        android:padding="@dimen/space_extra_large"
-        android:text="@string/hiking_routes_empty_text" />
 
 </FrameLayout>

@@ -4,7 +4,7 @@
     android:id="@+id/hikingRoutesItemText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
+    android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
     android:paddingStart="@dimen/space_extra_extra_large"
     android:paddingEnd="@dimen/space_extra_extra_large"
     android:paddingTop="@dimen/space_medium"

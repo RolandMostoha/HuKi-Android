@@ -2,36 +2,36 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="@dimen/icon_size_medium"
     android:height="@dimen/icon_size_medium"
-    android:viewportHeight="100"
-    android:viewportWidth="100">
+    android:viewportWidth="100"
+    android:viewportHeight="100">
     <path
-        android:pathData="M1,1h98v98h-98z"
-        android:strokeWidth="1"
         android:fillColor="#ffffff"
+        android:pathData="M1,1h98v98h-98z"
+        android:strokeWidth="@integer/symbol_stroke_width"
         android:strokeColor="@color/colorSymbolStroke" />
     <path
+        android:fillColor="#ffffff"
         android:pathData="M40,40h20v30h-20z"
-        android:fillColor="#ffffff"
         android:strokeColor="#00000000" />
     <path
+        android:fillColor="#ffffff"
         android:pathData="m60,40c0,5.252 -4.477,9.509 -10,9.509 -5.523,0 -10,-4.257 -10,-9.509 0,-5.252 4.477,-9.509 10,-9.509 5.523,0 10,4.257 10,9.509z"
-        android:fillColor="#ffffff"
         android:strokeColor="#00000000" />
     <path
+        android:fillColor="#ffffff"
         android:pathData="M10,70h5v15h-5z"
-        android:fillColor="#ffffff"
         android:strokeColor="#00000000" />
     <path
+        android:fillColor="#ffffff"
         android:pathData="M85,70h5v15h-5z"
-        android:fillColor="#ffffff"
         android:strokeColor="#00000000" />
     <path
-        android:pathData="M40,15h20v70h-20z"
         android:fillColor="@color/colorSymbolYellow"
+        android:pathData="M40,15h20v70h-20z"
         android:strokeColor="#00000000" />
     <path
+        android:fillColor="@color/colorSymbolYellow"
         android:pathData="M15,14.208h70v20h-70z"
         android:strokeWidth="1"
-        android:fillColor="@color/colorSymbolYellow"
         android:strokeColor="#00000000" />
 </vector>

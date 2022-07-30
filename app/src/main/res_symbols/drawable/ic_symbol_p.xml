@@ -2,15 +2,15 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="@dimen/icon_size_medium"
     android:height="@dimen/icon_size_medium"
-    android:viewportHeight="100"
-    android:viewportWidth="100">
+    android:viewportWidth="100"
+    android:viewportHeight="100">
     <path
         android:fillColor="#ffffff"
         android:pathData="M0.565,0.583h98.992v98.992h-98.992z"
+        android:strokeWidth="@integer/symbol_stroke_width"
         android:strokeColor="@color/colorSymbolStroke"
         android:strokeLineCap="butt"
-        android:strokeLineJoin="miter"
-        android:strokeWidth="1" />
+        android:strokeLineJoin="miter" />
     <path
         android:fillColor="@color/colorSymbolRed"
         android:pathData="M1,33h98v34h-98z" />

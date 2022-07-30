@@ -586,8 +586,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             )
             hikingRoutesList.setHasFixedSize(true)
             hikingRoutesList.adapter = hikingRoutesAdapter
-            hikingRoutesList.visibleOrGone(hikingRoutes.size > 1)
-            hikingRoutesEmptyView.visibleOrGone(hikingRoutes.size <= 1)
             hikingRoutesAdapter.submitList(hikingRoutes)
 
             placeDetailsSheet.hide()

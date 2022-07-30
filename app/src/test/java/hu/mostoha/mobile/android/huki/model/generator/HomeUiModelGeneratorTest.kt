@@ -3,13 +3,48 @@ package hu.mostoha.mobile.android.huki.model.generator
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
-import hu.mostoha.mobile.android.huki.model.domain.*
+import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.Geometry
+import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.Landscape
+import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
+import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
-import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_JEL
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_CITY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_COUNTRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_EXTENT_EAST
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_EXTENT_NORTH
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_EXTENT_SOUTH
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_EXTENT_WEST
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY_CLOSED
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_POST_CODE
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
@@ -233,6 +268,20 @@ class HomeUiModelGeneratorTest {
                         symbolIcon = hikingRoute.symbolType.getIconRes()
                     )
                 )
+            )
+        )
+    }
+
+    @Test
+    fun `Given empty hiking route domain models, when generateHikingRoutes, then empty HikingRoutesItem with header returns`() {
+        val placeName = DEFAULT_HIKING_ROUTE_NAME
+
+        val hikingRouteItems = generator.generateHikingRoutes(placeName, emptyList())
+
+        assertThat(hikingRouteItems).isEqualTo(
+            listOf(
+                HikingRoutesItem.Header(placeName),
+                HikingRoutesItem.Empty
             )
         )
     }

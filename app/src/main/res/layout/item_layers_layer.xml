@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/layers_layer_title_bottom_margin"
+        app:shapeAppearance="@style/DefaultShapeAppearance.Surface"
         app:strokeColor="@color/colorStroke"
         app:strokeWidth="@dimen/layers_image_stroke_width">
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hikingRoutesEmptyView"
+    style="@style/InfoViewTextStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:drawableTop="@drawable/ic_hiking_routes_empty"
+    android:padding="@dimen/space_extra_extra_large"
+    android:text="@string/hiking_routes_empty_text" />

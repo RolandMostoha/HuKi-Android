@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeHikingRoutesBinding
+import hu.mostoha.mobile.android.huki.databinding.ItemHomeHikingRoutesEmptyBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeHikingRoutesHeaderBinding
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setDrawableStart
@@ -17,15 +18,21 @@ class HikingRoutesAdapter(
     companion object {
         private const val TYPE_HEADER = 0
         private const val TYPE_ITEM = 1
+        private const val TYPE_EMPTY = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = parent.context.inflater
+
         return when (viewType) {
             TYPE_HEADER -> {
-                ViewHolderHeader(ItemHomeHikingRoutesHeaderBinding.inflate(parent.context.inflater, parent, false))
+                ViewHolderHeader(ItemHomeHikingRoutesHeaderBinding.inflate(inflater, parent, false))
             }
             TYPE_ITEM -> {
-                ViewHolderItem(ItemHomeHikingRoutesBinding.inflate(parent.context.inflater, parent, false))
+                ViewHolderItem(ItemHomeHikingRoutesBinding.inflate(inflater, parent, false))
+            }
+            TYPE_EMPTY -> {
+                ViewHolderEmpty(ItemHomeHikingRoutesEmptyBinding.inflate(inflater, parent, false))
             }
             else -> throw IllegalArgumentException("Not supported viewType")
         }
@@ -46,6 +53,7 @@ class HikingRoutesAdapter(
         return when (getItem(position)) {
             is HikingRoutesItem.Header -> TYPE_HEADER
             is HikingRoutesItem.Item -> TYPE_ITEM
+            is HikingRoutesItem.Empty -> TYPE_EMPTY
         }
     }
 
@@ -75,5 +83,7 @@ class HikingRoutesAdapter(
             }
         }
     }
+
+    inner class ViewHolderEmpty(binding: ItemHomeHikingRoutesEmptyBinding) : RecyclerView.ViewHolder(binding.root)
 
 }

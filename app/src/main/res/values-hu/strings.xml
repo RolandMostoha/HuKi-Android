@@ -13,7 +13,7 @@
     <string name="default_distance_template_km">%.2f km</string>
 
     <string name="search_bar_empty_message">Nincs találat</string>
-    <string name="search_bar_hint">Túraútvonal, hely keresése</string>
+    <string name="search_bar_hint">Keresés helységek között</string>
 
     <string name="home_bottom_sheet_directions_button">Navigáció</string>
     <string name="home_bottom_sheet_hiking_trails_button">Túrautak</string>

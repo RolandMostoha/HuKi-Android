@@ -22,6 +22,8 @@
     </style>
 
     <style name="DefaultButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:paddingTop">@dimen/default_button_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/default_button_vertical_padding</item>
         <item name="android:textAppearance">@style/DefaultTextAppearance.SemiBold.Medium</item>
         <item name="shapeAppearance">@style/DefaultShapeAppearance.Button</item>
         <item name="iconPadding">@dimen/space_small</item>

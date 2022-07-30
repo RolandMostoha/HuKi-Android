@@ -3,28 +3,28 @@
     android:height="@dimen/icon_size_medium"
     android:viewportWidth="100"
     android:viewportHeight="100">
-  <path
-      android:pathData="M-0,0h100v100h-100z"
-      android:strokeWidth="1"
-      android:fillColor="#ffffff"
-      android:strokeColor="@color/colorSymbolStroke" />
-  <path
-      android:pathData="M44,17.055h12v77.945h-12z"
-      android:strokeWidth="1"
-      android:fillColor="@color/colorSymbolYellow"
-      android:strokeColor="#00000000" />
-  <path
-      android:pathData="M25,70.598h50v10.104h-50z"
-      android:strokeWidth="1"
-      android:fillColor="@color/colorSymbolYellow"
-      android:strokeColor="#00000000" />
-  <path
-      android:pathData="M22,52.78h56v10.945h-56z"
-      android:strokeWidth="1"
-      android:fillColor="@color/colorSymbolYellow"
-      android:strokeColor="#00000000" />
-  <path
-      android:pathData="m15,25 l35,-22.5 35,22.5 0,12 -31,-19.5 -8,0 -31,19.5 0,-12z"
-      android:fillColor="@color/colorSymbolYellow"
-      android:strokeColor="#00000000" />
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M-0,0h100v100h-100z"
+        android:strokeWidth="@integer/symbol_stroke_width"
+        android:strokeColor="@color/colorSymbolStroke" />
+    <path
+        android:fillColor="@color/colorSymbolYellow"
+        android:pathData="M44,17.055h12v77.945h-12z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+    <path
+        android:fillColor="@color/colorSymbolYellow"
+        android:pathData="M25,70.598h50v10.104h-50z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+    <path
+        android:fillColor="@color/colorSymbolYellow"
+        android:pathData="M22,52.78h56v10.945h-56z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+    <path
+        android:fillColor="@color/colorSymbolYellow"
+        android:pathData="m15,25 l35,-22.5 35,22.5 0,12 -31,-19.5 -8,0 -31,19.5 0,-12z"
+        android:strokeColor="#00000000" />
 </vector>
