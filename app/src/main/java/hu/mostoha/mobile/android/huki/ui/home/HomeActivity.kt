@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.ListPopupWindow
@@ -102,6 +103,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeMyLocationButton by lazy { binding.homeMyLocationButton }
     private val homeRoutesNearbyFab by lazy { binding.homeRoutesNearbyFab }
     private val homeLayersFab by lazy { binding.homeLayersFab }
+    private val homeAltitudeText by lazy { binding.homeAltitudeText }
 
     private lateinit var searchBarPopup: ListPopupWindow
     private lateinit var searchBarAdapter: SearchBarAdapter
@@ -296,7 +298,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         lifecycleScope.launch {
             myLocationOverlay!!.enableMyLocationFlow()
                 .distinctUntilChanged()
-                .onEach { homeViewModel.loadLandscapes(it) }
+                .onEach { location ->
+                    homeViewModel.loadLandscapes(location)
+
+                    initAltitude(location)
+                }
                 .collect()
         }
     }
@@ -318,6 +324,19 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             !myLocationUiModel.isFollowLocationEnabled && locationOverlay.isFollowLocationEnabled -> {
                 locationOverlay.disableFollowLocation()
             }
+        }
+    }
+
+    private fun initAltitude(location: Location) {
+        val hasAltitude = location.altitude > 0
+
+        homeAltitudeText.visibleOrGone(hasAltitude)
+
+        if (hasAltitude) {
+            homeAltitudeText.text = getString(
+                R.string.default_distance_template_m,
+                location.altitude.toInt()
+            )
         }
     }
 

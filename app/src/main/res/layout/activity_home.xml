@@ -22,7 +22,7 @@
             android:layout_marginTop="@dimen/space_small"
             android:layout_marginEnd="@dimen/space_large"
             app:cardBackgroundColor="@color/colorBackground"
-            app:cardElevation="@dimen/default_elevation_on_map"
+            app:cardElevation="@dimen/default_elevation_map_interactive_views"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -102,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_small"
-            android:elevation="@dimen/default_elevation_on_map"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
             android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -128,7 +128,7 @@
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
             android:contentDescription="@string/accessibility_home_fab_my_location"
-            android:elevation="@dimen/default_elevation_on_map"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_layers"
             app:fabSize="mini"
             app:layout_constraintEnd_toEndOf="parent"
@@ -142,6 +142,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/homeAltitudeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_large"
+            android:layout_marginBottom="@dimen/home_fab_bottom_margin"
+            android:background="@drawable/background_altitude"
+            android:elevation="@dimen/default_elevation_map_overlay_views"
+            android:paddingHorizontal="@dimen/space_large"
+            android:paddingVertical="@dimen/home_my_location_altitude_vertical_padding"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="500m" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -162,7 +178,7 @@
             android:layout_marginEnd="@dimen/space_large"
             android:layout_marginBottom="@dimen/space_medium"
             android:contentDescription="@string/accessibility_home_fab_routes_nearby"
-            android:elevation="@dimen/default_elevation_on_map"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_hiking_routes"
             android:visibility="invisible" />
 
@@ -176,7 +192,7 @@
             android:layout_marginEnd="@dimen/space_large"
             android:layout_marginBottom="@dimen/home_fab_bottom_margin"
             android:contentDescription="@string/accessibility_home_fab_my_location"
-            android:elevation="@dimen/default_elevation_on_map"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_anim_home_fab_my_location_not_fixed" />
 
     </LinearLayout>
