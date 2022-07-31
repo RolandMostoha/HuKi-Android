@@ -10,6 +10,7 @@ fun Location.toMockLocation(): AndroidLocation {
 
     every { mockLocation.latitude } returns this.latitude
     every { mockLocation.longitude } returns this.longitude
+    every { mockLocation.altitude } returns (this.altitude ?: 0.0)
 
     return mockLocation
 }

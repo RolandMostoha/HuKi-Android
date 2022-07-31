@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.testdata
 
 const val DEFAULT_MY_LOCATION_LATITUDE = 47.4891187
 const val DEFAULT_MY_LOCATION_LONGITUDE = 19.061711
+const val DEFAULT_MY_LOCATION_ALTITUDE = 162.0
 
 const val DEFAULT_NODE_OSM_ID = "130074457"
 const val DEFAULT_NODE_NAME = "Dobogókő"

@@ -18,16 +18,32 @@ import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
-import hu.mostoha.mobile.android.huki.repository.*
-import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.repository.FileBasedHikingLayerRepository
+import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_WAY_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_ALTITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
 import hu.mostoha.mobile.android.huki.util.distanceBetween
-import hu.mostoha.mobile.android.huki.util.espresso.*
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
@@ -128,7 +144,7 @@ class HomeLandscapesUiTest {
     }
 
     private fun answerTestLocationProvider() {
-        coEvery { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
+        every { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
     }
 
     private fun answerTestWayGeometry(id: String) {
@@ -138,7 +154,8 @@ class HomeLandscapesUiTest {
     companion object {
         private val DEFAULT_MY_LOCATION = Location(
             DEFAULT_MY_LOCATION_LATITUDE,
-            DEFAULT_MY_LOCATION_LONGITUDE
+            DEFAULT_MY_LOCATION_LONGITUDE,
+            DEFAULT_MY_LOCATION_ALTITUDE
         )
         private val DEFAULT_CLOSE_LANDSCAPE = localLandscapes
             .minByOrNull { DEFAULT_MY_LOCATION.distanceBetween(it.center) }!!

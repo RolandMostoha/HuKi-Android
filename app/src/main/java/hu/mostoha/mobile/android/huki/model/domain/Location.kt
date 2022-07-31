@@ -6,7 +6,8 @@ import android.location.Location as AndroidLocation
 
 data class Location(
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
+    val altitude: Double? = null
 )
 
 fun Location.toGeoPoint() = GeoPoint(latitude, longitude)
