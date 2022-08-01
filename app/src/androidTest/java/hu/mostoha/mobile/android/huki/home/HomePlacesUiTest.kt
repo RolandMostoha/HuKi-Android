@@ -15,11 +15,40 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
-import hu.mostoha.mobile.android.huki.repository.*
-import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.repository.FileBasedHikingLayerRepository
+import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_CENTER_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_CENTER_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_1_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_1_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_2_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_2_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
-import hu.mostoha.mobile.android.huki.util.espresso.*
+import hu.mostoha.mobile.android.huki.ui.home.OverlayComparator
+import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isTextNotDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import io.mockk.coEvery
@@ -132,7 +161,8 @@ class HomePlacesUiTest {
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlay<Marker>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 
@@ -147,7 +177,8 @@ class HomePlacesUiTest {
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlay<Marker>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 
@@ -204,7 +235,8 @@ class HomePlacesUiTest {
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
             R.string.home_bottom_sheet_show_points_button.clickWithText()
 
-            R.id.homeMapView.hasOverlayInPosition<Polyline>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlay<Polyline>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 
@@ -219,7 +251,8 @@ class HomePlacesUiTest {
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlay<Marker>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 
@@ -254,11 +287,13 @@ class HomePlacesUiTest {
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
 
-            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlay<Marker>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
             scenario.recreate()
 
-            R.id.homeMapView.hasOverlayInPosition<Marker>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlay<Marker>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 
@@ -276,7 +311,8 @@ class HomePlacesUiTest {
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
             R.string.home_bottom_sheet_show_points_button.clickWithText()
 
-            R.id.homeMapView.hasOverlayInPosition<Polyline>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlay<Polyline>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 

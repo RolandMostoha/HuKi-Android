@@ -40,4 +40,12 @@
     <string name="accessibility_home_fab_routes_nearby">Routes nearby</string>
     <string name="accessibility_home_fab_my_location">My location</string>
 
+    <string name="licences_osm_copyright_notice">© OpenStreetMap contributors</string>
+    <string name="licences_title">Licenses</string>
+    <string name="licences_notices">License resources</string>
+    <string name="licences_openstreetmap_title">OpenStreetMap</string>
+    <string name="licences_hiking_layer_title">Hungarian Hiking Layer (turistautak.openstreetmap.hu)</string>
+    <string name="licences_photon_title">Komoot - Photon (Search engine)</string>
+    <string name="licences_ok_button_title">OK</string>
+
 </resources>

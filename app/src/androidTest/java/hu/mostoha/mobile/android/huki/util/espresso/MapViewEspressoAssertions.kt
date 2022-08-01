@@ -15,38 +15,57 @@ import org.hamcrest.Matcher
 import org.osmdroid.tileprovider.tilesource.ITileSource
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Overlay
 import kotlin.math.abs
 
-inline fun <reified T> @receiver:IdRes Int.hasOverlayInPosition(position: Int) {
-    onView(withId(this)).check(matches(hasOverlayMatcher<T>(position)))
+inline fun <reified T : Overlay> @receiver:IdRes Int.hasOverlay() {
+    onView(withId(this)).check(matches(hasOverlayMatcher<T>()))
 }
 
-inline fun <reified T> @receiver:IdRes Int.hasNotOverlayInPosition(position: Int) {
-    onView(withId(this)).check(matches(not(hasOverlayMatcher<T>(position))))
+inline fun <reified T : Overlay> @receiver:IdRes Int.hasNoOverlay() {
+    onView(withId(this)).check(matches(not(hasOverlayMatcher<T>())))
 }
 
-inline fun <reified T> hasOverlayMatcher(position: Int): BoundedMatcher<View, MapView> {
+inline fun <reified T : Overlay> hasOverlayMatcher(): BoundedMatcher<View, MapView> {
     return object : BoundedMatcher<View, MapView>(MapView::class.java) {
 
         override fun matchesSafely(mapView: MapView?): Boolean {
             if (mapView == null) return false
 
-            val overlay = mapView.overlays.getOrNull(position)
-
-            return overlay != null && overlay is T
+            return mapView.overlays
+                .filterIsInstance<T>()
+                .isNotEmpty()
         }
 
         override fun describeTo(description: Description) {
-            description.appendText("Has overlay with position $position")
+            description.appendText("Has overlay with type ${T::class.java}")
         }
     }
+}
+
+fun @receiver:IdRes Int.hasOverlaysInOrder(comparator: Comparator<Overlay>) {
+    onView(withId(this))
+        .check(
+            matches(object : BoundedMatcher<View, MapView>(MapView::class.java) {
+                override fun matchesSafely(mapView: MapView?): Boolean {
+                    if (mapView == null) return false
+
+                    return mapView.overlays == mapView.overlays.sortedWith(comparator)
+
+                }
+
+                override fun describeTo(description: Description) {
+                    description.appendText("Has overlays in order ${comparator::class.java}")
+                }
+            })
+        )
 }
 
 fun @receiver:IdRes Int.hasBaseTileSource(tileSource: ITileSource) {
     onView(withId(this)).check(matches(hasBaseTileSourceMatcher(tileSource)))
 }
 
-fun hasBaseTileSourceMatcher(tileSource: ITileSource): BoundedMatcher<View, MapView> {
+private fun hasBaseTileSourceMatcher(tileSource: ITileSource): BoundedMatcher<View, MapView> {
     return object : BoundedMatcher<View, MapView>(MapView::class.java) {
 
         override fun matchesSafely(mapView: MapView?): Boolean {
@@ -65,7 +84,7 @@ fun @receiver:IdRes Int.hasCenterAndZoom(center: GeoPoint, zoom: Double) {
     onView(withId(this)).check(matches(hasCenterAndZoomMatcher(center, zoom)))
 }
 
-fun hasCenterAndZoomMatcher(center: GeoPoint, zoom: Double): BoundedMatcher<View, MapView> {
+private fun hasCenterAndZoomMatcher(center: GeoPoint, zoom: Double): BoundedMatcher<View, MapView> {
     return object : BoundedMatcher<View, MapView>(MapView::class.java) {
 
         override fun matchesSafely(mapView: MapView?): Boolean {
@@ -75,8 +94,8 @@ fun hasCenterAndZoomMatcher(center: GeoPoint, zoom: Double): BoundedMatcher<View
             val actualZoom = mapView.zoomLevelDouble
 
             return center.latitude.equalsDelta(actualCenter.latitude) &&
-                    center.longitude.equalsDelta(actualCenter.longitude) &&
-                    zoom.toInt() == actualZoom.toInt()
+                center.longitude.equalsDelta(actualCenter.longitude) &&
+                zoom.toInt() == actualZoom.toInt()
         }
 
         override fun describeTo(description: Description) {
@@ -91,7 +110,7 @@ fun @receiver:IdRes Int.zoomTo(zoomLevel: Double) {
     onView(withId(this)).perform(zoomToAction(zoomLevel))
 }
 
-fun zoomToAction(zoomLevel: Double): ViewAction {
+private fun zoomToAction(zoomLevel: Double): ViewAction {
     return object : ViewAction {
 
         override fun getConstraints(): Matcher<View> {

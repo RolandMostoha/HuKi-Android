@@ -51,6 +51,7 @@ import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.osmdroid.OsmCopyrightOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesAdapter
@@ -75,6 +76,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
+import org.osmdroid.views.overlay.PolyOverlayWithIW
 import org.osmdroid.views.overlay.TilesOverlay
 import javax.inject.Inject
 
@@ -177,6 +179,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeRoutesNearbyFab.hide()
                 }
             }
+            addOverlay(OsmCopyrightOverlay(this@HomeActivity), OverlayComparator)
         }
     }
 
@@ -291,7 +294,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
                     homeViewModel.updateMyLocationConfig(isFollowLocationEnabled = false)
                 }
-                homeMapView.addOverlay(OverlayPositions.MY_LOCATION, this)
+                homeMapView.addOverlay(this, OverlayComparator)
             }
         }
 
@@ -446,7 +449,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             loadingLineColor = Color.TRANSPARENT
         }
 
-        homeMapView.addOverlay(OverlayPositions.HIKING_LAYER, tilesOverlay)
+        homeMapView.addOverlay(tilesOverlay, OverlayComparator)
     }
 
     private fun removeHikingLayer() {
@@ -570,7 +573,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             .fromGeoPoints(relation.ways.flatMap { it.geoPoints })
             .withDefaultOffset()
 
-        val overlays = mutableListOf<Overlay>()
+        val overlays = mutableListOf<PolyOverlayWithIW>()
 
         relation.ways.forEach { way ->
             val geoPoints = way.geoPoints

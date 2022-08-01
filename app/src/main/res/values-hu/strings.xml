@@ -40,4 +40,12 @@
     <string name="accessibility_home_fab_routes_nearby">Túrautak a közelben</string>
     <string name="accessibility_home_fab_my_location">Saját pozícióm</string>
 
+    <string name="licences_osm_copyright_notice">© OpenStreetMap közreműködők</string>
+    <string name="licences_title">Licencek</string>
+    <string name="licences_notices">Licencek elérhetőségei</string>
+    <string name="licences_openstreetmap_title">OpenStreetMap</string>
+    <string name="licences_hiking_layer_title">Magyar Túra réteg (turistautak.openstreetmap.hu)</string>
+    <string name="licences_photon_title">Komoot - Photon (Keresőmotor)</string>
+    <string name="licences_ok_button_title">Rendben</string>
+
 </resources>

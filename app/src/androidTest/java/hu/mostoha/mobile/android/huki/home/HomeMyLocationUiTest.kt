@@ -10,21 +10,18 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
-import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
-import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_ALTITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
+import hu.mostoha.mobile.android.huki.ui.home.OverlayComparator
 import hu.mostoha.mobile.android.huki.util.espresso.click
-import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isFollowLocationEnabled
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
@@ -44,7 +41,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class, LocationModule::class)
+@UninstallModules(LocationModule::class)
 class HomeMyLocationUiTest {
 
     @get:Rule
@@ -61,19 +58,7 @@ class HomeMyLocationUiTest {
 
     @BindValue
     @JvmField
-    val hikingLayerRepository: HikingLayerRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val placeRepository: PlacesRepository = mockk()
-
-    @BindValue
-    @JvmField
     val asyncMyLocationProvider: AsyncMyLocationProvider = mockk(relaxed = true)
-
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @Before
     fun init() {
@@ -86,7 +71,8 @@ class HomeMyLocationUiTest {
         answerTestLocationProvider()
 
         launchScenario<HomeActivity> {
-            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(0)
+            R.id.homeMapView.hasOverlay<MyLocationOverlay>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
             R.id.homeMapView.isFollowLocationEnabled(true)
         }
     }
@@ -140,11 +126,13 @@ class HomeMyLocationUiTest {
         answerTestLocationProvider()
 
         launchScenario<HomeActivity> { scenario ->
-            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(0)
+            R.id.homeMapView.hasOverlay<MyLocationOverlay>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
             scenario.recreate()
 
-            R.id.homeMapView.hasOverlayInPosition<MyLocationOverlay>(0)
+            R.id.homeMapView.hasOverlay<MyLocationOverlay>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 

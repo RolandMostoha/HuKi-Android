@@ -32,10 +32,11 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_ALTITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
+import hu.mostoha.mobile.android.huki.ui.home.OverlayComparator
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
-import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayInPosition
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
@@ -121,7 +122,8 @@ class HomeLandscapesUiTest {
 
             landscape.name.clickWithText()
 
-            R.id.homeMapView.hasOverlayInPosition<Polygon>(OverlayPositions.PLACE)
+            R.id.homeMapView.hasOverlay<Polygon>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 

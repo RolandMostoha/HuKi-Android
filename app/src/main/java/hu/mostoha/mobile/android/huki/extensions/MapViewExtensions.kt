@@ -11,16 +11,17 @@ import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.*
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Overlay
+import org.osmdroid.views.overlay.PolyOverlayWithIW
+import org.osmdroid.views.overlay.Polygon
+import org.osmdroid.views.overlay.Polyline
 
 private const val MAP_ANIMATION_DURATION: Long = 1000
 
-fun MapView.addOverlay(position: Int, overlay: Overlay) {
-    if (position > overlays.size - 1) {
-        overlays.add(overlay)
-    } else {
-        overlays.add(position, overlay)
-    }
+fun MapView.addOverlay(overlay: Overlay, comparator: Comparator<Overlay>) {
+    overlays.add(overlay)
+    overlays.sortWith(comparator)
     invalidate()
 }
 
@@ -57,7 +58,7 @@ fun MapView.addPolygon(
     @DimenRes strokeWidth: Int = R.dimen.default_polygon_stroke_width,
     @ColorRes strokeColor: Int = R.color.colorPolyline,
     @ColorRes fillColor: Int = R.color.colorPolylineFill
-): PolyOverlayWithIW {
+): Polygon {
     val context = this.context
     val polygon = Polygon().apply {
         outlinePaint.apply {
@@ -85,7 +86,7 @@ fun MapView.addPolyline(
     onClick: (PolyOverlayWithIW) -> Unit,
     @DimenRes strokeWidth: Int = R.dimen.default_polyline_stroke_width,
     @ColorRes strokeColor: Int = R.color.colorPolyline
-): PolyOverlayWithIW {
+): Polyline {
     val context = this.context
     val polyline = Polyline().apply {
         outlinePaint.apply {

@@ -1,28 +1,38 @@
 package hu.mostoha.mobile.android.huki.home
 
+import android.Manifest
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.rule.GrantPermissionRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.espresso.hasCenterAndZoom
+import hu.mostoha.mobile.android.huki.ui.home.OverlayComparator
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.overlay.CopyrightOverlay
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-class HomeMapWithoutLocationUiTest {
+class HomeLicencesUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
@@ -34,18 +44,11 @@ class HomeMapWithoutLocationUiTest {
     }
 
     @Test
-    fun givenNullHikingLayer_whenMapOpens_thenItIsCenteredAndZoomedToHungary() {
+    fun whenHomeScreenLaunches_thenCopyrightOverlayDisplays() {
         launchScenario<HomeActivity> {
-            R.id.homeMapView.hasCenterAndZoom(
-                center = HUNGARY_BOUNDING_BOX_CENTER,
-                zoom = HUNGARY_BOUNDING_BOX_ZOOM
-            )
+            R.id.homeMapView.hasOverlay<CopyrightOverlay>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
-    }
-
-    companion object {
-        private const val HUNGARY_BOUNDING_BOX_ZOOM = 7.0
-        private val HUNGARY_BOUNDING_BOX_CENTER = GeoPoint(47.31885723, 19.45407265)
     }
 
 }

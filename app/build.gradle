@@ -132,6 +132,9 @@ dependencies {
     implementation "com.google.firebase:firebase-analytics-ktx:21.1.0"
     implementation "com.google.firebase:firebase-crashlytics-ktx:18.2.11"
 
+    // Licenses
+    implementation 'com.github.marcoscgdev:Licenser:2.0.0'
+
     // Unit tests
     testImplementation project(":test-data")
 

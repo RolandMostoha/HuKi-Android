@@ -4,7 +4,9 @@ import android.Manifest
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -15,10 +17,19 @@ import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
-import hu.mostoha.mobile.android.huki.repository.*
+import hu.mostoha.mobile.android.huki.repository.FileBasedHikingLayerRepository
+import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.ui.home.OverlayPositions
-import hu.mostoha.mobile.android.huki.util.espresso.*
+import hu.mostoha.mobile.android.huki.ui.home.OverlayComparator
+import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.hasBaseTileSource
+import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
+import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import io.mockk.mockk
@@ -100,7 +111,8 @@ class HomeLayersUiTest {
     @Test
     fun whenMapOpens_thenHikingLayerDisplays() {
         launchScenario<HomeActivity> {
-            R.id.homeMapView.hasOverlayInPosition<TilesOverlay>(OverlayPositions.HIKING_LAYER)
+            R.id.homeMapView.hasOverlay<TilesOverlay>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 
@@ -118,7 +130,8 @@ class HomeLayersUiTest {
 
             Espresso.pressBack()
 
-            R.id.homeMapView.hasNotOverlayInPosition<TilesOverlay>(OverlayPositions.HIKING_LAYER)
+            R.id.homeMapView.hasNoOverlay<TilesOverlay>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 

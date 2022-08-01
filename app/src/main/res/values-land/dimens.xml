@@ -35,7 +35,7 @@
     <dimen name="progress_fab_stroke_width">3dp</dimen>
 
     <dimen name="home_marker_size_poi">45dp</dimen>
-    <dimen name="home_fab_bottom_margin">32dp</dimen>
+    <dimen name="home_fab_bottom_margin">@dimen/space_extra_large</dimen>
 
     <dimen name="home_search_bar_height">60dp</dimen>
     <dimen name="home_search_bar_stroke_width">1dp</dimen>
@@ -47,7 +47,7 @@
 
     <dimen name="home_my_location_altitude_vertical_padding">7dp</dimen>
 
-    <dimen name="home_copyright_bottom_margin">12dp</dimen>
+    <dimen name="home_copyright_bottom_margin">@dimen/space_small</dimen>
 
     <dimen name="home_map_view_top_offset">100dp</dimen>
     <dimen name="home_map_view_bottom_offset">90dp</dimen>
