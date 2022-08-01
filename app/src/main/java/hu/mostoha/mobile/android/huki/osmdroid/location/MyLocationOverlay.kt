@@ -1,6 +1,5 @@
 package hu.mostoha.mobile.android.huki.osmdroid.location
 
-import android.graphics.Bitmap
 import android.location.Location
 import androidx.lifecycle.LifecycleCoroutineScope
 import hu.mostoha.mobile.android.huki.R
@@ -14,8 +13,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 /**
- * [MyLocationNewOverlay] implementation that supports follow location callbacks and fixes
- * my location button misalignment on map. It also supports providing coroutine based location
+ * [MyLocationNewOverlay] implementation that supports follow location callbacks and coroutine based location
  * monitoring via [AsyncMyLocationProvider].
  */
 class MyLocationOverlay(
@@ -26,12 +24,10 @@ class MyLocationOverlay(
 
     companion object {
         /**
-         * Anchor scale values for the my location icon. Expected values between 0 and 1.
+         * Horizontal/vertical anchor scale values for my location icons.
          */
-        const val MY_LOCATION_ANCHOR_HORIZONTAL = 0.5f
-        const val MY_LOCATION_ANCHOR_VERTICAL = 0.5f
-        const val MY_LOCATION_COMPASS_ANCHOR_HORIZONTAL = 0.5f
-        const val MY_LOCATION_COMPASS_ANCHOR_VERTICAL = 0.75f
+        val MY_LOCATION_ICON_ANCHOR = 0.5f to 0.5f
+        val MY_LOCATION_COMPASS_ANCHOR = 0.5f to 0.75f
     }
 
     private var isLocationEnabled = false
@@ -40,10 +36,10 @@ class MyLocationOverlay(
     var onFollowLocationFirstFix: (() -> Unit)? = null
 
     init {
-        setDirectionArrow(
-            R.drawable.ic_marker_my_location.toBitmap(mapView.context),
-            R.drawable.ic_marker_my_location_compass.toBitmap(mapView.context)
-        )
+        setPersonIcon(R.drawable.ic_marker_my_location.toBitmap(mapView.context))
+        setDirectionIcon(R.drawable.ic_marker_my_location_compass.toBitmap(mapView.context))
+        setPersonAnchor(MY_LOCATION_ICON_ANCHOR.first, MY_LOCATION_ICON_ANCHOR.second)
+        setDirectionAnchor(MY_LOCATION_COMPASS_ANCHOR.first, MY_LOCATION_COMPASS_ANCHOR.second)
     }
 
     fun enableMyLocationFlow(): Flow<Location> {
@@ -97,20 +93,5 @@ class MyLocationOverlay(
     }
 
     override fun isMyLocationEnabled(): Boolean = isLocationEnabled
-
-    // TODO Remove after OSMDroid 6.2.0 release. https://github.com/osmdroid/osmdroid/issues/1360
-    override fun setDirectionArrow(personBitmap: Bitmap, directionArrowBitmap: Bitmap) {
-        super.setDirectionArrow(personBitmap, directionArrowBitmap)
-
-        if (mPersonHotspot != null) {
-            setPersonHotspot(
-                personBitmap.width * MY_LOCATION_ANCHOR_HORIZONTAL,
-                personBitmap.height * MY_LOCATION_ANCHOR_VERTICAL
-            )
-        }
-
-        mDirectionArrowCenterX = mDirectionArrowBitmap.width * MY_LOCATION_COMPASS_ANCHOR_HORIZONTAL
-        mDirectionArrowCenterY = mDirectionArrowBitmap.height * MY_LOCATION_COMPASS_ANCHOR_VERTICAL
-    }
 
 }
