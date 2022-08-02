@@ -39,6 +39,8 @@
     <style name="DefaultButton.Contained.Shadowless.Primary" />
 
     <style name="DefaultButton.Contained.Shadowless.Secondary">
+        <item name="android:paddingTop">@dimen/space_medium</item>
+        <item name="android:paddingBottom">@dimen/space_medium</item>
         <item name="android:textColor">@color/selector_default_secondary_button_text_color</item>
         <item name="backgroundTint">@color/colorBackground</item>
         <item name="rippleColor">@color/colorStroke</item>

@@ -14,45 +14,45 @@
         android:layout_width="@dimen/place_details_bottom_sheet_image_size"
         android:layout_height="@dimen/place_details_bottom_sheet_image_size"
         android:layout_gravity="center_vertical"
-        android:padding="@dimen/space_extra_small"
-        android:layout_marginTop="@dimen/space_extra_large"
         android:layout_marginStart="@dimen/space_extra_large"
-        android:layout_marginBottom="@dimen/space_small"
+        android:layout_marginTop="@dimen/space_extra_large"
         android:layout_marginEnd="@dimen/space_medium"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="@dimen/space_small"
+        android:padding="@dimen/space_extra_small"
         app:layout_constraintEnd_toStartOf="@id/placeDetailsTextContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_home_search_bar_type_relation" />
 
     <LinearLayout
         android:id="@+id/placeDetailsTextContainer"
-        android:layout_height="wrap_content"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="@id/placeDetailsImage"
         app:layout_constraintBottom_toBottomOf="@id/placeDetailsImage"
+        app:layout_constraintEnd_toStartOf="@id/placeDetailsCloseButton"
         app:layout_constraintStart_toEndOf="@id/placeDetailsImage"
-        app:layout_constraintEnd_toStartOf="@id/placeDetailsCloseButton">
+        app:layout_constraintTop_toTopOf="@id/placeDetailsImage">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/placeDetailsPrimaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
+            android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:ellipsize="end"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
             tools:text="Dobogókő Szánkópálya" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/placeDetailsSecondaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
             android:layout_marginTop="@dimen/space_extra_small"
+            android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:ellipsize="end"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
             tools:text="2099 Pilisszentkereszt" />
 
     </LinearLayout>
@@ -65,8 +65,8 @@
         android:layout_marginTop="@dimen/space_small"
         android:layout_marginEnd="@dimen/space_small"
         app:icon="@drawable/ic_bottom_sheet_clear"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/placeDetailsDirectionsButton"
@@ -77,22 +77,11 @@
         android:layout_marginEnd="@dimen/space_medium"
         android:text="@string/home_bottom_sheet_directions_button"
         app:icon="@drawable/ic_home_bottom_sheet_directions"
-        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/placeDetailsShowPointsButton" />
+        app:layout_constraintEnd_toStartOf="@id/placeDetailsShowPointsButton"
+        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
+        app:layout_constraintHorizontal_bias="1" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/placeDetailsHikingTrailsButton"
-        style="@style/DefaultButton.Contained.Shadowless.Primary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_medium"
-        android:layout_marginEnd="@dimen/space_extra_large"
-        android:text="@string/home_bottom_sheet_hiking_trails_button"
-        app:icon="@drawable/ic_place_details_hiking_routes"
-        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/placeDetailsShowPointsButton"
@@ -103,8 +92,21 @@
         android:layout_marginEnd="@dimen/space_extra_large"
         android:text="@string/home_bottom_sheet_show_points_button"
         app:icon="@drawable/ic_place_details_show_points"
-        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/placeDetailsHikingTrailsButton" />
+        app:layout_constraintEnd_toStartOf="@id/placeDetailsHikingTrailsButton"
+        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/placeDetailsHikingTrailsButton"
+        style="@style/DefaultButton.Contained.Shadowless.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginEnd="@dimen/space_extra_large"
+        android:text="@string/home_bottom_sheet_hiking_trails_button"
+        app:icon="@drawable/ic_place_details_hiking_routes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
