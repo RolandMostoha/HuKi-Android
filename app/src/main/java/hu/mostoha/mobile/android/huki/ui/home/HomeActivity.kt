@@ -1,7 +1,6 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
 import android.graphics.Color
-import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.ListPopupWindow
@@ -304,7 +303,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .onEach { location ->
                     homeViewModel.loadLandscapes(location)
 
-                    initAltitude(location)
+                    initAltitude(location.altitude)
                 }
                 .collect()
         }
@@ -330,15 +329,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initAltitude(location: Location) {
-        val hasAltitude = location.altitude > 0
+    private fun initAltitude(altitude: Double) {
+        val hasAltitude = altitude > 0
 
         homeAltitudeText.visibleOrGone(hasAltitude)
 
         if (hasAltitude) {
             homeAltitudeText.text = getString(
                 R.string.default_distance_template_m,
-                location.altitude.toInt()
+                altitude.toInt()
             )
         }
     }

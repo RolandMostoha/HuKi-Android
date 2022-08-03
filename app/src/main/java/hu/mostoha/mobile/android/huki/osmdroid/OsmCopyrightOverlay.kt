@@ -2,6 +2,9 @@ package hu.mostoha.mobile.android.huki.osmdroid
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
+import android.text.TextPaint
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import com.marcoscg.licenser.Library
@@ -9,27 +12,65 @@ import com.marcoscg.licenser.License
 import com.marcoscg.licenser.LicenserDialog
 import hu.mostoha.mobile.android.huki.R
 import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.CopyrightOverlay
+import org.osmdroid.views.Projection
+import org.osmdroid.views.overlay.Overlay
 
-class OsmCopyrightOverlay(val context: Context) : CopyrightOverlay(context) {
+class OsmCopyrightOverlay(val context: Context) : Overlay() {
 
-    init {
-        setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText))
-        setOffset(
-            context.resources.getDimensionPixelSize(R.dimen.space_medium),
-            context.resources.getDimensionPixelSize(R.dimen.home_copyright_bottom_margin)
+    private var textPaint: Paint = TextPaint().apply {
+        isAntiAlias = true
+        textSize = context.resources.getDimensionPixelSize(R.dimen.text_size_small).toFloat()
+        color = ContextCompat.getColor(context, R.color.colorSecondaryText)
+        textAlign = Paint.Align.LEFT
+        typeface = context.resources.getFont(R.font.opensans_regular)
+    }
+
+    private val copyrightNotice = context.getString(R.string.licences_osm_copyright_notice)
+
+    private val xOffset = context.resources.getDimensionPixelSize(R.dimen.space_medium)
+    private val yOffset = context.resources.getDimensionPixelSize(R.dimen.home_copyright_bottom_margin)
+
+    private val hitRect: Rect = Rect()
+    private val textBounds: Rect = Rect()
+
+    override fun draw(canvas: Canvas, projection: Projection) {
+        val canvasHeight = canvas.height
+
+        val x = xOffset.toFloat()
+        val y = (canvasHeight - yOffset).toFloat()
+
+        projection.save(canvas, false, false)
+
+        canvas.drawText(copyrightNotice, x, y, textPaint)
+        textPaint.getTextBounds(copyrightNotice, 0, copyrightNotice.length, textBounds)
+        hitRect.set(
+            0,
+            canvasHeight - (textBounds.height() + 2 * yOffset),
+            textBounds.width() + 2 * xOffset,
+            canvasHeight
         )
-        setCopyrightNotice(context.getString(R.string.licences_osm_copyright_notice))
+
+        projection.restore(canvas, false)
     }
 
-    override fun draw(canvas: Canvas, map: MapView, shadow: Boolean) {
-        draw(canvas, map.projection)
+    override fun onSingleTapConfirmed(motionEvent: MotionEvent, mapView: MapView): Boolean {
+        return if (isCopyrightHit(motionEvent, mapView)) {
+            showLicencesDialog()
+
+            true
+        } else {
+            super.onSingleTapConfirmed(motionEvent, mapView)
+        }
     }
 
-    override fun onSingleTapConfirmed(e: MotionEvent, mapView: MapView): Boolean {
-        showLicencesDialog()
+    private fun isCopyrightHit(event: MotionEvent, mapView: MapView): Boolean {
+        val projection = mapView.projection ?: return false
+        val screenRect = projection.intrinsicScreenRect
 
-        return true
+        val x = screenRect.left + event.x.toInt()
+        val y = screenRect.top + event.y.toInt()
+
+        return hitRect.contains(x, y)
     }
 
     private fun showLicencesDialog() {
