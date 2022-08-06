@@ -11,16 +11,20 @@ import com.marcoscg.licenser.Library
 import com.marcoscg.licenser.License
 import com.marcoscg.licenser.LicenserDialog
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import org.osmdroid.views.MapView
 import org.osmdroid.views.Projection
 import org.osmdroid.views.overlay.Overlay
 
-class OsmCopyrightOverlay(val context: Context) : Overlay() {
+class OsmCopyrightOverlay(
+    private val context: Context,
+    private val analyticsService: FirebaseAnalyticsService
+) : Overlay() {
 
     private var textPaint: Paint = TextPaint().apply {
         isAntiAlias = true
-        textSize = context.resources.getDimensionPixelSize(R.dimen.text_size_small).toFloat()
-        color = ContextCompat.getColor(context, R.color.colorSecondaryText)
+        textSize = context.resources.getDimensionPixelSize(R.dimen.text_size_extra_small).toFloat()
+        color = ContextCompat.getColor(context, R.color.colorCopyright)
         textAlign = Paint.Align.LEFT
         typeface = context.resources.getFont(R.font.opensans_regular)
     }
@@ -55,6 +59,8 @@ class OsmCopyrightOverlay(val context: Context) : Overlay() {
 
     override fun onSingleTapConfirmed(motionEvent: MotionEvent, mapView: MapView): Boolean {
         return if (isCopyrightHit(motionEvent, mapView)) {
+            analyticsService.copyrightClicked()
+
             showLicencesDialog()
 
             true

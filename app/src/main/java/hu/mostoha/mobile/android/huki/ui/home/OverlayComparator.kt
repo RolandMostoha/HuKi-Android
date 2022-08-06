@@ -11,14 +11,14 @@ import org.osmdroid.views.overlay.TilesOverlay
 object OverlayComparator : Comparator<Overlay> {
 
     private enum class OverlayType {
-        LICENCE,
+        COPYRIGHT,
         HIKING_LAYER,
         MY_LOCATION,
         PLACE_DETAILS
     }
 
     private val overlayOrderMap = mapOf(
-        listOf(OsmCopyrightOverlay::class) to OverlayType.LICENCE,
+        listOf(OsmCopyrightOverlay::class) to OverlayType.COPYRIGHT,
         listOf(TilesOverlay::class) to OverlayType.HIKING_LAYER,
         listOf(MyLocationOverlay::class) to OverlayType.MY_LOCATION,
         listOf(Marker::class, Polygon::class, Polyline::class) to OverlayType.PLACE_DETAILS

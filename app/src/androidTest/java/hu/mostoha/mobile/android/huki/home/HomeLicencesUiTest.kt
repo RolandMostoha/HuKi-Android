@@ -8,6 +8,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
+import hu.mostoha.mobile.android.huki.osmdroid.OsmCopyrightOverlay
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.ui.home.OverlayComparator
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
@@ -17,7 +18,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.osmdroid.views.overlay.CopyrightOverlay
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -46,7 +46,7 @@ class HomeLicencesUiTest {
     @Test
     fun whenHomeScreenLaunches_thenCopyrightOverlayDisplays() {
         launchScenario<HomeActivity> {
-            R.id.homeMapView.hasOverlay<CopyrightOverlay>()
+            R.id.homeMapView.hasOverlay<OsmCopyrightOverlay>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }

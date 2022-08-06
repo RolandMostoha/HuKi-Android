@@ -12,6 +12,6 @@ import hu.mostoha.mobile.android.huki.osmdroid.tiles.HikingTileUrlProvider
 class OsmModule {
 
     @Provides
-    fun provideHikingTileUrlProvider(): HikingTileUrlProvider = AwsHikingTileUrlProvider
+    fun provideHikingTileUrlProvider(): HikingTileUrlProvider = AwsHikingTileUrlProvider()
 
 }

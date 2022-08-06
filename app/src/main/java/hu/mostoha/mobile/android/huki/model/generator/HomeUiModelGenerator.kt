@@ -51,6 +51,7 @@ class HomeUiModelGenerator @Inject constructor() {
                 },
                 geoPoint = place.location.toGeoPoint(),
                 boundingBox = place.boundingBox,
+                isLandscape = false
             )
         }
     }
@@ -118,7 +119,8 @@ class HomeUiModelGenerator @Inject constructor() {
                     LandscapeType.CAVE_SYSTEM -> R.drawable.ic_landscapes_cave
                 },
                 geoPoint = landscape.center.toGeoPoint(),
-                boundingBox = null
+                boundingBox = null,
+                isLandscape = true
             )
         }
     }
@@ -158,7 +160,8 @@ class HomeUiModelGenerator @Inject constructor() {
                 geoPoint = relation.ways.flatMap { it.locations }
                     .calculateCenter()
                     .toGeoPoint(),
-                boundingBox = null
+                boundingBox = null,
+                isLandscape = false
             ),
             geometry = geometry
         )

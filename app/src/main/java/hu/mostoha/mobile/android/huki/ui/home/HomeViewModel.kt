@@ -18,6 +18,7 @@ import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.Message
@@ -48,6 +49,7 @@ class HomeViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
     private val placesInteractor: PlacesInteractor,
     private val landscapeInteractor: LandscapeInteractor,
+    private val analyticsService: FirebaseAnalyticsService,
     private val uiModelGenerator: HomeUiModelGenerator
 ) : ViewModel() {
 
@@ -155,6 +157,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadPlaceDetails(placeUiModel: PlaceUiModel) = viewModelScope.launch(dispatcher) {
+        if (placeUiModel.isLandscape) {
+            analyticsService.loadLandscapeClicked(placeUiModel.primaryText)
+        } else {
+            analyticsService.loadPlaceDetailsClicked(placeUiModel.primaryText, placeUiModel.placeType)
+        }
+
         placesInteractor.requestGeometryFlow(placeUiModel.osmId, placeUiModel.placeType)
             .map { uiModelGenerator.generatePlaceDetails(placeUiModel, it) }
             .onEach { _placeDetails.emit(it) }
@@ -170,6 +178,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = viewModelScope.launch(dispatcher) {
+        analyticsService.loadHikingRoutesClicked(placeName, boundingBox)
+
         placesInteractor.requestGetHikingRoutesFlow(boundingBox)
             .map { uiModelGenerator.generateHikingRoutes(placeName, it) }
             .onEach { _hikingRoutes.emit(it) }
@@ -180,6 +190,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = viewModelScope.launch(dispatcher) {
+        analyticsService.loadHikingRouteDetailsClicked(hikingRoute.name)
+
         placesInteractor.requestGeometryFlow(hikingRoute.osmId, PlaceType.RELATION)
             .map { uiModelGenerator.generateHikingRouteDetails(hikingRoute, it) }
             .onEach { _placeDetails.emit(it) }

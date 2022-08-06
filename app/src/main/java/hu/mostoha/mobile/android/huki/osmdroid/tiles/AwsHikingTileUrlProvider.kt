@@ -1,10 +1,12 @@
 package hu.mostoha.mobile.android.huki.osmdroid.tiles
 
 import com.amplifyframework.core.Amplify
+import hu.mostoha.mobile.android.huki.osmdroid.CounterProvider
 import timber.log.Timber
 import java.util.concurrent.CountDownLatch
+import javax.inject.Inject
 
-object AwsHikingTileUrlProvider : HikingTileUrlProvider {
+class AwsHikingTileUrlProvider @Inject constructor() : HikingTileUrlProvider {
 
     override fun getHikingTileUrl(storageKey: String): String {
         var url = ""
@@ -16,6 +18,8 @@ object AwsHikingTileUrlProvider : HikingTileUrlProvider {
                 url = storageGetUrlResult.url.toString()
 
                 Timber.d("Created url for S3 tile: $url")
+
+                CounterProvider.tileDownloadRequestCounter++
 
                 latch.countDown()
             },

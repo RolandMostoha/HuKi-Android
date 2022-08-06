@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.huki.model.domain
 
 /**
- * Model that represents an x,y limit for a zoom level to avoid the unnecessary requests of tiles.
+ * Represents an x,y limit for a zoom level to avoid the unnecessary requests of tiles.
  */
 data class TileZoomRange(
     val zoom: Int,
