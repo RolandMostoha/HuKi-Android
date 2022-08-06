@@ -8,6 +8,7 @@
     <dimen name="space_extra_large">20dp</dimen>
     <dimen name="space_extra_extra_large">25dp</dimen>
 
+    <dimen name="text_size_extra_small">12sp</dimen>
     <dimen name="text_size_small">13sp</dimen>
     <dimen name="text_size_medium">15sp</dimen>
     <dimen name="text_size_large">17sp</dimen>

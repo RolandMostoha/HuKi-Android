@@ -17,6 +17,4 @@
     <color name="colorPolyline">#D3474747</color>
     <color name="colorPolylineFill">#20474747</color>
 
-    <color name="transparent">@android:color/transparent</color>
-
 </resources>
