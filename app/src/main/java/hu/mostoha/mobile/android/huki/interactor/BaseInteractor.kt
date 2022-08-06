@@ -3,7 +3,6 @@ package hu.mostoha.mobile.android.huki.interactor
 import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
-import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -28,7 +27,7 @@ open class BaseInteractor @Inject constructor(
                     DomainExceptionMapper.map(exception)
                 }
 
-                if (!BuildConfig.DEBUG && mappedException is UnknownException) {
+                if (!BuildConfig.DEBUG) {
                     exceptionLogger.recordException(exception)
                 }
 

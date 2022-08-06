@@ -92,6 +92,7 @@ class HomeUiModelGeneratorTest {
                         iconRes = R.drawable.ic_home_search_bar_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
+                        isLandscape = false
                     )
                 )
             )
@@ -115,6 +116,7 @@ class HomeUiModelGeneratorTest {
                         iconRes = R.drawable.ic_home_search_bar_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
+                        isLandscape = false
                     )
                 )
             )
@@ -241,7 +243,8 @@ class HomeUiModelGeneratorTest {
                     secondaryText = R.string.home_bottom_sheet_landscape_secondary.toMessage(),
                     iconRes = R.drawable.ic_landscapes_mountain_low,
                     geoPoint = landscape.center.toGeoPoint(),
-                    boundingBox = null
+                    boundingBox = null,
+                    isLandscape = true
                 )
             )
         )
@@ -339,7 +342,8 @@ class HomeUiModelGeneratorTest {
                     geoPoint = geometry.ways.flatMap { it.locations }
                         .calculateCenter()
                         .toGeoPoint(),
-                    boundingBox = null
+                    boundingBox = null,
+                    isLandscape = false
                 ),
                 geometry
             )
@@ -390,7 +394,8 @@ class HomeUiModelGeneratorTest {
             secondaryText = DEFAULT_NODE_CITY.toMessage(),
             iconRes = 0,
             geoPoint = GeoPoint(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
-            boundingBox = null
+            boundingBox = null,
+            isLandscape = false
         )
         private val DEFAULT_LANDSCAPE = Landscape(
             osmId = DEFAULT_LANDSCAPE_OSM_ID,

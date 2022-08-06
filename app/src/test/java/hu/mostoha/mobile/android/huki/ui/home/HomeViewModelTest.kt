@@ -25,6 +25,7 @@ import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH
@@ -73,6 +74,8 @@ class HomeViewModelTest {
 
     private val landscapeInteractor = mockk<LandscapeInteractor>()
 
+    private val analyticsService = mockk<FirebaseAnalyticsService>(relaxed = true)
+
     private val exceptionLogger = mockk<ExceptionLogger>()
 
     private val generator = mockk<HomeUiModelGenerator>()
@@ -90,7 +93,8 @@ class HomeViewModelTest {
             exceptionLogger = exceptionLogger,
             placesInteractor = placesInteractor,
             landscapeInteractor = landscapeInteractor,
-            uiModelGenerator = generator
+            uiModelGenerator = generator,
+            analyticsService = analyticsService
         )
     }
 
@@ -503,7 +507,8 @@ class HomeViewModelTest {
             secondaryText = null,
             iconRes = 0,
             geoPoint = DEFAULT_PLACE.location.toGeoPoint(),
-            boundingBox = null
+            boundingBox = null,
+            isLandscape = false
         )
         private val DEFAULT_PLACE_DETAILS_UI_MODEL = PlaceDetailsUiModel(
             placeUiModel = DEFAULT_PLACE_UI_MODEL,
@@ -537,7 +542,8 @@ class HomeViewModelTest {
                 secondaryText = null,
                 iconRes = 0,
                 geoPoint = GeoPoint(DEFAULT_HIKING_ROUTE_START_LATITUDE, DEFAULT_HIKING_ROUTE_START_LONGITUDE),
-                boundingBox = null
+                boundingBox = null,
+                isLandscape = false
             ),
             geometryUiModel = GeometryUiModel.Relation(
                 ways = listOf(
