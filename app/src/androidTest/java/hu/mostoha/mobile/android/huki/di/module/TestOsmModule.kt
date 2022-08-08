@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import hu.mostoha.mobile.android.huki.osmdroid.tiles.FakeHikingTileUrlProvider
-import hu.mostoha.mobile.android.huki.osmdroid.tiles.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
 
 @Module
 @TestInstallIn(

@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.osmdroid.tiles
+package hu.mostoha.mobile.android.huki.osmdroid.tilesource
 
 import com.amplifyframework.core.Amplify
 import hu.mostoha.mobile.android.huki.osmdroid.CounterProvider

@@ -53,6 +53,7 @@ import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.osmdroid.OsmCopyrightOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
+import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesAdapter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
@@ -70,7 +71,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
@@ -449,13 +449,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun addHikingLayer(hikingLayer: LayerSpec) {
-        val tileProvider = MapTileProviderBasic(applicationContext).apply {
-            tileSource = hikingLayer.tileSource
-            tileRequestCompleteHandlers.apply {
-                // Issue: https://github.com/osmdroid/osmdroid/issues/690
-                clear()
-                add(homeMapView.tileRequestCompleteHandler)
-            }
+        val tileProvider = AwsMapTileProviderBasic(applicationContext, hikingLayer.tileSource)
+        tileProvider.tileRequestCompleteHandlers.apply {
+            // Issue: https://github.com/osmdroid/osmdroid/issues/690
+            clear()
+            add(homeMapView.tileRequestCompleteHandler)
         }
 
         val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {

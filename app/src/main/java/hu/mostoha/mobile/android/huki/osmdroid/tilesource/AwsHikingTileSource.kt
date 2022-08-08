@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.osmdroid.tiles
+package hu.mostoha.mobile.android.huki.osmdroid.tilesource
 
 import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
 import org.osmdroid.tileprovider.tilesource.XYTileSource

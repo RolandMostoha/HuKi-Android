@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import hu.mostoha.mobile.android.huki.osmdroid.tiles.AwsHikingTileUrlProvider
-import hu.mostoha.mobile.android.huki.osmdroid.tiles.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
 
 @Module
 @InstallIn(SingletonComponent::class)

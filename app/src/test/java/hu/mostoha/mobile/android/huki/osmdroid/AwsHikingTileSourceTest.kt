@@ -2,8 +2,8 @@ package hu.mostoha.mobile.android.huki.osmdroid
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
-import hu.mostoha.mobile.android.huki.osmdroid.tiles.AwsHikingTileSource
-import hu.mostoha.mobile.android.huki.osmdroid.tiles.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

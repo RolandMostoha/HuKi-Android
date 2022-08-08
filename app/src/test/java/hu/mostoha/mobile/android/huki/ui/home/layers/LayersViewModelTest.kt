@@ -8,8 +8,8 @@ import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.LayersConfig
-import hu.mostoha.mobile.android.huki.osmdroid.tiles.AwsHikingTileSource
-import hu.mostoha.mobile.android.huki.osmdroid.tiles.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.runTestDefault
 import io.mockk.every
