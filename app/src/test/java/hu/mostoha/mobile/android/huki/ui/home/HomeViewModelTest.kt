@@ -416,14 +416,16 @@ class HomeViewModelTest {
             viewModel.myLocationUiModel.test {
                 viewModel.updateMyLocationConfig(
                     isLocationPermissionEnabled = true,
-                    isFollowLocationEnabled = false
+                    isFollowLocationEnabled = false,
+                    isAnimationEnabled = true
                 )
 
                 assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
                 assertThat(awaitItem()).isEqualTo(
                     MyLocationUiModel(
                         isLocationPermissionEnabled = true,
-                        isFollowLocationEnabled = false
+                        isFollowLocationEnabled = false,
+                        isAnimationEnabled = true
                     )
                 )
             }

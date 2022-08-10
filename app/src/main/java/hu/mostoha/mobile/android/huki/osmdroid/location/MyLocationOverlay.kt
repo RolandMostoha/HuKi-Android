@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.lifecycle.LifecycleCoroutineScope
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
+import hu.mostoha.mobile.android.huki.extensions.centerAndZoom
 import hu.mostoha.mobile.android.huki.extensions.toBitmap
 import hu.mostoha.mobile.android.huki.util.calculateZoomLevel
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +33,7 @@ class MyLocationOverlay(
 
     private var isLocationEnabled = false
 
+    var isAnimationEnabled: Boolean = false
     var onFollowLocationDisabled: (() -> Unit)? = null
     var onFollowLocationFirstFix: (() -> Unit)? = null
 
@@ -74,7 +76,13 @@ class MyLocationOverlay(
         val zoomLevel = location.calculateZoomLevel().toDouble()
 
         if (mIsFollowing && !mapView.isAnimating && mapView.zoomLevelDouble != zoomLevel) {
-            mapView.animateCenterAndZoom(GeoPoint(location), zoomLevel)
+            val geoPoint = GeoPoint(location)
+
+            if (isAnimationEnabled) {
+                mapView.animateCenterAndZoom(geoPoint, zoomLevel)
+            } else {
+                mapView.centerAndZoom(geoPoint, zoomLevel)
+            }
         }
 
         super.setLocation(location)

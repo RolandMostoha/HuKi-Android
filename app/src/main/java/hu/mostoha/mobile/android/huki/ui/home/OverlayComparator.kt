@@ -8,6 +8,13 @@ import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 
+/**
+ * A comparator which ensures the order of the map view components rendered by its function.
+ *      1. Copyright
+ *      2. Hiking Layer
+ *      3. My location
+ *      4. Place details (Markers, Polylines, Polygons...)
+ */
 object OverlayComparator : Comparator<Overlay> {
 
     private enum class OverlayType {

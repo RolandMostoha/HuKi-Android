@@ -48,7 +48,6 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
-import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.osmdroid.OsmCopyrightOverlay
@@ -195,9 +194,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             addOverlay(OsmCopyrightOverlay(this@HomeActivity, analyticsService), OverlayComparator)
 
             if (isDarkMode()) {
-                overlayManager.tilesOverlay.setColorFilter(
-                    getColorScaledMatrix(getColor(R.color.colorScaleDarkMap))
-                )
+                overlayManager.tilesOverlay.setColorFilter(getColorScaledMatrix(getColor(R.color.colorScaleDarkMap)))
             }
         }
     }
@@ -245,7 +242,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 isLocationPermissionGranted() -> {
                     homeViewModel.updateMyLocationConfig(
                         isLocationPermissionEnabled = true,
-                        isFollowLocationEnabled = true
+                        isFollowLocationEnabled = true,
+                        isAnimationEnabled = true
                     )
                 }
                 shouldShowLocationRationale() -> showLocationRationaleDialog()
@@ -294,34 +292,38 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 permissions.isLocationPermissionGranted() -> {
                     homeViewModel.updateMyLocationConfig(
                         isLocationPermissionEnabled = true,
-                        isFollowLocationEnabled = true
+                        isFollowLocationEnabled = true,
+                        isAnimationEnabled = true
                     )
                 }
             }
         }
     }
 
-    private fun enableMyLocationMonitoring() {
+    private fun enableMyLocationMonitoring(isAnimationEnabled: Boolean) {
         if (myLocationOverlay == null) {
-            myLocationOverlay = MyLocationOverlay(lifecycleScope, myLocationProvider, homeMapView).apply {
-                runOnFirstFix {
-                    if (isFollowLocationEnabled) {
-                        homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
-                    } else {
-                        homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
+            myLocationOverlay = MyLocationOverlay(lifecycleScope, myLocationProvider, homeMapView)
+                .apply {
+                    runOnFirstFix {
+                        if (isFollowLocationEnabled) {
+                            homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
+                        } else {
+                            homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
+                        }
                     }
-                }
-                onFollowLocationFirstFix = {
-                    homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
-                }
-                onFollowLocationDisabled = {
-                    homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
+                    onFollowLocationFirstFix = {
+                        homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
+                    }
+                    onFollowLocationDisabled = {
+                        homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
 
-                    homeViewModel.updateMyLocationConfig(isFollowLocationEnabled = false)
+                        homeViewModel.updateMyLocationConfig(isFollowLocationEnabled = false)
+                    }
+                    homeMapView.addOverlay(this, OverlayComparator)
                 }
-                homeMapView.addOverlay(this, OverlayComparator)
-            }
         }
+
+        myLocationOverlay!!.isAnimationEnabled = isAnimationEnabled
 
         lifecycleScope.launch {
             myLocationOverlay!!.enableMyLocationFlow()
@@ -335,21 +337,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun updateFollowingLocation(myLocationUiModel: MyLocationUiModel) {
-        val locationOverlay = myLocationOverlay
-
-        if (locationOverlay == null || !myLocationUiModel.isLocationPermissionEnabled) {
-            return
-        }
+    private fun updateFollowingLocation(isFollowLocationEnabled: Boolean) {
+        val locationOverlay = myLocationOverlay ?: return
 
         when {
-            myLocationUiModel.isFollowLocationEnabled && !locationOverlay.isFollowLocationEnabled -> {
+            isFollowLocationEnabled && !locationOverlay.isFollowLocationEnabled -> {
                 homeMyLocationButton.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
                 homeMyLocationButton.startDrawableAnimation()
 
                 locationOverlay.enableFollowLocation()
             }
-            !myLocationUiModel.isFollowLocationEnabled && locationOverlay.isFollowLocationEnabled -> {
+            !isFollowLocationEnabled && locationOverlay.isFollowLocationEnabled -> {
                 locationOverlay.disableFollowLocation()
             }
         }
@@ -408,10 +406,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .collect { myLocationUiModel ->
                     if (myLocationUiModel.isLocationPermissionEnabled) {
-                        enableMyLocationMonitoring()
+                        enableMyLocationMonitoring(myLocationUiModel.isAnimationEnabled)
+                        updateFollowingLocation(myLocationUiModel.isFollowLocationEnabled)
                     }
-
-                    updateFollowingLocation(myLocationUiModel)
                 }
         }
         lifecycleScope.launch {

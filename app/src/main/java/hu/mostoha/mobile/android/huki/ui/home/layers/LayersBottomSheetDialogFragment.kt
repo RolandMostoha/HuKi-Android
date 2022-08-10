@@ -86,10 +86,8 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 layersViewModel.selectLayer(layerItem.layerType)
             }
         )
-
         binding.layersList.layoutManager = layoutManager
         binding.layersList.adapter = adapter
-
         adapter.submitList(layerAdapterItems)
     }
 
