@@ -29,6 +29,7 @@ import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.collapse
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.hide
+import hu.mostoha.mobile.android.huki.extensions.isDarkMode
 import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
 import hu.mostoha.mobile.android.huki.extensions.locationPermissions
 import hu.mostoha.mobile.android.huki.extensions.removeMarker
@@ -61,6 +62,9 @@ import hu.mostoha.mobile.android.huki.ui.home.layers.LayersBottomSheetDialogFrag
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarAdapter
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
+import hu.mostoha.mobile.android.huki.ui.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
+import hu.mostoha.mobile.android.huki.ui.util.getBrightnessColorMatrix
+import hu.mostoha.mobile.android.huki.ui.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_TILES_SCALE_FACTOR
 import hu.mostoha.mobile.android.huki.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
@@ -189,6 +193,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             }
             addOverlay(OsmCopyrightOverlay(this@HomeActivity, analyticsService), OverlayComparator)
+
+            if (isDarkMode()) {
+                overlayManager.tilesOverlay.setColorFilter(
+                    getColorScaledMatrix(getColor(R.color.colorScaleDarkMap))
+                )
+            }
         }
     }
 
@@ -389,7 +399,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     if (layerSpec == null) {
                         removeHikingLayer()
                     } else {
-                        addHikingLayer(layerSpec)
+                        initHikingLayer(layerSpec)
                     }
                 }
         }
@@ -448,19 +458,21 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun addHikingLayer(hikingLayer: LayerSpec) {
+    private fun initHikingLayer(hikingLayer: LayerSpec) {
         val tileProvider = AwsMapTileProviderBasic(applicationContext, hikingLayer.tileSource)
+        val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {
+            if (this@HomeActivity.isDarkMode()) {
+                setColorFilter(getBrightnessColorMatrix(DARK_MODE_HIKING_LAYER_BRIGHTNESS))
+            }
+            loadingBackgroundColor = Color.TRANSPARENT
+            loadingLineColor = Color.TRANSPARENT
+        }
+
         tileProvider.tileRequestCompleteHandlers.apply {
             // Issue: https://github.com/osmdroid/osmdroid/issues/690
             clear()
             add(homeMapView.tileRequestCompleteHandler)
         }
-
-        val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {
-            loadingBackgroundColor = Color.TRANSPARENT
-            loadingLineColor = Color.TRANSPARENT
-        }
-
         homeMapView.addOverlay(tilesOverlay, OverlayComparator)
     }
 

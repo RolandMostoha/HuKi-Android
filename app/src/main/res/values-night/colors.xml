@@ -11,10 +11,10 @@
     <color name="colorBackground">#2D2D2D</color>
     <color name="colorError">#c62828</color>
     <color name="colorStroke">#919191</color>
-    <color name="colorStrokeOnMap">#ABABAB</color>
+    <color name="colorStrokeOnMap">#61ABABAB</color>
     <color name="colorStrokeMarker">#474747</color>
-    <color name="colorMarker">#474747</color>
-    <color name="colorPolyline">#D3474747</color>
-    <color name="colorPolylineFill">#20474747</color>
+    <color name="colorMarker">@color/colorPrimary</color>
+    <color name="colorPolyline">@color/colorPrimary</color>
+    <color name="colorPolylineFill">#1F6BBA6F</color>
 
 </resources>

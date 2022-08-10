@@ -20,6 +20,7 @@
     <color name="colorPolyline">#D3474747</color>
     <color name="colorPolylineFill">#15474747</color>
     <color name="colorCopyright">#B3262626</color>
+    <color name="colorScaleDarkMap">#2A2A2A</color>
 
     <color name="colorSymbolStroke">#000000</color>
     <color name="colorSymbolBlue">#0000cc</color>

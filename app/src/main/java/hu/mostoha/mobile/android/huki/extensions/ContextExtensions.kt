@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -59,4 +60,13 @@ fun Context.registerReceiver(
 inline fun <reified T : Any> Context.requireSystemService(): T {
     return ContextCompat.getSystemService(this, T::class.java)
         ?: error("Required System Service was not found: ${T::class.java.simpleName}")
+}
+
+fun Context.isDarkMode(): Boolean {
+    return when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+        Configuration.UI_MODE_NIGHT_YES -> true
+        Configuration.UI_MODE_NIGHT_NO -> false
+        Configuration.UI_MODE_NIGHT_UNDEFINED -> false
+        else -> false
+    }
 }
