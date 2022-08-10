@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.osmdroid.tilesource
 
 import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
+import org.osmdroid.tileprovider.tilesource.TileSourcePolicy
 import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.MapTileIndex
 import javax.inject.Inject
@@ -14,7 +15,9 @@ data class AwsHikingTileSource @Inject constructor(
     MAX_ZOOM_LEVEL,
     TILE_SIZE_PX,
     FILE_NAME_ENDING,
-    emptyArray()
+    emptyArray(),
+    null,
+    TileSourcePolicy(MAX_CONCURRENT_DOWNLOAD, POLICY_FLAGS)
 ) {
 
     companion object {
@@ -23,6 +26,8 @@ data class AwsHikingTileSource @Inject constructor(
         private const val MAX_ZOOM_LEVEL = 17
         private const val TILE_SIZE_PX = 256
         private const val FILE_NAME_ENDING = ".png"
+        private const val MAX_CONCURRENT_DOWNLOAD = 3
+        private const val POLICY_FLAGS = TileSourcePolicy.FLAG_USER_AGENT_NORMALIZED
     }
 
     override fun getTileURLString(pMapTileIndex: Long): String {
