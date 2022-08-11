@@ -6,14 +6,16 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
+import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.espresso.hasCenterAndZoom
+import hu.mostoha.mobile.android.huki.ui.home.OverlayComparator
+import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -34,18 +36,11 @@ class HomeMapWithoutLocationUiTest {
     }
 
     @Test
-    fun givenNullHikingLayer_whenMapOpens_thenItIsCenteredAndZoomedToHungary() {
+    fun givenMapsWithoutLocation_whenScreenOpens_thenMyLocationOverlayDoesNotDisplay() {
         launchScenario<HomeActivity> {
-            R.id.homeMapView.hasCenterAndZoom(
-                center = HUNGARY_BOUNDING_BOX_CENTER,
-                zoom = HUNGARY_BOUNDING_BOX_ZOOM
-            )
+            R.id.homeMapView.hasNoOverlay<MyLocationOverlay>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
-    }
-
-    companion object {
-        private const val HUNGARY_BOUNDING_BOX_ZOOM = 7.0
-        private val HUNGARY_BOUNDING_BOX_CENTER = GeoPoint(47.31885723, 19.45407265)
     }
 
 }

@@ -369,16 +369,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeViewModel.mapUiModel
                 .flowWithLifecycle(lifecycle)
                 .collect { mapUiModel ->
-                    homeMapView.zoomToBoundingBox(
-                        if (mapUiModel.withDefaultOffset) {
-                            mapUiModel.boundingBox.toOsmBoundingBox()
-                        } else {
-                            mapUiModel.boundingBox
-                                .toOsmBoundingBox()
-                                .withDefaultOffset(homeMapView)
-                        },
-                        false
-                    )
+                    val boundingBox = if (mapUiModel.withDefaultOffset) {
+                        mapUiModel.boundingBox.toOsmBoundingBox()
+                    } else {
+                        mapUiModel.boundingBox
+                            .toOsmBoundingBox()
+                            .withDefaultOffset(homeMapView)
+                    }
+
+                    homeMapView.zoomToBoundingBox(boundingBox, false)
                 }
         }
         lifecycleScope.launch {
