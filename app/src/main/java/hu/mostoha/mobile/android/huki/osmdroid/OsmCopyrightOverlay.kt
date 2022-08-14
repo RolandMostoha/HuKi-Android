@@ -26,7 +26,7 @@ class OsmCopyrightOverlay(
         textSize = context.resources.getDimensionPixelSize(R.dimen.text_size_extra_small).toFloat()
         color = ContextCompat.getColor(context, R.color.colorCopyright)
         textAlign = Paint.Align.LEFT
-        typeface = context.resources.getFont(R.font.opensans_regular)
+        typeface = context.resources.getFont(R.font.opensans_semibold)
     }
 
     private val copyrightNotice = context.getString(R.string.licences_osm_copyright_notice)

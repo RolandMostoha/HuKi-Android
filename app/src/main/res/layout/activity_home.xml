@@ -151,6 +151,7 @@
             android:layout_marginBottom="@dimen/home_fab_bottom_margin"
             android:background="@drawable/background_altitude"
             android:drawableStart="@drawable/ic_altitude"
+            android:drawablePadding="@dimen/space_extra_extra_small"
             android:elevation="@dimen/default_elevation_map_overlay_views"
             android:gravity="center_vertical"
             android:paddingHorizontal="@dimen/space_large"
