@@ -25,7 +25,6 @@ import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
-import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH
@@ -39,7 +38,6 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_WAY_GEOMETRY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_WAY_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
@@ -74,8 +72,6 @@ class HomeViewModelTest {
 
     private val landscapeInteractor = mockk<LandscapeInteractor>()
 
-    private val analyticsService = mockk<FirebaseAnalyticsService>(relaxed = true)
-
     private val exceptionLogger = mockk<ExceptionLogger>()
 
     private val generator = mockk<HomeUiModelGenerator>()
@@ -93,8 +89,7 @@ class HomeViewModelTest {
             exceptionLogger = exceptionLogger,
             placesInteractor = placesInteractor,
             landscapeInteractor = landscapeInteractor,
-            uiModelGenerator = generator,
-            analyticsService = analyticsService
+            uiModelGenerator = generator
         )
     }
 
@@ -505,7 +500,7 @@ class HomeViewModelTest {
         private val DEFAULT_PLACE_UI_MODEL = PlaceUiModel(
             osmId = DEFAULT_PLACE.osmId,
             placeType = DEFAULT_PLACE.placeType,
-            primaryText = DEFAULT_PLACE.name,
+            primaryText = DEFAULT_PLACE.name.toMessage(),
             secondaryText = null,
             iconRes = 0,
             geoPoint = DEFAULT_PLACE.location.toGeoPoint(),
@@ -540,7 +535,7 @@ class HomeViewModelTest {
             placeUiModel = PlaceUiModel(
                 osmId = DEFAULT_HIKING_ROUTE.osmId,
                 placeType = PlaceType.RELATION,
-                primaryText = DEFAULT_HIKING_ROUTE.name,
+                primaryText = DEFAULT_HIKING_ROUTE.name.toMessage(),
                 secondaryText = null,
                 iconRes = 0,
                 geoPoint = GeoPoint(DEFAULT_HIKING_ROUTE_START_LATITUDE, DEFAULT_HIKING_ROUTE_START_LONGITUDE),
@@ -565,7 +560,7 @@ class HomeViewModelTest {
         )
         private val DEFAULT_LANDSCAPE = Landscape(
             osmId = DEFAULT_LANDSCAPE_OSM_ID,
-            name = DEFAULT_LANDSCAPE_NAME,
+            name = R.string.landscape_bükk,
             type = LandscapeType.MOUNTAIN_RANGE_HIGH,
             center = Location(DEFAULT_LANDSCAPE_LATITUDE, DEFAULT_LANDSCAPE_LONGITUDE)
         )

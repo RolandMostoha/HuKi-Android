@@ -9,7 +9,7 @@ import org.osmdroid.util.GeoPoint
 data class PlaceUiModel(
     val osmId: String,
     val placeType: PlaceType,
-    val primaryText: String,
+    val primaryText: Message,
     val secondaryText: Message?,
     @DrawableRes val iconRes: Int,
     val geoPoint: GeoPoint,

@@ -15,19 +15,12 @@ fun TextView.setDrawableTop(@DrawableRes drawableRes: Int) {
     setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
 }
 
-fun TextView.setMessage(message: Message) {
-    text = when (message) {
-        is Message.Res -> context.getString(message.res, *message.formatArgs.toTypedArray())
-        is Message.Text -> message.text
-    }
-}
-
 fun TextView.setMessageOrGone(message: Message?) {
     if (message == null) {
         gone()
     } else {
         visible()
-        setMessage(message)
+        text = message.resolve(context)
     }
 }
 

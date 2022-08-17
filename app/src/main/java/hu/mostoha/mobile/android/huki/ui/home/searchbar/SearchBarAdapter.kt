@@ -9,6 +9,7 @@ import android.widget.TextView
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeSearchBarErrorBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeSearchBarPlaceBinding
 import hu.mostoha.mobile.android.huki.extensions.inflater
+import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 
@@ -37,7 +38,7 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchBarItem>(context, 
                     holder = convertView.tag as ViewHolder
                 }
 
-                holder.primaryText.text = searchBarItem.placeUiModel.primaryText
+                holder.primaryText.text = searchBarItem.placeUiModel.primaryText.resolve(context)
                 holder.secondaryText.setMessageOrGone(searchBarItem.placeUiModel.secondaryText)
                 holder.iconImage.setImageResource(searchBarItem.placeUiModel.iconRes)
             }

@@ -27,19 +27,11 @@ val Context.screenHeightPx: Int
     }
 
 fun Context.showToast(message: Message, length: Int = Toast.LENGTH_LONG) {
-    val resolved = when (message) {
-        is Message.Text -> message.text
-        is Message.Res -> getString(message.res)
-    }
-    Toast.makeText(this, resolved, length).show()
+    Toast.makeText(this, message.resolve(this), length).show()
 }
 
 fun Context.showSnackbar(view: View, message: Message) {
-    val resolved = when (message) {
-        is Message.Text -> message.text
-        is Message.Res -> getString(message.res)
-    }
-    Snackbar.make(view, resolved, Snackbar.LENGTH_LONG).show()
+    Snackbar.make(view, message.resolve(this), Snackbar.LENGTH_LONG).show()
 }
 
 fun Context.colorStateList(@ColorRes res: Int) = ContextCompat.getColorStateList(this, res)

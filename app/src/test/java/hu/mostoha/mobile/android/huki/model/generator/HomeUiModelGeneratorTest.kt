@@ -23,7 +23,6 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
@@ -87,7 +86,7 @@ class HomeUiModelGeneratorTest {
                     PlaceUiModel(
                         osmId = DEFAULT_PLACE_WAY.osmId,
                         placeType = PlaceType.WAY,
-                        primaryText = DEFAULT_PLACE_WAY.name,
+                        primaryText = DEFAULT_PLACE_WAY.name.toMessage(),
                         secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.city}"),
                         iconRes = R.drawable.ic_home_search_bar_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
@@ -111,7 +110,7 @@ class HomeUiModelGeneratorTest {
                     PlaceUiModel(
                         osmId = DEFAULT_PLACE_WAY.osmId,
                         placeType = PlaceType.WAY,
-                        primaryText = DEFAULT_PLACE_WAY.name,
+                        primaryText = DEFAULT_PLACE_WAY.name.toMessage(),
                         secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.country}"),
                         iconRes = R.drawable.ic_home_search_bar_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
@@ -239,7 +238,7 @@ class HomeUiModelGeneratorTest {
                 PlaceUiModel(
                     osmId = landscape.osmId,
                     placeType = PlaceType.WAY,
-                    primaryText = landscape.name,
+                    primaryText = landscape.name.toMessage(),
                     secondaryText = R.string.home_bottom_sheet_landscape_secondary.toMessage(),
                     iconRes = R.drawable.ic_landscapes_mountain_low,
                     geoPoint = landscape.center.toGeoPoint(),
@@ -335,7 +334,7 @@ class HomeUiModelGeneratorTest {
             generator.generatePlaceDetails(
                 PlaceUiModel(
                     osmId = hikingRoute.osmId,
-                    primaryText = hikingRoute.name,
+                    primaryText = hikingRoute.name.toMessage(),
                     secondaryText = DistanceFormatter.format(100 + 150),
                     placeType = PlaceType.RELATION,
                     iconRes = hikingRoute.symbolIcon,
@@ -390,7 +389,7 @@ class HomeUiModelGeneratorTest {
         private val DEFAULT_PLACE_UI_MODEL = PlaceUiModel(
             osmId = DEFAULT_NODE_OSM_ID,
             placeType = PlaceType.NODE,
-            primaryText = DEFAULT_NODE_NAME,
+            primaryText = DEFAULT_NODE_NAME.toMessage(),
             secondaryText = DEFAULT_NODE_CITY.toMessage(),
             iconRes = 0,
             geoPoint = GeoPoint(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
@@ -399,7 +398,7 @@ class HomeUiModelGeneratorTest {
         )
         private val DEFAULT_LANDSCAPE = Landscape(
             osmId = DEFAULT_LANDSCAPE_OSM_ID,
-            name = DEFAULT_LANDSCAPE_NAME,
+            name = R.string.landscape_bükk,
             type = LandscapeType.MOUNTAIN_RANGE_LOW,
             center = Location(DEFAULT_LANDSCAPE_LATITUDE, DEFAULT_LANDSCAPE_LONGITUDE)
         )

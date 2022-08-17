@@ -34,6 +34,7 @@ import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
 import hu.mostoha.mobile.android.huki.extensions.locationPermissions
 import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
+import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
@@ -200,7 +201,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initSearchBar() {
-        searchBarAdapter = SearchBarAdapter(this)
+        searchBarAdapter = SearchBarAdapter(this@HomeActivity)
         homeSearchBarInputLayout.setEndIconOnClickListener {
             homeSearchBarInput.text?.clear()
             homeSearchBarInput.clearFocusAndHideKeyboard()
@@ -212,7 +213,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeViewModel.loadSearchBarPlaces(text)
             }
         }
-        searchBarPopup = ListPopupWindow(this).apply {
+        searchBarPopup = ListPopupWindow(this@HomeActivity).apply {
             anchorView = homeSearchBarPopupAnchor
             height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
             setBackgroundDrawable(ContextCompat.getDrawable(this@HomeActivity, R.drawable.background_dialog))
@@ -221,14 +222,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 val place = searchBarAdapter.getItem(position)
                 if (place != null && place is SearchBarItem.Place) {
                     val searchText = homeSearchBarInput.text.toString()
+                    val placeUiModel = place.placeUiModel
 
                     homeSearchBarInput.text?.clear()
                     homeSearchBarInput.clearFocusAndHideKeyboard()
                     searchBarPopup.dismiss()
 
-                    homeViewModel.loadPlace(place.placeUiModel)
+                    homeViewModel.loadPlace(placeUiModel)
 
-                    analyticsService.searchBarPlaceClicked(searchText, place.placeUiModel.primaryText)
+                    analyticsService.searchBarPlaceClicked(
+                        searchText,
+                        placeUiModel.primaryText.resolve(this@HomeActivity)
+                    )
                 }
             }
         }
@@ -252,10 +257,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
 
         homeRoutesNearbyFab.setOnClickListener {
-            homeViewModel.loadHikingRoutes(
-                placeName = getString(R.string.map_place_name_routes_nearby),
-                boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
-            )
+            val placeName = getString(R.string.map_place_name_routes_nearby)
+            val boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
+
+            homeViewModel.loadHikingRoutes(placeName, boundingBox)
+            analyticsService.loadHikingRoutesClicked(placeName, boundingBox)
         }
 
         homeLayersFab.setOnClickListener {
@@ -507,11 +513,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 binding.homeLandscapeChipGroup,
                 false
             )
+            val placeName = landscape.primaryText.resolve(chipBinding.root.context)
             with(chipBinding.landscapesChip) {
-                text = landscape.primaryText
+                text = placeName
                 setChipIconResource(landscape.iconRes)
                 setOnClickListener {
                     homeViewModel.loadPlaceDetails(landscape)
+                    analyticsService.loadLandscapeClicked(placeName)
                 }
             }
             binding.homeLandscapeChipGroup.addView(chipBinding.root)
@@ -622,6 +630,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     hikingRoutesSheet.hide()
                     homeViewModel.loadHikingRouteDetails(hikingRoute)
                     removePlaceOverlays()
+                    analyticsService.loadHikingRouteDetailsClicked(hikingRoute.name)
                 },
                 onCloseClick = {
                     hikingRoutesSheet.hide()
@@ -640,12 +649,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initNodeBottomSheet(placeUiModel: PlaceUiModel, geoPoint: GeoPoint, marker: Marker) {
         with(binding.homePlaceDetailsBottomSheetContainer) {
-            placeDetailsPrimaryText.text = placeUiModel.primaryText
+            val placeName = placeUiModel.primaryText.resolve(root.context)
+
+            placeDetailsPrimaryText.text = placeName
             placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
             placeDetailsImage.setImageResource(placeUiModel.iconRes)
             placeDetailsDirectionsButton.visible()
             placeDetailsDirectionsButton.setOnClickListener {
-                analyticsService.navigationClicked(placeUiModel.primaryText)
+                analyticsService.navigationClicked(placeName)
 
                 startGoogleDirections(geoPoint)
             }
@@ -657,6 +668,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     removePlaceOverlays()
 
                     homeViewModel.loadPlaceDetails(placeUiModel)
+                    analyticsService.loadPlaceDetailsClicked(placeName, placeUiModel.placeType)
                 }
             } else {
                 placeDetailsShowPointsButton.gone()
@@ -664,10 +676,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 placeDetailsHikingTrailsButton.setOnClickListener {
                     placeDetailsSheet.hide()
 
-                    homeViewModel.loadHikingRoutes(
-                        placeName = getString(R.string.map_place_name_node_routes_nearby, placeUiModel.primaryText),
-                        boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
-                    )
+                    val placeTitle = getString(R.string.map_place_name_node_routes_nearby, placeUiModel.primaryText)
+                    val boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
+
+                    homeViewModel.loadHikingRoutes(placeTitle, boundingBox)
+                    analyticsService.loadHikingRoutesClicked(placeTitle, boundingBox)
                 }
             }
             placeDetailsCloseButton.setOnClickListener {
@@ -681,7 +694,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initWayBottomSheet(placeUiModel: PlaceUiModel, boundingBox: BoundingBox, overlays: List<Overlay>) {
         with(binding.homePlaceDetailsBottomSheetContainer) {
-            placeDetailsPrimaryText.text = placeUiModel.primaryText
+            val placeName = placeUiModel.primaryText.resolve(root.context)
+
+            placeDetailsPrimaryText.text = placeName
             placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
             placeDetailsImage.setImageResource(placeUiModel.iconRes)
             placeDetailsDirectionsButton.gone()
@@ -690,10 +705,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             placeDetailsHikingTrailsButton.setOnClickListener {
                 placeDetailsSheet.hide()
 
-                homeViewModel.loadHikingRoutes(
-                    placeName = placeUiModel.primaryText,
-                    boundingBox = boundingBox.toDomainBoundingBox()
-                )
+                homeViewModel.loadHikingRoutes(placeName, boundingBox.toDomainBoundingBox())
+                analyticsService.loadHikingRoutesClicked(placeName, boundingBox.toDomainBoundingBox())
             }
             placeDetailsCloseButton.setOnClickListener {
                 placeDetailsSheet.hide()

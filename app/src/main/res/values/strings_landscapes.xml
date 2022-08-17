@@ -1,0 +1,27 @@
+<resources>
+
+    <string name="landscape_bükk">Bükk</string>
+    <string name="landscape_balaton_felvidék">Balaton Uplands</string>
+    <string name="landscape_aggteleki_karszt">Aggtelek Karst</string>
+    <string name="landscape_mecsek">Mecsek</string>
+    <string name="landscape_mátra">Mátra</string>
+    <string name="landscape_börzsöny">Börzsöny</string>
+    <string name="landscape_pilis_hegység">Pilis Mountains</string>
+    <string name="landscape_visegrádi_hegység">Visegrád Mountains</string>
+    <string name="landscape_bakony">Bakony</string>
+    <string name="landscape_gerecse_hegység">Gerecse Mountains</string>
+    <string name="landscape_keszthelyi_hegység">Keszthely Mountains</string>
+    <string name="landscape_naszály">Naszály</string>
+    <string name="landscape_cserhát">Cserhát</string>
+    <string name="landscape_heves_Borsodi_dombság">Heves-Borsod Mountains</string>
+    <string name="landscape_gödöllői_dombság">Gödöllői Mountains</string>
+    <string name="landscape_kopasz_hegy">Kopasz Hill</string>
+    <string name="landscape_zempléni_hegység">Zempléni Mountains</string>
+    <string name="landscape_cserehát">Cserehát</string>
+    <string name="landscape_vértes">Vértes</string>
+    <string name="landscape_velencei_hegység">Velence Mountains</string>
+    <string name="landscape_zselic">Zselic</string>
+    <string name="landscape_villányi_hegység">Villány Mountains</string>
+    <string name="landscape_kőszegi_hegység">Kőszeg Mountains</string>
+
+</resources>

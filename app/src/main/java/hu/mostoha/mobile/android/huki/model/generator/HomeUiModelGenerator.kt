@@ -42,7 +42,7 @@ class HomeUiModelGenerator @Inject constructor() {
             PlaceUiModel(
                 osmId = place.osmId,
                 placeType = place.placeType,
-                primaryText = place.name,
+                primaryText = place.name.toMessage(),
                 secondaryText = Message.Text(generateAddress(place)),
                 iconRes = when (place.placeType) {
                     PlaceType.NODE -> R.drawable.ic_home_search_bar_type_node
@@ -110,7 +110,7 @@ class HomeUiModelGenerator @Inject constructor() {
             PlaceUiModel(
                 osmId = landscape.osmId,
                 placeType = PlaceType.WAY,
-                primaryText = landscape.name,
+                primaryText = landscape.name.toMessage(),
                 secondaryText = R.string.home_bottom_sheet_landscape_secondary.toMessage(),
                 iconRes = when (landscape.type) {
                     LandscapeType.MOUNTAIN_RANGE_LOW -> R.drawable.ic_landscapes_mountain_low
@@ -133,15 +133,17 @@ class HomeUiModelGenerator @Inject constructor() {
         } else {
             mutableListOf<HikingRoutesItem>()
                 .plus(HikingRoutesItem.Header(placeName))
-                .plus(hikingRoutes.map { hikingRoute ->
-                    HikingRoutesItem.Item(
-                        HikingRouteUiModel(
-                            osmId = hikingRoute.osmId,
-                            name = hikingRoute.name,
-                            symbolIcon = hikingRoute.symbolType.getIconRes()
+                .plus(
+                    hikingRoutes.map { hikingRoute ->
+                        HikingRoutesItem.Item(
+                            HikingRouteUiModel(
+                                osmId = hikingRoute.osmId,
+                                name = hikingRoute.name,
+                                symbolIcon = hikingRoute.symbolType.getIconRes()
+                            )
                         )
-                    )
-                })
+                    }
+                )
         }
     }
 
@@ -153,7 +155,7 @@ class HomeUiModelGenerator @Inject constructor() {
         return generatePlaceDetails(
             placeUiModel = PlaceUiModel(
                 osmId = hikingRoute.osmId,
-                primaryText = hikingRoute.name,
+                primaryText = hikingRoute.name.toMessage(),
                 secondaryText = DistanceFormatter.format(totalDistance),
                 placeType = PlaceType.RELATION,
                 iconRes = hikingRoute.symbolIcon,
