@@ -1,20 +1,47 @@
-package hu.mostoha.mobile.android.huki.model.generator
+package hu.mostoha.mobile.android.huki.model.mapper
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
-import hu.mostoha.mobile.android.huki.model.domain.*
-import hu.mostoha.mobile.android.huki.model.network.overpass.*
-import hu.mostoha.mobile.android.huki.model.network.photon.*
-import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.Geometry
+import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.network.overpass.Element
+import hu.mostoha.mobile.android.huki.model.network.overpass.ElementType
+import hu.mostoha.mobile.android.huki.model.network.overpass.Geom
+import hu.mostoha.mobile.android.huki.model.network.overpass.Member
+import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
+import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
+import hu.mostoha.mobile.android.huki.model.network.overpass.Tags
+import hu.mostoha.mobile.android.huki.model.network.photon.FeaturesItem
+import hu.mostoha.mobile.android.huki.model.network.photon.OsmType
+import hu.mostoha.mobile.android.huki.model.network.photon.PhotonGeometry
+import hu.mostoha.mobile.android.huki.model.network.photon.PhotonQueryResponse
+import hu.mostoha.mobile.android.huki.model.network.photon.Properties
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_JEL
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_1_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_1_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_2_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_2_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import org.junit.Assert.assertThrows
 import org.junit.Test
 
-class PlacesDomainModelGeneratorTest {
+class PlacesDomainModelMapperTest {
 
-    private val generator = PlacesDomainModelGenerator()
+    private val mapper = PlacesDomainModelMapper()
 
     @Test
     fun `Given photon query response, when generatePlace, then correct Place list returns`() {
@@ -24,7 +51,7 @@ class PlacesDomainModelGeneratorTest {
         )
         val expectedProperties = DEFAULT_PHOTON_FEATURE_ITEM.properties
 
-        val places = generator.generatePlace(photonQueryResponse)
+        val places = mapper.generatePlace(photonQueryResponse)
 
         assertThat(places).isEqualTo(
             listOf(
@@ -66,7 +93,7 @@ class PlacesDomainModelGeneratorTest {
             type = "FeatureCollection"
         )
 
-        val places = generator.generatePlace(photonQueryResponse)
+        val places = mapper.generatePlace(photonQueryResponse)
 
         assertThat(places).isEmpty()
     }
@@ -76,7 +103,7 @@ class PlacesDomainModelGeneratorTest {
         val osmId = DEFAULT_OVERPASS_ELEMENT_NODE.id.toString()
         val photonQueryResponse = OverpassQueryResponse(listOf(DEFAULT_OVERPASS_ELEMENT_NODE))
 
-        val geometry = generator.generateGeometryByNode(photonQueryResponse, osmId)
+        val geometry = mapper.generateGeometryByNode(photonQueryResponse, osmId)
 
         assertThat(geometry).isEqualTo(
             Geometry.Node(
@@ -92,7 +119,7 @@ class PlacesDomainModelGeneratorTest {
         val photonQueryResponse = OverpassQueryResponse(emptyList())
 
         val exception = assertThrows(DomainException::class.java) {
-            generator.generateGeometryByNode(photonQueryResponse, osmId)
+            mapper.generateGeometryByNode(photonQueryResponse, osmId)
         }
 
         assertThat(exception.messageRes).isEqualTo(R.string.error_message_missing_osm_id.toMessage())
@@ -102,9 +129,9 @@ class PlacesDomainModelGeneratorTest {
     fun `Given overpass query response, when generateGeometryByWay, then way Geometry returns`() {
         val osmId = DEFAULT_OVERPASS_ELEMENT_WAY.id.toString()
         val photonQueryResponse = OverpassQueryResponse(listOf(DEFAULT_OVERPASS_ELEMENT_WAY))
-        val expectedLocations = generator.extractLocations(DEFAULT_OVERPASS_ELEMENT_WAY.geometry!!)
+        val expectedLocations = mapper.extractLocations(DEFAULT_OVERPASS_ELEMENT_WAY.geometry!!)
 
-        val geometry = generator.generateGeometryByWay(photonQueryResponse, osmId)
+        val geometry = mapper.generateGeometryByWay(photonQueryResponse, osmId)
 
         assertThat(geometry).isEqualTo(
             Geometry.Way(
@@ -121,7 +148,7 @@ class PlacesDomainModelGeneratorTest {
         val photonQueryResponse = OverpassQueryResponse(emptyList())
 
         val exception = assertThrows(DomainException::class.java) {
-            generator.generateGeometryByWay(photonQueryResponse, osmId)
+            mapper.generateGeometryByWay(photonQueryResponse, osmId)
         }
 
         assertThat(exception.messageRes).isEqualTo(R.string.error_message_missing_osm_id.toMessage())
@@ -132,13 +159,13 @@ class PlacesDomainModelGeneratorTest {
         val osmId = DEFAULT_OVERPASS_ELEMENT_RELATION.id.toString()
         val photonQueryResponse = OverpassQueryResponse(listOf(DEFAULT_OVERPASS_ELEMENT_RELATION))
 
-        val geometry = generator.generateGeometryByRelation(photonQueryResponse, osmId)
+        val geometry = mapper.generateGeometryByRelation(photonQueryResponse, osmId)
 
         assertThat(geometry).isEqualTo(
             Geometry.Relation(
                 osmId = osmId,
                 ways = DEFAULT_OVERPASS_ELEMENT_RELATION.members!!.map {
-                    val locations = generator.extractLocations(it.geometry!!)
+                    val locations = mapper.extractLocations(it.geometry!!)
 
                     Geometry.Way(
                         osmId = it.ref,
@@ -156,7 +183,7 @@ class PlacesDomainModelGeneratorTest {
         val photonQueryResponse = OverpassQueryResponse(emptyList())
 
         val exception = assertThrows(DomainException::class.java) {
-            generator.generateGeometryByRelation(photonQueryResponse, osmId)
+            mapper.generateGeometryByRelation(photonQueryResponse, osmId)
         }
 
         assertThat(exception.messageRes).isEqualTo(R.string.error_message_missing_osm_id.toMessage())
@@ -178,7 +205,7 @@ class PlacesDomainModelGeneratorTest {
             )
         )
 
-        val hikingRoutes = generator.generateHikingRoutes(photonQueryResponse)
+        val hikingRoutes = mapper.generateHikingRoutes(photonQueryResponse)
 
         assertThat(hikingRoutes).isEqualTo(
             listOf(
@@ -200,7 +227,7 @@ class PlacesDomainModelGeneratorTest {
             Geom(47.12345, 19.12345)
         )
 
-        val locations = generator.extractLocations(geometries)
+        val locations = mapper.extractLocations(geometries)
 
         assertThat(locations).isEqualTo(listOf(Location(47.12345, 19.12345)))
     }

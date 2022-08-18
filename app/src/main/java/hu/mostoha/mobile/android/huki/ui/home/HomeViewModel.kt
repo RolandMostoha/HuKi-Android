@@ -12,7 +12,7 @@ import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
-import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
+import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
@@ -48,7 +48,7 @@ class HomeViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
     private val placesInteractor: PlacesInteractor,
     private val landscapeInteractor: LandscapeInteractor,
-    private val uiModelGenerator: HomeUiModelGenerator
+    private val homeUiModelMapper: HomeUiModelMapper
 ) : ViewModel() {
 
     companion object {
@@ -90,7 +90,7 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch(dispatcher) {
             landscapeInteractor.requestGetLandscapesFlow()
-                .map { uiModelGenerator.generateLandscapes(it) }
+                .map { homeUiModelMapper.generateLandscapes(it) }
                 .onEach { _landscapes.emit(it) }
                 .catch { showError(it) }
                 .collect()
@@ -99,7 +99,7 @@ class HomeViewModel @Inject constructor(
 
     fun loadLandscapes(location: Location) = viewModelScope.launch(dispatcher) {
         landscapeInteractor.requestGetLandscapesFlow(location.toLocation())
-            .map { uiModelGenerator.generateLandscapes(it) }
+            .map { homeUiModelMapper.generateLandscapes(it) }
             .onEach { _landscapes.emit(it) }
             .catch { showError(it) }
             .collect()
@@ -116,11 +116,11 @@ class HomeViewModel @Inject constructor(
         }
         searchPlacesJob = viewModelScope.launch {
             placesInteractor.requestGetPlacesByFlow(searchText)
-                .map { uiModelGenerator.generateSearchBarItems(it) }
+                .map { homeUiModelMapper.generateSearchBarItems(it) }
                 .onEach { _searchBarItems.emit(it) }
                 .catch { throwable ->
                     if (throwable is DomainException) {
-                        _searchBarItems.emit(uiModelGenerator.generatePlacesErrorItem(throwable))
+                        _searchBarItems.emit(homeUiModelMapper.generatePlacesErrorItem(throwable))
                     }
                 }
                 .onStart {
@@ -151,12 +151,12 @@ class HomeViewModel @Inject constructor(
         clearSearchBarItems()
         clearFollowLocation()
 
-        _placeDetails.emit(uiModelGenerator.generatePlaceDetails(placeUiModel))
+        _placeDetails.emit(homeUiModelMapper.generatePlaceDetails(placeUiModel))
     }
 
     fun loadPlaceDetails(placeUiModel: PlaceUiModel) = viewModelScope.launch(dispatcher) {
         placesInteractor.requestGeometryFlow(placeUiModel.osmId, placeUiModel.placeType)
-            .map { uiModelGenerator.generatePlaceDetails(placeUiModel, it) }
+            .map { homeUiModelMapper.generatePlaceDetails(placeUiModel, it) }
             .onEach { _placeDetails.emit(it) }
             .onStart {
                 clearFollowLocation()
@@ -171,7 +171,7 @@ class HomeViewModel @Inject constructor(
 
     fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = viewModelScope.launch(dispatcher) {
         placesInteractor.requestGetHikingRoutesFlow(boundingBox)
-            .map { uiModelGenerator.generateHikingRoutes(placeName, it) }
+            .map { homeUiModelMapper.generateHikingRoutes(placeName, it) }
             .onEach { _hikingRoutes.emit(it) }
             .onStart { showLoading(true) }
             .onCompletion { showLoading(false) }
@@ -181,7 +181,7 @@ class HomeViewModel @Inject constructor(
 
     fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = viewModelScope.launch(dispatcher) {
         placesInteractor.requestGeometryFlow(hikingRoute.osmId, PlaceType.RELATION)
-            .map { uiModelGenerator.generateHikingRouteDetails(hikingRoute, it) }
+            .map { homeUiModelMapper.generateHikingRouteDetails(hikingRoute, it) }
             .onEach { _placeDetails.emit(it) }
             .onStart {
                 clearFollowLocation()

@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.model.generator
+package hu.mostoha.mobile.android.huki.model.mapper
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
@@ -54,15 +54,15 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.osmdroid.util.GeoPoint
 
-class HomeUiModelGeneratorTest {
+class HomeUiModelMapperTest {
 
-    private val generator = HomeUiModelGenerator()
+    private val mapper = HomeUiModelMapper()
 
     @Test
     fun `Given empty place domain models, when generateSearchBarItems, then error item returns`() {
         val places = emptyList<Place>()
 
-        val searchBarPlaceItems = generator.generateSearchBarItems(places)
+        val searchBarPlaceItems = mapper.generateSearchBarItems(places)
 
         assertThat(searchBarPlaceItems).isEqualTo(
             listOf(
@@ -78,7 +78,7 @@ class HomeUiModelGeneratorTest {
     fun `Given place domain models, when generateSearchBarItems, then correct list of search bar items return`() {
         val places = listOf(DEFAULT_PLACE_WAY)
 
-        val searchBarPlaceItems = generator.generateSearchBarItems(places)
+        val searchBarPlaceItems = mapper.generateSearchBarItems(places)
 
         assertThat(searchBarPlaceItems).isEqualTo(
             listOf(
@@ -102,7 +102,7 @@ class HomeUiModelGeneratorTest {
     fun `Given place domain models without city, when generateSearchBarItems, then secondaryText contains the country`() {
         val places = listOf(DEFAULT_PLACE_WAY.copy(city = null))
 
-        val searchBarPlaceItems = generator.generateSearchBarItems(places)
+        val searchBarPlaceItems = mapper.generateSearchBarItems(places)
 
         assertThat(searchBarPlaceItems).isEqualTo(
             listOf(
@@ -126,7 +126,7 @@ class HomeUiModelGeneratorTest {
     fun `Given DomainException, when generatePlacesErrorItem, then proper error SearchBarItem returns`() {
         val domainException = DomainException(R.string.error_message_too_many_requests.toMessage())
 
-        val searchBarErrorItem = generator.generatePlacesErrorItem(domainException)
+        val searchBarErrorItem = mapper.generatePlacesErrorItem(domainException)
 
         assertThat(searchBarErrorItem).isEqualTo(
             listOf(
@@ -142,7 +142,7 @@ class HomeUiModelGeneratorTest {
     fun `Given node place UI model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
         val placeUiModel = DEFAULT_PLACE_UI_MODEL
 
-        val placeDetails = generator.generatePlaceDetails(placeUiModel)
+        val placeDetails = mapper.generatePlaceDetails(placeUiModel)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -159,7 +159,7 @@ class HomeUiModelGeneratorTest {
             location = DEFAULT_PLACE_UI_MODEL.geoPoint.toLocation()
         )
 
-        val placeDetails = generator.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
+        val placeDetails = mapper.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -173,7 +173,7 @@ class HomeUiModelGeneratorTest {
     fun `Given way geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
         val geometry = DEFAULT_OPEN_WAY_GEOMETRY
 
-        val placeDetails = generator.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
+        val placeDetails = mapper.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -191,7 +191,7 @@ class HomeUiModelGeneratorTest {
     fun `Given closed way geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
         val geometry = DEFAULT_CLOSED_WAY_GEOMETRY
 
-        val placeDetails = generator.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
+        val placeDetails = mapper.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -209,7 +209,7 @@ class HomeUiModelGeneratorTest {
     fun `Given relation geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
         val geometry = DEFAULT_CLOSED_RELATION_GEOMETRY
 
-        val placeDetails = generator.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
+        val placeDetails = mapper.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -231,7 +231,7 @@ class HomeUiModelGeneratorTest {
     fun `Given landscape domain models, when generateLandscapes, then correct PlaceDetailsUiModel returns`() {
         val landscape = DEFAULT_LANDSCAPE
 
-        val places = generator.generateLandscapes(listOf(landscape))
+        val places = mapper.generateLandscapes(listOf(landscape))
 
         assertThat(places).isEqualTo(
             listOf(
@@ -258,7 +258,7 @@ class HomeUiModelGeneratorTest {
             symbolType = SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL)
         )
 
-        val hikingRouteItems = generator.generateHikingRoutes(placeName, listOf(hikingRoute))
+        val hikingRouteItems = mapper.generateHikingRoutes(placeName, listOf(hikingRoute))
 
         assertThat(hikingRouteItems).isEqualTo(
             listOf(
@@ -278,7 +278,7 @@ class HomeUiModelGeneratorTest {
     fun `Given empty hiking route domain models, when generateHikingRoutes, then empty HikingRoutesItem with header returns`() {
         val placeName = DEFAULT_HIKING_ROUTE_NAME
 
-        val hikingRouteItems = generator.generateHikingRoutes(placeName, emptyList())
+        val hikingRouteItems = mapper.generateHikingRoutes(placeName, emptyList())
 
         assertThat(hikingRouteItems).isEqualTo(
             listOf(
@@ -301,7 +301,7 @@ class HomeUiModelGeneratorTest {
         )
 
         assertThrows(IllegalStateException::class.java) {
-            generator.generateHikingRouteDetails(hikingRoute, geometry)
+            mapper.generateHikingRouteDetails(hikingRoute, geometry)
         }
     }
 
@@ -328,10 +328,10 @@ class HomeUiModelGeneratorTest {
             )
         )
 
-        val placeDetailsUiModel = generator.generateHikingRouteDetails(hikingRoute, geometry)
+        val placeDetailsUiModel = mapper.generateHikingRouteDetails(hikingRoute, geometry)
 
         assertThat(placeDetailsUiModel).isEqualTo(
-            generator.generatePlaceDetails(
+            mapper.generatePlaceDetails(
                 PlaceUiModel(
                     osmId = hikingRoute.osmId,
                     primaryText = hikingRoute.name.toMessage(),

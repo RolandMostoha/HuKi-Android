@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.model.generator
+package hu.mostoha.mobile.android.huki.model.mapper
 
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
@@ -22,7 +22,7 @@ import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateCenter
 import javax.inject.Inject
 
-class HomeUiModelGenerator @Inject constructor() {
+class HomeUiModelMapper @Inject constructor() {
 
     fun generateSearchBarItems(places: List<Place>): List<SearchBarItem> {
         return if (places.isEmpty()) {

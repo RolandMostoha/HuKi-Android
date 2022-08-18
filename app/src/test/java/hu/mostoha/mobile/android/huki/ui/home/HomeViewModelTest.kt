@@ -17,7 +17,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
-import hu.mostoha.mobile.android.huki.model.generator.HomeUiModelGenerator
+import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
@@ -74,7 +74,7 @@ class HomeViewModelTest {
 
     private val exceptionLogger = mockk<ExceptionLogger>()
 
-    private val generator = mockk<HomeUiModelGenerator>()
+    private val homeUiModelMapper = mockk<HomeUiModelMapper>()
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -89,7 +89,7 @@ class HomeViewModelTest {
             exceptionLogger = exceptionLogger,
             placesInteractor = placesInteractor,
             landscapeInteractor = landscapeInteractor,
-            uiModelGenerator = generator
+            homeUiModelMapper = homeUiModelMapper
         )
     }
 
@@ -100,7 +100,7 @@ class HomeViewModelTest {
             val landscapesUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
 
             every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
-            every { generator.generateLandscapes(any()) } returns landscapesUiModels
+            every { homeUiModelMapper.generateLandscapes(any()) } returns landscapesUiModels
 
             viewModel.landscapes.test {
                 viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
@@ -141,7 +141,7 @@ class HomeViewModelTest {
             val places = listOf(DEFAULT_PLACE)
             val searchBarItems = listOf(SearchBarItem.Place(DEFAULT_PLACE_UI_MODEL))
             every { placesInteractor.requestGetPlacesByFlow(searchText) } returns flowOf(places)
-            every { generator.generateSearchBarItems(places) } returns searchBarItems
+            every { homeUiModelMapper.generateSearchBarItems(places) } returns searchBarItems
 
             viewModel.searchBarItems.test {
                 viewModel.loadSearchBarPlaces(searchText)
@@ -158,7 +158,7 @@ class HomeViewModelTest {
             val places = listOf(DEFAULT_PLACE)
             val searchBarItems = listOf(SearchBarItem.Place(DEFAULT_PLACE_UI_MODEL))
             every { placesInteractor.requestGetPlacesByFlow(searchText) } returns flowOf(places)
-            every { generator.generateSearchBarItems(places) } returns searchBarItems
+            every { homeUiModelMapper.generateSearchBarItems(places) } returns searchBarItems
 
             viewModel.searchBarItems.test {
                 viewModel.loadSearchBarPlaces(searchText)
@@ -182,7 +182,7 @@ class HomeViewModelTest {
                 )
             )
             every { placesInteractor.requestGetPlacesByFlow(any()) } returns flowOfError(domainException)
-            every { generator.generatePlacesErrorItem(domainException) } returns searchBarItems
+            every { homeUiModelMapper.generatePlacesErrorItem(domainException) } returns searchBarItems
 
             viewModel.searchBarItems.test {
                 viewModel.loadSearchBarPlaces("")
@@ -197,7 +197,7 @@ class HomeViewModelTest {
         runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
-            every { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+            every { homeUiModelMapper.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadPlace(placeUiModel)
@@ -212,7 +212,7 @@ class HomeViewModelTest {
         runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
-            every { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+            every { homeUiModelMapper.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
 
             viewModel.myLocationUiModel.test {
                 viewModel.loadPlace(placeUiModel)
@@ -227,9 +227,9 @@ class HomeViewModelTest {
         runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
-            every { generator.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+            every { homeUiModelMapper.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
             every { placesInteractor.requestGetPlacesByFlow(any()) } returns flowOf(emptyList())
-            every { generator.generateSearchBarItems(any()) } returns emptyList()
+            every { homeUiModelMapper.generateSearchBarItems(any()) } returns emptyList()
 
             viewModel.searchBarItems.test {
                 viewModel.loadSearchBarPlaces("")
@@ -249,7 +249,7 @@ class HomeViewModelTest {
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
             every { placesInteractor.requestGeometryFlow(osmId, PlaceType.NODE) } returns flowOf(geometry)
-            every { generator.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
+            every { homeUiModelMapper.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadPlaceDetails(placeUiModel)
@@ -267,7 +267,7 @@ class HomeViewModelTest {
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
             every { placesInteractor.requestGeometryFlow(osmId, PlaceType.NODE) } returns flowOf(geometry)
-            every { generator.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
+            every { homeUiModelMapper.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
 
             viewModel.myLocationUiModel.test {
                 viewModel.loadPlaceDetails(placeUiModel)
@@ -301,7 +301,7 @@ class HomeViewModelTest {
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             val hikingRouteUiModels = listOf(HikingRoutesItem.Item(DEFAULT_HIKING_ROUTE_UI_MODEL))
             every { placesInteractor.requestGetHikingRoutesFlow(boundingBox) } returns flowOf(hikingRoutes)
-            every { generator.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
+            every { homeUiModelMapper.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
 
             viewModel.hikingRoutes.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
@@ -336,7 +336,12 @@ class HomeViewModelTest {
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
             every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
-            every { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
+            every {
+                homeUiModelMapper.generateHikingRouteDetails(
+                    hikingRouteUiModel,
+                    geometry
+                )
+            } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadHikingRouteDetails(hikingRouteUiModel)
@@ -354,7 +359,12 @@ class HomeViewModelTest {
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
             every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
-            every { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
+            every {
+                homeUiModelMapper.generateHikingRouteDetails(
+                    hikingRouteUiModel,
+                    geometry
+                )
+            } returns placeDetailsUiModel
 
             viewModel.myLocationUiModel.test {
                 viewModel.loadHikingRouteDetails(hikingRouteUiModel)
@@ -376,9 +386,14 @@ class HomeViewModelTest {
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
             every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
-            every { generator.generateHikingRouteDetails(hikingRouteUiModel, geometry) } returns placeDetailsUiModel
+            every {
+                homeUiModelMapper.generateHikingRouteDetails(
+                    hikingRouteUiModel,
+                    geometry
+                )
+            } returns placeDetailsUiModel
             every { placesInteractor.requestGetHikingRoutesFlow(any()) } returns flowOf(hikingRoutes)
-            every { generator.generateHikingRoutes(any(), any()) } returns hikingRouteUiModels
+            every { homeUiModelMapper.generateHikingRoutes(any(), any()) } returns hikingRouteUiModels
 
             viewModel.hikingRoutes.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
@@ -446,7 +461,7 @@ class HomeViewModelTest {
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             val geometry = Geometry.Node(placeUiModel.osmId, Location(47.7193842, 18.8962014))
             every { placesInteractor.requestGeometryFlow(any(), any()) } returns flowOf(geometry)
-            every { generator.generatePlaceDetails(any(), any()) } returns placeDetailsUiModel
+            every { homeUiModelMapper.generatePlaceDetails(any(), any()) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadPlaceDetails(placeUiModel)
@@ -466,7 +481,7 @@ class HomeViewModelTest {
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             val hikingRouteUiModels = listOf(HikingRoutesItem.Item(DEFAULT_HIKING_ROUTE_UI_MODEL))
             every { placesInteractor.requestGetHikingRoutesFlow(boundingBox) } returns flowOf(hikingRoutes)
-            every { generator.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
+            every { homeUiModelMapper.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
 
             viewModel.hikingRoutes.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
@@ -483,7 +498,7 @@ class HomeViewModelTest {
         val landscapeUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
 
         every { landscapeInteractor.requestGetLandscapesFlow() } returns flowOf(landscapes)
-        every { generator.generateLandscapes(any()) } returns landscapeUiModels
+        every { homeUiModelMapper.generateLandscapes(any()) } returns landscapeUiModels
     }
 
     companion object {

@@ -1,9 +1,14 @@
-package hu.mostoha.mobile.android.huki.model.generator
+package hu.mostoha.mobile.android.huki.model.mapper
 
 import androidx.annotation.VisibleForTesting
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
-import hu.mostoha.mobile.android.huki.model.domain.*
+import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.Geometry
+import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.network.overpass.ElementType
 import hu.mostoha.mobile.android.huki.model.network.overpass.Geom
 import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
@@ -13,7 +18,7 @@ import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import javax.inject.Inject
 
-class PlacesDomainModelGenerator @Inject constructor() {
+class PlacesDomainModelMapper @Inject constructor() {
 
     companion object {
         private const val NORTH_EXTENT_POSITION = 1

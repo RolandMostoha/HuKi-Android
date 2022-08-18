@@ -7,12 +7,15 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class HikingLayerInteractor @Inject constructor(
-    exceptionLogger: ExceptionLogger,
+    private val exceptionLogger: ExceptionLogger,
     private val hikingLayerRepository: HikingLayerRepository
-) : BaseInteractor(exceptionLogger) {
+) {
 
     fun requestHikingLayerZoomRanges(): Flow<List<TileZoomRange>> {
-        return getRequestFlow { hikingLayerRepository.getHikingLayerZoomRanges() }
+        return transformRequestToFlow(
+            request = { hikingLayerRepository.getHikingLayerZoomRanges() },
+            exceptionLogger = exceptionLogger
+        )
     }
 
 }

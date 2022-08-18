@@ -10,12 +10,15 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LandscapeInteractor @Inject constructor(
-    exceptionLogger: ExceptionLogger,
+    private val exceptionLogger: ExceptionLogger,
     private val landscapeRepository: LandscapeRepository
-) : BaseInteractor(exceptionLogger) {
+) {
 
     fun requestGetLandscapesFlow(location: Location? = null): Flow<List<Landscape>> {
-        val landscapesFlow = getRequestFlow { landscapeRepository.getLandscapes() }
+        val landscapesFlow = transformRequestToFlow(
+            request = { landscapeRepository.getLandscapes() },
+            exceptionLogger = exceptionLogger
+        )
 
         return if (location == null) {
             landscapesFlow
