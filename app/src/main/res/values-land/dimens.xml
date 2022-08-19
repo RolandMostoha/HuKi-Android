@@ -1,65 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="space_extra_extra_small">1dp</dimen>
-    <dimen name="space_extra_small">3dp</dimen>
-    <dimen name="space_small">5dp</dimen>
-    <dimen name="space_medium">10dp</dimen>
-    <dimen name="space_large">15dp</dimen>
-    <dimen name="space_extra_large">20dp</dimen>
-    <dimen name="space_extra_extra_large">25dp</dimen>
-
-    <dimen name="text_size_small">13sp</dimen>
-    <dimen name="text_size_medium">15sp</dimen>
-    <dimen name="text_size_large">17sp</dimen>
-
-    <dimen name="icon_size_extra_small">20dp</dimen>
-    <dimen name="icon_size_small">22dp</dimen>
-    <dimen name="icon_size_medium">24dp</dimen>
-    <dimen name="icon_size_large">26dp</dimen>
-    <dimen name="icon_size_extra_large">30dp</dimen>
-
-    <dimen name="default_button_vertical_padding">8dp</dimen>
-    <dimen name="default_elevation">5dp</dimen>
-    <dimen name="default_elevation_map_interactive_views">5dp</dimen>
-    <dimen name="default_elevation_map_overlay_views">1dp</dimen>
-    <dimen name="default_elevation_fab">10dp</dimen>
-    <dimen name="default_text_size">@dimen/text_size_medium</dimen>
-    <dimen name="default_corner_size_surface">10dp</dimen>
-    <dimen name="default_corner_size_input">30dp</dimen>
-    <dimen name="default_icon_only_button_size">48dp</dimen>
-    <dimen name="default_polygon_stroke_width">2dp</dimen>
-    <dimen name="default_polyline_stroke_width">5dp</dimen>
-
-    <dimen name="progress_fab_progress_bar_size_mini">46dp</dimen>
-    <dimen name="progress_fab_progress_bar_size_normal">64dp</dimen>
-    <dimen name="progress_fab_stroke_width">3dp</dimen>
-
-    <dimen name="home_marker_size_poi">45dp</dimen>
     <dimen name="home_fab_bottom_margin">@dimen/space_extra_extra_large</dimen>
 
-    <dimen name="home_search_bar_height">60dp</dimen>
-    <dimen name="home_search_bar_stroke_width">1dp</dimen>
-    <dimen name="home_search_bar_progress_size">25dp</dimen>
-    <dimen name="home_search_bar_popup_height">350dp</dimen>
-
-    <dimen name="home_landscapes_icon_size">19dp</dimen>
-    <dimen name="home_landscapes_chip_min_height">40dp</dimen>
-
-    <dimen name="home_my_location_altitude_vertical_padding">7dp</dimen>
-
     <dimen name="home_copyright_bottom_margin">@dimen/space_medium</dimen>
-
-    <dimen name="home_map_view_top_offset">100dp</dimen>
-    <dimen name="home_map_view_bottom_offset">90dp</dimen>
-    <dimen name="home_map_view_start_offset">20dp</dimen>
-    <dimen name="home_map_view_end_offset">20dp</dimen>
-
-    <dimen name="place_details_bottom_sheet_image_size">45dp</dimen>
-
-    <dimen name="hiking_routes_bottom_sheet_peek_height">250dp</dimen>
-
-    <dimen name="layers_image_stroke_width">3dp</dimen>
-    <dimen name="layers_layer_title_bottom_margin">7dp</dimen>
 
 </resources>

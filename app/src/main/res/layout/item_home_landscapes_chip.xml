@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:elevation="@dimen/default_elevation_map_interactive_views"
     android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+    app:chipStrokeWidth="@dimen/home_stroke_width_on_map"
+    app:chipStrokeColor="@color/colorStrokeOnMap"
     app:chipMinHeight="@dimen/home_landscapes_chip_min_height"
     app:chipBackgroundColor="@color/colorBackground"
     app:chipIconSize="@dimen/home_landscapes_icon_size"

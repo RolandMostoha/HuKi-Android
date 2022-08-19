@@ -36,10 +36,12 @@
     <dimen name="progress_fab_progress_bar_size_normal">64dp</dimen>
     <dimen name="progress_fab_stroke_width">3dp</dimen>
 
+    <dimen name="home_stroke_width_on_map">0dp</dimen>
     <dimen name="home_marker_size_poi">45dp</dimen>
     <dimen name="home_fab_bottom_margin">33dp</dimen>
 
     <dimen name="home_search_bar_height">60dp</dimen>
+    <dimen name="home_search_bar_vertical_offset">3dp</dimen>
     <dimen name="home_search_bar_stroke_width">1dp</dimen>
     <dimen name="home_search_bar_progress_size">25dp</dimen>
     <dimen name="home_search_bar_popup_height">350dp</dimen>

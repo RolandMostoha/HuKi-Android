@@ -100,12 +100,15 @@
     </style>
 
     <style name="DefaultFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="android:elevation">@dimen/default_elevation</item>
-        <item name="backgroundTint">@color/colorBackground</item>
+        <item name="android:elevation">@dimen/default_elevation_map_interactive_views</item>
+        <item name="android:backgroundTint">@color/colorBackground</item>
+        <item name="backgroundTint">@color/colorStrokeOnMap</item>
         <item name="tint">@color/colorPrimaryIconStrong</item>
+        <item name="borderWidth">@dimen/home_stroke_width_on_map</item>
     </style>
 
     <style name="DefaultFloatingActionButton.Primary">
+        <item name="android:backgroundTint">@null</item>
         <item name="backgroundTint">@color/colorPrimary</item>
         <item name="tint">@color/colorOnPrimary</item>
     </style>

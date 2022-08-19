@@ -5,4 +5,8 @@
 
     <corners android:radius="@dimen/default_corner_size_input" />
 
+    <stroke
+        android:width="@dimen/home_stroke_width_on_map"
+        android:color="@color/colorStrokeOnMap" />
+
 </shape>

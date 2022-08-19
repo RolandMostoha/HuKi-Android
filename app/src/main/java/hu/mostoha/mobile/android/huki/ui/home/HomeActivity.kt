@@ -215,7 +215,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         searchBarPopup = ListPopupWindow(this@HomeActivity).apply {
             anchorView = homeSearchBarPopupAnchor
-            height = resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
+            verticalOffset = resources.getDimensionPixelSize(R.dimen.space_extra_extra_small)
+            height = resources.getDimensionPixelSize(R.dimen.home_search_bar_vertical_offset)
             setBackgroundDrawable(ContextCompat.getDrawable(this@HomeActivity, R.drawable.background_dialog))
             setAdapter(searchBarAdapter)
             setOnItemClickListener { _, _, position, _ ->
