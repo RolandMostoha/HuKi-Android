@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.extensions.getOrCreateDirectory
 import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.ONE_WEEK
 import org.osmdroid.tileprovider.util.StorageUtils
 import timber.log.Timber
 import java.io.File
@@ -38,6 +39,7 @@ class OsmConfiguration @Inject constructor(
             osmdroidBasePath = getOsmDroidBaseDirectory()
             osmdroidTileCache = getOsmDroidCacheDirectory()
             userAgentValue = BuildConfig.APPLICATION_ID
+            expirationExtendedDuration = ONE_WEEK
 
             load(context, context.getSharedPreferences(KEY_GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE))
         }
