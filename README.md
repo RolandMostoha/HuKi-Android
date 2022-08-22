@@ -1,22 +1,17 @@
 # HuKi - Hungarian Hiking Map #
 
-HuKi is an Android app for hikers, which helps you plan trips and discover the hiking trails of
-Hungary.
+HuKi is an Android app for hikers, which helps you plan trips and discover the hiking trails of Hungary.
 
-The app is available in Google Play and currently in beta
-stage: [HuKi Beta](https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki)
+The app is available in Google Play and currently in beta stage: [HuKi Beta](https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki)
 
 ## Goals
 
 The project was born for two primary reasons:
 
-1. My personal entertainment - it's my beloved pet project that I can play with and try out Android
-   stuff outside of my job.
-2. It comes in handy for casual hikers to navigate and plan trips in Hungary. No need to download
-   tiles or setup layers manually.
+1. My personal entertainment - it's my beloved pet project with which I can try out Android stuff outside of my job.
+2. It comes in handy for casual hikers to navigate and plan trips in Hungary. No need to download tiles or setup layers manually.
 
-Huge shout out to the inspiration of this
-project: [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/)
+Huge shout out to the inspiration of this project: [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/)
 
 ## Screenshots
 
@@ -35,32 +30,27 @@ project: [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/)
 ### Future plans
 
 - Importing and displaying routes from GPX files
-- Hiking route planner (similar
-  to [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/turautvonal.php))
+- Hiking route planner (similar to [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/turautvonal.php))
 
 ### What is NOT good for
 
-- Custom layers with styles - [Locus](https://www.locusmap.app/), [OsmAnd](https://osmand.net/) are
-  perfect choices for advanced layer customization.
+- Custom layers with styles - [Locus](https://www.locusmap.app/), [OsmAnd](https://osmand.net/) are perfect choices for advanced layer customization.
 - Recording hikes - Almost every fitness tracker/watch has its own functionality in this regard.
 - Pre-recorded hike collection - [Természetjáró](https://www.termeszetjaro.hu/) for president.
-- Community based hike sharing - [AllTrails](https://alltrails.com/)
-  , [Komoot](https://www.komoot.com/) etc.
+- Community based hike sharing - [AllTrails](https://alltrails.com/), [Komoot](https://www.komoot.com/) etc.
 
 ## How does it work
 
 - Tile render - [OsmDroid library](https://github.com/osmdroid/osmdroid)
 - Base layers - Mapnik, OpenTopo
-- Hiking tiles - [TuraReteg.sqlitedb](https://data2.openstreetmap.hu/) privately hosted in an AWS S3
-  bucket
+- Hiking tiles - [TuraReteg.sqlitedb](https://data2.openstreetmap.hu/) privately hosted in an AWS S3 bucket
 - OpenStreetMap data provider - Overpass API
 - Search engine - [Photon](https://photon.komoot.io/)
 - Location service - Google Fused Location provider integrated with OsmDroid
 
 ### Architecture
 
-The project is my playground, and I don't like to be overly-attached to a specific architecture, but
-the currently used stack can be summarized by the next table:
+The project is my playground, and I don't like to be overly-attached to a specific architecture, but the currently used stack can be summarized by the next table:
 
 <table>
     <tr>
@@ -103,25 +93,19 @@ the currently used stack can be summarized by the next table:
 
 ### Tile server optimization
 
-Since the hiking tiles are hosted in an AWS S3 bucket funded by me, I had to make some preliminary
-optimization to reduce the cost of the service.
+Since the hiking tiles are hosted in an AWS S3 bucket funded by me, I had to make some preliminary optimization to reduce the cost of the service.
 
 1. The S3 bucket is only accessible by my app via `Amazon Amplify`
 2. The hiking tiles are synced by `TuraReteg.sqlitedb` every month
-3. The app uses an
-   inclusive [tile range map](app/src/main/res/raw/hiking_layer_tile_zoom_ranges.json) created by
-   the `TuraReteg` database to avoid unnecessary requests of empty tiles
+3. The app uses an inclusive [tile range map](app/src/main/res/raw/hiking_layer_tile_zoom_ranges.json) created by the `TuraReteg` database to avoid unnecessary requests of empty tiles
 4. 14 days cache mechanism is applied by the `OsmDroid` tile renderer.
-5. I had to customize the tile renderer to also cache the empty tiles (HTTP 404 responses also count
-   as paid S3 requests)
+5. I had to customize the tile renderer to also cache the empty tiles (HTTP 404 responses also count as paid S3 requests)
 
-In the future I might have to make additional changes or re-consider the current setup completely
-based on the server costs.
+In the future I might have to make additional changes or re-consider the current setup completely based on the server costs.
 
 ## Integration & Delivery
 
-The project uses `GitHub Actions` to ensure code quality and to automatically deploy to Google Play
-Store.
+The project uses `GitHub Actions` to ensure code quality and to automatically deploy to Google Play Store.
 
 I'm a big fan of testing so the project is quite well covered with Unit and Instrumentation tests.
 
@@ -138,14 +122,13 @@ The following steps are running on the CI server on `master` push:
 ### Release steps
 
 - Update the release notes under [whatsnew](assets/GooglePlayStore/whatsnew)
-- Create a `TAG` with a final version like `v0.5` - the apk version is generated by the latest tag
-  via [versions.gradle](buildscripts/versions.gradle)
+- Create an annotated `TAG` with a final version like `v0.5`
+- The apk version is generated by the latest tag via [versions.gradle](buildscripts/versions.gradle)
 - Push the code with tags
 
 ## Contributions
 
-Since the project is still in its early stages, I would be happy to receive ideas, advices or even a
-code review :)
+Since the project is still in its early stages, I would be happy to receive ideas, advices or even a code review :)
 
 - If you've found a bug, please file an issue.
 - PRs are more than welcome. Please keep an eye on the CI verification steps.
