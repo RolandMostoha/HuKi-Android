@@ -134,11 +134,11 @@ jobs:
           path: app/build/outputs/mapping/release/mapping.txt
 
       - name: Publish to Google Play Store
-        uses: r0adkll/upload-google-play@v1.0.15
+        uses: r0adkll/upload-google-play@v1.0.17
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_PUBLISHER_SERVICE_ACCOUNT }}
           packageName: hu.mostoha.mobile.android.huki
           releaseFiles: ${{ env.ARTIFACT_PATHNAME_AAB }}
-          track: internal
-          whatsNewDirectory: assets/googlePlayStore/whatsnew
+          track: beta
+          whatsNewDirectory: assets/GooglePlayStore/whatsnew
           mappingFile: app/build/outputs/mapping/release/mapping.txt

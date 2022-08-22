@@ -1,0 +1,69 @@
+## EN
+# App Title
+HuKi - Hungarian Hiking Map
+
+# Short Description
+HuKi helps you explore the hiking trails of Hungary.
+
+# Long Description
+Hungarian hiking map for hikers and nature lovers!
+
+HuKi is based on OpenStreetMap and it integrates the Hungarian hiking trails without any additional setup.
+
+It comes in handy when you want to see the hiking trails nearby or you plan your trip beforehand.
+
+- Hungarian hiking layer integration
+The app uses the Hungarian hiking layer, which is integrated with the base OpenStreetMap layers.
+
+- Live location support
+HuKi can show your actual position, elevation, orientation and location accuracy during your trip.
+
+- Search for places
+You can make text based searches for places or hiking routes.
+
+- Explore landscapes
+You can search in the main Hungarian landscapes like Bükk, Mátra, Balaton etc.
+
+- Hiking routes nearby
+HuKi can show the nearest hiking routes in a list format.
+
+- Dark mode support
+
+- OpenSource project
+HuKi is an OpenSource app, which can be found in GitHub:
+<a href="https://github.com/RolandMostoha/HuKi-Android/">https://github.com/RolandMostoha/HuKi-Android/</a>
+
+## HU
+# App Title
+HuKi - A Magyar Túratérkép
+
+# Short Description
+HuKi egy túra térkép, ami segít felfedezni a magyar túraútvonalakat.
+
+# Long Description
+Magyar túratérkép túrázóknak és természetbarátoknak.
+
+HuKi egy OpenStreetMap alapú térkép, amely felhasználja Magyar Túraréteget, nincs szükség külső rétegek letöltésére vagy rátét réteg használatára.
+
+Hasznos segítség lehet ha a közeledben lévő túraútvonalakat szeretnéd látni vagy épp egy kirándulást tervezel a jövőben.
+
+- A Magyar Túraréteg integrációja
+Az alkalmazás a Magyar Túraréteget használja, amely integrálódik az alap OpenStreetMap rétegekkel.
+
+- Helymeghatározás
+HuKi mutatja az aktuális pozíciód, magasságod, irányod és a helymeghatározás pontosságát a túra alatt.
+
+- Hely keresése
+Szöveges kereső segítségével kereshetsz helyek, túraútvonalak után.
+
+- Tájak felfedezése
+Külön kereshetsz Magyarország tájegységei közt, mint például Bükk, Mátra, Balaton stb.
+
+- Közeli túraútvonalak keresése
+Az alkalmazás lista nézetben mutatja a közeli útvonalakat.
+
+- Sötét mód támogatás
+
+- OpenSource projekt
+HuKi egy nyílt forráskódú app, ami megtalálható GitHub-on:
+<a href="https://github.com/RolandMostoha/HuKi-Android/">https://github.com/RolandMostoha/HuKi-Android/</a>
