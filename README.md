@@ -9,15 +9,15 @@ The app is available in Google Play and currently in beta stage: [HuKi Beta](htt
 The project was born for two primary reasons:
 
 1. My personal entertainment - it's my beloved pet project in which I can try out Android stuff outside of my job.
-2. It comes in handy for casual hikers to navigate and plan trips in Hungary. No need to download tiles or setup layers manually.
+2. It comes in handy for hikers to have trips in Hungary. No need to download tiles or setup layers manually.
 
 Huge shout out to the inspiration of this project: [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/)
 
 ## Screenshots
 
-<img src="https://github.com/RolandMostoha/HuKi-Android/blob/master/assets/GitHub/github_screenshot_1.png" width="260">
-<img src="https://github.com/RolandMostoha/HuKi-Android/blob/master/assets/GitHub/github_screenshot_2.png" width="260">
-<img src="https://github.com/RolandMostoha/HuKi-Android/blob/master/assets/GitHub/github_screenshot_3.png" width="260">
+![Screenshot HuKi 1](assets/GitHub/github_screenshot_1.png "Screenshot HuKi 1")
+![Screenshot HuKi 2](assets/GitHub/github_screenshot_2.png "Screenshot HuKi 2")
+![Screenshot HuKi 3](assets/GitHub/github_screenshot_3.png "Screenshot HuKi 3")
 
 ### What is it good for
 
