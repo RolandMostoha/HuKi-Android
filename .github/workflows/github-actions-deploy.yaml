@@ -45,6 +45,13 @@ jobs:
           json: ${{ secrets.AWS_CONFIGURATION }}
           dir: 'app/src/main/res/raw/'
 
+      - name: Copy Firebase google-services.json file to app folder
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "google-services.json"
+          json: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          dir: 'app/'
+
       - name: Create test apks
         run: |
           ./gradlew assembleDebug
@@ -99,6 +106,13 @@ jobs:
           name: "awsconfiguration.json"
           json: ${{ secrets.AWS_CONFIGURATION }}
           dir: 'app/src/main/res/raw/'
+
+      - name: Copy Firebase google-services.json file to app folder
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "google-services.json"
+          json: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          dir: 'app/'
 
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease
