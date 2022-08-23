@@ -37,6 +37,7 @@ import hu.mostoha.mobile.android.huki.extensions.removeOverlay
 import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
+import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
@@ -361,13 +362,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initAltitude(altitude: Double) {
-        val hasAltitude = altitude > 0
-
-        homeAltitudeText.visibleOrGone(hasAltitude)
-
-        if (hasAltitude) {
-            homeAltitudeText.text = getString(R.string.default_distance_template_m, altitude.toInt())
+        val altitudeText = if (altitude >= 1.0) {
+            getString(R.string.default_distance_template_m, altitude.toInt())
+        } else {
+            null
         }
+        homeAltitudeText.setTextOrGone(altitudeText)
     }
 
     @Suppress("LongMethod")
