@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Checkout with secrets
-        uses: ./.github/actions/github-action-checkout-with-secrets.yaml
+        uses: ./.github/actions/checkout-with-secrets
         with:
           aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Checkout with secrets
-        uses: ./.github/actions/github-action-checkout-with-secrets.yaml
+        uses: ./.github/actions/checkout-with-secrets
         with:
           aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
@@ -40,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Checkout with secrets
-        uses: ./.github/actions/github-action-checkout-with-secrets.yaml
+        uses: ./.github/actions/checkout-with-secrets
         with:
           aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
@@ -84,7 +84,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Checkout with secrets
-        uses: ./.github/actions/github-action-checkout-with-secrets.yaml
+        uses: ./.github/actions/checkout-with-secrets
         with:
           aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
