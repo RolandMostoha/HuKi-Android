@@ -15,6 +15,7 @@
 .externalNativeBuild
 .cxx
 /keys.properties
+/app/google-services.json
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend

@@ -10,6 +10,12 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
+      - name: Checkout with secrets
+        uses: ./.github/actions/github-action-checkout-with-secrets.yaml
+        with:
+          aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
+          aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
+          google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Static code analysis
         run: ./gradlew lint detekt
@@ -18,6 +24,12 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
+      - name: Checkout with secrets
+        uses: ./.github/actions/github-action-checkout-with-secrets.yaml
+        with:
+          aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
+          aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
+          google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Unit tests
         run: ./gradlew test
@@ -26,31 +38,13 @@ jobs:
     runs-on: [ ubuntu-latest ]
 
     steps:
-      - name: Checkout code with history
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - name: Checkout with secrets
+        uses: ./.github/actions/github-action-checkout-with-secrets.yaml
         with:
-          fetch-depth: 0
-
-      - name: Copy Amplify configuration file to raw folder
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "amplifyconfiguration.json"
-          json: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
-          dir: 'app/src/main/res/raw/'
-
-      - name: Copy AWS configuration file to raw folder
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "awsconfiguration.json"
-          json: ${{ secrets.AWS_CONFIGURATION }}
-          dir: 'app/src/main/res/raw/'
-
-      - name: Copy Firebase google-services.json file to app folder
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "google-services.json"
-          json: ${{ secrets.GOOGLE_SERVICES_JSON }}
-          dir: 'app/'
+          aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
+          aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
+          google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Create test apks
         run: |
@@ -88,31 +82,13 @@ jobs:
     needs: [ lint, unit_tests, android_tests ]
     runs-on: [ ubuntu-latest ]
     steps:
-      - name: Checkout code with history
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - name: Checkout with secrets
+        uses: ./.github/actions/github-action-checkout-with-secrets.yaml
         with:
-          fetch-depth: 0
-
-      - name: Copy Amplify configuration file to raw folder
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "amplifyconfiguration.json"
-          json: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
-          dir: 'app/src/main/res/raw/'
-
-      - name: Copy AWS configuration file to raw folder
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "awsconfiguration.json"
-          json: ${{ secrets.AWS_CONFIGURATION }}
-          dir: 'app/src/main/res/raw/'
-
-      - name: Copy Firebase google-services.json file to app folder
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "google-services.json"
-          json: ${{ secrets.GOOGLE_SERVICES_JSON }}
-          dir: 'app/'
+          aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
+          aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
+          google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease
