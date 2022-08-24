@@ -18,23 +18,23 @@ runs:
       with:
         fetch-depth: 0
 
-          - name: Copy Amplify configuration file to raw folder
-            uses: jsdaniell/create-json@1.1.2
-            with:
-              name: "amplifyconfiguration.json"
-              json: ${{ inputs.aws-amplifyconfiguration }}
-              dir: 'app/src/main/res/raw/'
+    - name: Copy Amplify configuration file to raw folder
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "amplifyconfiguration.json"
+        json: ${{ inputs.aws-amplifyconfiguration }}
+        dir: 'app/src/main/res/raw/'
 
-          - name: Copy AWS configuration file to raw folder
-            uses: jsdaniell/create-json@1.1.2
-            with:
-              name: "awsconfiguration.json"
-              json: ${{ inputs.aws-awsconfiguration }}
-              dir: 'app/src/main/res/raw/'
+    - name: Copy AWS configuration file to raw folder
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "awsconfiguration.json"
+        json: ${{ inputs.aws-awsconfiguration }}
+        dir: 'app/src/main/res/raw/'
 
-          - name: Copy Firebase google-services.json file to app folder
-            uses: jsdaniell/create-json@1.1.2
-            with:
-              name: "google-services.json"
-              json: ${{ inputs.google-services }}
-              dir: 'app/'
+    - name: Copy Firebase google-services.json file to app folder
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "google-services.json"
+        json: ${{ inputs.google-services }}
+        dir: 'app/'
