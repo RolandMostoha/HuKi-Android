@@ -21,11 +21,16 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
 
+@Ignore(
+    "Internet connection is unreliable in Firebase Test Lab emulators" +
+        "Use this test to ensure Overpass and Photon service availability"
+)
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @MediumTest
