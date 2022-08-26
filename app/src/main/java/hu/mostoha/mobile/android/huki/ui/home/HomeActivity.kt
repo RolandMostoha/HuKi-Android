@@ -67,7 +67,6 @@ import hu.mostoha.mobile.android.huki.ui.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.ui.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.ui.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
-import hu.mostoha.mobile.android.huki.util.MAP_TILES_SCALE_FACTOR
 import hu.mostoha.mobile.android.huki.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
 import hu.mostoha.mobile.android.huki.util.startGoogleDirections
 import kotlinx.coroutines.flow.collect
@@ -180,7 +179,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initMapView() {
         homeMapView.apply {
-            tilesScaleFactor = MAP_TILES_SCALE_FACTOR
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
             addOnFirstLayoutListener { _, _, _, _, _ ->
