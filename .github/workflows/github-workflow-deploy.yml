@@ -76,7 +76,15 @@ jobs:
           service_account_key: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT }}
 
       - name: Run Instrumentation Tests in Firebase Test Lab
-        run: gcloud firebase test android run --use-orchestrator --type instrumentation --app ${{ env.ARTIFACT_PATHNAME_APK }} --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }} --device model=blueline,version=28,locale=en,orientation=portrait --device model=MediumPhone.arm,version=32,locale=hu,orientation=portrait --use-orchestrator --environment-variables clearPackageData=true
+        run: >
+          gcloud firebase test android run
+          --type instrumentation
+          --app ${{ env.ARTIFACT_PATHNAME_APK }}
+          --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
+          --device model=cruiserlteatt,version=26,locale=en,orientation=portrait
+          --device model=Pixel2.arm,version=32,locale=hu,orientation=portrait
+          --use-orchestrator
+          --environment-variables clearPackageData=true
 
   release:
     needs: [ lint, unit_tests, android_tests ]

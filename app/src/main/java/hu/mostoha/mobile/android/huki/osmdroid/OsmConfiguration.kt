@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.osmdroid
 
 import android.content.Context
+import android.webkit.WebSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.extensions.getOrCreateDirectory
@@ -38,7 +39,7 @@ class OsmConfiguration @Inject constructor(
 
             osmdroidBasePath = getOsmDroidBaseDirectory()
             osmdroidTileCache = getOsmDroidCacheDirectory()
-            userAgentValue = BuildConfig.APPLICATION_ID
+            userAgentValue = "${WebSettings.getDefaultUserAgent(context)} ${BuildConfig.APPLICATION_ID}"
             expirationExtendedDuration = ONE_WEEK
 
             load(context, context.getSharedPreferences(KEY_GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE))
