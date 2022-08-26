@@ -92,9 +92,7 @@ class HomeHikingRoutesUiTest {
         answerTestHikingRoute()
 
         launchScenario<HomeActivity> {
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
-
-            waitForFabAnimation()
+            zoomToReachHikingRoutesThreshold()
 
             R.id.homeRoutesNearbyFab.click()
 
@@ -107,11 +105,25 @@ class HomeHikingRoutesUiTest {
         coEvery { placesRepository.getHikingRoutes(any()) } returns emptyList()
 
         launchScenario<HomeActivity> {
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
-            waitForFabAnimation()
+            zoomToReachHikingRoutesThreshold()
+
             R.id.homeRoutesNearbyFab.click()
 
             R.id.hikingRoutesEmptyView.isDisplayed()
+        }
+    }
+
+    @Test
+    fun givenEmptyHikingRoutes_whenClickOnClose_thenBottomSheetIsNotDisplayed() {
+        coEvery { placesRepository.getHikingRoutes(any()) } returns emptyList()
+
+        launchScenario<HomeActivity> {
+            zoomToReachHikingRoutesThreshold()
+
+            R.id.homeRoutesNearbyFab.click()
+            R.id.hikingRoutesCloseButton.click()
+
+            R.id.hikingRoutesEmptyView.isNotDisplayed()
         }
     }
 
@@ -121,9 +133,7 @@ class HomeHikingRoutesUiTest {
         answerTestHikingRoute()
 
         launchScenario<HomeActivity> {
-            R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
-
-            waitForFabAnimation()
+            zoomToReachHikingRoutesThreshold()
 
             R.id.homeRoutesNearbyFab.click()
 
@@ -141,6 +151,11 @@ class HomeHikingRoutesUiTest {
         coEvery {
             placesRepository.getGeometry(DEFAULT_HIKING_ROUTE.osmId, any())
         } returns DEFAULT_HIKING_ROUTE_GEOMETRY
+    }
+
+    private fun zoomToReachHikingRoutesThreshold() {
+        R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
+        waitForFabAnimation()
     }
 
     private fun waitForFabAnimation() {

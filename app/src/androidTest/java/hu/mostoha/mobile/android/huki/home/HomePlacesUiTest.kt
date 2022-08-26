@@ -42,6 +42,7 @@ import hu.mostoha.mobile.android.huki.ui.home.OverlayComparator
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
+import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
@@ -135,22 +136,6 @@ class HomePlacesUiTest {
     }
 
     @Test
-    fun givenNodePlace_whenCloseClickOnBottomSheet_thenBottomSheetIsHidden() {
-        answerTestPlaces()
-        answerTestGeometries()
-
-        launchScenario<HomeActivity> {
-            val searchText = DEFAULT_SEARCH_TEXT
-
-            R.id.homeSearchBarInput.typeText(searchText)
-            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-            R.id.placeDetailsCloseButton.click()
-
-            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
-        }
-    }
-
-    @Test
     fun givenNodePlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
         answerTestPlaces()
         answerTestGeometries()
@@ -163,6 +148,23 @@ class HomePlacesUiTest {
 
             R.id.homeMapView.hasOverlay<Marker>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
+        }
+    }
+
+    @Test
+    fun givenNodePlace_whenCloseClickOnBottomSheet_thenMarkerIsRemovedAndBottomSheetIsNotDisplayed() {
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            R.id.placeDetailsCloseButton.click()
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+            R.id.homeMapView.hasNoOverlay<Marker>()
         }
     }
 
