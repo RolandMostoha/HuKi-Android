@@ -2,6 +2,8 @@ package hu.mostoha.mobile.android.huki.ui.home
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ListPopupWindow
 import androidx.activity.result.ActivityResultLauncher
@@ -311,10 +313,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             myLocationOverlay = MyLocationOverlay(lifecycleScope, myLocationProvider, homeMapView)
                 .apply {
                     runOnFirstFix {
-                        if (isFollowLocationEnabled) {
-                            homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
-                        } else {
-                            homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
+                        Handler(Looper.getMainLooper()).post {
+                            if (isFollowLocationEnabled) {
+                                homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
+                            } else {
+                                homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
+                            }
                         }
                     }
                     onFollowLocationFirstFix = {
