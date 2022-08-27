@@ -48,4 +48,9 @@
     <string name="licences_photon_title">Komoot - Photon (Keresőmotor)</string>
     <string name="licences_ok_button_title">Rendben</string>
 
+    <string name="contact_title">Kapcsolat</string>
+    <string name="contact_subtitle">A projekt nyílt forráskódú és fejlesztés alatt áll.\n\nÖrömmel fogadom a hibabejelentéseket, öteleteket, vagy akár egy code review-t.</string>
+    <string name="contact_email_title">Email:</string>
+    <string name="contact_github_title">GitHub repository:</string>
+
 </resources>

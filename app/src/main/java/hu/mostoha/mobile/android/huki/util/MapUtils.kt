@@ -1,10 +1,6 @@
 package hu.mostoha.mobile.android.huki.util
 
-import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
-import org.osmdroid.util.GeoPoint
 
 const val MAP_DEFAULT_ZOOM_LEVEL = 15.0
 const val MAP_ZOOM_THRESHOLD_ROUTES_NEARBY = 8.5
@@ -23,10 +19,3 @@ val HUNGARY_BOUNDING_BOX = BoundingBox(
     south = HUNGARY_BOX_SOUTH,
     west = HUNGARY_BOX_WEST
 )
-
-fun AppCompatActivity.startGoogleDirections(geoPoint: GeoPoint) {
-    val latLng = "${geoPoint.latitude},${geoPoint.longitude}"
-    val uri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$latLng")
-
-    startActivity(Intent(Intent.ACTION_VIEW, uri))
-}

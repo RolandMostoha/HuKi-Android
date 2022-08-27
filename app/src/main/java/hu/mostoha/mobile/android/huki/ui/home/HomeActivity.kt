@@ -43,6 +43,7 @@ import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
+import hu.mostoha.mobile.android.huki.extensions.startGoogleMapsDirectionsIntent
 import hu.mostoha.mobile.android.huki.extensions.toDrawable
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
@@ -61,6 +62,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBa
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesAdapter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
+import hu.mostoha.mobile.android.huki.ui.home.information.ContactBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarAdapter
@@ -70,7 +72,6 @@ import hu.mostoha.mobile.android.huki.ui.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.ui.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
-import hu.mostoha.mobile.android.huki.util.startGoogleDirections
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -114,6 +115,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeMyLocationButton by lazy { binding.homeMyLocationButton }
     private val homeRoutesNearbyFab by lazy { binding.homeRoutesNearbyFab }
     private val homeLayersFab by lazy { binding.homeLayersFab }
+    private val homeInfoFab by lazy { binding.homeContactFab }
     private val homeAltitudeText by lazy { binding.homeAltitudeText }
 
     private lateinit var searchBarPopup: ListPopupWindow
@@ -268,6 +270,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         homeLayersFab.setOnClickListener {
             LayersBottomSheetDialogFragment().show(supportFragmentManager, LayersBottomSheetDialogFragment.TAG)
+        }
+
+        homeInfoFab.setOnClickListener {
+            ContactBottomSheetDialogFragment().show(supportFragmentManager, ContactBottomSheetDialogFragment.TAG)
         }
     }
 
@@ -661,7 +667,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             placeDetailsDirectionsButton.setOnClickListener {
                 analyticsService.navigationClicked(placeName)
 
-                startGoogleDirections(geoPoint)
+                startGoogleMapsDirectionsIntent(geoPoint)
             }
             if (placeUiModel.placeType != PlaceType.NODE) {
                 placeDetailsHikingTrailsButton.gone()

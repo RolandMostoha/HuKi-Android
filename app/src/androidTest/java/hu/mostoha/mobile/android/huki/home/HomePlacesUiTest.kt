@@ -1,6 +1,10 @@
 package hu.mostoha.mobile.android.huki.home
 
 import android.Manifest
+import android.content.Intent
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -10,6 +14,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
+import hu.mostoha.mobile.android.huki.extensions.GOOGLE_MAPS_DIRECTIONS_URL
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
@@ -54,6 +59,7 @@ import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import io.mockk.coEvery
 import io.mockk.mockk
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -165,6 +171,35 @@ class HomePlacesUiTest {
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
             R.id.homeMapView.hasNoOverlay<Marker>()
+        }
+    }
+
+    @Test
+    fun givenNodePlace_whenClickOnNavigation_thenGoogleMapsDirectionsIntentIsFired() {
+        Intents.init()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            R.string.home_bottom_sheet_directions_button.clickWithText()
+
+            intended(
+                allOf(
+                    IntentMatchers.hasAction(Intent.ACTION_VIEW),
+                    IntentMatchers.hasData(
+                        GOOGLE_MAPS_DIRECTIONS_URL.format(
+                            DEFAULT_PLACE_NODE.location.latitude,
+                            DEFAULT_PLACE_NODE.location.longitude
+                        )
+                    )
+                )
+            )
         }
     }
 

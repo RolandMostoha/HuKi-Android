@@ -1,5 +1,8 @@
 package hu.mostoha.mobile.android.huki.extensions
 
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.URLSpan
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -31,4 +34,13 @@ fun TextView.setTextOrGone(text: String?) {
         visible()
         this.text = text
     }
+}
+
+fun TextView.hyperlinkStyle() {
+    setText(
+        SpannableString(text).apply {
+            setSpan(URLSpan(""), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        },
+        TextView.BufferType.SPANNABLE
+    )
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/space_large"
+    android:paddingVertical="@dimen/space_small">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contactTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        android:text="@string/contact_title"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contactSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_large"
+        android:text="@string/contact_subtitle"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contactEmailTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_large"
+        android:text="@string/contact_email_title"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contactEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
+        android:text="@string/contact_email"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contactGitHubTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_large"
+        android:text="@string/contact_github_title"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contactGitHub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
+        android:text="@string/contact_github_repository_url"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+</LinearLayout>
