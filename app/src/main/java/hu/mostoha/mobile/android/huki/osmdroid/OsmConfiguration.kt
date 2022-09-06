@@ -19,6 +19,17 @@ class OsmConfiguration @Inject constructor(
 ) {
 
     companion object {
+        /**
+         *  Default cache size increased from 600MB to 1000MB
+         */
+        private const val TILE_FILE_SYSTEM_CACHE_MAX_BYTES = 1000L * 1024 * 1024
+        private const val TILE_FILE_SYSTEM_CACHE_TARGET_BYTES = 900L * 1024 * 1024
+
+        /**
+         *  Default tile count cache is doubled - the app uses 2 tile layers by default
+         */
+        private const val DEFAULT_TILE_COUNT_IN_CACHE = (2 * 9).toShort()
+
         private const val DIRECTORY_NAME_OSM_DROID = "osmdroid"
         private const val DIRECTORY_NAME_CACHE = "tiles"
 
@@ -41,6 +52,9 @@ class OsmConfiguration @Inject constructor(
             osmdroidTileCache = getOsmDroidCacheDirectory()
             userAgentValue = "${WebSettings.getDefaultUserAgent(context)} ${BuildConfig.APPLICATION_ID}"
             expirationExtendedDuration = ONE_WEEK
+            tileFileSystemCacheMaxBytes = TILE_FILE_SYSTEM_CACHE_MAX_BYTES
+            tileFileSystemCacheTrimBytes = TILE_FILE_SYSTEM_CACHE_TARGET_BYTES
+            cacheMapTileCount = DEFAULT_TILE_COUNT_IN_CACHE
 
             load(context, context.getSharedPreferences(KEY_GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE))
         }
