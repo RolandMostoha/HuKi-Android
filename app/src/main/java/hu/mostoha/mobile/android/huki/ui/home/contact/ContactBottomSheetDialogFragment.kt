@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.ui.home.information
+package hu.mostoha.mobile.android.huki.ui.home.contact
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -60,9 +60,9 @@ import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.ui.home.contact.ContactBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesAdapter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.ui.home.information.ContactBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarAdapter
@@ -470,7 +470,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initHikingLayer(hikingLayer: LayerSpec) {
-        val tileProvider = AwsMapTileProviderBasic(applicationContext, hikingLayer.tileSource)
+        val tileProvider = AwsMapTileProviderBasic(this, hikingLayer.tileSource)
         val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {
             if (this@HomeActivity.isDarkMode()) {
                 setColorFilter(getBrightnessColorMatrix(DARK_MODE_HIKING_LAYER_BRIGHTNESS))

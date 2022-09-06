@@ -17,7 +17,7 @@ import org.osmdroid.views.overlay.PolyOverlayWithIW
 import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
 
-private const val MAP_ANIMATION_DURATION: Long = 1000
+private const val MAP_ANIMATION_DURATION = 1000L
 
 fun MapView.addOverlay(overlay: Overlay, comparator: Comparator<Overlay>) {
     overlays.add(overlay)

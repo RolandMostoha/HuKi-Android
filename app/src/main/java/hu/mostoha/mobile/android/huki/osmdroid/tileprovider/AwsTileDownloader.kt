@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.osmdroid.tileprovider
 
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
+import hu.mostoha.mobile.android.huki.osmdroid.tilecache.AwsSqlTileWriter.Companion.NOT_FOUND_BYTE_ARRAY
 import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_OK
 import org.osmdroid.config.Configuration
@@ -26,10 +27,10 @@ import java.net.URL
 import java.net.UnknownHostException
 
 /**
- * [TileDownloader] implementation that saves an empty blob in the tile cache DB if HTTP status code was 404.
+ * [TileDownloader] that saves an empty indicator [ByteArray] in the database if the response was HTTP 404 Not Found.
  * The code is the almost identical kotlin version of the original [TileDownloader] implementation.
 
- * Saving the empty blob is needed to avoid repeating requests for getting unavailable tiles.
+ * Saving the empty blob is needed to avoid repeating requests for getting unavailable (HTTP 404) tiles.
  */
 class AwsTileDownloader : TileDownloader() {
 
@@ -79,19 +80,17 @@ class AwsTileDownloader : TileDownloader() {
                 System.currentTimeMillis()
             )
             val responseCode = urlConnection.responseCode
+            val responseMessage = urlConnection.responseMessage
 
             if (responseCode != HTTP_OK) {
-                Timber.w(
-                    "Problem downloading MapTile: $formattedTileIndex HTTP response: ${urlConnection.responseMessage}"
-                )
+                Timber.w("Problem downloading MapTile: $formattedTileIndex, $responseCode: $responseMessage")
                 Counters.tileDownloadErrors++
 
                 if (responseCode == HTTP_NOT_FOUND) {
-                    // Saving the empty blob in DB
                     pFilesystemCache.saveFile(
                         pTileSource,
                         pMapTileIndex,
-                        ByteArrayInputStream(ByteArray(0)),
+                        ByteArrayInputStream(NOT_FOUND_BYTE_ARRAY),
                         expirationTime
                     )
                 }
@@ -133,7 +132,7 @@ class AwsTileDownloader : TileDownloader() {
             Timber.w("IOException downloading MapTile: $formattedTileIndex : $ioException")
         } catch (throwable: Throwable) {
             Counters.tileDownloadErrors++
-            Timber.e("Error downloading MapTile: $formattedTileIndex", throwable)
+            Timber.e(throwable, "Error downloading MapTile: $formattedTileIndex")
         } finally {
             StreamUtils.closeStream(inputStream)
             StreamUtils.closeStream(outputStream)
