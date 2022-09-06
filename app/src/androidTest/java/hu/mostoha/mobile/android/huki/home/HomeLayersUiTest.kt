@@ -17,6 +17,7 @@ import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.MapnikTileSource
 import hu.mostoha.mobile.android.huki.repository.FileBasedHikingLayerRepository
 import hu.mostoha.mobile.android.huki.repository.HikingLayerRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
@@ -91,7 +92,7 @@ class HomeLayersUiTest {
     @Test
     fun whenSelectOpenTopoMap_thenOpenTopoLayerDisplays() {
         launchScenario<HomeActivity> {
-            R.id.homeMapView.hasBaseTileSource(TileSourceFactory.MAPNIK)
+            R.id.homeMapView.hasBaseTileSource(MapnikTileSource)
 
             R.id.homeLayersFab.click()
 
