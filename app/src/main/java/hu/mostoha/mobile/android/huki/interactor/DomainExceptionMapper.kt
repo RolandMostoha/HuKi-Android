@@ -2,8 +2,10 @@ package hu.mostoha.mobile.android.huki.interactor
 
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.GatewayTimeoutException
+import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
 import hu.mostoha.mobile.android.huki.interactor.exception.TooManyRequestsException
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
+import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException
 
 object DomainExceptionMapper {
@@ -18,6 +20,9 @@ object DomainExceptionMapper {
             }
             exception is HttpException && exception.code() == HTTP_CODE_GATEWAY_TIMEOUT -> {
                 GatewayTimeoutException(exception)
+            }
+            exception is CancellationException -> {
+                JobCancellationException(exception)
             }
             else -> UnknownException(exception)
         }

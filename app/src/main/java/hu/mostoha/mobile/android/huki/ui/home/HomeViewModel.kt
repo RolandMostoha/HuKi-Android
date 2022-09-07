@@ -9,6 +9,7 @@ import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
@@ -119,7 +120,7 @@ class HomeViewModel @Inject constructor(
                 .map { homeUiModelMapper.generateSearchBarItems(it) }
                 .onEach { _searchBarItems.emit(it) }
                 .catch { throwable ->
-                    if (throwable is DomainException) {
+                    if (throwable is DomainException && throwable !is JobCancellationException) {
                         _searchBarItems.emit(homeUiModelMapper.generatePlacesErrorItem(throwable))
                     }
                 }

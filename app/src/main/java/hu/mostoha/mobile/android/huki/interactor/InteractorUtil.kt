@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.interactor
 import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -31,7 +32,7 @@ fun <T> transformRequestToFlow(request: suspend () -> T, exceptionLogger: Except
                 DomainExceptionMapper.map(exception)
             }
 
-            if (!BuildConfig.DEBUG) {
+            if (!BuildConfig.DEBUG && exception !is JobCancellationException) {
                 exceptionLogger.recordException(exception)
             }
 

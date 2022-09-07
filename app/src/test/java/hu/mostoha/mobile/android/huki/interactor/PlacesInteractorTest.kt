@@ -3,14 +3,31 @@ package hu.mostoha.mobile.android.huki.interactor
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
-import hu.mostoha.mobile.android.huki.model.domain.*
+import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.Geometry
+import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
-import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_WEST
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_JEL
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -59,6 +76,21 @@ class PlacesInteractorTest {
 
             flow.test {
                 assertThat(awaitError()).isEqualTo(UnknownException(exception))
+            }
+        }
+    }
+
+    @Test
+    fun `Given CancellationException, when requestGetPlacesByFlow, then cancellation exception is emitted`() {
+        runTest {
+            val searchText = "Mecsek"
+            val exception = CancellationException("StandaloneCoroutine was cancelled")
+            coEvery { placesRepository.getPlacesBy(searchText) } throws exception
+
+            val flow = placesInteractor.requestGetPlacesByFlow(searchText)
+
+            flow.test {
+                assertThat(awaitError()).isEqualTo(JobCancellationException(exception))
             }
         }
     }
