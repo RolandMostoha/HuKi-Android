@@ -52,7 +52,7 @@
     <string name="contact_subtitle">The project is Open-Source and still in development.\n\nI would be happy to receive bug reports, ideas or even a code review.</string>
     <string name="contact_email_title">Email:</string>
     <string name="contact_github_title">GitHub repository:</string>
-    <string name="contact_email" translatable="false">roland.mostoha@gmail.com</string>
+    <string name="contact_email" translatable="false">huki.app@gmail.com</string>
     <string name="contact_email_subject" translatable="false">[HuKi]</string>
     <string name="contact_github_repository_url" translatable="false">https://github.com/RolandMostoha/HuKi-Android/</string>
 
