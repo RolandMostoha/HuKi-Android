@@ -265,7 +265,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             val boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
 
             homeViewModel.loadHikingRoutes(placeName, boundingBox)
-            analyticsService.loadHikingRoutesClicked(placeName, boundingBox)
+            analyticsService.loadHikingRoutesClicked(placeName)
         }
 
         homeLayersFab.setOnClickListener {
@@ -689,7 +689,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     val boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
 
                     homeViewModel.loadHikingRoutes(placeTitle, boundingBox)
-                    analyticsService.loadHikingRoutesClicked(placeTitle, boundingBox)
+                    analyticsService.loadHikingRoutesClicked(placeTitle)
                 }
             }
             placeDetailsCloseButton.setOnClickListener {
@@ -715,7 +715,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 placeDetailsSheet.hide()
 
                 homeViewModel.loadHikingRoutes(placeName, boundingBox.toDomainBoundingBox())
-                analyticsService.loadHikingRoutesClicked(placeName, boundingBox.toDomainBoundingBox())
+                analyticsService.loadHikingRoutesClicked(placeName)
             }
             placeDetailsCloseButton.setOnClickListener {
                 placeDetailsSheet.hide()

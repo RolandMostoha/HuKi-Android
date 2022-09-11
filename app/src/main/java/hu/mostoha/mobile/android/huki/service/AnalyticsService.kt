@@ -1,6 +1,5 @@
 package hu.mostoha.mobile.android.huki.service
 
-import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 
 interface AnalyticsService {
@@ -11,7 +10,7 @@ interface AnalyticsService {
 
     fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType)
 
-    fun loadHikingRoutesClicked(placeName: String, boundingBox: BoundingBox)
+    fun loadHikingRoutesClicked(placeName: String)
 
     fun loadHikingRouteDetailsClicked(routeName: String)
 

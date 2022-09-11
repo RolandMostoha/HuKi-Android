@@ -1,6 +1,5 @@
 package hu.mostoha.mobile.android.huki.service
 
-import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 
 class FakeAnalyticsService : AnalyticsService {
@@ -11,7 +10,7 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType) = Unit
 
-    override fun loadHikingRoutesClicked(placeName: String, boundingBox: BoundingBox) = Unit
+    override fun loadHikingRoutesClicked(placeName: String) = Unit
 
     override fun loadHikingRouteDetailsClicked(routeName: String) = Unit
 
