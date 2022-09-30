@@ -1,6 +1,6 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
-import hu.mostoha.mobile.android.huki.osmdroid.OsmCopyrightOverlay
+import hu.mostoha.mobile.android.huki.osmdroid.OsmLicencesOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
@@ -25,7 +25,7 @@ object OverlayComparator : Comparator<Overlay> {
     }
 
     private val overlayOrderMap = mapOf(
-        listOf(OsmCopyrightOverlay::class) to OverlayType.COPYRIGHT,
+        listOf(OsmLicencesOverlay::class) to OverlayType.COPYRIGHT,
         listOf(TilesOverlay::class) to OverlayType.HIKING_LAYER,
         listOf(MyLocationOverlay::class) to OverlayType.MY_LOCATION,
         listOf(Marker::class, Polygon::class, Polyline::class) to OverlayType.PLACE_DETAILS

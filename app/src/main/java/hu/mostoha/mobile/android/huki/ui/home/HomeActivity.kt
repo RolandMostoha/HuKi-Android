@@ -55,7 +55,7 @@ import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
-import hu.mostoha.mobile.android.huki.osmdroid.OsmCopyrightOverlay
+import hu.mostoha.mobile.android.huki.osmdroid.OsmLicencesOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
@@ -195,7 +195,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeRoutesNearbyFab.hide()
                 }
             }
-            addOverlay(OsmCopyrightOverlay(this@HomeActivity, analyticsService), OverlayComparator)
+            addOverlay(OsmLicencesOverlay(this@HomeActivity, analyticsService), OverlayComparator)
 
             if (isDarkMode()) {
                 overlayManager.tilesOverlay.setColorFilter(getColorScaledMatrix(getColor(R.color.colorScaleDarkMap)))

@@ -46,6 +46,7 @@
     <string name="licences_openstreetmap_title">OpenStreetMap</string>
     <string name="licences_hiking_layer_title">Hungarian Hiking Layer (turistautak.openstreetmap.hu)</string>
     <string name="licences_photon_title">Komoot - Photon (Search engine)</string>
+    <string name="licences_osmdroid">OsmDroid - Tile render</string>
     <string name="licences_ok_button_title">OK</string>
 
     <string name="contact_title">Contact</string>

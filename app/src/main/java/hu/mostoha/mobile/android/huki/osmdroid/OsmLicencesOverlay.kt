@@ -16,7 +16,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.Projection
 import org.osmdroid.views.overlay.Overlay
 
-class OsmCopyrightOverlay(
+class OsmLicencesOverlay(
     private val context: Context,
     private val analyticsService: FirebaseAnalyticsService
 ) : Overlay() {
@@ -102,6 +102,13 @@ class OsmCopyrightOverlay(
                 Library(
                     title = context.getString(R.string.licences_photon_title),
                     url = "https://photon.komoot.io/",
+                    license = License.CREATIVE_COMMONS
+                )
+            )
+            .setLibrary(
+                Library(
+                    title = context.getString(R.string.licences_osmdroid),
+                    url = "https://github.com/osmdroid/osmdroid",
                     license = License.CREATIVE_COMMONS
                 )
             )
