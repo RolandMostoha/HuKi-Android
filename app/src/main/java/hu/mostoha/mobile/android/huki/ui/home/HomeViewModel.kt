@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        private const val SEARCH_QUERY_DELAY_MS = 800L
+        private const val SEARCH_QUERY_DELAY_MS = 1200L
     }
 
     private val _mapUiModel = MutableStateFlow(MapUiModel())
