@@ -6,6 +6,7 @@ import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.HiltAndroidApp
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
@@ -21,14 +22,21 @@ class HukiApplication : Application() {
     @Inject
     lateinit var exceptionLogger: ExceptionLogger
 
+    private val isRelease = !BuildConfig.DEBUG
+
     override fun onCreate() {
         super.onCreate()
 
         osmConfiguration.init()
 
-        FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!BuildConfig.DEBUG)
+        initAnalytics()
         initAmplify()
         initTimber()
+    }
+
+    private fun initAnalytics() {
+        FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(isRelease)
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(isRelease)
     }
 
     private fun initAmplify() {
@@ -44,7 +52,7 @@ class HukiApplication : Application() {
     }
 
     private fun initTimber() {
-        if (BuildConfig.DEBUG) {
+        if (!isRelease) {
             Timber.plant(Timber.DebugTree())
         }
     }
