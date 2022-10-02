@@ -1,15 +1,21 @@
 package hu.mostoha.mobile.android.huki.network
 
 import hu.mostoha.mobile.android.huki.model.network.photon.PhotonQueryResponse
+import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface PhotonService {
 
     /**
-     *  Ex. https://photon.komoot.io/api?q="Mecsek"&limit=10
+     *  Ex. https://photon.komoot.io/api?q="Mecsek"&limit=10&lat=47.5452098&lon=19.1130386
      */
     @GET("/api")
-    suspend fun query(@Query("q") query: String, @Query("limit") limit: Int): PhotonQueryResponse
+    suspend fun query(
+        @Query("q") query: String,
+        @Query("limit") limit: Int,
+        @Query("lat") latitude: Double = BUDAPEST_LOCATION.latitude,
+        @Query("lon") longitude: Double = BUDAPEST_LOCATION.longitude
+    ): PhotonQueryResponse
 
 }

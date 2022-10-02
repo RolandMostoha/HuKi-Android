@@ -339,17 +339,19 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
         }
 
-        myLocationOverlay!!.isAnimationEnabled = isAnimationEnabled
+        myLocationOverlay?.let { overlay ->
+            overlay.isAnimationEnabled = isAnimationEnabled
 
-        lifecycleScope.launch {
-            myLocationOverlay!!.enableMyLocationFlow()
-                .distinctUntilChanged()
-                .onEach { location ->
-                    homeViewModel.loadLandscapes(location)
+            lifecycleScope.launch {
+                overlay.myLocationFlow()
+                    .distinctUntilChanged()
+                    .onEach { location ->
+                        homeViewModel.loadLandscapes(location)
 
-                    initAltitude(location.altitude)
-                }
-                .collect()
+                        initAltitude(location.altitude)
+                    }
+                    .collect()
+            }
         }
     }
 

@@ -10,6 +10,10 @@
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
 
+    <style name="DefaultTextAppearance.Regular.ExtraSmall">
+        <item name="android:textSize">@dimen/text_size_extra_small</item>
+    </style>
+
     <style name="DefaultTextAppearance.Regular.Small">
         <item name="android:textSize">@dimen/text_size_small</item>
     </style>

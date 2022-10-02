@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.repository
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.mapper.PlacesDomainModelMapper
@@ -27,8 +28,12 @@ class OsmPlacesRepository @Inject constructor(
         const val OSM_HIKING_ROUTES_QUERY_LIMIT = 30
     }
 
-    override suspend fun getPlacesBy(searchText: String): List<Place> {
-        val response = photonService.query(searchText, PHOTON_SEARCH_QUERY_LIMIT)
+    override suspend fun getPlacesBy(searchText: String, location: Location?): List<Place> {
+        val response = if (location == null) {
+            photonService.query(searchText, PHOTON_SEARCH_QUERY_LIMIT)
+        } else {
+            photonService.query(searchText, PHOTON_SEARCH_QUERY_LIMIT, location.latitude, location.longitude)
+        }
 
         return placesDomainModelMapper.generatePlace(response)
     }

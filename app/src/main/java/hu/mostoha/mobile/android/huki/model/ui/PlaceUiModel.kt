@@ -14,5 +14,6 @@ data class PlaceUiModel(
     @DrawableRes val iconRes: Int,
     val geoPoint: GeoPoint,
     val boundingBox: BoundingBox?,
-    val isLandscape: Boolean
+    val isLandscape: Boolean,
+    val distanceText: Message? = null
 )

@@ -21,7 +21,6 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationProvider
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 /**
  * OSMDroid's [IMyLocationProvider] implementation that uses Google's Fused Location Provider
@@ -90,7 +89,10 @@ class FusedLocationProvider @Inject constructor(
         return suspendCancellableCoroutine { continuation ->
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { continuation.resume(it) }
-                .addOnFailureListener { continuation.resumeWithException(it) }
+                .addOnFailureListener { exception ->
+                    Timber.w(exception, "Exception during get last known location coroutine: ${exception.message}")
+                    continuation.resume(null)
+                }
         }
     }
 

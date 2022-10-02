@@ -32,6 +32,7 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchBarItem>(context, 
                     holder.primaryText = binding.searchBarResultPrimaryText
                     holder.secondaryText = binding.searchBarResultSecondaryText
                     holder.iconImage = binding.homeSearchBarResultIcon
+                    holder.distanceText = binding.homeSearchBarResultDistanceText
                     binding.root.tag = holder
                 } else {
                     view = convertView
@@ -41,6 +42,7 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchBarItem>(context, 
                 holder.primaryText.text = searchBarItem.placeUiModel.primaryText.resolve(context)
                 holder.secondaryText.setMessageOrGone(searchBarItem.placeUiModel.secondaryText)
                 holder.iconImage.setImageResource(searchBarItem.placeUiModel.iconRes)
+                holder.distanceText.setMessageOrGone(searchBarItem.placeUiModel.distanceText)
             }
             is SearchBarItem.Error -> {
                 val binding = ItemHomeSearchBarErrorBinding.inflate(parent.context.inflater, parent, false)
@@ -65,6 +67,7 @@ class SearchBarAdapter(context: Context) : ArrayAdapter<SearchBarItem>(context, 
         lateinit var primaryText: TextView
         lateinit var secondaryText: TextView
         lateinit var iconImage: ImageView
+        lateinit var distanceText: TextView
     }
 
 }

@@ -354,7 +354,7 @@ class HomePlacesUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { placesRepository.getPlacesBy(any()) } returns listOf(
+        coEvery { placesRepository.getPlacesBy(any(), any()) } returns listOf(
             DEFAULT_PLACE_WAY,
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_RELATION

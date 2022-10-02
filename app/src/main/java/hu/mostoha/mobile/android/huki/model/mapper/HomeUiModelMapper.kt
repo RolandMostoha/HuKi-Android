@@ -6,6 +6,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
+import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
@@ -20,11 +21,12 @@ import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.util.Message
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateCenter
+import hu.mostoha.mobile.android.huki.util.distanceBetween
 import javax.inject.Inject
 
 class HomeUiModelMapper @Inject constructor() {
 
-    fun generateSearchBarItems(places: List<Place>): List<SearchBarItem> {
+    fun generateSearchBarItems(places: List<Place>, location: Location? = null): List<SearchBarItem> {
         return if (places.isEmpty()) {
             listOf(
                 SearchBarItem.Error(
@@ -33,11 +35,11 @@ class HomeUiModelMapper @Inject constructor() {
                 )
             )
         } else {
-            generatePlaces(places).map { placeUiModel -> SearchBarItem.Place(placeUiModel) }
+            generatePlaces(places, location).map { placeUiModel -> SearchBarItem.Place(placeUiModel) }
         }
     }
 
-    private fun generatePlaces(places: List<Place>): List<PlaceUiModel> {
+    private fun generatePlaces(places: List<Place>, location: Location?): List<PlaceUiModel> {
         return places.map { place ->
             PlaceUiModel(
                 osmId = place.osmId,
@@ -51,7 +53,8 @@ class HomeUiModelMapper @Inject constructor() {
                 },
                 geoPoint = place.location.toGeoPoint(),
                 boundingBox = place.boundingBox,
-                isLandscape = false
+                isLandscape = false,
+                distanceText = location?.let { DistanceFormatter.format(place.location.distanceBetween(location)) }
             )
         }
     }

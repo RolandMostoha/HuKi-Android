@@ -25,6 +25,7 @@ import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH
@@ -52,6 +53,7 @@ import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.runTestDefault
 import hu.mostoha.mobile.android.huki.util.toMockLocation
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -68,11 +70,13 @@ class HomeViewModelTest {
 
     private lateinit var viewModel: HomeViewModel
 
+    private val exceptionLogger = mockk<ExceptionLogger>()
+
     private val placesInteractor = mockk<PlacesInteractor>()
 
     private val landscapeInteractor = mockk<LandscapeInteractor>()
 
-    private val exceptionLogger = mockk<ExceptionLogger>()
+    private val myLocationProvider = mockk<AsyncMyLocationProvider>()
 
     private val homeUiModelMapper = mockk<HomeUiModelMapper>()
 
@@ -82,14 +86,16 @@ class HomeViewModelTest {
     @Before
     fun setUp() {
         every { exceptionLogger.recordException(any()) } returns Unit
+        coEvery { myLocationProvider.getLastKnownLocationCoroutine() } returns null
         mockLandscapes()
 
         viewModel = HomeViewModel(
-            dispatcher = mainCoroutineRule.testDispatcher,
-            exceptionLogger = exceptionLogger,
-            placesInteractor = placesInteractor,
-            landscapeInteractor = landscapeInteractor,
-            homeUiModelMapper = homeUiModelMapper
+            mainCoroutineRule.testDispatcher,
+            exceptionLogger,
+            placesInteractor,
+            landscapeInteractor,
+            myLocationProvider,
+            homeUiModelMapper
         )
     }
 

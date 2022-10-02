@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.util
 
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.Location
 
 const val MAP_DEFAULT_ZOOM_LEVEL = 15.0
 const val MAP_ZOOM_THRESHOLD_ROUTES_NEARBY = 8.5
@@ -19,3 +20,8 @@ val HUNGARY_BOUNDING_BOX = BoundingBox(
     south = HUNGARY_BOX_SOUTH,
     west = HUNGARY_BOX_WEST
 )
+
+private const val BUDAPEST_LATITUDE = 47.4933876
+private const val BUDAPEST_LONGITUDE = 19.0548635
+
+val BUDAPEST_LOCATION = Location(BUDAPEST_LATITUDE, BUDAPEST_LONGITUDE)

@@ -17,13 +17,23 @@ class DistanceFormatterTest {
     }
 
     @Test
-    fun `Given distance above 1000m, when format, then km template is used`() {
+    fun `Given integer distance above 1000m, when format, then km template is used with stripped trailing zeros`() {
+        val distance = 1000
+
+        val formatted = DistanceFormatter.format(distance)
+
+        assertThat(formatted)
+            .isEqualTo(Message.Res(R.string.default_distance_template_km, listOf("1")))
+    }
+
+    @Test
+    fun `Given decimal distance above 1000m, when format, then km template is used`() {
         val distance = 1500
 
         val formatted = DistanceFormatter.format(distance)
 
         assertThat(formatted)
-            .isEqualTo(Message.Res(R.string.default_distance_template_km, listOf(1.5)))
+            .isEqualTo(Message.Res(R.string.default_distance_template_km, listOf("1.5")))
     }
 
 }

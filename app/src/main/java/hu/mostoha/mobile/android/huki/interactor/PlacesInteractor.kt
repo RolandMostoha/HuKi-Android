@@ -4,6 +4,7 @@ import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
@@ -15,9 +16,9 @@ class PlacesInteractor @Inject constructor(
     private val placesRepository: PlacesRepository
 ) {
 
-    fun requestGetPlacesByFlow(searchText: String): Flow<List<Place>> {
+    fun requestGetPlacesByFlow(searchText: String, location: Location? = null): Flow<List<Place>> {
         return transformRequestToFlow(
-            request = { placesRepository.getPlacesBy(searchText) },
+            request = { placesRepository.getPlacesBy(searchText, location) },
             exceptionLogger = exceptionLogger
         )
     }

@@ -44,7 +44,7 @@ class MyLocationOverlay(
         setDirectionAnchor(MY_LOCATION_COMPASS_ANCHOR.first, MY_LOCATION_COMPASS_ANCHOR.second)
     }
 
-    fun enableMyLocationFlow(): Flow<Location> {
+    fun myLocationFlow(): Flow<Location> {
         val isStarted = provider.startLocationProvider(this)
 
         isLocationEnabled = isStarted

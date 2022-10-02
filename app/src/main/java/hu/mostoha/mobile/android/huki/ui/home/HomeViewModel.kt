@@ -19,6 +19,7 @@ import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.Message
@@ -49,6 +50,7 @@ class HomeViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
     private val placesInteractor: PlacesInteractor,
     private val landscapeInteractor: LandscapeInteractor,
+    private val myLocationProvider: AsyncMyLocationProvider,
     private val homeUiModelMapper: HomeUiModelMapper
 ) : ViewModel() {
 
@@ -116,8 +118,10 @@ class HomeViewModel @Inject constructor(
             }
         }
         searchPlacesJob = viewModelScope.launch {
-            placesInteractor.requestGetPlacesByFlow(searchText)
-                .map { homeUiModelMapper.generateSearchBarItems(it) }
+            val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation()
+
+            placesInteractor.requestGetPlacesByFlow(searchText, lastKnownLocation)
+                .map { homeUiModelMapper.generateSearchBarItems(it, lastKnownLocation) }
                 .onEach { _searchBarItems.emit(it) }
                 .catch { throwable ->
                     if (throwable is DomainException && throwable !is JobCancellationException) {

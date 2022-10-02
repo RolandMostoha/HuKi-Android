@@ -49,7 +49,9 @@ import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.util.Message
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
+import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
 import hu.mostoha.mobile.android.huki.util.calculateCenter
+import hu.mostoha.mobile.android.huki.util.distanceBetween
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.osmdroid.util.GeoPoint
@@ -116,6 +118,32 @@ class HomeUiModelMapperTest {
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
                         isLandscape = false
+                    )
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `Given place domain models with location, when generateSearchBarItems, then correct list of search bar items return`() {
+        val places = listOf(DEFAULT_PLACE_WAY)
+        val location = BUDAPEST_LOCATION
+
+        val searchBarPlaceItems = mapper.generateSearchBarItems(places, location)
+
+        assertThat(searchBarPlaceItems).isEqualTo(
+            listOf(
+                SearchBarItem.Place(
+                    PlaceUiModel(
+                        osmId = DEFAULT_PLACE_WAY.osmId,
+                        placeType = PlaceType.WAY,
+                        primaryText = DEFAULT_PLACE_WAY.name.toMessage(),
+                        secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.city}"),
+                        iconRes = R.drawable.ic_home_search_bar_type_way,
+                        geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
+                        boundingBox = DEFAULT_PLACE_WAY.boundingBox,
+                        isLandscape = false,
+                        distanceText = DistanceFormatter.format(DEFAULT_PLACE_WAY.location.distanceBetween(location))
                     )
                 )
             )

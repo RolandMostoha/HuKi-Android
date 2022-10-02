@@ -24,6 +24,7 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
+import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -57,6 +58,23 @@ class PlacesInteractorTest {
             coEvery { placesRepository.getPlacesBy(searchText) } returns places
 
             val flow = placesInteractor.requestGetPlacesByFlow(searchText)
+
+            flow.test {
+                assertThat(awaitItem()).isEqualTo(places)
+                awaitComplete()
+            }
+        }
+    }
+
+    @Test
+    fun `Given search text with location, when requestGetPlacesByFlow, then places are emitted`() {
+        runTest {
+            val searchText = "Mecsek"
+            val places = listOf(DEFAULT_PLACE)
+            val location = BUDAPEST_LOCATION
+            coEvery { placesRepository.getPlacesBy(searchText, location) } returns places
+
+            val flow = placesInteractor.requestGetPlacesByFlow(searchText, location)
 
             flow.test {
                 assertThat(awaitItem()).isEqualTo(places)
