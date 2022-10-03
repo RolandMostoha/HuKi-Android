@@ -688,7 +688,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 placeDetailsHikingTrailsButton.setOnClickListener {
                     placeDetailsSheet.hide()
 
-                    val placeTitle = getString(R.string.map_place_name_node_routes_nearby, placeUiModel.primaryText)
+                    val placeTitle = getString(
+                        R.string.map_place_name_node_routes_nearby,
+                        placeUiModel.primaryText.resolve(this@HomeActivity)
+                    )
                     val boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
 
                     homeViewModel.loadHikingRoutes(placeTitle, boundingBox)
