@@ -355,17 +355,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun updateFollowingLocation(isFollowLocationEnabled: Boolean) {
+    private fun updateFollowingLocation(isEnabled: Boolean) {
         val locationOverlay = myLocationOverlay ?: return
+        val previouslyEnabled = locationOverlay.isFollowLocationEnabled
 
         when {
-            isFollowLocationEnabled && !locationOverlay.isFollowLocationEnabled -> {
+            !previouslyEnabled && isEnabled -> {
                 homeMyLocationButton.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
                 homeMyLocationButton.startDrawableAnimation()
 
                 locationOverlay.enableFollowLocation()
             }
-            !isFollowLocationEnabled && locationOverlay.isFollowLocationEnabled -> {
+            previouslyEnabled && !isEnabled -> {
                 locationOverlay.disableFollowLocation()
             }
         }

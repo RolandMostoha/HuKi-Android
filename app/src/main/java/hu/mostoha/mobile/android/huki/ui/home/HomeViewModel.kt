@@ -153,8 +153,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadPlace(placeUiModel: PlaceUiModel) = viewModelScope.launch(dispatcher) {
-        clearSearchBarItems()
         clearFollowLocation()
+        clearSearchBarItems()
 
         _placeDetails.emit(homeUiModelMapper.generatePlaceDetails(placeUiModel))
     }
@@ -206,7 +206,7 @@ class HomeViewModel @Inject constructor(
         isLocationPermissionEnabled: Boolean? = null,
         isFollowLocationEnabled: Boolean? = null,
         isAnimationEnabled: Boolean? = null
-    ) = viewModelScope.launch(dispatcher) {
+    ) {
         _myLocationUiModel.update { locationUiModel ->
             var model = locationUiModel
 
@@ -218,24 +218,24 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun saveBoundingBox(boundingBox: BoundingBox) = viewModelScope.launch(dispatcher) {
+    fun saveBoundingBox(boundingBox: BoundingBox) {
         _mapUiModel.update { it.copy(boundingBox = boundingBox, withDefaultOffset = true) }
     }
 
-    fun clearPlaceDetails() = viewModelScope.launch(dispatcher) {
-        _placeDetails.emit(null)
+    fun clearPlaceDetails() {
+        _placeDetails.value = null
     }
 
-    fun clearHikingRoutes() = viewModelScope.launch(dispatcher) {
-        _hikingRoutes.emit(null)
+    fun clearHikingRoutes() {
+        _hikingRoutes.value = null
     }
 
     private fun clearFollowLocation() {
         updateMyLocationConfig(isFollowLocationEnabled = false)
     }
 
-    private suspend fun clearSearchBarItems() {
-        _searchBarItems.emit(null)
+    private fun clearSearchBarItems() {
+        _searchBarItems.value = null
     }
 
     private suspend fun showLoading(isLoading: Boolean) {
