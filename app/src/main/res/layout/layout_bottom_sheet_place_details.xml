@@ -1,112 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/DefaultBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/space_large"
     app:behavior_hideable="true"
     app:layout_insetEdge="bottom">
 
-    <ImageView
-        android:id="@+id/placeDetailsImage"
-        android:layout_width="@dimen/place_details_bottom_sheet_image_size"
-        android:layout_height="@dimen/place_details_bottom_sheet_image_size"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/space_extra_large"
-        android:layout_marginTop="@dimen/space_extra_large"
-        android:layout_marginEnd="@dimen/space_medium"
-        android:layout_marginBottom="@dimen/space_small"
-        android:padding="@dimen/space_extra_small"
-        app:layout_constraintEnd_toStartOf="@id/placeDetailsTextContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_home_search_bar_type_relation" />
+    <View
+        style="@style/DragViewStyle"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_medium" />
 
     <LinearLayout
-        android:id="@+id/placeDetailsTextContainer"
-        android:layout_width="0dp"
+        android:id="@+id/placeDetailsContentContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@id/placeDetailsImage"
-        app:layout_constraintEnd_toStartOf="@id/placeDetailsCloseButton"
-        app:layout_constraintStart_toEndOf="@id/placeDetailsImage"
-        app:layout_constraintTop_toTopOf="@id/placeDetailsImage">
+        android:layout_marginBottom="@dimen/space_medium"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/placeDetailsPrimaryText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
-            tools:text="Dobogókő Szánkópálya" />
+        <ImageView
+            android:id="@+id/placeDetailsImage"
+            android:layout_width="@dimen/place_details_bottom_sheet_image_size"
+            android:layout_height="@dimen/place_details_bottom_sheet_image_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/space_extra_large"
+            android:layout_marginEnd="@dimen/space_medium"
+            android:padding="@dimen/space_extra_small"
+            tools:src="@drawable/ic_home_search_bar_type_relation" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/placeDetailsSecondaryText"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/placeDetailsTextContainer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_extra_small"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
-            tools:text="2099 Pilisszentkereszt" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/placeDetailsPrimaryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
+                tools:text="Dobogókő Szánkópálya" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/placeDetailsSecondaryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_extra_small"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+                tools:text="2099 Pilisszentkereszt" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/placeDetailsCloseButton"
+            style="@style/DefaultButton.IconOnly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_medium"
+            app:icon="@drawable/ic_bottom_sheet_clear" />
 
     </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/placeDetailsCloseButton"
-        style="@style/DefaultButton.IconOnly"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_medium"
-        android:layout_marginEnd="@dimen/space_medium"
-        app:icon="@drawable/ic_bottom_sheet_clear"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="end"
+        android:orientation="horizontal">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/placeDetailsDirectionsButton"
-        style="@style/DefaultButton.Contained.Shadowless.Secondary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_medium"
-        android:layout_marginEnd="@dimen/space_medium"
-        android:text="@string/home_bottom_sheet_directions_button"
-        app:icon="@drawable/ic_home_bottom_sheet_directions"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/placeDetailsShowPointsButton"
-        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer"
-        app:layout_constraintHorizontal_bias="1" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/placeDetailsDirectionsButton"
+            style="@style/DefaultButton.Contained.Shadowless.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_medium"
+            android:text="@string/home_bottom_sheet_directions_button"
+            app:icon="@drawable/ic_home_bottom_sheet_directions" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/placeDetailsShowPointsButton"
+            style="@style/DefaultButton.Contained.Shadowless.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_extra_large"
+            android:text="@string/home_bottom_sheet_show_points_button"
+            android:visibility="gone"
+            app:icon="@drawable/ic_place_details_show_points" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/placeDetailsShowPointsButton"
-        style="@style/DefaultButton.Contained.Shadowless.Primary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_medium"
-        android:layout_marginEnd="@dimen/space_extra_large"
-        android:text="@string/home_bottom_sheet_show_points_button"
-        app:icon="@drawable/ic_place_details_show_points"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/placeDetailsHikingTrailsButton"
-        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/placeDetailsHikingTrailsButton"
+            style="@style/DefaultButton.Contained.Shadowless.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_extra_large"
+            android:text="@string/home_bottom_sheet_hiking_trails_button"
+            app:icon="@drawable/ic_place_details_hiking_routes" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/placeDetailsHikingTrailsButton"
-        style="@style/DefaultButton.Contained.Shadowless.Primary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_medium"
-        android:layout_marginEnd="@dimen/space_extra_large"
-        android:text="@string/home_bottom_sheet_hiking_trails_button"
-        app:icon="@drawable/ic_place_details_hiking_routes"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/placeDetailsTextContainer" />
+    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

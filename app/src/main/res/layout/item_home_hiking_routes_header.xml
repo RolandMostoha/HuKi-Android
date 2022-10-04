@@ -4,28 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/hikingRoutesHeaderText"
-        android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
-        android:paddingTop="@dimen/space_extra_large"
-        android:paddingBottom="@dimen/space_medium"
-        android:paddingStart="@dimen/space_extra_extra_large"
-        android:paddingEnd="@dimen/space_extra_extra_large"
-        tools:text="Írott-kő - Budapest - Hollóháza" />
+    <View
+        style="@style/DragViewStyle"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_medium" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/hikingRoutesCloseButton"
-        style="@style/DefaultButton.IconOnly"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/space_medium"
-        app:icon="@drawable/ic_bottom_sheet_clear"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/hikingRoutesHeaderText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="@dimen/space_extra_extra_large"
+            android:paddingTop="@dimen/space_extra_large"
+            android:paddingEnd="@dimen/space_extra_extra_large"
+            android:paddingBottom="@dimen/space_medium"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
+            tools:text="Írott-kő - Budapest - Hollóháza" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/hikingRoutesCloseButton"
+            style="@style/DefaultButton.IconOnly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_medium"
+            app:icon="@drawable/ic_bottom_sheet_clear"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
 
 </LinearLayout>

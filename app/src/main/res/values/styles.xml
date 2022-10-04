@@ -61,6 +61,12 @@
         <item name="iconTint">@color/colorPrimaryIcon</item>
     </style>
 
+    <style name="DefaultButton.IconOnly.Stroked">
+        <item name="shapeAppearance">@style/DefaultShapeAppearance.Button</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/colorStroke</item>
+    </style>
+
     <style name="DefaultMaterialDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -118,6 +124,12 @@
         <item name="android:drawablePadding">@dimen/space_medium</item>
         <item name="android:gravity">center</item>
         <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
+
+    <style name="DragViewStyle">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">5dp</item>
+        <item name="android:background">@drawable/background_drag_view</item>
     </style>
 
 </resources>
