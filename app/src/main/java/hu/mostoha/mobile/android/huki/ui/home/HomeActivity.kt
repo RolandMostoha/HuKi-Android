@@ -136,14 +136,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initPermissions()
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        // State restoration is disabled in hiking routes because of BottomSheet-RecyclerView bug
-        homeViewModel.clearHikingRoutes()
-        hikingRoutesSheet.hide()
-    }
-
     override fun onResume() {
         super.onResume()
 
@@ -453,7 +445,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeViewModel.hikingRoutes
                 .flowWithLifecycle(lifecycle)
                 .collect { hikingRoutes ->
-                    hikingRoutes?.let { initHikingRoutes(it) }
+                    hikingRoutes?.let { initHikingRoutesBottomSheet(it) }
                 }
         }
         lifecycleScope.launch {
@@ -635,101 +627,107 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(homeMapView), true)
     }
 
-    private fun initHikingRoutes(hikingRoutes: List<HikingRoutesItem>) {
-        with(binding.homeHikingRoutesBottomSheetContainer) {
-            val hikingRoutesAdapter = HikingRoutesAdapter(
-                onItemClick = { hikingRoute ->
-                    hikingRoutesSheet.hide()
-                    homeViewModel.loadHikingRouteDetails(hikingRoute)
-                    removePlaceOverlays()
-                    analyticsService.loadHikingRouteDetailsClicked(hikingRoute.name)
-                },
-                onCloseClick = {
-                    hikingRoutesSheet.hide()
+    private fun initHikingRoutesBottomSheet(hikingRoutes: List<HikingRoutesItem>) {
+        Handler(Looper.getMainLooper()).post {
+            with(binding.homeHikingRoutesBottomSheetContainer) {
+                val hikingRoutesAdapter = HikingRoutesAdapter(
+                    onItemClick = { hikingRoute ->
+                        hikingRoutesSheet.hide()
+                        homeViewModel.loadHikingRouteDetails(hikingRoute)
+                        removePlaceOverlays()
+                        analyticsService.loadHikingRouteDetailsClicked(hikingRoute.name)
+                    },
+                    onCloseClick = {
+                        hikingRoutesSheet.hide()
 
-                    homeViewModel.clearHikingRoutes()
-                }
-            )
-            hikingRoutesList.setHasFixedSize(true)
-            hikingRoutesList.adapter = hikingRoutesAdapter
-            hikingRoutesAdapter.submitList(hikingRoutes)
+                        homeViewModel.clearHikingRoutes()
+                    }
+                )
+                hikingRoutesList.setHasFixedSize(true)
+                hikingRoutesList.adapter = hikingRoutesAdapter
+                hikingRoutesAdapter.submitList(hikingRoutes)
 
-            placeDetailsSheet.hide()
-            hikingRoutesSheet.collapse()
+                placeDetailsSheet.hide()
+                hikingRoutesSheet.collapse()
+            }
         }
     }
 
     private fun initNodeBottomSheet(placeUiModel: PlaceUiModel, geoPoint: GeoPoint, marker: Marker) {
-        with(binding.homePlaceDetailsBottomSheetContainer) {
-            val placeName = placeUiModel.primaryText.resolve(root.context)
+        Handler(Looper.getMainLooper()).post {
+            with(binding.homePlaceDetailsBottomSheetContainer) {
+                val placeName = placeUiModel.primaryText.resolve(root.context)
 
-            placeDetailsPrimaryText.text = placeName
-            placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
-            placeDetailsImage.setImageResource(placeUiModel.iconRes)
-            placeDetailsDirectionsButton.visible()
-            placeDetailsDirectionsButton.setOnClickListener {
-                analyticsService.navigationClicked(placeName)
+                placeDetailsPrimaryText.text = placeName
+                placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
+                placeDetailsImage.setImageResource(placeUiModel.iconRes)
+                placeDetailsDirectionsButton.visible()
+                placeDetailsDirectionsButton.setOnClickListener {
+                    analyticsService.navigationClicked(placeName)
 
-                startGoogleMapsDirectionsIntent(geoPoint)
-            }
-            if (placeUiModel.placeType != PlaceType.NODE) {
-                placeDetailsHikingTrailsButton.gone()
-                placeDetailsShowPointsButton.visible()
-                placeDetailsShowPointsButton.setOnClickListener {
-                    placeDetailsSheet.hide()
-                    removePlaceOverlays()
-
-                    homeViewModel.loadPlaceDetails(placeUiModel)
-                    analyticsService.loadPlaceDetailsClicked(placeName, placeUiModel.placeType)
+                    startGoogleMapsDirectionsIntent(geoPoint)
                 }
-            } else {
-                placeDetailsShowPointsButton.gone()
-                placeDetailsHikingTrailsButton.visible()
-                placeDetailsHikingTrailsButton.setOnClickListener {
+                if (placeUiModel.placeType != PlaceType.NODE) {
+                    placeDetailsHikingTrailsButton.gone()
+                    placeDetailsShowPointsButton.visible()
+                    placeDetailsShowPointsButton.setOnClickListener {
+                        placeDetailsSheet.hide()
+                        removePlaceOverlays()
+
+                        homeViewModel.loadPlaceDetails(placeUiModel)
+                        analyticsService.loadPlaceDetailsClicked(placeName, placeUiModel.placeType)
+                    }
+                } else {
+                    placeDetailsShowPointsButton.gone()
+                    placeDetailsHikingTrailsButton.visible()
+                    placeDetailsHikingTrailsButton.setOnClickListener {
+                        placeDetailsSheet.hide()
+
+                        val placeTitle = getString(
+                            R.string.map_place_name_node_routes_nearby,
+                            placeUiModel.primaryText.resolve(this@HomeActivity)
+                        )
+                        val boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
+
+                        homeViewModel.loadHikingRoutes(placeTitle, boundingBox)
+                        analyticsService.loadHikingRoutesClicked(placeTitle)
+                    }
+                }
+                placeDetailsCloseButton.setOnClickListener {
+                    homeMapView.removeMarker(marker)
                     placeDetailsSheet.hide()
 
-                    val placeTitle = getString(
-                        R.string.map_place_name_node_routes_nearby,
-                        placeUiModel.primaryText.resolve(this@HomeActivity)
-                    )
-                    val boundingBox = homeMapView.boundingBox.toDomainBoundingBox()
-
-                    homeViewModel.loadHikingRoutes(placeTitle, boundingBox)
-                    analyticsService.loadHikingRoutesClicked(placeTitle)
+                    homeViewModel.clearPlaceDetails()
                 }
-            }
-            placeDetailsCloseButton.setOnClickListener {
-                homeMapView.removeMarker(marker)
-                placeDetailsSheet.hide()
-
-                homeViewModel.clearPlaceDetails()
             }
         }
     }
 
     private fun initWayBottomSheet(placeUiModel: PlaceUiModel, boundingBox: BoundingBox, overlays: List<Overlay>) {
-        with(binding.homePlaceDetailsBottomSheetContainer) {
-            val placeName = placeUiModel.primaryText.resolve(root.context)
+        Handler(Looper.getMainLooper()).post {
+            with(binding.homePlaceDetailsBottomSheetContainer) {
+                val placeName = placeUiModel.primaryText.resolve(root.context)
 
-            placeDetailsPrimaryText.text = placeName
-            placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
-            placeDetailsImage.setImageResource(placeUiModel.iconRes)
-            placeDetailsDirectionsButton.gone()
-            placeDetailsShowPointsButton.gone()
-            placeDetailsHikingTrailsButton.visible()
-            placeDetailsHikingTrailsButton.setOnClickListener {
-                placeDetailsSheet.hide()
+                placeDetailsPrimaryText.text = placeName
+                placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
+                placeDetailsImage.setImageResource(placeUiModel.iconRes)
+                placeDetailsDirectionsButton.gone()
+                placeDetailsShowPointsButton.gone()
+                placeDetailsHikingTrailsButton.visible()
+                placeDetailsHikingTrailsButton.setOnClickListener {
+                    placeDetailsSheet.hide()
 
-                homeViewModel.loadHikingRoutes(placeName, boundingBox.toDomainBoundingBox())
-                analyticsService.loadHikingRoutesClicked(placeName)
-            }
-            placeDetailsCloseButton.setOnClickListener {
-                placeDetailsSheet.hide()
-                if (overlays.isNotEmpty()) {
-                    homeMapView.removeOverlay(overlays)
+                    homeViewModel.loadHikingRoutes(placeName, boundingBox.toDomainBoundingBox())
+                    analyticsService.loadHikingRoutesClicked(placeName)
                 }
+                placeDetailsCloseButton.setOnClickListener {
+                    placeDetailsSheet.hide()
+                    if (overlays.isNotEmpty()) {
+                        homeMapView.removeOverlay(overlays)
+                    }
 
-                homeViewModel.clearPlaceDetails()
+                    homeViewModel.clearPlaceDetails()
+                }
             }
         }
     }
