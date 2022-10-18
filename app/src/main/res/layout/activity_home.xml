@@ -163,7 +163,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_large"
-            android:layout_marginBottom="@dimen/home_fab_bottom_margin"
+            android:layout_marginBottom="@dimen/home_altitude_text_bottom_margin"
             android:background="@drawable/background_altitude"
             android:drawableStart="@drawable/ic_altitude"
             android:drawablePadding="@dimen/space_extra_extra_small"
@@ -223,6 +223,11 @@
     <include
         android:id="@+id/homeHikingRoutesBottomSheetContainer"
         layout="@layout/layout_bottom_sheet_hiking_routes"
+        tools:visibility="gone" />
+
+    <include
+        android:id="@+id/homeGpxDetailsBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_gpx_details"
         tools:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

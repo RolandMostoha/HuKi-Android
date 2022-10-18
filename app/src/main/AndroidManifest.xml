@@ -22,10 +22,90 @@
             android:name="hu.mostoha.mobile.android.huki.ui.home.HomeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- GPX: Email attachments, File Explorers -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="content" />
+                <data android:host="*" />
+
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+
+            <!-- GPX: Mime type set -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="content" />
+
+                <!-- Valid mime types by GPX definition -->
+                <data android:mimeType="application/gpx+xml" />
+                <!-- Invalid mime types used by some bad software -->
+                <data android:mimeType="application/gpx" />
+                <data android:mimeType="text/gpx" />
+                <data android:mimeType="text/gpx+xml" />
+                <data android:mimeType="text/xml+gpx" />
+            </intent-filter>
+
+            <!-- GPX: Mime type not set but valid extensions -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="content" />
+
+                <data android:host="*" />
+
+                <data android:pathPattern="/.*..*..*..*..*\\.gpx" />
+                <data android:pathPattern="/.*..*..*..*\\.gpx" />
+                <data android:pathPattern="/.*..*..*\\.gpx" />
+                <data android:pathPattern="/.*..*\\.gpx" />
+                <data android:pathPattern="/.*\\.gpx" />
+            </intent-filter>
+
+            <!-- GPX: Invalid mime type but valid extensions -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="content" />
+
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+
+                <data android:pathPattern="/.*..*..*..*..*\\.gpx" />
+                <data android:pathPattern="/.*..*..*..*\\.gpx" />
+                <data android:pathPattern="/.*..*..*\\.gpx" />
+                <data android:pathPattern="/.*..*\\.gpx" />
+                <data android:pathPattern="/.*\\.gpx" />
+                <data android:pathPattern=".*\\.gpx" />
+            </intent-filter>
+
         </activity>
 
     </application>

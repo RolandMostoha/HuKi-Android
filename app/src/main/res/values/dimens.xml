@@ -30,8 +30,9 @@
     <dimen name="default_corner_size_input">30dp</dimen>
     <dimen name="default_corner_size_drag_view">60dp</dimen>
     <dimen name="default_icon_only_button_size">50dp</dimen>
-    <dimen name="default_polygon_stroke_width">2dp</dimen>
-    <dimen name="default_polyline_stroke_width">5dp</dimen>
+    <dimen name="default_polygon_stroke_width">4dp</dimen>
+    <dimen name="default_polyline_stroke_width">6dp</dimen>
+    <dimen name="default_horizontal_separator_width">1dp</dimen>
 
     <dimen name="progress_fab_progress_bar_size_mini">46dp</dimen>
     <dimen name="progress_fab_progress_bar_size_normal">64dp</dimen>
@@ -39,7 +40,8 @@
 
     <dimen name="home_stroke_width_on_map">0dp</dimen>
     <dimen name="home_marker_size_poi">45dp</dimen>
-    <dimen name="home_fab_bottom_margin">33dp</dimen>
+    <dimen name="home_fab_bottom_margin">@dimen/space_extra_extra_large</dimen>
+    <dimen name="home_altitude_text_bottom_margin">33dp</dimen>
 
     <dimen name="home_search_bar_height">60dp</dimen>
     <dimen name="home_search_bar_vertical_offset">3dp</dimen>
@@ -56,8 +58,8 @@
 
     <dimen name="home_map_view_top_offset">100dp</dimen>
     <dimen name="home_map_view_bottom_offset">90dp</dimen>
-    <dimen name="home_map_view_start_offset">20dp</dimen>
-    <dimen name="home_map_view_end_offset">20dp</dimen>
+    <dimen name="home_map_view_start_offset">60dp</dimen>
+    <dimen name="home_map_view_end_offset">60dp</dimen>
 
     <dimen name="place_details_bottom_sheet_image_size">45dp</dimen>
 

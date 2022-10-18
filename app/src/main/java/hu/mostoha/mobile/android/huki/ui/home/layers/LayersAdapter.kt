@@ -8,11 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ItemLayersHeaderBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemLayersLayerBinding
+import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.inflater
+import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
+import hu.mostoha.mobile.android.huki.model.domain.LayerType
 
 class LayersAdapter(
-    val onLayerClick: (LayersAdapterItem.Layer) -> Unit
+    val onLayerClick: (LayersAdapterItem.Layer) -> Unit,
+    val onActionButtonClick: (LayerType) -> Unit,
 ) : ListAdapter<LayersAdapterItem, RecyclerView.ViewHolder>(LayersItemDiffUtilCallback) {
 
     companion object {
@@ -20,8 +24,7 @@ class LayersAdapter(
         const val TYPE_LAYER_ITEM = 1
         const val SPAN_COUNT_MAX = 2
         const val SPAN_COUNT_LAYER_HEADER = 2
-        const val SPAN_COUNT_LAYER_BASE = 1
-        const val SPAN_COUNT_LAYER_HIKING = 2
+        const val SPAN_COUNT_LAYER_ITEMS = 1
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -77,6 +80,16 @@ class LayersAdapter(
                 itemLayersSelectedImage.visibleOrGone(layer.isSelected)
                 itemLayersImageCard.setOnClickListener {
                     onLayerClick.invoke(layer)
+                }
+                if (layer.layerType == LayerType.GPX) {
+                    itemLayersActionButton.visible()
+                    itemLayersActionButton.setText(R.string.layers_gpx_import_button_title)
+                    itemLayersActionButton.setIconResource(R.drawable.ic_layers_import_gpx)
+                    itemLayersActionButton.setOnClickListener {
+                        onActionButtonClick.invoke(layer.layerType)
+                    }
+                } else {
+                    itemLayersActionButton.gone()
                 }
             }
         }

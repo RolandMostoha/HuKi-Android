@@ -2,9 +2,11 @@ package hu.mostoha.mobile.android.huki.extensions
 
 import androidx.annotation.DimenRes
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.views.MapView
 import org.osmdroid.views.Projection
+import hu.mostoha.mobile.android.huki.model.domain.BoundingBox as DomainBoundingBox
 
 fun BoundingBox.withOffset(
     mapView: MapView,
@@ -58,6 +60,16 @@ fun BoundingBox.withOffset(
 
 fun BoundingBox.withDefaultOffset(mapView: MapView): BoundingBox {
     return withOffset(
+        mapView,
+        R.dimen.home_map_view_top_offset,
+        R.dimen.home_map_view_bottom_offset,
+        R.dimen.home_map_view_start_offset,
+        R.dimen.home_map_view_end_offset
+    )
+}
+
+fun DomainBoundingBox.withDefaultOffset(mapView: MapView): BoundingBox {
+    return this.toOsmBoundingBox().withOffset(
         mapView,
         R.dimen.home_map_view_top_offset,
         R.dimen.home_map_view_bottom_offset,

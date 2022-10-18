@@ -1,9 +1,11 @@
 package hu.mostoha.mobile.android.huki.ui.home.layers
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,10 +14,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.databinding.FragmentLayersBottomSheetDialogBinding
+import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
-import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_BASE
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_HEADER
-import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_HIKING
+import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_ITEMS
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_MAX
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -23,6 +25,8 @@ import kotlinx.coroutines.launch
 class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
+        private const val GPX_FILE_OPEN_MIME_TYPE = "*/*"
+
         val TAG = LayersBottomSheetDialogFragment::class.java.simpleName + ".TAG"
     }
 
@@ -30,6 +34,14 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentLayersBottomSheetDialogBinding? = null
     private val binding get() = _binding!!
+
+    private val openGpxFileResultLauncher = registerForActivityResult(OpenDocument()) { gpxFileUri: Uri? ->
+        lifecycleScope.launch {
+            layersViewModel.loadGpx(gpxFileUri)
+
+            dismiss()
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLayersBottomSheetDialogBinding.inflate(inflater, container, false)
@@ -41,15 +53,7 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initDialog()
-
-        lifecycleScope.launch {
-            layersViewModel.layerAdapterItems
-                .flowWithLifecycle(lifecycle)
-                .distinctUntilChanged()
-                .collect { layerAdapterItems ->
-                    initLayerList(layerAdapterItems)
-                }
-        }
+        initFlows()
     }
 
     override fun onDestroyView() {
@@ -64,19 +68,35 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
         sheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
+    private fun initFlows() {
+        lifecycleScope.launch {
+            layersViewModel.layerAdapterItems
+                .flowWithLifecycle(lifecycle)
+                .distinctUntilChanged()
+                .collect { layerAdapterItems ->
+                    initLayerList(layerAdapterItems)
+                }
+        }
+        lifecycleScope.launch {
+            layersViewModel.errorMessage
+                .flowWithLifecycle(lifecycle)
+                .collect { errorMessage ->
+                    errorMessage?.let { messageRes ->
+                        requireActivity().showToast(messageRes)
+
+                        layersViewModel.clearError()
+                    }
+                }
+        }
+    }
+
     private fun initLayerList(layerAdapterItems: List<LayersAdapterItem>) {
         val layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT_MAX)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return when (val layersItem = layerAdapterItems[position]) {
+                return when (layerAdapterItems[position]) {
                     is LayersAdapterItem.Header -> SPAN_COUNT_LAYER_HEADER
-                    is LayersAdapterItem.Layer -> {
-                        if (layersItem.layerType == LayerType.ONLINE_HIKING_LAYER) {
-                            SPAN_COUNT_LAYER_HIKING
-                        } else {
-                            SPAN_COUNT_LAYER_BASE
-                        }
-                    }
+                    is LayersAdapterItem.Layer -> SPAN_COUNT_LAYER_ITEMS
                 }
             }
         }
@@ -84,6 +104,11 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val adapter = LayersAdapter(
             onLayerClick = { layerItem ->
                 layersViewModel.selectLayer(layerItem.layerType)
+            },
+            onActionButtonClick = { layerType ->
+                if (layerType == LayerType.GPX) {
+                    openGpxFileResultLauncher.launch(arrayOf(GPX_FILE_OPEN_MIME_TYPE))
+                }
             }
         )
         binding.layersList.layoutManager = layoutManager

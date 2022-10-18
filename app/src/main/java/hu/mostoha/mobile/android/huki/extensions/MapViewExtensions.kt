@@ -6,6 +6,10 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.OVERLAY_TYPE_ORDER_MAP
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
@@ -13,15 +17,35 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
+import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.PolyOverlayWithIW
 import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
+import java.util.UUID
 
 private const val MAP_ANIMATION_DURATION = 1000L
 
 fun MapView.addOverlay(overlay: Overlay, comparator: Comparator<Overlay>) {
     overlays.add(overlay)
     overlays.sortWith(comparator)
+    invalidate()
+}
+
+fun MapView.hasOverlay(overlayId: String): Boolean {
+    return overlays.any { it is OverlayWithIW && it.id == overlayId }
+}
+
+fun MapView.hideOverlay(overlayId: String) {
+    overlays.filterIsInstance<OverlayWithIW>()
+        .filter { it.id == overlayId }
+        .forEach { it.isEnabled = false }
+    invalidate()
+}
+
+fun MapView.showOverlay(overlayId: String) {
+    overlays.filterIsInstance<OverlayWithIW>()
+        .filter { it.id == overlayId }
+        .forEach { it.isEnabled = true }
     invalidate()
 }
 
@@ -32,10 +56,27 @@ fun MapView.removeOverlay(overlay: List<Overlay>) {
     invalidate()
 }
 
-fun MapView.addMarker(geoPoint: GeoPoint, icon: Drawable, onClick: (Marker) -> Unit): Marker {
+fun MapView.removeOverlay(overlayId: String) {
+    overlays.removeAll { it is OverlayWithIW && it.id == overlayId }
+    invalidate()
+}
+
+fun MapView.removeOverlay(overlayType: OverlayType) {
+    val overlayClasses = OVERLAY_TYPE_ORDER_MAP.getValue(overlayType)
+    overlays.removeIf { overlayClasses.contains(it::class) }
+    invalidate()
+}
+
+fun MapView.addMarker(
+    overlayId: String = UUID.randomUUID().toString(),
+    geoPoint: GeoPoint,
+    iconDrawable: Drawable,
+    onClick: (Marker) -> Unit
+): Marker {
     val marker = Marker(this).apply {
+        id = overlayId
         position = geoPoint
-        this.icon = icon
+        icon = iconDrawable
         setOnMarkerClickListener { marker, _ ->
             onClick.invoke(marker)
             true
@@ -52,23 +93,55 @@ fun MapView.removeMarker(marker: Marker) {
     invalidate()
 }
 
-fun MapView.addPolygon(
+fun MapView.addPolyline(
+    overlayId: String = UUID.randomUUID().toString(),
     geoPoints: List<GeoPoint>,
     onClick: (PolyOverlayWithIW) -> Unit,
-    @DimenRes strokeWidth: Int = R.dimen.default_polygon_stroke_width,
-    @ColorRes strokeColor: Int = R.color.colorPolyline,
-    @ColorRes fillColor: Int = R.color.colorPolylineFill
+    @DimenRes strokeWidthRes: Int = R.dimen.default_polyline_stroke_width,
+    @ColorRes strokeColorRes: Int = R.color.colorPolyline
+): Polyline {
+    val context = this.context
+    val polyline = Polyline(this).apply {
+        id = overlayId
+        outlinePaint.apply {
+            isAntiAlias = true
+            color = ContextCompat.getColor(context, strokeColorRes)
+            style = Paint.Style.STROKE
+            strokeCap = Paint.Cap.ROUND
+            strokeJoin = Paint.Join.ROUND
+            isGeodesic = true
+            strokeWidth = context.resources.getDimension(strokeWidthRes)
+        }
+        setPoints(geoPoints)
+        setOnClickListener { polygon, _, _ ->
+            onClick.invoke(polygon)
+            true
+        }
+    }
+    overlays.add(polyline)
+    invalidate()
+
+    return polyline
+}
+
+fun MapView.addPolygon(
+    overlayId: String = UUID.randomUUID().toString(),
+    geoPoints: List<GeoPoint>,
+    onClick: (PolyOverlayWithIW) -> Unit,
+    @ColorRes strokeColorRes: Int = R.color.colorPolyline,
+    @ColorRes fillColorRes: Int = R.color.colorPolylineFill
 ): Polygon {
     val context = this.context
     val polygon = Polygon().apply {
+        id = overlayId
         outlinePaint.apply {
             isAntiAlias = true
-            color = ContextCompat.getColor(context, strokeColor)
+            color = ContextCompat.getColor(context, strokeColorRes)
             style = Paint.Style.STROKE
             strokeCap = Paint.Cap.ROUND
-            this.strokeWidth = context.resources.getDimension(strokeWidth)
+            strokeWidth = context.resources.getDimension(R.dimen.default_polygon_stroke_width)
         }
-        fillPaint.color = ContextCompat.getColor(context, fillColor)
+        fillPaint.color = ContextCompat.getColor(context, fillColorRes)
         points = geoPoints
         setOnClickListener { polygon, _, _ ->
             onClick.invoke(polygon)
@@ -81,20 +154,43 @@ fun MapView.addPolygon(
     return polygon
 }
 
-fun MapView.addPolyline(
+fun MapView.addGpxMarker(
+    overlayId: String = UUID.randomUUID().toString(),
+    geoPoint: GeoPoint,
+    iconDrawable: Drawable,
+    onClick: (Marker) -> Unit
+): Marker {
+    val marker = GpxMarker(this).apply {
+        id = overlayId
+        position = geoPoint
+        icon = iconDrawable
+        setOnMarkerClickListener { marker, _ ->
+            onClick.invoke(marker)
+            true
+        }
+    }
+    overlays.add(marker)
+    invalidate()
+
+    return marker
+}
+
+fun MapView.addGpxPolyline(
+    overlayId: String = UUID.randomUUID().toString(),
     geoPoints: List<GeoPoint>,
-    onClick: (PolyOverlayWithIW) -> Unit,
-    @DimenRes strokeWidth: Int = R.dimen.default_polyline_stroke_width,
-    @ColorRes strokeColor: Int = R.color.colorPolyline
+    onClick: (PolyOverlayWithIW) -> Unit
 ): Polyline {
     val context = this.context
-    val polyline = Polyline().apply {
+    val polyline = GpxPolyline(this).apply {
+        id = overlayId
         outlinePaint.apply {
             isAntiAlias = true
-            color = ContextCompat.getColor(context, strokeColor)
+            color = ContextCompat.getColor(context, R.color.colorPolyline)
             style = Paint.Style.STROKE
             strokeCap = Paint.Cap.ROUND
-            this.strokeWidth = context.resources.getDimension(strokeWidth)
+            strokeJoin = Paint.Join.ROUND
+            isGeodesic = true
+            strokeWidth = context.resources.getDimension(R.dimen.default_polyline_stroke_width)
         }
         setPoints(geoPoints)
         setOnClickListener { polygon, _, _ ->

@@ -3,17 +3,20 @@ package hu.mostoha.mobile.android.huki.util.espresso
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
-import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
 
@@ -67,12 +70,13 @@ fun @receiver:IdRes Int.click() {
     onView(withId(this)).perform(ViewActions.click())
 }
 
-fun @receiver:StringRes Int.isToastTextDisplayed(activityScenario: ActivityScenario<HomeActivity>) {
-    activityScenario.onActivity { activity ->
-        onView(withText(this))
-            .inRoot(withDecorView(not(activity.window.decorView)))
-            .check(matches(ViewMatchers.isDisplayed()))
-    }
+fun @receiver:IdRes Int.clickWithSibling(@StringRes stringRes: Int) {
+    onView(
+        allOf(
+            withId(this),
+            hasSibling(withText(stringRes))
+        )
+    ).perform(ViewActions.click())
 }
 
 fun @receiver:IdRes Int.clickInPopup() {

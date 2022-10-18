@@ -2,11 +2,14 @@ package hu.mostoha.mobile.android.huki.interactor
 
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.GatewayTimeoutException
+import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
 import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
 import hu.mostoha.mobile.android.huki.interactor.exception.TooManyRequestsException
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import kotlinx.coroutines.CancellationException
+import org.xmlpull.v1.XmlPullParserException
 import retrofit2.HttpException
+import java.io.FileNotFoundException
 
 object DomainExceptionMapper {
 
@@ -23,6 +26,12 @@ object DomainExceptionMapper {
             }
             exception is CancellationException -> {
                 JobCancellationException(exception)
+            }
+            exception is FileNotFoundException -> {
+                GpxParseFailedException(exception)
+            }
+            exception is XmlPullParserException -> {
+                GpxParseFailedException(exception)
             }
             else -> UnknownException(exception)
         }

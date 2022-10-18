@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingStart="@dimen/space_extra_extra_large"
-            android:paddingTop="@dimen/space_extra_large"
+            android:paddingTop="@dimen/space_large"
             android:paddingEnd="@dimen/space_extra_extra_large"
             android:paddingBottom="@dimen/space_medium"
             android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"

@@ -7,7 +7,7 @@ import java.math.RoundingMode
 object DistanceFormatter {
 
     @Suppress("MagicNumber")
-    fun format(meters: Int): Message {
+    fun format(meters: Int): Message.Res {
         val km = (meters.toDouble() / 1000)
             .toBigDecimal()
             .setScale(1, RoundingMode.HALF_UP)

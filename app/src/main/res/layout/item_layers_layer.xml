@@ -40,7 +40,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
-        android:gravity="center_vertical"
         tools:text="Mapnik" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/itemLayersActionButton"
+        style="@style/DefaultButton.Contained.Shadowless.Secondary.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
+        android:visibility="gone"
+        tools:icon="@drawable/ic_layers_import_gpx"
+        tools:text="Import GPX" />
 
 </LinearLayout>

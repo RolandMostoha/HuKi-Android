@@ -43,4 +43,36 @@ class LocationUtilsTest {
         )
     }
 
+    @Test
+    fun `Given list of locations, when calculateIncline, then the total incline of locations returns`() {
+        val locations = listOf(
+            Location(47.123, 19.234, 90.0),
+            Location(47.123, 19.234, 100.0),
+            Location(46.567, 19.345, 95.0),
+            Location(46.567, 19.345, 110.0),
+            Location(46.567, 19.345, 120.0),
+            Location(46.567, 19.345, 115.0)
+        )
+
+        val incline = locations.calculateIncline()
+
+        assertThat(incline).isEqualTo(10 + 15 + 10)
+    }
+
+    @Test
+    fun `Given list of locations, when calculateDecline, then the total decline of locations returns`() {
+        val locations = listOf(
+            Location(47.123, 19.234, 90.0),
+            Location(47.123, 19.234, 100.0),
+            Location(46.567, 19.345, 95.0),
+            Location(46.567, 19.345, 110.0),
+            Location(46.567, 19.345, 120.0),
+            Location(46.567, 19.345, 115.0)
+        )
+
+        val incline = locations.calculateDecline()
+
+        assertThat(incline).isEqualTo(5 + 5)
+    }
+
 }

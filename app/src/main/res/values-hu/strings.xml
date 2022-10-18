@@ -8,6 +8,7 @@
     <string name="error_message_missing_relation_bounding_box">Nem sikerült lekérdezni az OSM kapcsolat koordinátáit.</string>
     <string name="error_message_too_many_requests">Túl sok kérés indult az eszközről! Kérjük próbálkozz később.</string>
     <string name="error_message_gateway_timeout">Openstreetmap időtúllépés! Kérjük próbáld újra.</string>
+    <string name="error_message_gpx_parse_failed">GPX feldolgozási hiba. Kérjük ellenőrizd a formátumát!</string>
 
     <string name="default_distance_template_m">%d m</string>
     <string name="default_distance_template_km">%s km</string>
@@ -19,6 +20,10 @@
     <string name="home_bottom_sheet_hiking_trails_button">Túrautak</string>
     <string name="home_bottom_sheet_show_points_button">Összes pont</string>
     <string name="home_bottom_sheet_landscape_secondary">Tájegység</string>
+
+    <string name="gpx_details_bottom_sheet_distance">Távolság: %s</string>
+    <string name="gpx_details_bottom_sheet_altitude_range">%s - %s</string>
+    <string name="gpx_details_bottom_sheet_navigate_start_button">Navigáció kezdőponthoz</string>
 
     <string name="map_place_name_routes_nearby">Túraútvonalak a térképen</string>
     <string name="map_place_name_node_routes_nearby">%s közelében</string>
@@ -33,8 +38,10 @@
     <string name="layers_base_layers_header">Alap rétegek</string>
     <string name="layers_mapnik_title">Mapnik</string>
     <string name="layers_open_topo_title">Open Topo</string>
-    <string name="layers_hiking_layers_header">Túra réteg</string>
+    <string name="layers_hiking_layers_header">Túra rétegek</string>
     <string name="layers_hiking_hungarian_title">Magyar Túraréteg</string>
+    <string name="layers_gpx_title">GPX Réteg</string>
+    <string name="layers_gpx_import_button_title">Import GPX</string>
 
     <string name="accessibility_home_fab_layers">Rétegek</string>
     <string name="accessibility_home_fab_routes_nearby">Túrautak a közelben</string>

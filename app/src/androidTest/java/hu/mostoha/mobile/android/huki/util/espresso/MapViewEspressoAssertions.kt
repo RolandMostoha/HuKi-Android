@@ -32,13 +32,55 @@ inline fun <reified T : Overlay> hasOverlayMatcher(): BoundedMatcher<View, MapVi
         override fun matchesSafely(mapView: MapView?): Boolean {
             if (mapView == null) return false
 
-            return mapView.overlays
-                .filterIsInstance<T>()
-                .isNotEmpty()
+            val overlays = mapView.overlays.filterIsInstance<T>()
+
+            return overlays.isNotEmpty() && overlays.all { it.isEnabled }
         }
 
         override fun describeTo(description: Description) {
-            description.appendText("Has overlay with type ${T::class.java}")
+            description.appendText("Has visible overlay with type ${T::class.java}")
+        }
+    }
+}
+
+inline fun <reified T : Overlay> @receiver:IdRes Int.hasInvisibleOverlay() {
+    onView(withId(this)).check(matches(hasInvisibleOverlayMatcher<T>()))
+}
+
+inline fun <reified T : Overlay> hasInvisibleOverlayMatcher(): BoundedMatcher<View, MapView> {
+    return object : BoundedMatcher<View, MapView>(MapView::class.java) {
+
+        override fun matchesSafely(mapView: MapView?): Boolean {
+            if (mapView == null) return false
+
+            val overlays = mapView.overlays.filterIsInstance<T>()
+
+            return overlays.isNotEmpty() && overlays.all { !it.isEnabled }
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("Has invisible overlay with type ${T::class.java}")
+        }
+    }
+}
+
+inline fun <reified T : Overlay> @receiver:IdRes Int.hasOverlayCount(count: Int) {
+    onView(withId(this)).check(matches(hasOverlayCountMatcher<T>(count)))
+}
+
+inline fun <reified T : Overlay> hasOverlayCountMatcher(count: Int): BoundedMatcher<View, MapView> {
+    return object : BoundedMatcher<View, MapView>(MapView::class.java) {
+
+        override fun matchesSafely(mapView: MapView?): Boolean {
+            if (mapView == null) return false
+
+            return mapView.overlays
+                .filterIsInstance<T>()
+                .size == count
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("Has $count overlay(s) with type ${T::class.java}")
         }
     }
 }

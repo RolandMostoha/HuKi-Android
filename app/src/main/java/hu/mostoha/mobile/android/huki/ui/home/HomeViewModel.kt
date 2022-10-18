@@ -130,7 +130,6 @@ class HomeViewModel @Inject constructor(
                 }
                 .onStart {
                     showLoading(true)
-
                     delay(SEARCH_QUERY_DELAY_MS)
                 }
                 .onCompletion { showLoading(false) }
@@ -144,7 +143,6 @@ class HomeViewModel @Inject constructor(
                 job.cancel()
             }
         }
-
         viewModelScope.launch(dispatcher) {
             clearSearchBarItems()
 
@@ -178,7 +176,11 @@ class HomeViewModel @Inject constructor(
         placesInteractor.requestGetHikingRoutesFlow(boundingBox)
             .map { homeUiModelMapper.generateHikingRoutes(placeName, it) }
             .onEach { _hikingRoutes.emit(it) }
-            .onStart { showLoading(true) }
+            .onStart {
+                clearFollowLocation()
+
+                showLoading(true)
+            }
             .onCompletion { showLoading(false) }
             .catch { showError(it) }
             .collect()
@@ -230,7 +232,7 @@ class HomeViewModel @Inject constructor(
         _hikingRoutes.value = null
     }
 
-    private fun clearFollowLocation() {
+    fun clearFollowLocation() {
         updateMyLocationConfig(isFollowLocationEnabled = false)
     }
 
@@ -243,11 +245,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun showError(throwable: Throwable) {
+        Timber.e(throwable)
+
         if (throwable is DomainException) {
             _errorMessage.emit(throwable.messageRes)
         } else {
-            Timber.e(throwable, "Unhandled exception!")
-
             exceptionLogger.recordException(throwable)
         }
     }
