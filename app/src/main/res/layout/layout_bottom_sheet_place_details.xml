@@ -90,7 +90,7 @@
             app:icon="@drawable/ic_home_bottom_sheet_directions" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/placeDetailsShowPointsButton"
+            android:id="@+id/placeDetailsShowAllPointsButton"
             style="@style/DefaultButton.Contained.Shadowless.Primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
