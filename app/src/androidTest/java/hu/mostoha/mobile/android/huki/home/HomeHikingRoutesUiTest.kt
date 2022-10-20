@@ -77,12 +77,12 @@ class HomeHikingRoutesUiTest {
     fun givenZoomLevelInThreshold_whenZoomOut_thenRoutesNearbyIsNotVisible() {
         launchScenario<HomeActivity> {
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY - 1)
-            waitForFabAnimation()
+            waitForAnimation()
 
             R.id.homeRoutesNearbyFab.isNotDisplayed()
 
             R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY + 1)
-            waitForFabAnimation()
+            waitForAnimation()
 
             R.id.homeRoutesNearbyFab.isDisplayed()
         }
@@ -124,6 +124,8 @@ class HomeHikingRoutesUiTest {
             R.id.homeRoutesNearbyFab.click()
             R.id.hikingRoutesCloseButton.click()
 
+            waitForAnimation()
+
             R.id.hikingRoutesEmptyView.isNotDisplayed()
         }
     }
@@ -156,10 +158,10 @@ class HomeHikingRoutesUiTest {
 
     private fun zoomToReachHikingRoutesThreshold() {
         R.id.homeMapView.zoomTo(MAP_ZOOM_THRESHOLD_ROUTES_NEARBY)
-        waitForFabAnimation()
+        waitForAnimation()
     }
 
-    private fun waitForFabAnimation() {
+    private fun waitForAnimation() {
         waitFor(400)
     }
 

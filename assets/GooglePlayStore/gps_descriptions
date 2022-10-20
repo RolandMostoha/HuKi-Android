@@ -27,6 +27,9 @@ You can search in the main Hungarian landscapes like Bükk, Mátra, Balaton etc.
 - Hiking routes nearby
 HuKi can show the nearest hiking routes in a list format.
 
+- GPX File import
+HuKi can import and show GPX file tracks in the map.
+
 - Dark mode support
 
 - OpenSource project
@@ -61,6 +64,9 @@ Külön kereshetsz Magyarország tájegységei közt, mint például Bükk, Mát
 
 - Közeli túraútvonalak keresése
 Az alkalmazás lista nézetben mutatja a közeli útvonalakat.
+
+- GPX File import
+Az alkalmazással importálható és megjeleníthető a GPX fájl útvonalak a térképen.
 
 - Sötét mód támogatás
 
