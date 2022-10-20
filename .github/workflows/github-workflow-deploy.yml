@@ -81,7 +81,7 @@ jobs:
           --type instrumentation
           --app ${{ env.ARTIFACT_PATHNAME_APK }}
           --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
-          --device model=cruiserlteatt,version=26,locale=en,orientation=portrait
+          --device model=G8342,version=26,locale=en,orientation=portrait
           --device model=Pixel2.arm,version=32,locale=hu,orientation=portrait
           --use-orchestrator
           --environment-variables clearPackageData=true
