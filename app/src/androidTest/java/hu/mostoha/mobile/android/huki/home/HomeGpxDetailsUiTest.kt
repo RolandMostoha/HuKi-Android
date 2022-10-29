@@ -19,12 +19,14 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.extensions.GOOGLE_MAPS_DIRECTIONS_URL
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
+import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
@@ -32,6 +34,9 @@ import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_ALTITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithSibling
@@ -45,7 +50,10 @@ import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
+import hu.mostoha.mobile.android.huki.util.toMockLocation
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.Matchers.allOf
 import org.junit.Before
 import org.junit.Rule
@@ -57,7 +65,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class)
+@UninstallModules(RepositoryModule::class, LocationModule::class)
 class HomeGpxDetailsUiTest {
 
     @get:Rule
@@ -71,6 +79,10 @@ class HomeGpxDetailsUiTest {
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
+
+    @BindValue
+    @JvmField
+    val asyncMyLocationProvider: AsyncMyLocationProvider = mockk(relaxed = true)
 
     @BindValue
     @JvmField
@@ -88,12 +100,13 @@ class HomeGpxDetailsUiTest {
     fun init() {
         hiltRule.inject()
         osmConfiguration.init()
+        Intents.init()
+
+        every { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
     }
 
     @Test
     fun whenImportGpxClicked_thenOpenFileIntentIsFired() {
-        Intents.init()
-
         launchScenario<HomeActivity> {
             R.id.homeLayersFab.click()
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
@@ -109,8 +122,6 @@ class HomeGpxDetailsUiTest {
 
     @Test
     fun givenGpxFile_whenImportGpxClicked_thenPolylineDisplaysOnMap() {
-        Intents.init()
-
         launchScenario<HomeActivity> {
             intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
 
@@ -124,8 +135,6 @@ class HomeGpxDetailsUiTest {
 
     @Test
     fun givenGpxFile_whenImportGpxClicked_thenGpxDetailsBottomSheetIsDisplayed() {
-        Intents.init()
-
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
 
@@ -142,8 +151,6 @@ class HomeGpxDetailsUiTest {
 
     @Test
     fun givenGpxFile_whenCloseClickOnBottomSheet_thenPolylineIsRemovedAndBottomSheetIsNotDisplayed() {
-        Intents.init()
-
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
 
@@ -161,8 +168,6 @@ class HomeGpxDetailsUiTest {
 
     @Test
     fun givenGpxFile_whenNavigateToStartClicked_thenGoogleMapsDirectionsIntentIsFired() {
-        Intents.init()
-
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
 
@@ -189,8 +194,6 @@ class HomeGpxDetailsUiTest {
 
     @Test
     fun givenGpxFileWithoutAltitude_whenImportGpxClicked_thenGpxDetailsBottomSheetIsDisplayedWithoutAltitude() {
-        Intents.init()
-
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
 
@@ -208,8 +211,6 @@ class HomeGpxDetailsUiTest {
 
     @Test
     fun givenSecondGpxFile_whenImportGpxClicked_thenPreviousGpxIsCleared() {
-        Intents.init()
-
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
 
@@ -225,6 +226,18 @@ class HomeGpxDetailsUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
             R.id.homeMapView.hasOverlayCount<GpxPolyline>(1)
+        }
+    }
+
+    @Test
+    fun givenGpxDetails_whenRecreate_thenGpxDetailsDisplaysAgain() {
+        launchScenario<HomeActivity> {
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            R.id.homeMapView.hasOverlayCount<GpxPolyline>(1)
+            R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
         }
     }
 
@@ -246,6 +259,11 @@ class HomeGpxDetailsUiTest {
         private const val TEST_GPX_NAME = "dera_szurdok"
         private const val TEST_GPX_NAME_WITHOUT_ALTITUDE = "dera_szurdok_without_altitude"
         private val TEST_GPX_START_LOCATION = Location(47.68498711287975, 18.91935557126999)
+        private val DEFAULT_MY_LOCATION = Location(
+            DEFAULT_MY_LOCATION_LATITUDE,
+            DEFAULT_MY_LOCATION_LONGITUDE,
+            DEFAULT_MY_LOCATION_ALTITUDE
+        )
     }
 
 }

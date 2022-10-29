@@ -206,6 +206,61 @@ class HomePlacesUiTest {
     }
 
     @Test
+    fun givenSecondNodePlace_whenClickInSearchResults_thenSecondPlaceDisplaysOnBottomSheet() {
+        answerTestGeometries()
+        coEvery { placesRepository.getPlacesBy(any(), any()) } returns listOf(
+            DEFAULT_PLACE_NODE,
+            DEFAULT_PLACE_NODE_2
+        )
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
+            DEFAULT_PLACE_NODE.name.isTextDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE_2.name.clickWithTextInPopup()
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
+            DEFAULT_PLACE_NODE_2.name.isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenNodePlace_whenClickDirections_thenGoogleMapsDirectionsIntentIsFired() {
+        Intents.init()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            R.string.home_bottom_sheet_directions_button.clickWithText()
+
+            intended(
+                allOf(
+                    hasAction(Intent.ACTION_VIEW),
+                    hasData(
+                        GOOGLE_MAPS_DIRECTIONS_URL.format(
+                            DEFAULT_PLACE_NODE.location.latitude,
+                            DEFAULT_PLACE_NODE.location.longitude
+                        )
+                    )
+                )
+            )
+        }
+    }
+
+    @Test
     fun givenWayPlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
         answerTestPlaces()
         answerTestGeometries()
@@ -383,6 +438,7 @@ class HomePlacesUiTest {
             placeType = PlaceType.NODE,
             location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE)
         )
+        private val DEFAULT_PLACE_NODE_2 = DEFAULT_PLACE_NODE.copy(name = DEFAULT_WAY_NAME)
         private val DEFAULT_GEOMETRY_NODE = Geometry.Node(
             osmId = DEFAULT_PLACE_NODE.osmId,
             location = DEFAULT_PLACE_NODE.location

@@ -75,15 +75,15 @@ class HomeLandscapesUiTest {
 
     @BindValue
     @JvmField
+    val asyncMyLocationProvider: AsyncMyLocationProvider = mockk(relaxed = true)
+
+    @BindValue
+    @JvmField
     val layersRepository: LayersRepository = FileBasedLayersRepository(testAppContext, LayersDomainModelMapper())
 
     @BindValue
     @JvmField
     val placesRepository: PlacesRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val asyncMyLocationProvider: AsyncMyLocationProvider = mockk(relaxed = true)
 
     @BindValue
     @JvmField
@@ -160,8 +160,7 @@ class HomeLandscapesUiTest {
             DEFAULT_MY_LOCATION_LONGITUDE,
             DEFAULT_MY_LOCATION_ALTITUDE
         )
-        private val DEFAULT_CLOSE_LANDSCAPE = localLandscapes
-            .minByOrNull { DEFAULT_MY_LOCATION.distanceBetween(it.center) }!!
+        private val DEFAULT_CLOSE_LANDSCAPE = localLandscapes.minBy { DEFAULT_MY_LOCATION.distanceBetween(it.center) }
         private val DEFAULT_LANDSCAPE = Place(
             osmId = DEFAULT_LANDSCAPE_OSM_ID,
             name = DEFAULT_LANDSCAPE_NAME,

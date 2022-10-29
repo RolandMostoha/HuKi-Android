@@ -71,15 +71,15 @@ class HomeSearchBarUiTest {
 
     @BindValue
     @JvmField
+    val asyncMyLocationProvider: AsyncMyLocationProvider = mockk(relaxed = true)
+
+    @BindValue
+    @JvmField
     val layersRepository: LayersRepository = FileBasedLayersRepository(testAppContext, LayersDomainModelMapper())
 
     @BindValue
     @JvmField
     val placesRepository: PlacesRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val asyncMyLocationProvider: AsyncMyLocationProvider = mockk(relaxed = true)
 
     @BindValue
     @JvmField

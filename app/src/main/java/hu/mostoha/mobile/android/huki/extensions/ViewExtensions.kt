@@ -4,6 +4,7 @@ import android.view.View
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
 fun View.gone() {
     this.isGone = true
@@ -30,8 +31,24 @@ fun List<View>.showOnly(vararg views: View) {
         it.gone()
     }
     views.forEach { targetView ->
-        if (!this.contains(targetView)) error("Exclusive view list not contains the target view!")
+        if (!this.contains(targetView)) {
+            error("Exclusive view list does not contain the target view!")
+        }
 
         targetView.visible()
     }
 }
+
+fun List<BottomSheetDialog>.showOnly(vararg dialogs: BottomSheetDialog) {
+    forEach {
+        it.hide()
+    }
+    dialogs.forEach { targetView ->
+        if (!this.contains(targetView)) {
+            error("Exclusive dialog list does not contain the target dialog!")
+        }
+
+        targetView.show()
+    }
+}
+

@@ -41,6 +41,7 @@ import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
 import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
+import hu.mostoha.mobile.android.huki.extensions.showOnly
 import hu.mostoha.mobile.android.huki.extensions.showOverlay
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
@@ -75,6 +76,7 @@ import hu.mostoha.mobile.android.huki.ui.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.ui.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
+import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -125,6 +127,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var placeDetailsBottomSheet: PlaceDetailsBottomSheetDialog
     private lateinit var hikingRoutesBottomSheet: HikingRoutesBottomSheetDialog
     private lateinit var gpxDetailsBottomSheet: GpxDetailsBottomSheetDialog
+    private lateinit var bottomSheets: List<BottomSheetDialog>
 
     private var myLocationOverlay: MyLocationOverlay? = null
 
@@ -289,16 +292,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initBottomSheets() {
-        placeDetailsBottomSheet = PlaceDetailsBottomSheetDialog(
-            binding.homePlaceDetailsBottomSheetContainer,
-            analyticsService
-        )
-        placeDetailsBottomSheet.hide()
-
         hikingRoutesBottomSheet = HikingRoutesBottomSheetDialog(binding.homeHikingRoutesBottomSheetContainer)
-        hikingRoutesBottomSheet.hide()
-
         gpxDetailsBottomSheet = GpxDetailsBottomSheetDialog(binding.homeGpxDetailsBottomSheetContainer)
+        placeDetailsBottomSheet = PlaceDetailsBottomSheetDialog(
+            binding = binding.homePlaceDetailsBottomSheetContainer,
+            analyticsService = analyticsService
+        )
+        bottomSheets = listOf(placeDetailsBottomSheet, hikingRoutesBottomSheet, gpxDetailsBottomSheet)
+
+        placeDetailsBottomSheet.hide()
+        hikingRoutesBottomSheet.hide()
         gpxDetailsBottomSheet.hide()
     }
 
@@ -578,7 +581,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             iconDrawable = R.drawable.ic_marker_poi.toDrawable(this),
             onClick = { marker ->
                 initNodeBottomSheet(placeUiModel, marker)
-                placeDetailsBottomSheet.hide()
 
                 if (boundingBox != null) {
                     homeMapView.zoomToBoundingBox(
@@ -592,7 +594,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         )
 
         initNodeBottomSheet(placeUiModel, marker)
-        placeDetailsBottomSheet.hide()
 
         if (boundingBox != null) {
             homeMapView.zoomToBoundingBox(boundingBox.toOsmBoundingBox(), true)
@@ -612,7 +613,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 geoPoints = geoPoints,
                 onClick = { polygon ->
                     initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polygon))
-                    placeDetailsBottomSheet.hide()
                     homeMapView.zoomToBoundingBox(boundingBoxWithOffset, true)
                 }
             )
@@ -621,14 +621,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 geoPoints = geoPoints,
                 onClick = { polyline ->
                     initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polyline))
-                    placeDetailsBottomSheet.hide()
                     homeMapView.zoomToBoundingBox(boundingBoxWithOffset, true)
                 }
             )
         }
 
         initWayBottomSheet(placeDetails.placeUiModel, boundingBox, listOf(polyOverlay))
-        placeDetailsBottomSheet.hide()
 
         homeMapView.zoomToBoundingBox(boundingBoxWithOffset, true)
     }
@@ -647,7 +645,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 geoPoints = geoPoints,
                 onClick = {
                     initWayBottomSheet(placeDetails.placeUiModel, boundingBox, overlays)
-                    placeDetailsBottomSheet.hide()
                     homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(homeMapView), true)
                 }
             )
@@ -656,7 +653,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
 
         initWayBottomSheet(placeDetails.placeUiModel, boundingBox, overlays)
-        placeDetailsBottomSheet.hide()
 
         homeMapView.zoomToBoundingBox(boundingBox.withDefaultOffset(homeMapView), true)
     }
@@ -713,6 +709,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             gpxDetails = gpxDetailsUiModel,
             onCloseClick = { layersViewModel.clearGpxDetails() }
         )
+        bottomSheets.showOnly(gpxDetailsBottomSheet)
     }
 
     private fun initHikingRoutesBottomSheet(hikingRoutes: List<HikingRoutesItem>) {
@@ -725,7 +722,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             },
             onCloseClick = { homeViewModel.clearHikingRoutes() }
         )
-        placeDetailsBottomSheet.hide()
+        bottomSheets.showOnly(hikingRoutesBottomSheet)
     }
 
     private fun initNodeBottomSheet(placeUiModel: PlaceUiModel, marker: Marker) {
@@ -754,6 +751,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeViewModel.clearPlaceDetails()
             }
         )
+        bottomSheets.showOnly(placeDetailsBottomSheet)
     }
 
     private fun initWayBottomSheet(placeUiModel: PlaceUiModel, boundingBox: BoundingBox, overlays: List<Overlay>) {
@@ -774,6 +772,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeViewModel.clearPlaceDetails()
             }
         )
+        bottomSheets.showOnly(placeDetailsBottomSheet)
     }
 
 }
