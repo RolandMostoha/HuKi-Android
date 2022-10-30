@@ -56,8 +56,8 @@
 
     <dimen name="home_copyright_bottom_margin">13dp</dimen>
 
-    <dimen name="home_map_view_top_offset">100dp</dimen>
-    <dimen name="home_map_view_bottom_offset">90dp</dimen>
+    <dimen name="home_map_view_top_offset">120dp</dimen>
+    <dimen name="home_map_view_bottom_offset">180dp</dimen>
     <dimen name="home_map_view_start_offset">60dp</dimen>
     <dimen name="home_map_view_end_offset">60dp</dimen>
 

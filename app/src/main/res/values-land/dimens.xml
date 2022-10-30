@@ -5,4 +5,9 @@
 
     <dimen name="home_copyright_bottom_margin">@dimen/space_medium</dimen>
 
+    <dimen name="home_map_view_top_offset">110dp</dimen>
+    <dimen name="home_map_view_bottom_offset">50dp</dimen>
+    <dimen name="home_map_view_start_offset">20dp</dimen>
+    <dimen name="home_map_view_end_offset">20dp</dimen>
+
 </resources>

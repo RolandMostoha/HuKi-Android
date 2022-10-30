@@ -60,20 +60,14 @@ fun BoundingBox.withOffset(
 
 fun BoundingBox.withDefaultOffset(mapView: MapView): BoundingBox {
     return withOffset(
-        mapView,
-        R.dimen.home_map_view_top_offset,
-        R.dimen.home_map_view_bottom_offset,
-        R.dimen.home_map_view_start_offset,
-        R.dimen.home_map_view_end_offset
+        mapView = mapView,
+        top = R.dimen.home_map_view_top_offset,
+        bottom = R.dimen.home_map_view_bottom_offset,
+        left = R.dimen.home_map_view_start_offset,
+        right = R.dimen.home_map_view_end_offset
     )
 }
 
 fun DomainBoundingBox.withDefaultOffset(mapView: MapView): BoundingBox {
-    return this.toOsmBoundingBox().withOffset(
-        mapView,
-        R.dimen.home_map_view_top_offset,
-        R.dimen.home_map_view_bottom_offset,
-        R.dimen.home_map_view_start_offset,
-        R.dimen.home_map_view_end_offset
-    )
+    return this.toOsmBoundingBox().withDefaultOffset(mapView)
 }
