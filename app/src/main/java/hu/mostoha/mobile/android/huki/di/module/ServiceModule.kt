@@ -6,11 +6,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
 abstract class ServiceModule {
 
+    @Singleton
     @Binds
     abstract fun bindAnalyticsService(analyticsService: FirebaseAnalyticsService): AnalyticsService
 

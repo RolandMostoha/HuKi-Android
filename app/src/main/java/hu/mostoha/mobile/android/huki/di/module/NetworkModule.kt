@@ -19,11 +19,13 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
+    @Singleton
     @Provides
     fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder()
@@ -48,6 +50,7 @@ class NetworkModule {
             .build()
     }
 
+    @Singleton
     @Provides
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
@@ -55,6 +58,7 @@ class NetworkModule {
             .build()
     }
 
+    @Singleton
     @Provides
     fun provideOverpassService(okHttpClient: OkHttpClient, moshi: Moshi): OverpassService {
         return Retrofit.Builder()
@@ -65,6 +69,7 @@ class NetworkModule {
             .create(OverpassService::class.java)
     }
 
+    @Singleton
     @Provides
     fun providePhotonService(okHttpClient: OkHttpClient, moshi: Moshi): PhotonService {
         return Retrofit.Builder()
