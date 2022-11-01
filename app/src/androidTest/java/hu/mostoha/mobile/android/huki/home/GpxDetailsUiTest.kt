@@ -66,7 +66,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, LocationModule::class)
-class HomeGpxDetailsUiTest {
+class GpxDetailsUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

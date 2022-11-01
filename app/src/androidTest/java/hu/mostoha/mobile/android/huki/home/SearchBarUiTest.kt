@@ -55,7 +55,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class, LocationModule::class)
-class HomeSearchBarUiTest {
+class SearchBarUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

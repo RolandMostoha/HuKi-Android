@@ -54,7 +54,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class)
-class HomeLayersUiTest {
+class LayersUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

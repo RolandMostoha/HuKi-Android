@@ -28,7 +28,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-class HomeContactUiTest {
+class ContactUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

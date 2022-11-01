@@ -47,7 +47,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class)
-class HomeHikingRoutesUiTest {
+class HikingRoutesUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

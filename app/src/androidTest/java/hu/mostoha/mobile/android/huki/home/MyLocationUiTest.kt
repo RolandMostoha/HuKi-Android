@@ -42,7 +42,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(LocationModule::class)
-class HomeMyLocationUiTest {
+class MyLocationUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
