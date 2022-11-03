@@ -19,7 +19,6 @@
     <color name="colorCopyright">#61ffffff</color>
     <color name="colorStrokeGpxMarker">#1a1a1a</color>
     <color name="colorFillGpxStartMarker">#DEDEDE</color>
-    <color name="colorFillGpxEndMarker">@color/colorPrimary</color>
     <color name="colorIconGpxStartMarker">@color/colorBackground</color>
 
 </resources>

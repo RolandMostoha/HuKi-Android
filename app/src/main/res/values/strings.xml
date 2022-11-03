@@ -5,7 +5,6 @@
 
     <string name="error_message_unknown">Unexpected error has occurred!\nThe error has been sent for further investigation!</string>
     <string name="error_message_missing_osm_id">The place with the corresponding OSM ID does not exist.</string>
-    <string name="error_message_missing_relation_bounding_box">Could not fetch the positions of the OSM relation.</string>
     <string name="error_message_too_many_requests">Too many requests initiated from the device! Please try again later.</string>
     <string name="error_message_gateway_timeout">Openstreetmap timeout! Please try again.</string>
     <string name="error_message_gpx_parse_failed">Cannot process GPX. Please check its format.</string>
@@ -46,6 +45,7 @@
     <string name="accessibility_home_fab_layers">Layers</string>
     <string name="accessibility_home_fab_routes_nearby">Routes nearby</string>
     <string name="accessibility_home_fab_my_location">My location</string>
+    <string name="accessibility_home_fab_contact">Contact</string>
 
     <string name="licences_osm_copyright_notice">© OpenStreetMap contributors</string>
     <string name="licences_title">Licenses</string>

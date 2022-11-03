@@ -6,7 +6,11 @@ import android.view.WindowManager
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
 import hu.mostoha.mobile.android.huki.R
 
 fun AppCompatActivity.setStatusBarColor(@ColorRes colorRes: Int) {

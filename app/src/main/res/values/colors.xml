@@ -23,7 +23,6 @@
     <color name="colorScaleDarkMap">#2A2A2A</color>
     <color name="colorStrokeGpxMarker">@color/colorMarker</color>
     <color name="colorFillGpxStartMarker">@color/colorBackground</color>
-    <color name="colorFillGpxEndMarker">@color/colorPrimary</color>
     <color name="colorIconGpxStartMarker">@color/colorPrimaryIcon</color>
 
     <color name="colorSymbolStroke">#000000</color>

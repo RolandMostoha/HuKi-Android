@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        tools:src="@drawable/ic_hiking" />
+        tools:src="@drawable/ic_home_fab_hiking_routes" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         style="@style/DefaultCircularProgressIndicator"

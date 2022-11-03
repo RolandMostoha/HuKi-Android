@@ -4,10 +4,13 @@ detekt {
     config = files("${rootProject.projectDir}/tools/quality/HuKi-detekt.yml")
 
     autoCorrect = true
+}
 
+tasks.named("detekt").configure {
     reports {
-        html.enabled = true
-        xml.enabled = true
-        txt.enabled = true
+        xml.required.set(true)
+        html.required.set(true)
+        txt.required.set(true)
+        md.required.set(true)
     }
 }

@@ -152,7 +152,7 @@ class LayersViewModelTest {
         }
 
     @Test
-    fun `Given loaded GPX, when select GPX layer, then layer adapter items are updated`() =
+    fun `Given loaded GPX, when deselect GPX layer, then layer adapter items are updated`() =
         runTestDefault {
             every { layersInteractor.requestGpxDetails(gpxFileUri) } returns flowOf(DEFAULT_GPX_DETAILS)
 
@@ -166,11 +166,12 @@ class LayersViewModelTest {
 
                 assertThat(awaitItem()).isEqualTo(
                     createSelectedAdapterItems(
-                        listOf(
-                            LayerType.MAPNIK,
-                            LayerType.HUNGARIAN_HIKING_LAYER,
-                            LayerType.GPX
-                        )
+                        listOf(LayerType.MAPNIK, LayerType.HUNGARIAN_HIKING_LAYER, LayerType.GPX)
+                    )
+                )
+                assertThat(awaitItem()).isEqualTo(
+                    createSelectedAdapterItems(
+                        listOf(LayerType.MAPNIK, LayerType.HUNGARIAN_HIKING_LAYER)
                     )
                 )
             }

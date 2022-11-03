@@ -5,7 +5,6 @@
 
     <string name="error_message_unknown">Nem várt hiba történt!\nAz eset továbbítva lett fejlesztői kivizsgálásra.</string>
     <string name="error_message_missing_osm_id">Az OSM ID-hez kapcsolódó hely nem létezik.</string>
-    <string name="error_message_missing_relation_bounding_box">Nem sikerült lekérdezni az OSM kapcsolat koordinátáit.</string>
     <string name="error_message_too_many_requests">Túl sok kérés indult az eszközről! Kérjük próbálkozz később.</string>
     <string name="error_message_gateway_timeout">Openstreetmap időtúllépés! Kérjük próbáld újra.</string>
     <string name="error_message_gpx_parse_failed">GPX feldolgozási hiba. Kérjük ellenőrizd a formátumát!</string>
@@ -46,6 +45,7 @@
     <string name="accessibility_home_fab_layers">Rétegek</string>
     <string name="accessibility_home_fab_routes_nearby">Túrautak a közelben</string>
     <string name="accessibility_home_fab_my_location">Saját pozícióm</string>
+    <string name="accessibility_home_fab_contact">Kapcsolat</string>
 
     <string name="licences_osm_copyright_notice">© OpenStreetMap közreműködők</string>
     <string name="licences_title">Licencek</string>

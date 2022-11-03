@@ -19,7 +19,7 @@
         android:theme="@style/BaseTheme.HuKiTheme">
 
         <activity
-            android:name="hu.mostoha.mobile.android.huki.ui.home.HomeActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
 
