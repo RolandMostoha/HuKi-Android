@@ -6,10 +6,12 @@ import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedExcepti
 import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
 import hu.mostoha.mobile.android.huki.interactor.exception.TooManyRequestsException
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
+import hu.mostoha.mobile.android.huki.interactor.exception.UnknownHostDomainException
 import kotlinx.coroutines.CancellationException
 import org.xmlpull.v1.XmlPullParserException
 import retrofit2.HttpException
 import java.io.FileNotFoundException
+import java.net.UnknownHostException
 
 object DomainExceptionMapper {
 
@@ -23,6 +25,9 @@ object DomainExceptionMapper {
             }
             exception is HttpException && exception.code() == HTTP_CODE_GATEWAY_TIMEOUT -> {
                 GatewayTimeoutException(exception)
+            }
+            exception is UnknownHostException -> {
+                UnknownHostDomainException(exception)
             }
             exception is CancellationException -> {
                 JobCancellationException(exception)
