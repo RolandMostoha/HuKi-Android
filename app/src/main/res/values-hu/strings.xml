@@ -7,6 +7,7 @@
     <string name="error_message_missing_osm_id">Az OSM ID-hez kapcsolódó hely nem létezik.</string>
     <string name="error_message_too_many_requests">Túl sok kérés indult az eszközről! Kérjük próbálkozz később.</string>
     <string name="error_message_gateway_timeout">Openstreetmap időtúllépés! Kérjük próbáld újra.</string>
+    <string name="error_message_unknown_host">Az OpenStreetMap rendszere nem elérhető. Kérjük próbálkozz később.</string>
     <string name="error_message_gpx_parse_failed">GPX feldolgozási hiba. Kérjük ellenőrizd a formátumát!</string>
 
     <string name="default_distance_template_m">%d m</string>
