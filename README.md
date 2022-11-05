@@ -25,11 +25,11 @@ Huge shout out to the inspiration of this project: [turistautak.openstreetmap.hu
 - Free-text search for places in OpenStreetMap databases
 - Landscapes, routes-nearby function
 - Current location monitoring with elevation support
+- Importing and displaying routes from GPX files
 - Dark mode support
 
 ### Future plans
 
-- Importing and displaying routes from GPX files
 - Hiking route planner (similar to [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/turautvonal.php))
 
 ### What is it NOT good for
