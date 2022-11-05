@@ -88,9 +88,13 @@ dependencies {
 
     implementation project(':osm-overpasser')
 
-    def kotlinxCoroutinesVersion = "1.6.4"
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+
+    // Design
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation "com.google.android.material:material:1.7.0"
     implementation "androidx.appcompat:appcompat:1.5.1"
 
     // Hilt
@@ -131,10 +135,6 @@ dependencies {
     implementation "com.amplifyframework:core:$awsVersion"
     implementation "com.amplifyframework:aws-storage-s3:$awsVersion"
     implementation "com.amplifyframework:aws-auth-cognito:$awsVersion"
-
-    // Design
-    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "com.google.android.material:material:1.7.0"
 
     // Logging
     implementation "com.jakewharton.timber:timber:5.0.1"

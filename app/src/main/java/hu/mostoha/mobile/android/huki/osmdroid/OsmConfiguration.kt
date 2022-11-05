@@ -20,10 +20,10 @@ class OsmConfiguration @Inject constructor(
 
     companion object {
         /**
-         *  Default cache size increased from 600MB to 1000MB
+         *  Default cache size increased from 600MB to 800MB
          */
-        private const val TILE_FILE_SYSTEM_CACHE_MAX_BYTES = 1000L * 1024 * 1024
-        private const val TILE_FILE_SYSTEM_CACHE_TARGET_BYTES = 900L * 1024 * 1024
+        private const val TILE_FILE_SYSTEM_CACHE_MAX_BYTES = 800L * 1024 * 1024
+        private const val TILE_FILE_SYSTEM_CACHE_TARGET_BYTES = 700L * 1024 * 1024
 
         /**
          *  Default tile count cache is doubled - the app uses 2 tile layers by default
