@@ -114,7 +114,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
     // Google Play Services Location
-    implementation "com.google.android.gms:play-services-location:21.0.0"
+    implementation "com.google.android.gms:play-services-location:21.0.1"
 
     // GPX Parser
     implementation 'com.github.ticofab:android-gpx-parser:2.3.0'
