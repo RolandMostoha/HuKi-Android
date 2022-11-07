@@ -2,9 +2,9 @@ package hu.mostoha.mobile.android.huki.interactor
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.interactor.exception.GatewayTimeoutException
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
 import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
+import hu.mostoha.mobile.android.huki.interactor.exception.TimeoutException
 import hu.mostoha.mobile.android.huki.interactor.exception.TooManyRequestsException
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import hu.mostoha.mobile.android.huki.ui.util.toMessage
@@ -15,6 +15,7 @@ import org.xmlpull.v1.XmlPullParserException
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.FileNotFoundException
+import java.net.SocketTimeoutException
 
 class DomainExceptionMapperTest {
 
@@ -29,12 +30,22 @@ class DomainExceptionMapperTest {
     }
 
     @Test
-    fun `Given HTTP 504 Gateway Timeout exception, when map, then GatewayTimeoutException returns`() {
+    fun `Given HTTP 504 Gateway Timeout exception, when map, then TimeoutException returns`() {
         val exception = HttpException(Response.error<Unit>(504, "".toResponseBody()))
 
         val mappedException = DomainExceptionMapper.map(exception)
 
-        assertThat(mappedException).isEqualTo(GatewayTimeoutException(exception))
+        assertThat(mappedException).isEqualTo(TimeoutException(exception))
+        assertThat(mappedException.messageRes).isEqualTo(R.string.error_message_gateway_timeout.toMessage())
+    }
+
+    @Test
+    fun `Given SocketTimeoutException exception, when map, then TimeoutException returns`() {
+        val exception = SocketTimeoutException("Failed to connect!")
+
+        val mappedException = DomainExceptionMapper.map(exception)
+
+        assertThat(mappedException).isEqualTo(TimeoutException(exception))
         assertThat(mappedException.messageRes).isEqualTo(R.string.error_message_gateway_timeout.toMessage())
     }
 
