@@ -490,6 +490,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeViewModel.clearFollowLocation()
 
                 layersViewModel.loadGpx(intent.data)
+
+                analyticsService.gpxImportedByIntent()
             }
         }
     }

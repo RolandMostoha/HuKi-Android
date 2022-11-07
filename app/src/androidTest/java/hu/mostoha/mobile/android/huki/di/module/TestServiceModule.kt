@@ -1,17 +1,22 @@
 package hu.mostoha.mobile.android.huki.di.module
 
-import dagger.Binds
 import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.Provides
+import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.service.FakeAnalyticsService
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
-abstract class TestServiceModule {
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [ServiceModule::class]
+)
+class TestServiceModule {
 
-    @Binds
-    abstract fun bindAnalyticsService(analyticsService: FakeAnalyticsService): AnalyticsService
+    @Singleton
+    @Provides
+    fun provideAnalyticsService(): AnalyticsService = FakeAnalyticsService()
 
 }

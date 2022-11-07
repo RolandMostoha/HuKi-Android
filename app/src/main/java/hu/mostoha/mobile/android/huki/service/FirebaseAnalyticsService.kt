@@ -19,6 +19,9 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_HIKING_ROUTE = "select_hiking_route"
         private const val EVENT_SELECT_MY_LOCATION = "select_my_location"
         private const val EVENT_SELECT_MAPS_DIRECTIONS = "select_maps_directions"
+        private const val EVENT_GPX_IMPORT_CLICKED = "gpx_import_clicked"
+        private const val EVENT_GPX_IMPORTED_BY_INTENT = "gpx_imported_by_intent"
+        private const val EVENT_GPX_IMPORTED_BY_FILE_EXPLORER = "gpx_imported_by_file_explorer"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
         private const val EVENT_DESTROYED = "destroyed"
 
@@ -76,6 +79,18 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_MAPS_DIRECTIONS) {
             param(PARAM_NAVIGATION_PLACE_NAME, destinationPlaceName)
         }
+    }
+
+    override fun gpxImportClicked() {
+        firebaseAnalytics.logEvent(EVENT_GPX_IMPORT_CLICKED, null)
+    }
+
+    override fun gpxImportedByIntent() {
+        firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED_BY_INTENT, null)
+    }
+
+    override fun gpxImportedByFileExplorer() {
+        firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED_BY_FILE_EXPLORER, null)
     }
 
     override fun copyrightClicked() {

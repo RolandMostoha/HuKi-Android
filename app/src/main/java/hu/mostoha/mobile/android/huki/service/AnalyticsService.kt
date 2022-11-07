@@ -18,6 +18,12 @@ interface AnalyticsService {
 
     fun navigationClicked(destinationPlaceName: String)
 
+    fun gpxImportClicked()
+
+    fun gpxImportedByIntent()
+
+    fun gpxImportedByFileExplorer()
+
     fun copyrightClicked()
 
     fun destroyed()

@@ -13,15 +13,19 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.databinding.FragmentLayersBottomSheetDialogBinding
 import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_HEADER
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_ITEMS
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_MAX
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
@@ -29,6 +33,9 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
         val TAG = LayersBottomSheetDialogFragment::class.java.simpleName + ".TAG"
     }
+
+    @Inject
+    lateinit var analyticsService: AnalyticsService
 
     private val layersViewModel: LayersViewModel by activityViewModels()
 
@@ -38,6 +45,10 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val openGpxFileResultLauncher = registerForActivityResult(OpenDocument()) { gpxFileUri: Uri? ->
         lifecycleScope.launch {
             layersViewModel.loadGpx(gpxFileUri)
+
+            if (gpxFileUri != null) {
+                analyticsService.gpxImportedByFileExplorer()
+            }
 
             dismiss()
         }
@@ -108,6 +119,8 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
             onActionButtonClick = { layerType ->
                 if (layerType == LayerType.GPX) {
                     openGpxFileResultLauncher.launch(arrayOf(GPX_FILE_OPEN_MIME_TYPE))
+
+                    analyticsService.gpxImportClicked()
                 }
             }
         )

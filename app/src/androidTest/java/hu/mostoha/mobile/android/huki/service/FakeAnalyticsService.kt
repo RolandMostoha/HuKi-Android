@@ -18,6 +18,12 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun navigationClicked(destinationPlaceName: String) = Unit
 
+    override fun gpxImportClicked() = Unit
+
+    override fun gpxImportedByIntent() = Unit
+
+    override fun gpxImportedByFileExplorer() = Unit
+
     override fun copyrightClicked() = Unit
 
     override fun destroyed() = Unit
