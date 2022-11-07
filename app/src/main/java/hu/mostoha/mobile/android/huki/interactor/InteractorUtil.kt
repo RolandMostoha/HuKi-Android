@@ -32,7 +32,7 @@ fun <T> transformRequestToFlow(request: suspend () -> T, exceptionLogger: Except
                 DomainExceptionMapper.map(exception)
             }
 
-            if (!BuildConfig.DEBUG && exception !is JobCancellationException) {
+            if (!BuildConfig.DEBUG && mappedException !is JobCancellationException) {
                 exceptionLogger.recordException(exception)
             }
 
