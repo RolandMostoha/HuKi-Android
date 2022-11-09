@@ -6,7 +6,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.getFileName
 import hu.mostoha.mobile.android.huki.extensions.readRawJson
-import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
+import hu.mostoha.mobile.android.huki.interactor.exception.GpxUriNullException
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
@@ -27,7 +27,7 @@ class FileBasedLayersRepository @Inject constructor(
         Timber.d("Importing GPX by URI: $fileUri")
 
         if (fileUri == null) {
-            throw GpxParseFailedException(IllegalArgumentException("Uri is null"))
+            throw GpxUriNullException(IllegalArgumentException("Uri is null"))
         }
 
         val inputStream = context.contentResolver.openInputStream(fileUri)

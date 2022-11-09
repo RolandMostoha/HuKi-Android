@@ -9,6 +9,7 @@
     <string name="error_message_gateway_timeout">Openstreetmap timeout! Please try again.</string>
     <string name="error_message_unknown_host">The OpenStreetMap system is currently unavailable. Please try again later.</string>
     <string name="error_message_gpx_parse_failed">Cannot process GPX. Please check its format.</string>
+    <string name="error_message_gpx_uri_null">Unsuccessful choice. Try again with a valid GPX file.</string>
 
     <string name="default_distance_template_m">%d m</string>
     <string name="default_distance_template_km">%s km</string>

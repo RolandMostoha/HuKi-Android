@@ -33,10 +33,7 @@ object DomainExceptionMapper {
             exception is CancellationException -> {
                 JobCancellationException(exception)
             }
-            exception is FileNotFoundException -> {
-                GpxParseFailedException(exception)
-            }
-            exception is XmlPullParserException -> {
+            exception is FileNotFoundException || exception is XmlPullParserException -> {
                 GpxParseFailedException(exception)
             }
             else -> UnknownException(exception)

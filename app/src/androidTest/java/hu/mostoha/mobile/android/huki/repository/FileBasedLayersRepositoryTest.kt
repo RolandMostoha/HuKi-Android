@@ -7,7 +7,7 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
-import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
+import hu.mostoha.mobile.android.huki.interactor.exception.GpxUriNullException
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -59,7 +59,7 @@ class FileBasedLayersRepositoryTest {
     fun givenNullGpxFileUri_whenGetGpx_thenGpxParsedExceptionThrows() {
         val uri = null
 
-        assertThrows(GpxParseFailedException::class.java) {
+        assertThrows(GpxUriNullException::class.java) {
             runTest {
                 repository.getGpxDetails(uri)
             }
