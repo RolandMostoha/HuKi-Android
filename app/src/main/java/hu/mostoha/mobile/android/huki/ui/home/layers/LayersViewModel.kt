@@ -15,9 +15,9 @@ import hu.mostoha.mobile.android.huki.model.domain.LayersConfig
 import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
 import hu.mostoha.mobile.android.huki.model.mapper.LayersUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
-import hu.mostoha.mobile.android.huki.ui.util.Message
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow

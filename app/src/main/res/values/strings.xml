@@ -23,7 +23,6 @@
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>
 
     <string name="gpx_details_bottom_sheet_distance">Distance: %s</string>
-    <string name="gpx_details_bottom_sheet_altitude_range">%s - %s</string>
     <string name="gpx_details_bottom_sheet_navigate_start_button">Navigate to start</string>
 
     <string name="map_place_name_routes_nearby">Hiking trails in map</string>

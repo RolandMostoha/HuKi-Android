@@ -14,7 +14,7 @@ import hu.mostoha.mobile.android.huki.model.network.overpass.Geom
 import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
 import hu.mostoha.mobile.android.huki.model.network.photon.OsmType
 import hu.mostoha.mobile.android.huki.model.network.photon.PhotonQueryResponse
-import hu.mostoha.mobile.android.huki.ui.util.toMessage
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import javax.inject.Inject
 

@@ -19,6 +19,7 @@
     <dimen name="icon_size_medium">24dp</dimen>
     <dimen name="icon_size_large">26dp</dimen>
     <dimen name="icon_size_extra_large">30dp</dimen>
+    <dimen name="icon_size_extra_extra_large">32dp</dimen>
 
     <dimen name="default_button_vertical_padding">8dp</dimen>
     <dimen name="default_elevation">5dp</dimen>
@@ -30,8 +31,9 @@
     <dimen name="default_corner_size_input">30dp</dimen>
     <dimen name="default_corner_size_drag_view">60dp</dimen>
     <dimen name="default_icon_only_button_size">50dp</dimen>
-    <dimen name="default_polygon_stroke_width">4dp</dimen>
-    <dimen name="default_polyline_stroke_width">6dp</dimen>
+    <dimen name="default_polygon_width">4dp</dimen>
+    <dimen name="default_polyline_width">7dp</dimen>
+    <dimen name="default_polyline_fill_width">5dp</dimen>
     <dimen name="default_horizontal_separator_width">1dp</dimen>
 
     <dimen name="progress_fab_progress_bar_size_mini">46dp</dimen>
@@ -67,5 +69,7 @@
 
     <dimen name="layers_image_stroke_width">3dp</dimen>
     <dimen name="layers_layer_title_bottom_margin">7dp</dimen>
+
+    <dimen name="gpx_details_altitude_range_view_height">10dp</dimen>
 
 </resources>

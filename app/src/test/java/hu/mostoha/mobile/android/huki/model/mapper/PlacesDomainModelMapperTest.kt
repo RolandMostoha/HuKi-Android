@@ -21,6 +21,7 @@ import hu.mostoha.mobile.android.huki.model.network.photon.OsmType
 import hu.mostoha.mobile.android.huki.model.network.photon.PhotonGeometry
 import hu.mostoha.mobile.android.huki.model.network.photon.PhotonQueryResponse
 import hu.mostoha.mobile.android.huki.model.network.photon.Properties
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_JEL
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
@@ -34,7 +35,6 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_2_GEOMETRY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_2_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
-import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import org.junit.Assert.assertThrows
 import org.junit.Test

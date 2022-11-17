@@ -14,72 +14,62 @@
         style="@style/DragViewStyle"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/space_medium"
-        android:layout_marginBottom="@dimen/space_medium" />
+        android:layout_marginBottom="@dimen/space_small" />
 
     <LinearLayout
-        android:id="@+id/gpxDetailsContentContainer"
+        android:id="@+id/gpxDetailsHeaderContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_extra_large"
+        android:layout_marginEnd="@dimen/space_medium"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/gpxDetailsImage"
-            android:layout_width="@dimen/place_details_bottom_sheet_image_size"
-            android:layout_height="@dimen/place_details_bottom_sheet_image_size"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/space_extra_large"
-            android:layout_marginEnd="@dimen/space_medium"
-            android:padding="@dimen/space_extra_small"
-            android:src="@drawable/ic_gpx_details" />
-
-        <LinearLayout
-            android:id="@+id/gpxDetailsTextContainer"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/gpxDetailsPrimaryText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/gpxDetailsPrimaryText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
-                tools:text="Dera szurdok.gpx" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/gpxDetailsSecondaryText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_extra_small"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
-                tools:text="Távolság: 50 km" />
-
-        </LinearLayout>
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
+            tools:text="Dera szurdok.gpx" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/gpxDetailsCloseButton"
             style="@style/DefaultButton.IconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_medium"
             app:icon="@drawable/ic_bottom_sheet_clear" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/gpxDetailsAltitudeDetailsContainer"
+        android:id="@+id/gpxDetailsAttributesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
         android:gravity="center_horizontal"
-        android:layout_marginTop="@dimen/space_medium"
         android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/gpxDetailsDistanceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_medium"
+            android:drawableEnd="@drawable/ic_gpx_details_distance"
+            android:drawablePadding="@dimen/space_extra_small"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+            tools:text="14 km" />
+
+        <View
+            android:id="@+id/gpxDetailsUphillTextSeparator"
+            android:layout_width="@dimen/default_horizontal_separator_width"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/space_medium"
+            android:background="@color/colorStroke" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/gpxDetailsUphillText"
@@ -93,6 +83,7 @@
             tools:text="500 m" />
 
         <View
+            android:id="@+id/gpxDetailsDownhillTextSeparator"
             android:layout_width="@dimen/default_horizontal_separator_width"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/space_medium"
@@ -109,22 +100,38 @@
             android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
             tools:text="300 m" />
 
-        <View
-            android:layout_width="@dimen/default_horizontal_separator_width"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/space_medium"
-            android:background="@color/colorStroke" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/gpxDetailsAltitudeRangeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_large"
+        android:layout_marginTop="@dimen/space_large"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gpxDetailsAltitudeRangeText"
+            android:id="@+id/gpxDetailsAltitudeRangeStartText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_medium"
-            android:drawableEnd="@drawable/ic_gpx_details_altitude_range"
-            android:drawablePadding="@dimen/space_extra_small"
-            android:gravity="center_vertical"
             android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
-            tools:text="300 m - 800 m" />
+            tools:text="300 m" />
+
+        <View
+            android:id="@+id/gpxDetailsAltitudeRangeView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/gpx_details_altitude_range_view_height"
+            android:layout_marginHorizontal="@dimen/space_medium"
+            android:layout_weight="1"
+            android:background="@drawable/background_gpx_details_altitude_range" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/gpxDetailsAltitudeRangeEndText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+            tools:text="800 m" />
 
     </LinearLayout>
 
@@ -133,9 +140,9 @@
         style="@style/DefaultButton.Contained.Shadowless.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:layout_marginTop="@dimen/space_medium"
         android:layout_marginEnd="@dimen/space_extra_large"
-        android:layout_gravity="end"
         android:text="@string/gpx_details_bottom_sheet_navigate_start_button"
         app:icon="@drawable/ic_home_bottom_sheet_directions" />
 

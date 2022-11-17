@@ -11,12 +11,12 @@ import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.ui.GpxAltitudeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileUrlProvider
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
+import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
-import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
-import hu.mostoha.mobile.android.huki.ui.util.Message
 import io.mockk.mockk
 import org.junit.Test
 import org.osmdroid.util.BoundingBox

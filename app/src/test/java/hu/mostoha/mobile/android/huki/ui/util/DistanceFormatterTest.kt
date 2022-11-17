@@ -2,6 +2,8 @@ package hu.mostoha.mobile.android.huki.ui.util
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import org.junit.Test
 
 class DistanceFormatterTest {

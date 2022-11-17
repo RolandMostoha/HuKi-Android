@@ -71,11 +71,11 @@ import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placedetails.PlaceDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarAdapter
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
-import hu.mostoha.mobile.android.huki.ui.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
-import hu.mostoha.mobile.android.huki.ui.util.getBrightnessColorMatrix
-import hu.mostoha.mobile.android.huki.ui.util.getColorScaledMatrix
+import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_ZOOM_THRESHOLD_ROUTES_NEARBY
+import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
+import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -679,15 +679,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.addGpxPolyline(
             overlayId = gpxDetailsUiModel.id,
             geoPoints = gpxDetailsUiModel.geoPoints,
-            onClick = {
-                gpxDetailsBottomSheet.show()
-                homeMapView.zoomToBoundingBox(gpxDetailsUiModel.boundingBox.withDefaultOffset(homeMapView), true)
-            }
-        )
-        homeMapView.addGpxMarker(
-            overlayId = gpxDetailsUiModel.id,
-            geoPoint = gpxDetailsUiModel.start,
-            iconDrawable = R.drawable.ic_marker_gpx_start.toDrawable(this@HomeActivity),
+            hasAltitudeValues = gpxDetailsUiModel.gpxAltitudeUiModel != null,
             onClick = {
                 gpxDetailsBottomSheet.show()
                 homeMapView.zoomToBoundingBox(gpxDetailsUiModel.boundingBox.withDefaultOffset(homeMapView), true)
@@ -704,6 +696,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             )
         }
+        homeMapView.addGpxMarker(
+            overlayId = gpxDetailsUiModel.id,
+            geoPoint = gpxDetailsUiModel.start,
+            iconDrawable = R.drawable.ic_marker_gpx_start.toDrawable(this@HomeActivity),
+            onClick = {
+                gpxDetailsBottomSheet.show()
+                homeMapView.zoomToBoundingBox(gpxDetailsUiModel.boundingBox.withDefaultOffset(homeMapView), true)
+            }
+        )
 
         homeMapView.zoomToBoundingBox(gpxDetailsUiModel.boundingBox.withDefaultOffset(homeMapView), true)
 

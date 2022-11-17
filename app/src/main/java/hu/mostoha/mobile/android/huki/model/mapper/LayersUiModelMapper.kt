@@ -9,8 +9,8 @@ import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.ui.GpxAltitudeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
+import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
-import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
 import org.osmdroid.util.BoundingBox
 import javax.inject.Inject
 

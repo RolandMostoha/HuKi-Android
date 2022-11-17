@@ -144,7 +144,7 @@ class GpxDetailsUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
-            R.id.gpxDetailsAltitudeDetailsContainer.isDisplayed()
+            R.id.gpxDetailsAttributesContainer.isDisplayed()
             TEST_GPX_NAME.isTextDisplayed()
         }
     }
@@ -204,7 +204,9 @@ class GpxDetailsUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
-            R.id.gpxDetailsAltitudeDetailsContainer.isNotDisplayed()
+            R.id.gpxDetailsAltitudeRangeContainer.isNotDisplayed()
+            R.id.gpxDetailsUphillTextSeparator.isNotDisplayed()
+            R.id.gpxDetailsDownhillTextSeparator.isNotDisplayed()
             TEST_GPX_NAME_WITHOUT_ALTITUDE.isTextDisplayed()
         }
     }
@@ -242,8 +244,8 @@ class GpxDetailsUiTest {
     }
 
     private fun getTestGpxFileResult(fileName: String = TEST_GPX_NAME): Instrumentation.ActivityResult {
-        val inputStream = testContext.assets.open("$fileName.gpx")
-        val file = File(testAppContext.cacheDir.path + "/$fileName.gpx").apply {
+        val inputStream = testContext.assets.open(fileName)
+        val file = File(testAppContext.cacheDir.path + "/$fileName").apply {
             copyFrom(inputStream)
         }
 
@@ -256,8 +258,8 @@ class GpxDetailsUiTest {
     }
 
     companion object {
-        private const val TEST_GPX_NAME = "dera_szurdok"
-        private const val TEST_GPX_NAME_WITHOUT_ALTITUDE = "dera_szurdok_without_altitude"
+        private const val TEST_GPX_NAME = "dera_szurdok.gpx"
+        private const val TEST_GPX_NAME_WITHOUT_ALTITUDE = "dera_szurdok_without_altitude.gpx"
         private val TEST_GPX_START_LOCATION = Location(47.68498711287975, 18.91935557126999)
         private val DEFAULT_MY_LOCATION = Location(
             DEFAULT_MY_LOCATION_LATITUDE,

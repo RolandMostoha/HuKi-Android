@@ -7,7 +7,7 @@ import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationExcept
 import hu.mostoha.mobile.android.huki.interactor.exception.TimeoutException
 import hu.mostoha.mobile.android.huki.interactor.exception.TooManyRequestsException
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
-import hu.mostoha.mobile.android.huki.ui.util.toMessage
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import kotlinx.coroutines.CancellationException
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test

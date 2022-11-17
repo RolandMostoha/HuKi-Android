@@ -16,6 +16,7 @@
     <color name="colorMarker">@color/colorPrimary</color>
     <color name="colorPolyline">@color/colorPrimary</color>
     <color name="colorPolylineFill">#1F6BBA6F</color>
+    <color name="colorPolylineHigh">#ee6002</color>
     <color name="colorCopyright">#61ffffff</color>
     <color name="colorStrokeGpxMarker">#1a1a1a</color>
     <color name="colorFillGpxStartMarker">#DEDEDE</color>

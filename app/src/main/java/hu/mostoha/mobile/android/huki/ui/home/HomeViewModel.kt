@@ -16,13 +16,13 @@ import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
+import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
-import hu.mostoha.mobile.android.huki.ui.util.Message
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job

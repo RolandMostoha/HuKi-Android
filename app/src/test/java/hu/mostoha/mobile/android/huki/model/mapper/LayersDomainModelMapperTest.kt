@@ -5,9 +5,9 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_OPEN
-import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateDecline
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import hu.mostoha.mobile.android.huki.util.calculateIncline

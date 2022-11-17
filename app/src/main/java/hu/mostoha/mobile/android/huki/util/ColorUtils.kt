@@ -1,9 +1,10 @@
-package hu.mostoha.mobile.android.huki.ui.util
+package hu.mostoha.mobile.android.huki.util
 
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import androidx.annotation.ColorInt
+import androidx.core.graphics.ColorUtils
 
 const val DARK_MODE_HIKING_LAYER_BRIGHTNESS = 0.85f
 
@@ -87,4 +88,27 @@ fun getColorScaledMatrix(@ColorInt destinationColor: Int): ColorMatrixColorFilte
     scaleMatrix.preConcat(tintMatrix)
 
     return ColorMatrixColorFilter(scaleMatrix)
+}
+
+/**
+ * Generates gradient colors for the given [scalars].
+ *
+ * @param startColor The start color for the minimum scalar value.
+ * @param endColor The end color for the maximum scalar value.
+ * @param scalars The scalar values.
+ * @return The color list by scalar values.
+ */
+fun getGradientColors(
+    @ColorInt startColor: Int,
+    @ColorInt endColor: Int,
+    scalars: List<Float>
+): List<Int> {
+    val min = scalars.min()
+    val max = scalars.max()
+
+    return scalars.map { scalar ->
+        val weight = linearInterpolation(min, max, 0f, scalar)
+
+        ColorUtils.blendARGB(startColor, endColor, weight)
+    }
 }

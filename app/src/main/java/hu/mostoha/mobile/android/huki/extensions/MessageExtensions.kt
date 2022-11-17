@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.huki.extensions
 
 import android.content.Context
-import hu.mostoha.mobile.android.huki.ui.util.Message
+import hu.mostoha.mobile.android.huki.model.ui.Message
 
 fun Message.resolve(context: Context): String {
     return when (val message = this) {

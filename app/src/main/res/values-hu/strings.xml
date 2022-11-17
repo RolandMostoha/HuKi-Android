@@ -23,7 +23,6 @@
     <string name="home_bottom_sheet_landscape_secondary">Tájegység</string>
 
     <string name="gpx_details_bottom_sheet_distance">Távolság: %s</string>
-    <string name="gpx_details_bottom_sheet_altitude_range">%s - %s</string>
     <string name="gpx_details_bottom_sheet_navigate_start_button">Navigáció kezdőponthoz</string>
 
     <string name="map_place_name_routes_nearby">Túraútvonalak a térképen</string>

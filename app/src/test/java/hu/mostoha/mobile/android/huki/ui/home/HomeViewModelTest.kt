@@ -25,6 +25,7 @@ import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH
@@ -48,7 +49,6 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
-import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.runTestDefault

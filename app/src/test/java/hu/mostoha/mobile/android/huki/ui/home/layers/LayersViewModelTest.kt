@@ -14,10 +14,10 @@ import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.LayersConfig
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.mapper.LayersUiModelMapper
+import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY_CLOSED
-import hu.mostoha.mobile.android.huki.ui.util.Message
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.runTestDefault

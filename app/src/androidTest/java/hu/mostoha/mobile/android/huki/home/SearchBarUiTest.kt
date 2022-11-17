@@ -31,8 +31,8 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
+import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
 import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed

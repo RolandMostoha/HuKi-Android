@@ -32,7 +32,7 @@ class FileBasedLayersRepository @Inject constructor(
 
         val inputStream = context.contentResolver.openInputStream(fileUri)
 
-        val fileName = fileUri.getFileName(context)
+        val fileName = "${fileUri.getFileName(context)}.gpx"
 
         val gpx = GPXParser().parse(inputStream)
 

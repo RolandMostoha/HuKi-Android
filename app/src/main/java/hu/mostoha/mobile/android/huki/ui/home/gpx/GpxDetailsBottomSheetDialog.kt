@@ -4,10 +4,11 @@ import android.os.Handler
 import android.os.Looper
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetGpxDetailsBinding
-import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setMessage
+import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.startGoogleMapsDirectionsIntent
+import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
@@ -18,22 +19,25 @@ class GpxDetailsBottomSheetDialog(
     fun initBottomSheet(gpxDetails: GpxDetailsUiModel, onCloseClick: () -> Unit) {
         Handler(Looper.getMainLooper()).post {
             with(binding) {
+                val hasAltitudeValues = gpxDetails.gpxAltitudeUiModel != null
+
                 gpxDetailsPrimaryText.text = gpxDetails.name
-                gpxDetailsSecondaryText.text = context.getString(
-                    R.string.gpx_details_bottom_sheet_distance,
-                    gpxDetails.distanceText.resolve(context)
-                )
-                if (gpxDetails.gpxAltitudeUiModel != null) {
-                    gpxDetailsUphillText.setMessage(gpxDetails.gpxAltitudeUiModel.uphillText)
-                    gpxDetailsDownhillText.setMessage(gpxDetails.gpxAltitudeUiModel.downhillText)
-                    gpxDetailsAltitudeRangeText.text = context.getString(
-                        R.string.gpx_details_bottom_sheet_altitude_range,
-                        gpxDetails.gpxAltitudeUiModel.minAltitudeText.resolve(context),
-                        gpxDetails.gpxAltitudeUiModel.maxAltitudeText.resolve(context)
-                    )
+                gpxDetailsAltitudeRangeContainer.visibleOrGone(hasAltitudeValues)
+                gpxDetailsUphillTextSeparator.visibleOrGone(hasAltitudeValues)
+                gpxDetailsDownhillTextSeparator.visibleOrGone(hasAltitudeValues)
+                if (hasAltitudeValues) {
+                    gpxDetailsDistanceText.setMessage(gpxDetails.distanceText)
                 } else {
-                    gpxDetailsAltitudeDetailsContainer.gone()
+                    gpxDetailsDistanceText.text = context.getString(
+                        R.string.gpx_details_bottom_sheet_distance,
+                        gpxDetails.distanceText.resolve(context)
+                    )
                 }
+                gpxDetailsUphillText.setMessageOrGone(gpxDetails.gpxAltitudeUiModel?.uphillText)
+                gpxDetailsDownhillText.setMessageOrGone(gpxDetails.gpxAltitudeUiModel?.downhillText)
+                gpxDetailsAltitudeRangeStartText.setMessageOrGone(gpxDetails.gpxAltitudeUiModel?.minAltitudeText)
+                gpxDetailsAltitudeRangeEndText.setMessageOrGone(gpxDetails.gpxAltitudeUiModel?.maxAltitudeText)
+
                 gpxDetailsCloseButton.setOnClickListener {
                     onCloseClick.invoke()
                     hide()

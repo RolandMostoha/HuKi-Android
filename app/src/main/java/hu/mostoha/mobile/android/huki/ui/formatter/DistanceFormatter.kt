@@ -1,6 +1,7 @@
-package hu.mostoha.mobile.android.huki.ui.util
+package hu.mostoha.mobile.android.huki.ui.formatter
 
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.model.ui.Message
 import java.math.BigDecimal
 import java.math.RoundingMode
 

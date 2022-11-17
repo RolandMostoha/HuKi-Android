@@ -6,7 +6,7 @@ import android.text.style.URLSpan
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-import hu.mostoha.mobile.android.huki.ui.util.Message
+import hu.mostoha.mobile.android.huki.model.ui.Message
 
 fun TextView.setDrawableStart(@DrawableRes drawableRes: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableRes)

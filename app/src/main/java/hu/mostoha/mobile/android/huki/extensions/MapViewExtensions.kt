@@ -10,6 +10,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OVERLAY_TYPE_ORDER_MAP
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
+import hu.mostoha.mobile.android.huki.util.getGradientColors
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
@@ -21,6 +22,9 @@ import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.PolyOverlayWithIW
 import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
+import org.osmdroid.views.overlay.advancedpolyline.ColorMappingCycle
+import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList
+import org.osmdroid.views.overlay.advancedpolyline.PolychromaticPaintList
 import java.util.UUID
 
 private const val MAP_ANIMATION_DURATION = 1000L
@@ -97,7 +101,7 @@ fun MapView.addPolyline(
     overlayId: String = UUID.randomUUID().toString(),
     geoPoints: List<GeoPoint>,
     onClick: (PolyOverlayWithIW) -> Unit,
-    @DimenRes strokeWidthRes: Int = R.dimen.default_polyline_stroke_width,
+    @DimenRes strokeWidthRes: Int = R.dimen.default_polyline_width,
     @ColorRes strokeColorRes: Int = R.color.colorPolyline
 ): Polyline {
     val context = this.context
@@ -139,7 +143,7 @@ fun MapView.addPolygon(
             color = ContextCompat.getColor(context, strokeColorRes)
             style = Paint.Style.STROKE
             strokeCap = Paint.Cap.ROUND
-            strokeWidth = context.resources.getDimension(R.dimen.default_polygon_stroke_width)
+            strokeWidth = context.resources.getDimension(R.dimen.default_polygon_width)
         }
         fillPaint.color = ContextCompat.getColor(context, fillColorRes)
         points = geoPoints
@@ -178,26 +182,54 @@ fun MapView.addGpxMarker(
 fun MapView.addGpxPolyline(
     overlayId: String = UUID.randomUUID().toString(),
     geoPoints: List<GeoPoint>,
+    hasAltitudeValues: Boolean,
     onClick: (PolyOverlayWithIW) -> Unit
 ): Polyline {
     val context = this.context
     val polyline = GpxPolyline(this).apply {
         id = overlayId
-        outlinePaint.apply {
-            isAntiAlias = true
-            color = ContextCompat.getColor(context, R.color.colorPolyline)
-            style = Paint.Style.STROKE
-            strokeCap = Paint.Cap.ROUND
-            strokeJoin = Paint.Join.ROUND
-            isGeodesic = true
-            strokeWidth = context.resources.getDimension(R.dimen.default_polyline_stroke_width)
-        }
+
         setPoints(geoPoints)
+
+        val borderPaint = Paint().apply {
+            color = if (hasAltitudeValues) {
+                ContextCompat.getColor(context, R.color.colorPolylineBorder)
+            } else {
+                ContextCompat.getColor(context, R.color.colorPolyline)
+            }
+            isAntiAlias = true
+            strokeWidth = context.resources.getDimension(R.dimen.default_polyline_width)
+            style = Paint.Style.STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+        }
+        outlinePaintLists.add(MonochromaticPaintList(borderPaint))
+
+        if (hasAltitudeValues) {
+            val fillPaint = Paint().apply {
+                isAntiAlias = true
+                strokeWidth = context.resources.getDimension(R.dimen.default_polyline_fill_width)
+                style = Paint.Style.FILL_AND_STROKE
+                strokeJoin = Paint.Join.ROUND
+                strokeCap = Paint.Cap.ROUND
+                isAntiAlias = true
+            }
+            val gradientColors = getGradientColors(
+                ContextCompat.getColor(context, R.color.colorPolyline),
+                ContextCompat.getColor(context, R.color.colorPolylineHigh),
+                geoPoints.map { it.altitude.toFloat() }
+            )
+            val colorMapping = ColorMappingCycle(gradientColors)
+            outlinePaintLists.add(PolychromaticPaintList(fillPaint, colorMapping, false))
+        }
+
         setOnClickListener { polygon, _, _ ->
             onClick.invoke(polygon)
             true
         }
     }
+
     overlays.add(polyline)
     invalidate()
 

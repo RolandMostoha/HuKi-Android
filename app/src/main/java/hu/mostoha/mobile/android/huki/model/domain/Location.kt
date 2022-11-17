@@ -10,7 +10,7 @@ data class Location(
     val altitude: Double? = null
 )
 
-fun Location.toGeoPoint() = GeoPoint(latitude, longitude)
+fun Location.toGeoPoint() = GeoPoint(latitude, longitude, altitude ?: 0.0)
 
 fun Location.toAndroidLocation() = AndroidLocation(LocationManager.GPS_PROVIDER).apply {
     latitude = this.latitude

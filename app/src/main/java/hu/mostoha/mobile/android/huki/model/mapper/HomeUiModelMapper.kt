@@ -13,13 +13,13 @@ import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
+import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
-import hu.mostoha.mobile.android.huki.ui.util.DistanceFormatter
-import hu.mostoha.mobile.android.huki.ui.util.Message
-import hu.mostoha.mobile.android.huki.ui.util.toMessage
 import hu.mostoha.mobile.android.huki.util.calculateCenter
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import javax.inject.Inject
