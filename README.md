@@ -1,8 +1,10 @@
 # HuKi - Hungarian Hiking Map #
 
-HuKi is an Android app for hikers, which helps you plan trips and discover the hiking trails of Hungary.
+HuKi is an Android app for hikers, which helps you plan trips and discover the hiking trails of
+Hungary.
 
-The app is available in Google Play and currently in beta stage: [HuKi Beta](https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki)
+The app is available in Google Play and currently in open beta
+stage: [HuKi Beta](https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki)
 
 ## Goals
 
