@@ -19,7 +19,7 @@
     <color name="colorMarker">#474747</color>
     <color name="colorPolyline">@color/colorPrimary</color>
     <color name="colorPolylineFill">#15474747</color>
-    <color name="colorPolylineHigh">#ffa000</color>
+    <color name="colorPolylineHigh">#fd7c26</color>
     <color name="colorPolylineBorder">#000000</color>
     <color name="colorCopyright">#B3262626</color>
     <color name="colorScaleDarkMap">#2A2A2A</color>
