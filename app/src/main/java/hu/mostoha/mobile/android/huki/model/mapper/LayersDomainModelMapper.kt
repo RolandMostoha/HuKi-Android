@@ -31,19 +31,17 @@ class LayersDomainModelMapper @Inject constructor() {
 
         val minAltitude = locations
             .mapNotNull { it.altitude }
-            .min()
-            .toInt()
+            .minOrNull() ?: 0.0
 
         val maxAltitude = locations
             .mapNotNull { it.altitude }
-            .max()
-            .toInt()
+            .maxOrNull() ?: 0.0
 
         return GpxDetails(
             fileName = fileName,
             locations = locations,
             distance = locations.calculateDistance(),
-            altitudeRange = minAltitude to maxAltitude,
+            altitudeRange = minAltitude.toInt() to maxAltitude.toInt(),
             incline = locations.calculateIncline(),
             decline = locations.calculateDecline(),
             isClosed = locations.first().distanceBetween(locations.last()) <= GPX_CLOSED_DISTANCE_THRESHOLD

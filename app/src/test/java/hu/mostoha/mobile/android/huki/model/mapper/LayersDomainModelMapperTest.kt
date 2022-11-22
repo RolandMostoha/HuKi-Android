@@ -81,6 +81,28 @@ class LayersDomainModelMapperTest {
     }
 
     @Test
+    fun `Given GPX track points without altitude, when mapGpxDetails, then GPX Details returns`() {
+        val fileName = "dera_szurdok_without_altitude.gpx"
+        val expectedLocations = DEFAULT_GPX_WAY_OPEN.map { Location(it.first, it.second) }
+        val gpx = DEFAULT_GPX_WITHOUT_ALTITUDE
+
+        val gpxDetails = mapper.mapGpxDetails(fileName, gpx)
+
+        assertThat(gpxDetails).isEqualTo(
+            GpxDetails(
+                id = gpxDetails.id,
+                fileName = fileName,
+                locations = expectedLocations,
+                distance = expectedLocations.calculateDistance(),
+                altitudeRange = Pair(0, 0),
+                incline = expectedLocations.calculateIncline(),
+                decline = expectedLocations.calculateDecline(),
+                isClosed = false
+            )
+        )
+    }
+
+    @Test
     fun `Given GPX with empty track points, when mapGpxDetails, then GPX parse failed exception throws`() {
         val fileName = "dera_szurdok_empty.gpx"
         val gpx = Gpx.Builder()
@@ -97,56 +119,52 @@ class LayersDomainModelMapperTest {
     }
 
     companion object {
-        private val DEFAULT_GPX_CLOSED = Gpx.Builder()
-            .setWayPoints(emptyList())
-            .setRoutes(emptyList())
-            .setTracks(
-                listOf(
-                    Track.Builder()
-                        .setTrackSegments(
-                            listOf(
-                                TrackSegment.Builder()
-                                    .setTrackPoints(
-                                        DEFAULT_GPX_WAY_CLOSED.map {
-                                            TrackPoint.Builder()
-                                                .setLatitude(it.first)
-                                                .setLongitude(it.second)
-                                                .setElevation(it.third)
-                                                .build() as TrackPoint
-                                        }
-                                    )
-                                    .build()
+        private val DEFAULT_GPX_CLOSED = createGpx(
+            DEFAULT_GPX_WAY_CLOSED.map {
+                TrackPoint.Builder()
+                    .setLatitude(it.first)
+                    .setLongitude(it.second)
+                    .setElevation(it.third)
+                    .build() as TrackPoint
+            }
+        )
+        private val DEFAULT_GPX_OPEN = createGpx(
+            DEFAULT_GPX_WAY_OPEN.map {
+                TrackPoint.Builder()
+                    .setLatitude(it.first)
+                    .setLongitude(it.second)
+                    .setElevation(it.third)
+                    .build() as TrackPoint
+            }
+        )
+        private val DEFAULT_GPX_WITHOUT_ALTITUDE = createGpx(
+            DEFAULT_GPX_WAY_OPEN.map {
+                TrackPoint.Builder()
+                    .setLatitude(it.first)
+                    .setLongitude(it.second)
+                    .build() as TrackPoint
+            }
+        )
+
+        private fun createGpx(trackPoints: List<TrackPoint>): Gpx {
+            return Gpx.Builder()
+                .setWayPoints(emptyList())
+                .setRoutes(emptyList())
+                .setTracks(
+                    listOf(
+                        Track.Builder()
+                            .setTrackSegments(
+                                listOf(
+                                    TrackSegment.Builder()
+                                        .setTrackPoints(trackPoints)
+                                        .build()
+                                )
                             )
-                        )
-                        .build()
+                            .build()
+                    )
                 )
-            )
-            .build()
-        private val DEFAULT_GPX_OPEN = Gpx.Builder()
-            .setWayPoints(emptyList())
-            .setRoutes(emptyList())
-            .setTracks(
-                listOf(
-                    Track.Builder()
-                        .setTrackSegments(
-                            listOf(
-                                TrackSegment.Builder()
-                                    .setTrackPoints(
-                                        DEFAULT_GPX_WAY_OPEN.map {
-                                            TrackPoint.Builder()
-                                                .setLatitude(it.first)
-                                                .setLongitude(it.second)
-                                                .setElevation(it.third)
-                                                .build() as TrackPoint
-                                        }
-                                    )
-                                    .build()
-                            )
-                        )
-                        .build()
-                )
-            )
-            .build()
+                .build()
+        }
     }
 
 }
