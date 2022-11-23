@@ -245,6 +245,20 @@ fun MapView.animateCenterAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {
     controller.animateTo(geoPoint, zoomLevel, MAP_ANIMATION_DURATION)
 }
 
+fun MapView.addMapMovedListener(onMapMoved: () -> Unit) {
+    addMapListener(object : MapListener {
+        override fun onScroll(event: ScrollEvent): Boolean {
+            onMapMoved.invoke()
+            return true
+        }
+
+        override fun onZoom(event: ZoomEvent): Boolean {
+            onMapMoved.invoke()
+            return true
+        }
+    })
+}
+
 fun MapView.addZoomListener(onZoom: (event: ZoomEvent) -> Unit) {
     addMapListener(object : MapListener {
         override fun onScroll(event: ScrollEvent): Boolean {

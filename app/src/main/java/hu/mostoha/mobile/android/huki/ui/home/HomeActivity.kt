@@ -21,6 +21,7 @@ import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeLandscapesChipBinding
 import hu.mostoha.mobile.android.huki.extensions.addGpxMarker
 import hu.mostoha.mobile.android.huki.extensions.addGpxPolyline
+import hu.mostoha.mobile.android.huki.extensions.addMapMovedListener
 import hu.mostoha.mobile.android.huki.extensions.addMarker
 import hu.mostoha.mobile.android.huki.extensions.addOverlay
 import hu.mostoha.mobile.android.huki.extensions.addPolygon
@@ -193,6 +194,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 } else {
                     homeRoutesNearbyFab.hide()
                 }
+            }
+            addMapMovedListener {
+                homeViewModel.clearHikingRoutes()
+                hikingRoutesBottomSheet.hide()
             }
             addOverlay(OsmLicencesOverlay(this@HomeActivity, analyticsService), OverlayComparator)
 

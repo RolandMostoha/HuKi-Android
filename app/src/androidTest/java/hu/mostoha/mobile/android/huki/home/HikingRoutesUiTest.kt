@@ -102,21 +102,8 @@ class HikingRoutesUiTest {
     }
 
     @Test
-    fun givenEmptyHikingRoutes_whenClickRoutesNearby_thenEmptyViewDisplayOnBottomSheet() {
-        coEvery { placesRepository.getHikingRoutes(any()) } returns emptyList()
-
-        launchScenario<HomeActivity> {
-            zoomToReachHikingRoutesThreshold()
-
-            R.id.homeRoutesNearbyFab.click()
-
-            R.id.hikingRoutesEmptyView.isDisplayed()
-        }
-    }
-
-    @Test
-    fun givenEmptyHikingRoutes_whenClickOnClose_thenBottomSheetIsNotDisplayed() {
-        coEvery { placesRepository.getHikingRoutes(any()) } returns emptyList()
+    fun givenHikingRoutes_whenClickOnClose_thenBottomSheetIsNotDisplayed() {
+        answerTestHikingRoute()
 
         launchScenario<HomeActivity> {
             zoomToReachHikingRoutesThreshold()
@@ -126,7 +113,20 @@ class HikingRoutesUiTest {
 
             waitForAnimation()
 
-            R.id.hikingRoutesEmptyView.isNotDisplayed()
+            R.id.hikingRoutesList.isNotDisplayed()
+        }
+    }
+
+    @Test
+    fun givenEmptyHikingRoutes_whenClickRoutesNearby_thenEmptyViewDisplayOnBottomSheet() {
+        coEvery { placesRepository.getHikingRoutes(any()) } returns emptyList()
+
+        launchScenario<HomeActivity> {
+            zoomToReachHikingRoutesThreshold()
+
+            R.id.homeRoutesNearbyFab.click()
+
+            R.id.hikingRoutesEmptyView.isDisplayed()
         }
     }
 
@@ -143,6 +143,20 @@ class HikingRoutesUiTest {
             DEFAULT_HIKING_ROUTE.name.clickWithText()
 
             R.id.homeRoutesNearbyFab.isDisplayed()
+        }
+    }
+
+    @Test
+    fun givenHikingRoutesDisplayed_whenMapMoves_thenHikingRoutesHides() {
+        answerTestHikingRoute()
+
+        launchScenario<HomeActivity> {
+            zoomToReachHikingRoutesThreshold()
+
+            R.id.homeRoutesNearbyFab.click()
+            R.id.homeMapView.zoomTo(15.0)
+
+            R.id.hikingRoutesList.isNotDisplayed()
         }
     }
 
