@@ -49,7 +49,7 @@ import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
 import hu.mostoha.mobile.android.huki.extensions.toDrawable
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withDefaultOffset
-import hu.mostoha.mobile.android.huki.model.domain.LayerSpec
+import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
@@ -501,10 +501,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initHikingLayer(hikingLayer: LayerSpec?) {
-        if (hikingLayer == null) {
-            removeHikingLayer()
-        } else {
+    private fun initHikingLayer(hikingLayer: HikingLayer?) {
+        removeHikingLayer()
+
+        if (hikingLayer != null) {
             val tileProvider = AwsMapTileProviderBasic(this, hikingLayer.tileSource)
             val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {
                 if (this@HomeActivity.isDarkMode()) {
