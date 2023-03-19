@@ -26,7 +26,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearance="@style/DefaultShapeAppearance.InputField"
+            app:shapeAppearance="@style/DefaultShapeAppearance.InputField.OnMap"
             app:strokeColor="@color/colorStrokeOnMap"
             app:strokeWidth="@dimen/home_search_bar_stroke_width">
 
@@ -68,6 +68,10 @@
                         android:id="@+id/homeSearchBarInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:imeActionLabel="Done"
+                        android:inputType="textPostalAddress"
+                        android:lines="1"
                         android:textAppearance="@style/DefaultTextAppearance.Regular.Large" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -177,6 +181,15 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:text="500m" />
 
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/homeRoutePlannerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/default_elevation_route_planner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -187,7 +200,7 @@
         app:layout_behavior="@string/fab_transformation_sheet_behavior">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/homeRoutesNearbyFab"
+            android:id="@+id/homeRoutePlannerFab"
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -195,10 +208,9 @@
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
             android:layout_marginBottom="@dimen/space_medium"
-            android:contentDescription="@string/accessibility_home_fab_routes_nearby"
+            android:contentDescription="@string/accessibility_home_fab_route_planner"
             android:elevation="@dimen/default_elevation_map_interactive_views"
-            android:src="@drawable/ic_home_fab_hiking_routes"
-            android:visibility="invisible" />
+            android:src="@drawable/ic_home_fab_route_planner" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/homeMyLocationButton"

@@ -4,7 +4,7 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 
 interface AnalyticsService {
 
-    fun searchBarPlaceClicked(searchText: String, placeName: String)
+    fun placeFinderPlaceClicked(searchText: String, placeName: String)
 
     fun loadLandscapeClicked(placeName: String)
 
@@ -16,7 +16,9 @@ interface AnalyticsService {
 
     fun myLocationClicked()
 
-    fun navigationClicked(destinationPlaceName: String)
+    fun routePlannerClicked()
+
+    fun googleMapsClicked(destinationPlaceName: String)
 
     fun gpxImportClicked()
 

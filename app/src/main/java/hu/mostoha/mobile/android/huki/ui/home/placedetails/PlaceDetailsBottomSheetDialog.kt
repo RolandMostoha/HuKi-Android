@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.huki.ui.home.placedetails
 
 import android.os.Handler
 import android.os.Looper
-import hu.mostoha.mobile.android.huki.R
+import android.view.View
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceDetailsBinding
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.resolve
@@ -22,7 +22,7 @@ class PlaceDetailsBottomSheetDialog(
     fun initNodeBottomSheet(
         placeUiModel: PlaceUiModel,
         onShowAllPointsClick: () -> Unit,
-        onHikingTrailsButtonClick: () -> Unit,
+        onRoutePlanButtonClick: () -> Unit,
         onCloseButtonClick: () -> Unit
     ) {
         Handler(Looper.getMainLooper()).post {
@@ -32,34 +32,31 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsPrimaryText.text = placeName
                 placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
-                placeDetailsDirectionsButton.visible()
-                placeDetailsDirectionsButton.setOnClickListener {
-                    analyticsService.navigationClicked(placeName)
+                placeDetailsGoogleNavButton.visible()
+                placeDetailsGoogleNavButton.setOnClickListener {
+                    analyticsService.googleMapsClicked(placeName)
 
                     context.startGoogleMapsDirectionsIntent(placeUiModel.geoPoint)
                 }
-                if (placeUiModel.placeType != PlaceType.NODE) {
-                    placeDetailsHikingTrailsButton.gone()
+                placeDetailsHikingTrailsButton.gone()
+                placeDetailsRoutePlanButton.visible()
+                placeDetailsRoutePlanButton.setOnClickListener {
+                    onRoutePlanButtonClick.invoke()
+                }
+                if (placeUiModel.placeType == PlaceType.NODE) {
+                    placeDetailsShowAllPointsButton.gone()
+                } else {
                     placeDetailsShowAllPointsButton.visible()
                     placeDetailsShowAllPointsButton.setOnClickListener {
                         analyticsService.loadPlaceDetailsClicked(placeName, placeUiModel.placeType)
                         onShowAllPointsClick.invoke()
                     }
-                } else {
-                    placeDetailsShowAllPointsButton.gone()
-                    placeDetailsHikingTrailsButton.visible()
-                    placeDetailsHikingTrailsButton.setOnClickListener {
-                        val placeTitle = context.getString(
-                            R.string.map_place_name_node_routes_nearby,
-                            placeUiModel.primaryText.resolve(context)
-                        )
-                        analyticsService.loadHikingRoutesClicked(placeTitle)
-                        onHikingTrailsButtonClick.invoke()
-                    }
                 }
                 placeDetailsCloseButton.setOnClickListener {
                     onCloseButtonClick.invoke()
                 }
+
+                placeDetailsButtonGroupScrollView.fullScroll(View.FOCUS_RIGHT)
             }
             show()
         }
@@ -77,7 +74,7 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsPrimaryText.text = placeName
                 placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
-                placeDetailsDirectionsButton.gone()
+                placeDetailsGoogleNavButton.gone()
                 placeDetailsShowAllPointsButton.gone()
                 placeDetailsHikingTrailsButton.visible()
                 placeDetailsHikingTrailsButton.setOnClickListener {
@@ -87,6 +84,9 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsCloseButton.setOnClickListener {
                     onCloseButtonClick.invoke()
                 }
+                placeDetailsRoutePlanButton.gone()
+
+                placeDetailsButtonGroupScrollView.fullScroll(View.FOCUS_RIGHT)
             }
             show()
         }

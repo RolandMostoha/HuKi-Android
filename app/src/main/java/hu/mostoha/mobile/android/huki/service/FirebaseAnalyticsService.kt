@@ -18,6 +18,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SEARCH_HIKING_ROUTES = "search_hiking_routes"
         private const val EVENT_SELECT_HIKING_ROUTE = "select_hiking_route"
         private const val EVENT_SELECT_MY_LOCATION = "select_my_location"
+        private const val EVENT_SELECT_ROUTE_PLANNER = "select_route_planner"
         private const val EVENT_SELECT_MAPS_DIRECTIONS = "select_maps_directions"
         private const val EVENT_GPX_IMPORT_CLICKED = "gpx_import_clicked"
         private const val EVENT_GPX_IMPORTED_BY_INTENT = "gpx_imported_by_intent"
@@ -40,7 +41,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     private var firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
-    override fun searchBarPlaceClicked(searchText: String, placeName: String) {
+    override fun placeFinderPlaceClicked(searchText: String, placeName: String) {
         firebaseAnalytics.logEvent(EVENT_SELECT_PLACE) {
             param(PARAM_SEARCH_PLACE_TEXT, searchText)
             param(PARAM_SELECTED_PLACE_NAME, placeName)
@@ -75,7 +76,11 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_MY_LOCATION, null)
     }
 
-    override fun navigationClicked(destinationPlaceName: String) {
+    override fun routePlannerClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER, null)
+    }
+
+    override fun googleMapsClicked(destinationPlaceName: String) {
         firebaseAnalytics.logEvent(EVENT_SELECT_MAPS_DIRECTIONS) {
             param(PARAM_NAVIGATION_PLACE_NAME, destinationPlaceName)
         }

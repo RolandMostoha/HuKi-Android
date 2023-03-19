@@ -7,6 +7,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
@@ -14,11 +15,13 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
+
 
 fun @receiver:IdRes Int.isDisplayed() {
     onView(withId(this)).check(matches(ViewMatchers.isDisplayed()))
@@ -103,6 +106,22 @@ fun String.clickWithTextInPopup() {
     onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
         .perform(ViewActions.click())
+}
+
+fun @receiver:StringRes Int.isDisplayedWithContentDescription() {
+    onView(withContentDescription(this)).check(matches(ViewMatchers.isDisplayed()))
+}
+
+fun @receiver:StringRes Int.isNotDisplayedWithContentDescription() {
+    onView(withContentDescription(this)).check(matches(not(ViewMatchers.isDisplayed())))
+}
+
+fun @receiver:StringRes Int.doesNotExistWithContentDescription() {
+    onView(withContentDescription(this)).check(ViewAssertions.doesNotExist())
+}
+
+fun @receiver:StringRes Int.clickWithContentDescription() {
+    onView(withContentDescription(this)).perform(ViewActions.click())
 }
 
 fun @receiver:IdRes Int.swipeDown() {

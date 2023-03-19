@@ -144,7 +144,7 @@ class GpxDetailsUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
-            R.id.gpxDetailsAttributesContainer.isDisplayed()
+            R.id.gpxDetailsRouteAttributesContainer.isDisplayed()
             TEST_GPX_NAME.isTextDisplayed()
         }
     }
@@ -176,7 +176,7 @@ class GpxDetailsUiTest {
             R.id.homeLayersFab.click()
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
-            R.id.gpxDetailsNavigateStartButton.click()
+            R.id.gpxDetailsGoogleMapsButton.click()
 
             intended(
                 allOf(
@@ -205,8 +205,8 @@ class GpxDetailsUiTest {
 
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
             R.id.gpxDetailsAltitudeRangeContainer.isNotDisplayed()
-            R.id.gpxDetailsUphillTextSeparator.isNotDisplayed()
-            R.id.gpxDetailsDownhillTextSeparator.isNotDisplayed()
+            R.id.routeAttributesUphillTextSeparator.isNotDisplayed()
+            R.id.routeAttributesDownhillTextSeparator.isNotDisplayed()
             TEST_GPX_NAME_WITHOUT_ALTITUDE.isTextDisplayed()
         }
     }

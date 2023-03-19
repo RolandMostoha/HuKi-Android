@@ -9,6 +9,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.IndeterminateDrawable
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.extensions.colorStateList
 
 class ProgressMaterialButton @JvmOverloads constructor(
     context: Context,
@@ -17,15 +18,33 @@ class ProgressMaterialButton @JvmOverloads constructor(
 ) : MaterialButton(context, attrs, defStyleAttr) {
 
     private val iconDrawable: Drawable
-
     private val progressIndicatorDrawable: Drawable
+
+    var disabled: Boolean = false
+        set(value) {
+            if (value) {
+                icon = iconDrawable
+                iconTint = context.colorStateList(R.color.colorPrimaryTextDisabled)
+                isEnabled = false
+            } else {
+                icon = iconDrawable
+                iconTint = context.colorStateList(R.color.colorPrimary)
+                isEnabled = true
+            }
+
+            invalidate()
+
+            field = value
+        }
 
     var inProgress: Boolean = false
         set(value) {
-            icon = if (value) {
-                progressIndicatorDrawable
+            if (value) {
+                icon = progressIndicatorDrawable
+                isEnabled = false
             } else {
-                iconDrawable
+                icon = iconDrawable
+                isEnabled = true
             }
 
             invalidate()
@@ -36,9 +55,11 @@ class ProgressMaterialButton @JvmOverloads constructor(
     init {
         with(context.obtainStyledAttributes(attrs, R.styleable.ProgressMaterialButton)) {
             iconDrawable = getDrawableOrThrow(R.styleable.ProgressMaterialButton_iconRes)
-        }
+            progressIndicatorDrawable = createProgressDrawable(context)
+            icon = iconDrawable
 
-        progressIndicatorDrawable = createProgressDrawable(context)
+            recycle()
+        }
     }
 
     private fun createProgressDrawable(context: Context): IndeterminateDrawable<CircularProgressIndicatorSpec> {

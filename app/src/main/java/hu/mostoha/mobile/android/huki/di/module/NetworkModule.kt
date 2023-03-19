@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import hu.mostoha.mobile.android.huki.BuildConfig
+import hu.mostoha.mobile.android.huki.network.GraphhopperService
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
 import hu.mostoha.mobile.android.huki.network.PhotonService
@@ -78,6 +79,17 @@ class NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(PhotonService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGraphhopperService(okHttpClient: OkHttpClient, moshi: Moshi): GraphhopperService {
+        return Retrofit.Builder()
+            .baseUrl(NetworkConfig.BASE_URL_GRAPHHOPPER_API)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(GraphhopperService::class.java)
     }
 
 }

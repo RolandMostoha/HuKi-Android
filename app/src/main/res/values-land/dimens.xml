@@ -5,9 +5,16 @@
 
     <dimen name="home_copyright_bottom_margin">@dimen/space_medium</dimen>
 
-    <dimen name="home_map_view_top_offset">110dp</dimen>
-    <dimen name="home_map_view_bottom_offset">50dp</dimen>
-    <dimen name="home_map_view_start_offset">20dp</dimen>
-    <dimen name="home_map_view_end_offset">20dp</dimen>
+    <dimen name="route_planner_waypoint_list_max_height">@null</dimen>
+
+    <dimen name="map_view_default_top_offset">130dp</dimen>
+    <dimen name="map_view_default_bottom_offset">50dp</dimen>
+    <dimen name="map_view_bottom_sheet_bottom_offset">70dp</dimen>
+    <dimen name="map_view_default_start_offset">40dp</dimen>
+    <dimen name="map_view_default_end_offset">40dp</dimen>
+    <dimen name="map_view_top_sheet_top_offset">@dimen/map_view_default_top_offset</dimen>
+    <dimen name="map_view_top_sheet_bottom_offset">50dp</dimen>
+    <dimen name="map_view_top_sheet_start_offset">370dp</dimen>
+    <dimen name="map_view_top_sheet_end_offset">@dimen/map_view_default_end_offset</dimen>
 
 </resources>

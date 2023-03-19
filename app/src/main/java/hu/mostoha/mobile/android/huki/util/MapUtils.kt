@@ -4,7 +4,6 @@ import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Location
 
 const val MAP_DEFAULT_ZOOM_LEVEL = 15.0
-const val MAP_ZOOM_THRESHOLD_ROUTES_NEARBY = 8.5
 const val MAP_TILES_SCALE_FACTOR = 1.5f
 
 const val MY_LOCATION_TIME_MS = 10000L
@@ -26,3 +25,5 @@ private const val BUDAPEST_LATITUDE = 47.4933876
 private const val BUDAPEST_LONGITUDE = 19.0548635
 
 val BUDAPEST_LOCATION = Location(BUDAPEST_LATITUDE, BUDAPEST_LONGITUDE)
+
+const val WAY_CLOSED_DISTANCE_THRESHOLD_METER = 20

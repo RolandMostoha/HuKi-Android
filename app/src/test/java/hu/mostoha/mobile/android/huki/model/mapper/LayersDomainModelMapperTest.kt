@@ -11,6 +11,7 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_OPEN
 import hu.mostoha.mobile.android.huki.util.calculateDecline
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import hu.mostoha.mobile.android.huki.util.calculateIncline
+import hu.mostoha.mobile.android.huki.util.calculateTravelTime
 import io.ticofab.androidgpxparser.parser.domain.Gpx
 import io.ticofab.androidgpxparser.parser.domain.Track
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint
@@ -35,6 +36,7 @@ class LayersDomainModelMapperTest {
                 id = gpxDetails.id,
                 fileName = fileName,
                 locations = expectedLocations,
+                travelTime = expectedLocations.calculateTravelTime(),
                 distance = expectedLocations.calculateDistance(),
                 altitudeRange = Pair(
                     expectedLocations.mapNotNull { it.altitude }
@@ -64,6 +66,7 @@ class LayersDomainModelMapperTest {
                 id = gpxDetails.id,
                 fileName = fileName,
                 locations = expectedLocations,
+                travelTime = expectedLocations.calculateTravelTime(),
                 distance = expectedLocations.calculateDistance(),
                 altitudeRange = Pair(
                     expectedLocations.mapNotNull { it.altitude }
@@ -93,6 +96,7 @@ class LayersDomainModelMapperTest {
                 id = gpxDetails.id,
                 fileName = fileName,
                 locations = expectedLocations,
+                travelTime = expectedLocations.calculateTravelTime(),
                 distance = expectedLocations.calculateDistance(),
                 altitudeRange = Pair(0, 0),
                 incline = expectedLocations.calculateIncline(),

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@drawable/background_place_finder_place"
+    android:paddingHorizontal="@dimen/space_medium"
+    android:paddingVertical="@dimen/space_small"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/placeFinderIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:importantForAccessibility="no"
+            android:paddingHorizontal="@dimen/space_medium"
+            tools:src="@drawable/ic_home_search_bar_type_relation" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/placeFinderDistanceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_extra_small"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall"
+            tools:text="4 km" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_small"
+        android:paddingVertical="@dimen/space_medium">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/placeFinderPrimaryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+            tools:text="Dobogókő Szánkópálya" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/placeFinderSecondaryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+            tools:text="2099 Pilisszentkereszt" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -10,8 +10,9 @@ data class GpxDetailsUiModel(
     val end: GeoPoint,
     val geoPoints: List<GeoPoint>,
     val boundingBox: BoundingBox,
+    val travelTimeText: Message.Text,
     val distanceText: Message.Res,
-    val gpxAltitudeUiModel: GpxAltitudeUiModel?,
+    val altitudeUiModel: AltitudeUiModel?,
     val isClosed: Boolean,
     val isVisible: Boolean
 )

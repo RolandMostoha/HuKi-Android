@@ -48,7 +48,6 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.runTestDefault
@@ -94,7 +93,6 @@ class HomeViewModelTest {
             exceptionLogger,
             placesInteractor,
             landscapeInteractor,
-            myLocationProvider,
             homeUiModelMapper
         )
     }
@@ -141,64 +139,6 @@ class HomeViewModelTest {
         }
 
     @Test
-    fun `Given search text, when loadSearchBarPlaces, then search bar items are emitted`() =
-        runTestDefault {
-            val searchText = "Mecs"
-            val places = listOf(DEFAULT_PLACE)
-            val searchBarItems = listOf(SearchBarItem.Place(DEFAULT_PLACE_UI_MODEL))
-            every { placesInteractor.requestGetPlacesByFlow(searchText) } returns flowOf(places)
-            every { homeUiModelMapper.generateSearchBarItems(places) } returns searchBarItems
-
-            viewModel.searchBarItems.test {
-                viewModel.loadSearchBarPlaces(searchText)
-
-                assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(searchBarItems)
-            }
-        }
-
-    @Test
-    fun `When cancelSearch, then search bar items are cleared`() =
-        runTestDefault {
-            val searchText = "Mecs"
-            val places = listOf(DEFAULT_PLACE)
-            val searchBarItems = listOf(SearchBarItem.Place(DEFAULT_PLACE_UI_MODEL))
-            every { placesInteractor.requestGetPlacesByFlow(searchText) } returns flowOf(places)
-            every { homeUiModelMapper.generateSearchBarItems(places) } returns searchBarItems
-
-            viewModel.searchBarItems.test {
-                viewModel.loadSearchBarPlaces(searchText)
-                assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(searchBarItems)
-
-                viewModel.cancelSearch()
-                assertThat(awaitItem()).isNull()
-            }
-        }
-
-    @Test
-    fun `Given domain error, when loadSearchBarPlaces, then error search bar item is emitted`() =
-        runTestDefault {
-            val errorRes = R.string.error_message_unknown.toMessage()
-            val domainException = DomainException(errorRes)
-            val searchBarItems = listOf(
-                SearchBarItem.Error(
-                    messageRes = domainException.messageRes,
-                    drawableRes = R.drawable.ic_search_bar_error
-                )
-            )
-            every { placesInteractor.requestGetPlacesByFlow(any()) } returns flowOfError(domainException)
-            every { homeUiModelMapper.generatePlacesErrorItem(domainException) } returns searchBarItems
-
-            viewModel.searchBarItems.test {
-                viewModel.loadSearchBarPlaces("")
-
-                assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(searchBarItems)
-            }
-        }
-
-    @Test
     fun `Given place, when loadPlace, then place details is posted`() =
         runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
@@ -225,25 +165,6 @@ class HomeViewModelTest {
 
                 assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
                 assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
-            }
-        }
-
-    @Test
-    fun `Given place, when loadPlace, then searchbar items are cleared`() =
-        runTestDefault {
-            val placeUiModel = DEFAULT_PLACE_UI_MODEL
-            val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
-            every { homeUiModelMapper.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
-            every { placesInteractor.requestGetPlacesByFlow(any()) } returns flowOf(emptyList())
-            every { homeUiModelMapper.generateSearchBarItems(any()) } returns emptyList()
-
-            viewModel.searchBarItems.test {
-                viewModel.loadSearchBarPlaces("")
-                assertThat(awaitItem()).isEqualTo(null)
-                assertThat(awaitItem()).isEqualTo(emptyList<SearchBarItem>())
-
-                viewModel.loadPlace(placeUiModel)
-                assertThat(awaitItem()).isEqualTo(null)
             }
         }
 

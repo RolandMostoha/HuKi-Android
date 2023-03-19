@@ -5,7 +5,9 @@ import android.content.Intent
 import android.net.MailTo
 import android.net.Uri
 import android.provider.Browser
+import androidx.core.app.ShareCompat
 import org.osmdroid.util.GeoPoint
+
 
 const val GOOGLE_MAPS_DIRECTIONS_URL = "https://www.google.com/maps/dir/?api=1&destination=%s,%s"
 
@@ -52,4 +54,11 @@ fun Intent.isGpxFileIntent(): Boolean {
     val isOctetStream = type.contains("application/octet-stream")
 
     return isTypeGpx || isOctetStream || isSchemeGpx || isUriPathGpx
+}
+
+fun Context.shareFile(uri: Uri) {
+    ShareCompat.IntentBuilder(this)
+        .setStream(uri)
+        .setType("*/*")
+        .startChooser()
 }

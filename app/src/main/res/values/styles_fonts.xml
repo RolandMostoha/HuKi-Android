@@ -6,6 +6,18 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
+    <style name="DefaultTextAppearance.Light">
+        <item name="fontFamily">@font/opensans_light</item>
+    </style>
+
+    <style name="DefaultTextAppearance.Light.ExtraSmall">
+        <item name="android:textSize">@dimen/text_size_extra_small</item>
+    </style>
+
+    <style name="DefaultTextAppearance.Light.Small">
+        <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
     <style name="DefaultTextAppearance.Regular">
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
@@ -60,6 +72,10 @@
 
     <style name="DefaultTextAppearance.Bold.Small">
         <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
+    <style name="DefaultTextAppearance.Bold.Medium">
+        <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
 </resources>

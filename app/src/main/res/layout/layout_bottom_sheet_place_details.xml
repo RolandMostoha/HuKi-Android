@@ -74,40 +74,58 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <HorizontalScrollView
+        android:id="@+id/placeDetailsButtonGroupScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:paddingHorizontal="@dimen/space_extra_large"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:scrollbars="none">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/placeDetailsDirectionsButton"
-            style="@style/DefaultButton.Contained.Shadowless.Secondary"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_medium"
-            android:text="@string/home_bottom_sheet_directions_button"
-            app:icon="@drawable/ic_home_bottom_sheet_directions" />
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/placeDetailsShowAllPointsButton"
-            style="@style/DefaultButton.Contained.Shadowless.Primary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_extra_large"
-            android:text="@string/home_bottom_sheet_show_points_button"
-            android:visibility="gone"
-            app:icon="@drawable/ic_place_details_show_points" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/placeDetailsGoogleNavButton"
+                style="@style/DefaultButton.Contained.Shadowless.Secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_medium"
+                android:text="@string/home_bottom_sheet_directions_button"
+                app:icon="@drawable/ic_google_nav" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/placeDetailsHikingTrailsButton"
-            style="@style/DefaultButton.Contained.Shadowless.Primary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_extra_large"
-            android:text="@string/home_bottom_sheet_hiking_trails_button"
-            app:icon="@drawable/ic_place_details_hiking_routes" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/placeDetailsShowAllPointsButton"
+                style="@style/DefaultButton.Contained.Shadowless.Secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_large"
+                android:text="@string/home_bottom_sheet_show_points_button"
+                app:icon="@drawable/ic_place_details_show_points" />
 
-    </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/placeDetailsHikingTrailsButton"
+                style="@style/DefaultButton.Contained.Shadowless.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_bottom_sheet_hiking_trails_button"
+                app:icon="@drawable/ic_place_details_hiking_routes" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/placeDetailsRoutePlanButton"
+                style="@style/DefaultButton.Contained.Shadowless.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_bottom_sheet_route_plan_button"
+                app:icon="@drawable/ic_place_details_route_plan" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
 </LinearLayout>

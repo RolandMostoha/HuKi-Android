@@ -16,6 +16,7 @@ jobs:
           aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
           google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
 
       - name: Static code analysis
         run: ./gradlew lint detekt
@@ -30,6 +31,7 @@ jobs:
           aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
           google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
 
       - name: Unit tests
         run: ./gradlew test
@@ -45,6 +47,7 @@ jobs:
           aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
           google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
 
       - name: Create test apks
         run: |
@@ -97,6 +100,7 @@ jobs:
           aws-amplifyconfiguration: ${{ secrets.AWS_AMPLIFY_CONFIGURATION }}
           aws-awsconfiguration: ${{ secrets.AWS_CONFIGURATION }}
           google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
 
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease

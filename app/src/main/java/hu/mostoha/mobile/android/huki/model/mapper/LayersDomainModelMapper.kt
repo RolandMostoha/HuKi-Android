@@ -3,9 +3,11 @@ package hu.mostoha.mobile.android.huki.model.mapper
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.util.WAY_CLOSED_DISTANCE_THRESHOLD_METER
 import hu.mostoha.mobile.android.huki.util.calculateDecline
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import hu.mostoha.mobile.android.huki.util.calculateIncline
+import hu.mostoha.mobile.android.huki.util.calculateTravelTime
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import io.ticofab.androidgpxparser.parser.domain.Gpx
 import javax.inject.Inject
@@ -14,7 +16,6 @@ class LayersDomainModelMapper @Inject constructor() {
 
     companion object {
         private const val GPX_GEO_POINTS_LIMIT = 2
-        private const val GPX_CLOSED_DISTANCE_THRESHOLD = 20
     }
 
     fun mapGpxDetails(fileName: String, gpx: Gpx): GpxDetails {
@@ -36,15 +37,17 @@ class LayersDomainModelMapper @Inject constructor() {
         val maxAltitude = locations
             .mapNotNull { it.altitude }
             .maxOrNull() ?: 0.0
+        val distance = locations.calculateDistance()
 
         return GpxDetails(
             fileName = fileName,
             locations = locations,
-            distance = locations.calculateDistance(),
+            distance = distance,
+            travelTime = locations.calculateTravelTime(),
             altitudeRange = minAltitude.toInt() to maxAltitude.toInt(),
             incline = locations.calculateIncline(),
             decline = locations.calculateDecline(),
-            isClosed = locations.first().distanceBetween(locations.last()) <= GPX_CLOSED_DISTANCE_THRESHOLD
+            isClosed = locations.first().distanceBetween(locations.last()) <= WAY_CLOSED_DISTANCE_THRESHOLD_METER
         )
     }
 

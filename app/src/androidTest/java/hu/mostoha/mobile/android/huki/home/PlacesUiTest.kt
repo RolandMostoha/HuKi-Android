@@ -137,8 +137,8 @@ class PlacesUiTest {
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
 
-            R.string.home_bottom_sheet_directions_button.isTextDisplayed()
-            R.string.home_bottom_sheet_hiking_trails_button.isTextDisplayed()
+            R.id.placeDetailsGoogleNavButton.isDisplayed()
+            R.string.home_bottom_sheet_route_plan_button.isTextDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
         }
     }
@@ -189,7 +189,7 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-            R.string.home_bottom_sheet_directions_button.clickWithText()
+            R.id.placeDetailsGoogleNavButton.click()
 
             intended(
                 allOf(
@@ -244,7 +244,7 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-            R.string.home_bottom_sheet_directions_button.clickWithText()
+            R.id.placeDetailsGoogleNavButton.click()
 
             intended(
                 allOf(
@@ -289,8 +289,9 @@ class PlacesUiTest {
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
 
-            R.string.home_bottom_sheet_directions_button.isTextDisplayed()
+            R.id.placeDetailsGoogleNavButton.isDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextDisplayed()
+            R.string.home_bottom_sheet_route_plan_button.isTextDisplayed()
             R.string.home_bottom_sheet_hiking_trails_button.isTextNotDisplayed()
         }
     }
@@ -309,7 +310,7 @@ class PlacesUiTest {
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
             R.string.home_bottom_sheet_show_points_button.clickWithText()
 
-            R.string.home_bottom_sheet_directions_button.isTextNotDisplayed()
+            R.id.placeDetailsGoogleNavButton.isNotDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
             R.string.home_bottom_sheet_hiking_trails_button.isTextDisplayed()
         }
@@ -364,9 +365,28 @@ class PlacesUiTest {
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
             R.string.home_bottom_sheet_show_points_button.clickWithText()
 
-            R.string.home_bottom_sheet_directions_button.isTextNotDisplayed()
+            R.id.placeDetailsGoogleNavButton.isNotDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
             R.string.home_bottom_sheet_hiking_trails_button.isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenRelationPlace_whenClickOnShowPointsButton_thenPlaceDetailsDisplayOnMap() {
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
+            R.string.home_bottom_sheet_show_points_button.clickWithText()
+
+            R.id.homeMapView.hasOverlay<Polyline>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 
@@ -387,25 +407,6 @@ class PlacesUiTest {
             scenario.recreate()
 
             R.id.homeMapView.hasOverlay<Marker>()
-            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
-        }
-    }
-
-    @Test
-    fun givenRelationPlace_whenClickOnShowPointsButton_thenPlaceDetailsDisplayOnMap() {
-        answerTestPlaces()
-        answerTestGeometries()
-
-        launchScenario<HomeActivity> {
-            val searchText = DEFAULT_SEARCH_TEXT
-
-            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
-
-            R.id.homeSearchBarInput.typeText(searchText)
-            DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
-            R.string.home_bottom_sheet_show_points_button.clickWithText()
-
-            R.id.homeMapView.hasOverlay<Polyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }

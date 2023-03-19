@@ -10,4 +10,14 @@
         <attr name="iconRes" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="DashedDividerView">
+        <attr name="dashGap" format="dimension" />
+        <attr name="dashWidth" format="dimension" />
+        <attr name="dashColor" format="reference|color" />
+        <attr name="dashDirection" format="enum">
+            <enum name="vertical" value="0" />
+            <enum name="horizontal" value="1" />
+        </attr>
+    </declare-styleable>
+
 </resources>

@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
@@ -9,9 +10,10 @@ import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
-import hu.mostoha.mobile.android.huki.model.ui.GpxAltitudeUiModel
+import hu.mostoha.mobile.android.huki.model.ui.AltitudeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileUrlProvider
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
@@ -22,6 +24,7 @@ import org.junit.Test
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import java.util.UUID
+import kotlin.time.Duration.Companion.hours
 
 class LayersUiModelMapperTest {
 
@@ -245,8 +248,9 @@ class LayersUiModelMapperTest {
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomainBoundingBox(),
+                travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
-                gpxAltitudeUiModel = GpxAltitudeUiModel(
+                altitudeUiModel = AltitudeUiModel(
                     minAltitudeText = DistanceFormatter.format(gpxDetails.altitudeRange.first),
                     maxAltitudeText = DistanceFormatter.format(gpxDetails.altitudeRange.second),
                     uphillText = DistanceFormatter.format(gpxDetails.incline),
@@ -274,8 +278,9 @@ class LayersUiModelMapperTest {
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomainBoundingBox(),
+                travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
-                gpxAltitudeUiModel = null,
+                altitudeUiModel = null,
                 isClosed = gpxDetails.isClosed,
                 isVisible = true
             )
@@ -287,6 +292,7 @@ class LayersUiModelMapperTest {
             id = UUID.randomUUID().toString(),
             fileName = "dera_szurdok.gpx",
             locations = DEFAULT_GPX_WAY_CLOSED.map { Location(it.first, it.second) },
+            travelTime = 2L.hours,
             distance = 15000,
             altitudeRange = 300 to 800,
             incline = 500,
@@ -302,8 +308,9 @@ class LayersUiModelMapperTest {
             boundingBox = BoundingBox
                 .fromGeoPoints(DEFAULT_GPX_WAY_CLOSED.map { GeoPoint(it.first, it.second) })
                 .toDomainBoundingBox(),
-            distanceText = Message.Res(R.string.gpx_details_bottom_sheet_distance, listOf(5)),
-            gpxAltitudeUiModel = null,
+            travelTimeText = Message.Text("02:00"),
+            distanceText = Message.Res(R.string.default_distance_template_m, listOf(5)),
+            altitudeUiModel = null,
             isClosed = true,
             isVisible = true
         )

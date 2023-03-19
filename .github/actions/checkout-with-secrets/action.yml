@@ -1,5 +1,5 @@
 name: "Checkout with secrets"
-description: "Checkout the repository with Google and AWS secrets"
+description: "Checkout the repository with secrets"
 inputs:
   aws-amplifyconfiguration:
     description: "The amplifyconfiguration.json file"
@@ -9,6 +9,9 @@ inputs:
     required: true
   google-services:
     description: "The google-services.json file"
+    required: true
+  graphhopper-api-key:
+    description: "The Graphhopper API key"
     required: true
 runs:
   using: "composite"
@@ -32,9 +35,6 @@ runs:
         json: ${{ inputs.aws-awsconfiguration }}
         dir: 'app/src/main/res/raw/'
 
-    - name: Copy Firebase google-services.json file to app folder
-      uses: jsdaniell/create-json@1.1.2
-      with:
-        name: "google-services.json"
-        json: ${{ inputs.google-services }}
-        dir: 'app/'
+    - name: Copy Graphhopper API key to local.properties
+      shell: bash
+      run: echo GRAPHHOPPER_API_KEY=\"${{ graphhopper-api-key }}\" > ./local.properties

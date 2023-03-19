@@ -9,7 +9,6 @@ import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
-import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
@@ -20,13 +19,9 @@ import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
-import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -50,13 +45,8 @@ class HomeViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
     private val placesInteractor: PlacesInteractor,
     private val landscapeInteractor: LandscapeInteractor,
-    private val myLocationProvider: AsyncMyLocationProvider,
     private val homeUiModelMapper: HomeUiModelMapper
 ) : ViewModel() {
-
-    companion object {
-        private const val SEARCH_QUERY_DELAY_MS = 1200L
-    }
 
     private val _mapUiModel = MutableStateFlow(MapUiModel())
     val mapUiModel: StateFlow<MapUiModel> = _mapUiModel
@@ -68,10 +58,6 @@ class HomeViewModel @Inject constructor(
 
     private val _placeDetails = MutableStateFlow<PlaceDetailsUiModel?>(null)
     val placeDetails: StateFlow<PlaceDetailsUiModel?> = _placeDetails
-        .stateIn(viewModelScope, WhileViewSubscribed, null)
-
-    private val _searchBarItems = MutableStateFlow<List<SearchBarItem>?>(null)
-    val searchBarItems: StateFlow<List<SearchBarItem>?> = _searchBarItems
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     private val _landscapes = MutableStateFlow<List<PlaceUiModel>?>(null)
@@ -87,8 +73,6 @@ class HomeViewModel @Inject constructor(
 
     private val _errorMessage = MutableSharedFlow<Message.Res>()
     val errorMessage: SharedFlow<Message.Res> = _errorMessage.asSharedFlow()
-
-    private var searchPlacesJob: Job? = null
 
     init {
         viewModelScope.launch(dispatcher) {
@@ -108,51 +92,8 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadSearchBarPlaces(searchText: String) {
-        searchPlacesJob?.let { job ->
-            if (job.isActive) {
-                job.cancel()
-                viewModelScope.launch {
-                    showLoading(false)
-                }
-            }
-        }
-        searchPlacesJob = viewModelScope.launch {
-            val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation()
-
-            placesInteractor.requestGetPlacesByFlow(searchText, lastKnownLocation)
-                .map { homeUiModelMapper.generateSearchBarItems(it, lastKnownLocation) }
-                .onEach { _searchBarItems.emit(it) }
-                .catch { throwable ->
-                    if (throwable is DomainException && throwable !is JobCancellationException) {
-                        _searchBarItems.emit(homeUiModelMapper.generatePlacesErrorItem(throwable))
-                    }
-                }
-                .onStart {
-                    showLoading(true)
-                    delay(SEARCH_QUERY_DELAY_MS)
-                }
-                .onCompletion { showLoading(false) }
-                .collect()
-        }
-    }
-
-    fun cancelSearch() {
-        searchPlacesJob?.let { job ->
-            if (job.isActive) {
-                job.cancel()
-            }
-        }
-        viewModelScope.launch(dispatcher) {
-            clearSearchBarItems()
-
-            showLoading(false)
-        }
-    }
-
     fun loadPlace(placeUiModel: PlaceUiModel) = viewModelScope.launch(dispatcher) {
         clearFollowLocation()
-        clearSearchBarItems()
 
         _placeDetails.emit(homeUiModelMapper.generatePlaceDetails(placeUiModel))
     }
@@ -234,10 +175,6 @@ class HomeViewModel @Inject constructor(
 
     fun clearFollowLocation() {
         updateMyLocationConfig(isFollowLocationEnabled = false)
-    }
-
-    private fun clearSearchBarItems() {
-        _searchBarItems.value = null
     }
 
     private suspend fun showLoading(isLoading: Boolean) {

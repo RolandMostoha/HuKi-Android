@@ -93,6 +93,13 @@ class OsmLicencesOverlay(
             )
             .setLibrary(
                 Library(
+                    title = context.getString(R.string.licences_graphhopper),
+                    url = context.getString(R.string.route_planner_graphhopper_url),
+                    license = License.CREATIVE_COMMONS
+                )
+            )
+            .setLibrary(
+                Library(
                     title = context.getString(R.string.licences_hiking_layer_title),
                     url = "https://data2.openstreetmap.hu/",
                     license = License.CREATIVE_COMMONS

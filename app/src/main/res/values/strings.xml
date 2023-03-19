@@ -1,29 +1,33 @@
 <resources>
 
-    <string name="app_name">HuKi</string>
-    <string name="app_name_debug">HuKi-Debug</string>
+    <string name="huki_app_name">HuKi</string>
+    <string name="huki_app_name_debug">HuKi-Debug</string>
 
     <string name="error_message_unknown">Unexpected error has occurred!\nThe error has been sent for further investigation!</string>
     <string name="error_message_missing_osm_id">The place with the corresponding OSM ID does not exist.</string>
     <string name="error_message_too_many_requests">Too many requests initiated from the device! Please try again later.</string>
     <string name="error_message_gateway_timeout">Openstreetmap timeout! Please try again.</string>
-    <string name="error_message_unknown_host">The OpenStreetMap system is currently unavailable. Please try again later.</string>
+    <string name="error_message_unknown_host">The Photon search system is currently unavailable. Please try again later.</string>
     <string name="error_message_gpx_parse_failed">Cannot process GPX. Please check its format.</string>
     <string name="error_message_gpx_uri_null">Unsuccessful choice. Try again with a valid GPX file.</string>
 
     <string name="default_distance_template_m">%d m</string>
     <string name="default_distance_template_km">%s km</string>
 
-    <string name="search_bar_empty_message">No results found</string>
     <string name="search_bar_hint">Search for places</string>
 
-    <string name="home_bottom_sheet_directions_button">Navigation</string>
+    <string name="place_finder_empty_message">No results found</string>
+    <string name="place_finder_my_location">My Location</string>
+    <string name="place_finder_manual_location">Manual pick</string>
+
+    <string name="home_bottom_sheet_directions_button">Google Nav</string>
     <string name="home_bottom_sheet_hiking_trails_button">Hiking trails</string>
     <string name="home_bottom_sheet_show_points_button">All points</string>
+    <string name="home_bottom_sheet_route_plan_button">Route plan</string>
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>
 
-    <string name="gpx_details_bottom_sheet_distance">Distance: %s</string>
-    <string name="gpx_details_bottom_sheet_navigate_start_button">Navigate to start</string>
+    <string name="gpx_details_bottom_sheet_google_maps_button">Google Nav</string>
+    <string name="gpx_details_bottom_sheet_start_button">Start</string>
 
     <string name="map_place_name_routes_nearby">Hiking trails in map</string>
     <string name="map_place_name_node_routes_nearby">Hiking trails near %s</string>
@@ -43,8 +47,18 @@
     <string name="layers_gpx_title">GPX Layer</string>
     <string name="layers_gpx_import_button_title">Import GPX</string>
 
+    <string name="route_planner_waypoint_hint">Place or location</string>
+    <string name="route_planner_done_button">Done</string>
+    <string name="route_planner_general_error_message">Error occurred. Please update your plan!</string>
+    <string name="route_planner_error_file_save_unsuccsessful">Error occurred during saving your plan to GPX file!</string>
+    <string name="route_planner_powered_by" translatable="false">Powered by</string>
+    <string name="route_planner_graphhopper_url" translatable="false">https://www.graphhopper.com/</string>
+    <string name="route_planner_accessibility_add_waypoint">Add new waypoint</string>
+    <string name="route_planner_accessibility_remove_waypoint">Remove waypoint</string>
+    <string name="route_planner_accessibility_return_waypoint">Return to start position</string>
+
     <string name="accessibility_home_fab_layers">Layers</string>
-    <string name="accessibility_home_fab_routes_nearby">Routes nearby</string>
+    <string name="accessibility_home_fab_route_planner">Route planner</string>
     <string name="accessibility_home_fab_my_location">My location</string>
     <string name="accessibility_home_fab_contact">Contact</string>
 
@@ -52,13 +66,14 @@
     <string name="licences_title">Licenses</string>
     <string name="licences_notices">License resources</string>
     <string name="licences_openstreetmap_title">OpenStreetMap</string>
+    <string name="licences_graphhopper">Graphhopper - Route Planner API</string>
     <string name="licences_hiking_layer_title">Hungarian Hiking Layer (turistautak.openstreetmap.hu)</string>
     <string name="licences_photon_title">Komoot - Photon (Search engine)</string>
     <string name="licences_osmdroid">OsmDroid - Tile render</string>
     <string name="licences_ok_button_title">OK</string>
 
     <string name="contact_title">Contact</string>
-    <string name="contact_subtitle">The project is Open-Source and still in development.\n\nI would be happy to receive bug reports, ideas or even a code review.</string>
+    <string name="contact_subtitle">The project is Open-Source and still in development.\n\nI would be happy to receive bug reports or ideas.</string>
     <string name="contact_email_title">Email:</string>
     <string name="contact_github_title">GitHub repository:</string>
     <string name="contact_email" translatable="false">huki.app@gmail.com</string>

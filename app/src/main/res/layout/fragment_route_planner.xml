@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/routePlannerContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/default_elevation"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/background_route_planner"
+    android:clickable="true"
+    android:elevation="@dimen/default_elevation"
+    android:focusable="true"
+    android:paddingHorizontal="@dimen/space_medium"
+    android:paddingTop="@dimen/space_extra_extra_large"
+    android:paddingBottom="@dimen/space_medium">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/routePlannerBackButton"
+        style="@style/DefaultButton.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_route_planner_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/routePlannerWaypointList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_small"
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@id/routePlannerRouteAttributesContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_max="@dimen/route_planner_waypoint_list_max_height"
+        app:layout_constraintStart_toEndOf="@id/routePlannerBackButton"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="3"
+        tools:listitem="@layout/item_route_planner_waypoint" />
+
+    <include
+        android:id="@+id/routePlannerRouteAttributesContainer"
+        layout="@layout/view_route_attributes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/routePlannerWaypointList" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/routePlannerErrorText"
+        style="@style/InfoViewTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_small"
+        android:layout_marginTop="@dimen/space_large"
+        android:drawableStart="@drawable/ic_search_bar_error"
+        android:gravity="start|center_vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/routePlannerWaypointList"
+        tools:text="Timeout error!" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/routePlannerButtonBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="routePlannerRouteAttributesContainer,routePlannerErrorText" />
+
+    <LinearLayout
+        android:id="@+id/routePlannerGraphhopperContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_medium"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="@dimen/space_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/routePlannerSaveButton"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/routePlannerPoweredByText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_small"
+            android:gravity="center_vertical"
+            android:text="@string/route_planner_powered_by"
+            android:textAppearance="@style/DefaultTextAppearance.Light.ExtraSmall" />
+
+        <ImageView
+            android:id="@+id/routePlannerGraphhopperLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_small_medium"
+            android:contentDescription="@null"
+            android:src="@drawable/img_graphhopper_logo" />
+
+    </LinearLayout>
+
+    <hu.mostoha.mobile.android.huki.views.ProgressMaterialButton
+        android:id="@+id/routePlannerSaveButton"
+        style="@style/DefaultButton.Contained.Shadowless.Secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        android:text="@string/route_planner_done_button"
+        app:iconRes="@drawable/ic_route_planner_done"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/routePlannerButtonBarrier"
+        app:layout_constraintVertical_bias="1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

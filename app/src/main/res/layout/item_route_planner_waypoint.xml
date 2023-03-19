@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/space_small"
+        android:orientation="vertical">
+
+        <hu.mostoha.mobile.android.huki.views.DashedDividerView
+            android:id="@+id/routePlannerDashedDividerTop"
+            android:layout_width="@dimen/default_dashed_divider_width"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            app:dashDirection="vertical" />
+
+        <ImageView
+            android:id="@+id/routePlannerWaypointImage"
+            android:layout_width="@dimen/icon_size_medium"
+            android:layout_height="@dimen/icon_size_medium"
+            tools:src="@drawable/ic_marker_gpx_start" />
+
+        <hu.mostoha.mobile.android.huki.views.DashedDividerView
+            android:id="@+id/routePlannerDashedDividerBottom"
+            android:layout_width="@dimen/default_dashed_divider_width"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            app:dashDirection="vertical" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/routePlannerWaypointInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_extra_small"
+        android:layout_weight="1"
+        android:hint="@string/route_planner_waypoint_hint"
+        android:textColorHint="@color/colorSecondaryText"
+        app:endIconDrawable="@drawable/ic_route_planner_drag"
+        app:endIconMode="custom"
+        app:endIconTint="@color/colorPrimaryIcon"
+        app:shapeAppearance="@style/DefaultShapeAppearance.InputField">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/routePlannerWaypointInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="textPostalAddress"
+            android:lines="1"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/routePlannerWaypointActionButton"
+        style="@style/DefaultButton.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:icon="@drawable/ic_input_clear" />
+
+</LinearLayout>

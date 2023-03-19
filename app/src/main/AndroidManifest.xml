@@ -20,9 +20,10 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="false"
         android:icon="${appIcon}"
-        android:label="${appName}"
+        android:label="${appNameHuki}"
         android:supportsRtl="false"
-        android:theme="@style/BaseTheme.HuKiTheme">
+        android:theme="@style/BaseTheme.HuKiTheme"
+        tools:replace="android:label,android:allowBackup">
 
         <activity
             android:name=".ui.home.HomeActivity"

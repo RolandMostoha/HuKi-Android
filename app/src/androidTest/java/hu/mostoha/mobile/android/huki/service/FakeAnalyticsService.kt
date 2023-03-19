@@ -4,7 +4,7 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 
 class FakeAnalyticsService : AnalyticsService {
 
-    override fun searchBarPlaceClicked(searchText: String, placeName: String) = Unit
+    override fun placeFinderPlaceClicked(searchText: String, placeName: String) = Unit
 
     override fun loadLandscapeClicked(placeName: String) = Unit
 
@@ -16,7 +16,9 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun myLocationClicked() = Unit
 
-    override fun navigationClicked(destinationPlaceName: String) = Unit
+    override fun routePlannerClicked() = Unit
+
+    override fun googleMapsClicked(destinationPlaceName: String) = Unit
 
     override fun gpxImportClicked() = Unit
 

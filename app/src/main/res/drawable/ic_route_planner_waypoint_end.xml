@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/ic_route_planner_waypoint_background" />
+
+    <item
+        android:bottom="7dp"
+        android:drawable="@drawable/ic_marker_gpx_end_foreground"
+        android:end="7dp"
+        android:start="7dp"
+        android:top="7dp" />
+
+</layer-list>

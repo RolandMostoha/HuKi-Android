@@ -12,6 +12,10 @@
         <item name="cornerSize">@dimen/default_corner_size_input</item>
     </style>
 
+    <style name="DefaultShapeAppearance.InputField.OnMap">
+        <item name="cornerSize">@dimen/default_corner_size_input_on_map</item>
+    </style>
+
     <style name="DefaultShapeAppearance.Button">
         <item name="cornerSize">@dimen/default_corner_size_input</item>
     </style>
@@ -36,7 +40,12 @@
         <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <style name="DefaultButton.Contained.Shadowless.Primary" />
+    <style name="DefaultButton.Contained.Shadowless.Primary">
+        <item name="android:paddingTop">@dimen/space_medium</item>
+        <item name="android:paddingBottom">@dimen/space_medium</item>
+        <item name="strokeColor">@color/colorPrimary</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
 
     <style name="DefaultButton.Contained.Shadowless.Secondary">
         <item name="android:paddingTop">@dimen/space_medium</item>
@@ -98,6 +107,10 @@
         <item name="trackThickness">@dimen/progress_fab_stroke_width</item>
     </style>
 
+    <style name="DefaultCircularProgressIndicator.Small">
+        <item name="indicatorSize">35dp</item>
+    </style>
+
     <style name="DefaultBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/DefaultShapeAppearance.BottomSheet</item>
         <item name="android:backgroundTint">@color/colorBackground</item>
@@ -130,6 +143,13 @@
         <item name="android:layout_width">28dp</item>
         <item name="android:layout_height">5dp</item>
         <item name="android:background">@drawable/background_drag_view</item>
+    </style>
+
+    <style name="DefaultDashedDivider">
+        <item name="dashGap">4dp</item>
+        <item name="dashWidth">2dp</item>
+        <item name="dashColor">@color/colorStrokeOnMap</item>
+        <item name="dashDirection">horizontal</item>
     </style>
 
 </resources>

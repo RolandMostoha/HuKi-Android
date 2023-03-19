@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/routeAttributesContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/space_small"
+    android:orientation="horizontal">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/routeAttributesTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_small_medium"
+        android:drawableEnd="@drawable/ic_route_attributes_time"
+        android:drawablePadding="@dimen/space_extra_small"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
+        tools:text="00:51" />
+
+    <View
+        android:id="@+id/routeAttributesTimeTextSeparator"
+        android:layout_width="@dimen/default_horizontal_separator_width"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/space_small_medium"
+        android:background="@color/colorStroke" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/routeAttributesDistanceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_small_medium"
+        android:drawableEnd="@drawable/ic_route_attributes_distance"
+        android:drawablePadding="@dimen/space_extra_small"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
+        tools:text="14 km" />
+
+    <View
+        android:id="@+id/routeAttributesUphillTextSeparator"
+        android:layout_width="@dimen/default_horizontal_separator_width"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/space_small_medium"
+        android:background="@color/colorStroke" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/routeAttributesUphillText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_small_medium"
+        android:drawableEnd="@drawable/ic_route_attributes_uphill"
+        android:drawablePadding="@dimen/space_extra_small"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
+        tools:text="500 m" />
+
+    <View
+        android:id="@+id/routeAttributesDownhillTextSeparator"
+        android:layout_width="@dimen/default_horizontal_separator_width"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/space_small_medium"
+        android:background="@color/colorStroke" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/routeAttributesDownhillText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_small_medium"
+        android:drawableEnd="@drawable/ic_route_attributes_downhill"
+        android:drawablePadding="@dimen/space_extra_small"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
+        tools:text="300 m" />
+
+</LinearLayout>

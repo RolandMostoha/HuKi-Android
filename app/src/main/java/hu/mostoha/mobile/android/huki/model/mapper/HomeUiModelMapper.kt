@@ -1,80 +1,24 @@
 package hu.mostoha.mobile.android.huki.model.mapper
 
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
-import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
-import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.ui.home.searchbar.SearchBarItem
 import hu.mostoha.mobile.android.huki.util.calculateCenter
-import hu.mostoha.mobile.android.huki.util.distanceBetween
 import javax.inject.Inject
 
 class HomeUiModelMapper @Inject constructor() {
-
-    fun generateSearchBarItems(places: List<Place>, location: Location? = null): List<SearchBarItem> {
-        return if (places.isEmpty()) {
-            listOf(
-                SearchBarItem.Error(
-                    messageRes = R.string.search_bar_empty_message.toMessage(),
-                    drawableRes = R.drawable.ic_search_bar_empty_result
-                )
-            )
-        } else {
-            generatePlaces(places, location).map { placeUiModel -> SearchBarItem.Place(placeUiModel) }
-        }
-    }
-
-    private fun generatePlaces(places: List<Place>, location: Location?): List<PlaceUiModel> {
-        return places.map { place ->
-            PlaceUiModel(
-                osmId = place.osmId,
-                placeType = place.placeType,
-                primaryText = place.name.toMessage(),
-                secondaryText = Message.Text(generateAddress(place)),
-                iconRes = when (place.placeType) {
-                    PlaceType.NODE -> R.drawable.ic_home_search_bar_type_node
-                    PlaceType.WAY -> R.drawable.ic_home_search_bar_type_way
-                    PlaceType.RELATION -> R.drawable.ic_home_search_bar_type_relation
-                },
-                geoPoint = place.location.toGeoPoint(),
-                boundingBox = place.boundingBox,
-                isLandscape = false,
-                distanceText = location?.let { DistanceFormatter.format(place.location.distanceBetween(location)) }
-            )
-        }
-    }
-
-    private fun generateAddress(place: Place): String {
-        return listOfNotNull(
-            place.postCode,
-            place.city ?: place.country,
-            place.street
-        ).joinToString(" ")
-    }
-
-    fun generatePlacesErrorItem(domainException: DomainException): List<SearchBarItem> {
-        return listOf(
-            SearchBarItem.Error(
-                messageRes = domainException.messageRes,
-                drawableRes = R.drawable.ic_search_bar_error
-            )
-        )
-    }
 
     fun generatePlaceDetails(placeUiModel: PlaceUiModel): PlaceDetailsUiModel {
         return generatePlaceDetails(

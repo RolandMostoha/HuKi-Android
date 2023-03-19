@@ -10,6 +10,9 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OVERLAY_TYPE_ORDER_MAP
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
+import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import hu.mostoha.mobile.android.huki.util.getGradientColors
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
@@ -159,7 +162,7 @@ fun MapView.addPolygon(
 }
 
 fun MapView.addGpxMarker(
-    overlayId: String = UUID.randomUUID().toString(),
+    overlayId: String,
     geoPoint: GeoPoint,
     iconDrawable: Drawable,
     onClick: (Marker) -> Unit
@@ -180,9 +183,9 @@ fun MapView.addGpxMarker(
 }
 
 fun MapView.addGpxPolyline(
-    overlayId: String = UUID.randomUUID().toString(),
+    overlayId: String,
     geoPoints: List<GeoPoint>,
-    hasAltitudeValues: Boolean,
+    useAltitudeColors: Boolean,
     onClick: (PolyOverlayWithIW) -> Unit
 ): Polyline {
     val context = this.context
@@ -192,7 +195,7 @@ fun MapView.addGpxPolyline(
         setPoints(geoPoints)
 
         val borderPaint = Paint().apply {
-            color = if (hasAltitudeValues) {
+            color = if (useAltitudeColors) {
                 ContextCompat.getColor(context, R.color.colorPolylineBorder)
             } else {
                 ContextCompat.getColor(context, R.color.colorPolyline)
@@ -206,7 +209,7 @@ fun MapView.addGpxPolyline(
         }
         outlinePaintLists.add(MonochromaticPaintList(borderPaint))
 
-        if (hasAltitudeValues) {
+        if (useAltitudeColors) {
             val fillPaint = Paint().apply {
                 isAntiAlias = true
                 strokeWidth = context.resources.getDimension(R.dimen.default_polyline_fill_width)
@@ -223,6 +226,77 @@ fun MapView.addGpxPolyline(
             val colorMapping = ColorMappingCycle(gradientColors)
             outlinePaintLists.add(PolychromaticPaintList(fillPaint, colorMapping, false))
         }
+
+        setOnClickListener { polygon, _, _ ->
+            onClick.invoke(polygon)
+            true
+        }
+    }
+
+    overlays.add(polyline)
+    invalidate()
+
+    return polyline
+}
+
+fun MapView.addRoutePlannerMarker(
+    overlayId: String,
+    geoPoint: GeoPoint,
+    waypointType: WaypointType,
+    onClick: (Marker) -> Unit
+): Marker {
+    val iconDrawable = when (waypointType) {
+        WaypointType.START -> R.drawable.ic_marker_gpx_start.toDrawable(this.context)
+        WaypointType.INTERMEDIATE -> R.drawable.ic_marker_gpx_intermediate.toDrawable(this.context)
+        WaypointType.END -> R.drawable.ic_marker_gpx_end.toDrawable(this.context)
+    }
+
+    val marker = RoutePlannerMarker(this).apply {
+        id = overlayId
+        position = geoPoint
+        icon = iconDrawable
+        setOnMarkerClickListener { marker, _ ->
+            onClick.invoke(marker)
+            true
+        }
+    }
+    overlays.add(marker)
+    invalidate()
+
+    return marker
+}
+
+fun MapView.addRoutePlannerPolyline(
+    overlayId: String,
+    geoPoints: List<GeoPoint>,
+    onClick: (PolyOverlayWithIW) -> Unit
+): Polyline {
+    val context = this.context
+    val polyline = RoutePlannerPolyline(this).apply {
+        id = overlayId
+
+        val borderPaint = Paint().apply {
+            color = ContextCompat.getColor(context, R.color.colorPolylineBorder)
+            isAntiAlias = true
+            strokeWidth = context.resources.getDimension(R.dimen.default_polyline_width)
+            style = Paint.Style.STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+        }
+        outlinePaintLists.add(MonochromaticPaintList(borderPaint))
+        val fillPaint = Paint().apply {
+            color = ContextCompat.getColor(context, R.color.colorPolyline)
+            isAntiAlias = true
+            strokeWidth = context.resources.getDimension(R.dimen.default_polyline_fill_width)
+            style = Paint.Style.FILL_AND_STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+        }
+        outlinePaintLists.add(MonochromaticPaintList(fillPaint))
+
+        setPoints(geoPoints)
 
         setOnClickListener { polygon, _, _ ->
             onClick.invoke(polygon)

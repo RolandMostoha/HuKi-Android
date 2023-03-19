@@ -1,14 +1,16 @@
 package hu.mostoha.mobile.android.huki.model.mapper
 
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
-import hu.mostoha.mobile.android.huki.model.ui.GpxAltitudeUiModel
+import hu.mostoha.mobile.android.huki.model.ui.AltitudeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
 import org.osmdroid.util.BoundingBox
@@ -63,9 +65,10 @@ class LayersUiModelMapper @Inject constructor() {
             end = locations.last().toGeoPoint(),
             geoPoints = geoPoints,
             boundingBox = BoundingBox.fromGeoPoints(geoPoints).toDomainBoundingBox(),
+            travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
             distanceText = DistanceFormatter.format(gpxDetails.distance),
-            gpxAltitudeUiModel = if (altitudeRange.first != 0 && altitudeRange.second != 0) {
-                GpxAltitudeUiModel(
+            altitudeUiModel = if (altitudeRange.first != 0 && altitudeRange.second != 0) {
+                AltitudeUiModel(
                     minAltitudeText = DistanceFormatter.format(altitudeRange.first),
                     maxAltitudeText = DistanceFormatter.format(altitudeRange.second),
                     uphillText = DistanceFormatter.format(gpxDetails.incline),

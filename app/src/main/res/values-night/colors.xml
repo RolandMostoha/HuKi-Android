@@ -6,6 +6,7 @@
     <color name="colorPrimaryIcon">#B3ffffff</color>
     <color name="colorPrimaryIconStrong">#ffffff</color>
     <color name="colorPrimaryText">#DEffffff</color>
+    <color name="colorPrimaryTextStrong">#DE000000</color>
     <color name="colorPrimaryTextDisabled">#80ffffff</color>
     <color name="colorSecondaryText">#B3ffffff</color>
     <color name="colorBackground">#2D2D2D</color>
@@ -13,6 +14,7 @@
     <color name="colorStroke">#919191</color>
     <color name="colorStrokeOnMap">#DE000000</color>
     <color name="colorStrokeMarker">#474747</color>
+    <color name="colorDivider">#61919191</color>
     <color name="colorMarker">@color/colorPrimary</color>
     <color name="colorPolyline">@color/colorPrimary</color>
     <color name="colorPolylineFill">#1F6BBA6F</color>

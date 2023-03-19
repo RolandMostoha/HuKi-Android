@@ -10,10 +10,10 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
+import hu.mostoha.mobile.android.huki.util.calculateTravelTime
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -33,8 +33,6 @@ class LayersInteractorTest {
     @Before
     fun setUp() {
         layersInteractor = LayersInteractor(exceptionLogger, layersRepository)
-
-        mockkStatic(Uri::class)
 
         every { exceptionLogger.recordException(any()) } returns Unit
     }
@@ -101,6 +99,9 @@ class LayersInteractorTest {
         private val DEFAULT_GPX_DETAILS = GpxDetails(
             fileName = "dera_szurdok.gpx",
             locations = DEFAULT_GPX_WAY_CLOSED.map { Location(it.first, it.second) },
+            travelTime = DEFAULT_GPX_WAY_CLOSED
+                .map { Location(it.first, it.second) }
+                .calculateTravelTime(),
             distance = 15000,
             altitudeRange = 300 to 800,
             incline = 500,

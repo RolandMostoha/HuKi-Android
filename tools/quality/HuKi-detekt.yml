@@ -121,7 +121,7 @@ complexity:
     ignoredLabels: [ ]
   LargeClass:
     active: true
-    threshold: 600
+    threshold: 650
   LongMethod:
     active: true
     threshold: 60
@@ -163,11 +163,11 @@ complexity:
   TooManyFunctions:
     active: true
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
-    thresholdInFiles: 30
-    thresholdInClasses: 30
-    thresholdInInterfaces: 30
-    thresholdInObjects: 30
-    thresholdInEnums: 30
+    thresholdInFiles: 35
+    thresholdInClasses: 35
+    thresholdInInterfaces: 35
+    thresholdInObjects: 35
+    thresholdInEnums: 35
     ignoreDeprecated: false
     ignorePrivate: false
     ignoreOverridden: false

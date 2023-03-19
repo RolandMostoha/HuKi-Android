@@ -17,6 +17,7 @@ android {
         targetSdk 33
         versionCode gitVersionCode
         versionName gitVersionName
+        buildConfigField("String", "GRAPHHOPPER_API_KEY", getGraphhopperApiKey())
 
         testInstrumentationRunner "hu.mostoha.mobile.android.huki.HiltTestRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -30,8 +31,8 @@ android {
         debug {
             applicationIdSuffix '.debug'
             manifestPlaceholders = [
-                    appName: "@string/app_name_debug",
-                    appIcon: "@mipmap/ic_launcher_debug"
+                    appNameHuki: "@string/huki_app_name_debug",
+                    appIcon    : "@mipmap/ic_launcher_debug"
             ]
             archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
             firebaseCrashlytics {
@@ -40,8 +41,8 @@ android {
         }
         release {
             manifestPlaceholders = [
-                    appName: "@string/app_name",
-                    appIcon: "@mipmap/ic_launcher"
+                    appNameHuki: "@string/huki_app_name",
+                    appIcon    : "@mipmap/ic_launcher"
             ]
             archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
             minifyEnabled true
@@ -116,8 +117,9 @@ dependencies {
     // Google Play Services Location
     implementation "com.google.android.gms:play-services-location:21.0.1"
 
-    // GPX Parser
+    // GPX
     implementation 'com.github.ticofab:android-gpx-parser:2.3.0'
+    implementation 'com.codebutchery.android:gpx_lib:1.0.3'
 
     // OSM
     implementation 'org.osmdroid:osmdroid-android:6.1.14'
@@ -166,6 +168,7 @@ dependencies {
     def espressoVersion = "3.4.0"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.3.0"
     androidTestImplementation "com.google.truth:truth:1.1.3"
     androidTestImplementation "androidx.test.ext:junit:$androidExtTestVersion"
     androidTestImplementation "androidx.test.ext:junit-ktx:$androidExtTestVersion"
@@ -184,4 +187,11 @@ dependencies {
 
 kapt {
     correctErrorTypes true
+}
+
+String getGraphhopperApiKey() {
+    def propFile = rootProject.file("./local.properties")
+    def properties = new Properties()
+    properties.load(new FileInputStream(propFile))
+    return properties['GRAPHHOPPER_API_KEY']
 }
