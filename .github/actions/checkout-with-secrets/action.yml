@@ -37,4 +37,4 @@ runs:
 
     - name: Copy Graphhopper API key to local.properties
       shell: bash
-      run: echo GRAPHHOPPER_API_KEY=\"${{ graphhopper-api-key }}\" > ./local.properties
+      run: echo GRAPHHOPPER_API_KEY=\"${{ inputs.graphhopper-api-key }}\" > ./local.properties
