@@ -6,6 +6,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.osmdroid.infowindow.MapInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OVERLAY_TYPE_ORDER_MAP
@@ -164,16 +165,28 @@ fun MapView.addPolygon(
 fun MapView.addGpxMarker(
     overlayId: String,
     geoPoint: GeoPoint,
-    iconDrawable: Drawable,
+    waypointType: WaypointType,
+    infoWindowTitle: String? = null,
     onClick: (Marker) -> Unit
 ): Marker {
+    val iconDrawable = when (waypointType) {
+        WaypointType.START -> R.drawable.ic_marker_gpx_start.toDrawable(this.context)
+        WaypointType.INTERMEDIATE -> R.drawable.ic_marker_gpx_intermediate.toDrawable(this.context)
+        WaypointType.END -> R.drawable.ic_marker_gpx_end.toDrawable(this.context)
+    }
     val marker = GpxMarker(this).apply {
         id = overlayId
         position = geoPoint
         icon = iconDrawable
-        setOnMarkerClickListener { marker, _ ->
-            onClick.invoke(marker)
-            true
+
+        if (infoWindowTitle != null) {
+            infoWindow = MapInfoWindow(this@addGpxMarker, infoWindowTitle)
+            title = infoWindowTitle
+        } else {
+            setOnMarkerClickListener { marker, _ ->
+                onClick.invoke(marker)
+                true
+            }
         }
     }
     overlays.add(marker)
@@ -250,7 +263,6 @@ fun MapView.addRoutePlannerMarker(
         WaypointType.INTERMEDIATE -> R.drawable.ic_marker_gpx_intermediate.toDrawable(this.context)
         WaypointType.END -> R.drawable.ic_marker_gpx_end.toDrawable(this.context)
     }
-
     val marker = RoutePlannerMarker(this).apply {
         id = overlayId
         position = geoPoint

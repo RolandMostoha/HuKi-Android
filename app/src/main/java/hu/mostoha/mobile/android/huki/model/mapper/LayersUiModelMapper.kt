@@ -8,11 +8,16 @@ import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.AltitudeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.WaypointUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
+import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
+import hu.mostoha.mobile.android.huki.util.WAY_CLOSED_DISTANCE_THRESHOLD_METER
+import hu.mostoha.mobile.android.huki.util.distanceBetween
 import org.osmdroid.util.BoundingBox
 import javax.inject.Inject
 
@@ -56,14 +61,42 @@ class LayersUiModelMapper @Inject constructor() {
     fun mapGpxDetails(gpxDetails: GpxDetails): GpxDetailsUiModel {
         val locations = gpxDetails.locations
         val geoPoints = locations.map { it.toGeoPoint() }
+        val startLocation = geoPoints.first().toLocation()
+        val endLocation = geoPoints.last().toLocation()
+        val isRouteClosed = startLocation.distanceBetween(endLocation) <= WAY_CLOSED_DISTANCE_THRESHOLD_METER
+        val edgeWaypoints = if (isRouteClosed) {
+            listOf(
+                WaypointUiModel(
+                    startLocation.toGeoPoint(),
+                    waypointType = WaypointType.END,
+                )
+            )
+        } else {
+            listOf(
+                WaypointUiModel(
+                    startLocation.toGeoPoint(),
+                    waypointType = WaypointType.START,
+                ),
+                WaypointUiModel(
+                    endLocation.toGeoPoint(),
+                    waypointType = WaypointType.END,
+                ),
+            )
+        }
+        val gpxWaypoints = gpxDetails.gpxWaypoints.map { waypoint ->
+            WaypointUiModel(
+                geoPoint = waypoint.location.toGeoPoint(),
+                waypointType = WaypointType.INTERMEDIATE,
+                name = waypoint.name?.toMessage(),
+            )
+        }
         val altitudeRange = gpxDetails.altitudeRange
 
         return GpxDetailsUiModel(
             id = gpxDetails.id,
             name = gpxDetails.fileName,
-            start = locations.first().toGeoPoint(),
-            end = locations.last().toGeoPoint(),
             geoPoints = geoPoints,
+            waypoints = gpxWaypoints + edgeWaypoints,
             boundingBox = BoundingBox.fromGeoPoints(geoPoints).toDomainBoundingBox(),
             travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
             distanceText = DistanceFormatter.format(gpxDetails.distance),
@@ -77,7 +110,6 @@ class LayersUiModelMapper @Inject constructor() {
             } else {
                 null
             },
-            isClosed = gpxDetails.isClosed,
             isVisible = true
         )
     }

@@ -99,6 +99,7 @@ class LayersInteractorTest {
         private val DEFAULT_GPX_DETAILS = GpxDetails(
             fileName = "dera_szurdok.gpx",
             locations = DEFAULT_GPX_WAY_CLOSED.map { Location(it.first, it.second) },
+            gpxWaypoints = emptyList(),
             travelTime = DEFAULT_GPX_WAY_CLOSED
                 .map { Location(it.first, it.second) }
                 .calculateTravelTime(),
@@ -106,7 +107,6 @@ class LayersInteractorTest {
             altitudeRange = 300 to 800,
             incline = 500,
             decline = 300,
-            isClosed = true
         )
     }
 

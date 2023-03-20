@@ -42,7 +42,7 @@ class GpxDetailsBottomSheetDialog(
                     hide()
                 }
                 gpxDetailsGoogleMapsButton.setOnClickListener {
-                    context.startGoogleMapsDirectionsIntent(gpxDetails.start)
+                    context.startGoogleMapsDirectionsIntent(gpxDetails.geoPoints.first())
                 }
             }
             show()

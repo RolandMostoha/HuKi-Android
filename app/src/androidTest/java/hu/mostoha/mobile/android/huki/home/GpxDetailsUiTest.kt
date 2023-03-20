@@ -27,6 +27,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
@@ -212,6 +213,23 @@ class GpxDetailsUiTest {
     }
 
     @Test
+    fun givenGpxFileWithWaypoints_whenImportGpxClicked_thenGpxDetailsBottomSheetIsDisplayedWithoutAltitude() {
+        launchScenario<HomeActivity> {
+            R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
+
+            val activityResult = getTestGpxFileResult(TEST_GPX_NAME_WITH_WAYPOINTS)
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(activityResult)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
+            R.id.homeMapView.hasOverlayCount<GpxMarker>(6)
+            R.id.homeMapView.hasOverlayCount<GpxPolyline>(1)
+        }
+    }
+
+    @Test
     fun givenSecondGpxFile_whenImportGpxClicked_thenPreviousGpxIsCleared() {
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
@@ -260,6 +278,7 @@ class GpxDetailsUiTest {
     companion object {
         private const val TEST_GPX_NAME = "dera_szurdok.gpx"
         private const val TEST_GPX_NAME_WITHOUT_ALTITUDE = "dera_szurdok_without_altitude.gpx"
+        private const val TEST_GPX_NAME_WITH_WAYPOINTS = "sorrento_with_waypoints.gpx"
         private val TEST_GPX_START_LOCATION = Location(47.68498711287975, 18.91935557126999)
         private val DEFAULT_MY_LOCATION = Location(
             DEFAULT_MY_LOCATION_LATITUDE,

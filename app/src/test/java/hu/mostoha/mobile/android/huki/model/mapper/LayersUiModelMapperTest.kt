@@ -10,15 +10,20 @@ import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.huki.model.domain.toGpxWaypoint
+import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.AltitudeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.WaypointUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileUrlProvider
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_OPEN
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
+import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import io.mockk.mockk
 import org.junit.Test
 import org.osmdroid.util.BoundingBox
@@ -242,9 +247,17 @@ class LayersUiModelMapperTest {
             GpxDetailsUiModel(
                 id = gpxDetails.id,
                 name = gpxDetails.fileName,
-                start = gpxDetails.locations.first().toGeoPoint(),
-                end = gpxDetails.locations.last().toGeoPoint(),
                 geoPoints = gpxDetails.locations.map { it.toGeoPoint() },
+                waypoints = listOf(
+                    WaypointUiModel(
+                        geoPoint = gpxDetails.gpxWaypoints.first().location.toGeoPoint(),
+                        waypointType = WaypointType.INTERMEDIATE,
+                    ),
+                    WaypointUiModel(
+                        geoPoint = gpxDetails.locations.first().toGeoPoint(),
+                        waypointType = WaypointType.END,
+                    )
+                ),
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomainBoundingBox(),
@@ -256,7 +269,47 @@ class LayersUiModelMapperTest {
                     uphillText = DistanceFormatter.format(gpxDetails.incline),
                     downhillText = DistanceFormatter.format(gpxDetails.decline),
                 ),
-                isClosed = gpxDetails.isClosed,
+                isVisible = true
+            )
+        )
+    }
+
+    @Test
+    fun `Given GPX details with open route, when mapGpxDetails, then GPX Details UI model returns`() {
+        val gpxDetails = DEFAULT_GPX_DETAILS_OPEN
+
+        val gpxDetailsUiModel = mapper.mapGpxDetails(gpxDetails)
+
+        assertThat(gpxDetailsUiModel).isEqualTo(
+            GpxDetailsUiModel(
+                id = gpxDetails.id,
+                name = gpxDetails.fileName,
+                geoPoints = gpxDetails.locations.map { it.toGeoPoint() },
+                waypoints = listOf(
+                    WaypointUiModel(
+                        geoPoint = gpxDetails.gpxWaypoints.first().location.toGeoPoint(),
+                        waypointType = WaypointType.INTERMEDIATE,
+                    ),
+                    WaypointUiModel(
+                        geoPoint = gpxDetails.locations.first().toGeoPoint(),
+                        waypointType = WaypointType.START,
+                    ),
+                    WaypointUiModel(
+                        geoPoint = gpxDetails.locations.last().toGeoPoint(),
+                        waypointType = WaypointType.END,
+                    )
+                ),
+                boundingBox = BoundingBox
+                    .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
+                    .toDomainBoundingBox(),
+                travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
+                distanceText = DistanceFormatter.format(gpxDetails.distance),
+                altitudeUiModel = AltitudeUiModel(
+                    minAltitudeText = DistanceFormatter.format(gpxDetails.altitudeRange.first),
+                    maxAltitudeText = DistanceFormatter.format(gpxDetails.altitudeRange.second),
+                    uphillText = DistanceFormatter.format(gpxDetails.incline),
+                    downhillText = DistanceFormatter.format(gpxDetails.decline),
+                ),
                 isVisible = true
             )
         )
@@ -272,16 +325,23 @@ class LayersUiModelMapperTest {
             GpxDetailsUiModel(
                 id = gpxDetails.id,
                 name = gpxDetails.fileName,
-                start = gpxDetails.locations.first().toGeoPoint(),
-                end = gpxDetails.locations.last().toGeoPoint(),
                 geoPoints = gpxDetails.locations.map { it.toGeoPoint() },
+                waypoints = listOf(
+                    WaypointUiModel(
+                        geoPoint = gpxDetails.gpxWaypoints.first().location.toGeoPoint(),
+                        waypointType = WaypointType.INTERMEDIATE,
+                    ),
+                    WaypointUiModel(
+                        geoPoint = gpxDetails.locations.first().toGeoPoint(),
+                        waypointType = WaypointType.END,
+                    )
+                ),
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomainBoundingBox(),
                 travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
                 altitudeUiModel = null,
-                isClosed = gpxDetails.isClosed,
                 isVisible = true
             )
         )
@@ -291,19 +351,34 @@ class LayersUiModelMapperTest {
         private val DEFAULT_GPX_DETAILS = GpxDetails(
             id = UUID.randomUUID().toString(),
             fileName = "dera_szurdok.gpx",
+            gpxWaypoints = listOf(DEFAULT_GPX_WAY_CLOSED.first().toLocation().toGpxWaypoint()),
             locations = DEFAULT_GPX_WAY_CLOSED.map { Location(it.first, it.second) },
             travelTime = 2L.hours,
             distance = 15000,
             altitudeRange = 300 to 800,
             incline = 500,
             decline = 300,
-            isClosed = true
+        )
+        private val DEFAULT_GPX_DETAILS_OPEN = GpxDetails(
+            id = UUID.randomUUID().toString(),
+            fileName = "dera_szurdok.gpx",
+            gpxWaypoints = listOf(DEFAULT_GPX_WAY_OPEN.first().toLocation().toGpxWaypoint()),
+            locations = DEFAULT_GPX_WAY_OPEN.map { Location(it.first, it.second) },
+            travelTime = 2L.hours,
+            distance = 15000,
+            altitudeRange = 300 to 800,
+            incline = 500,
+            decline = 300,
         )
         private val DEFAULT_GPX_DETAILS_UI_MODEL = GpxDetailsUiModel(
             id = DEFAULT_GPX_DETAILS.id,
             name = "dera_szurdok",
-            start = GeoPoint(DEFAULT_GPX_WAY_CLOSED.first().first, DEFAULT_GPX_WAY_CLOSED.first().second),
-            end = GeoPoint(DEFAULT_GPX_WAY_CLOSED.last().first, DEFAULT_GPX_WAY_CLOSED.last().second),
+            waypoints = listOf(
+                WaypointUiModel(
+                    geoPoint = DEFAULT_GPX_WAY_CLOSED.first().toLocation().toGeoPoint(),
+                    waypointType = WaypointType.INTERMEDIATE
+                )
+            ),
             geoPoints = DEFAULT_GPX_WAY_CLOSED.map { GeoPoint(it.first, it.second) },
             boundingBox = BoundingBox
                 .fromGeoPoints(DEFAULT_GPX_WAY_CLOSED.map { GeoPoint(it.first, it.second) })
@@ -311,7 +386,6 @@ class LayersUiModelMapperTest {
             travelTimeText = Message.Text("02:00"),
             distanceText = Message.Res(R.string.default_distance_template_m, listOf(5)),
             altitudeUiModel = null,
-            isClosed = true,
             isVisible = true
         )
     }

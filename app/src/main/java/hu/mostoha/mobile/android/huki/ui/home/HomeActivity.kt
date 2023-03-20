@@ -727,8 +727,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         bottomSheets.showOnly(placeDetailsBottomSheet)
     }
 
-    // TODO
-    @Suppress("LongMethod")
     private fun initGpxDetails(gpxDetailsUiModel: GpxDetailsUiModel?) {
         if (gpxDetailsUiModel == null) {
             homeMapView.removeOverlay(OverlayType.GPX)
@@ -757,26 +755,19 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
             }
         )
-        if (!gpxDetailsUiModel.isClosed) {
+
+        gpxDetailsUiModel.waypoints.forEach { waypointItem ->
             homeMapView.addGpxMarker(
                 overlayId = gpxDetailsUiModel.id,
-                geoPoint = gpxDetailsUiModel.end,
-                iconDrawable = R.drawable.ic_marker_gpx_end.toDrawable(this@HomeActivity),
+                geoPoint = waypointItem.geoPoint,
+                waypointType = waypointItem.waypointType,
+                infoWindowTitle = waypointItem.name?.resolve(this),
                 onClick = {
                     gpxDetailsBottomSheet.show()
                     homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
                 }
             )
         }
-        homeMapView.addGpxMarker(
-            overlayId = gpxDetailsUiModel.id,
-            geoPoint = gpxDetailsUiModel.start,
-            iconDrawable = R.drawable.ic_marker_gpx_start.toDrawable(this@HomeActivity),
-            onClick = {
-                gpxDetailsBottomSheet.show()
-                homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
-            }
-        )
 
         homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
 
@@ -786,9 +777,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             onStartClick = {
                 val myLocationGeoPoint = myLocationOverlay?.myLocation
                 val geoPoints = if (myLocationGeoPoint != null) {
-                    listOfNotNull(myLocationGeoPoint, gpxDetailsUiModel.start)
+                    listOfNotNull(myLocationGeoPoint, gpxDetailsUiModel.geoPoints.first())
                 } else {
-                    listOf(gpxDetailsUiModel.start, gpxDetailsUiModel.end)
+                    gpxDetailsUiModel.geoPoints
                 }
                 val boundingBox = BoundingBox
                     .fromGeoPoints(geoPoints)

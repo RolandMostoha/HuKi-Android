@@ -37,7 +37,7 @@
     <dimen name="default_icon_only_button_size">50dp</dimen>
     <dimen name="default_polygon_width">4dp</dimen>
     <dimen name="default_polyline_width">6dp</dimen>
-    <dimen name="default_polyline_fill_width">3dp</dimen>
+    <dimen name="default_polyline_fill_width">4dp</dimen>
     <dimen name="default_horizontal_separator_width">1dp</dimen>
     <dimen name="default_dashed_divider_width">2dp</dimen>
     <dimen name="default_divider_height">1dp</dimen>

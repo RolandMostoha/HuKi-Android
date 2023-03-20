@@ -13,12 +13,13 @@ import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.LayersConfig
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.toGpxWaypointsByLocations
+import hu.mostoha.mobile.android.huki.model.domain.toLocationsTriple
 import hu.mostoha.mobile.android.huki.model.mapper.LayersUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY_CLOSED
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.calculateTravelTime
 import hu.mostoha.mobile.android.huki.util.flowOfError
@@ -260,7 +261,8 @@ class LayersViewModelTest {
     companion object {
         private val DEFAULT_GPX_DETAILS = GpxDetails(
             fileName = "dera_szurdok.gpx",
-            locations = DEFAULT_WAY_GEOMETRY_CLOSED.map { Location(it.first, it.second) },
+            locations = DEFAULT_GPX_WAY_CLOSED.map { Location(it.first, it.second, it.third) },
+            gpxWaypoints = DEFAULT_GPX_WAY_CLOSED.toLocationsTriple().toGpxWaypointsByLocations(),
             travelTime = DEFAULT_GPX_WAY_CLOSED
                 .map { Location(it.first, it.second) }
                 .calculateTravelTime(),
@@ -268,7 +270,6 @@ class LayersViewModelTest {
             altitudeRange = 300 to 800,
             incline = 500,
             decline = 300,
-            isClosed = true
         )
     }
 
