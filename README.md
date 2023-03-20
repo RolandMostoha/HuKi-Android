@@ -11,9 +11,12 @@ stage: [HuKi Beta](https://play.google.com/store/apps/details?id=hu.mostoha.mobi
 The project was born for two primary reasons:
 
 1. My personal entertainment - it's my beloved pet project in which I can try out Android stuff outside of my job.
-2. It comes in handy for hikers to have trips in Hungary. No need to download tiles or setup layers manually.
+2. It comes in handy for hikers to have trips in Hungary. No need to download tiles or setup layers
+   manually.
 
-Huge shout out to the inspiration of this project: [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/)
+The inspiration of the project
+was [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/), I've been using their
+webapp since I started hiking.
 
 ## Screenshots
 
@@ -21,18 +24,23 @@ Huge shout out to the inspiration of this project: [turistautak.openstreetmap.hu
 ![Screenshot HuKi 2](assets/GitHub/github_screenshot_2.png "Screenshot HuKi 2")
 ![Screenshot HuKi 3](assets/GitHub/github_screenshot_3.png "Screenshot HuKi 3")
 
+## Graphhopper support
+
+The route planner function is powered and supported by [Graphhopper](https://www.graphhopper.com/),
+it uses the cloud version of the [Routing API](https://docs.graphhopper.com/#tag/Routing-API) for
+creating navigation plans.
+
+Huge thanks to the Graphhopper team for the opportunity!
+
 ### What is it good for
 
 - Out-of-the-box integration with the Hungarian hiking trails
 - Free-text search for places in OpenStreetMap databases
 - Landscapes, routes-nearby function
 - Current location monitoring with elevation support
+- Route planner
 - Importing and displaying routes from GPX files
 - Dark mode support
-
-### Future plans
-
-- Hiking route planner (similar to [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/turautvonal.php))
 
 ### What is it NOT good for
 
@@ -48,7 +56,10 @@ Huge shout out to the inspiration of this project: [turistautak.openstreetmap.hu
 - Hiking tiles - [TuraReteg.sqlitedb](https://data2.openstreetmap.hu/) privately hosted in an AWS S3 bucket
 - OpenStreetMap data provider - [Overpass API](https://wiki.openstreetmap.org/wiki/Overpass_API)
 - Search engine - [Photon](https://photon.komoot.io/)
-- Location service - [Google Fused Location Provider](https://developers.google.com/location-context/fused-location-provider) integrated with OsmDroid
+- Route planner - [Graphhopper Routing API](https://docs.graphhopper.com/#tag/Routing-API)
+- Location service
+  - [Google Fused Location Provider](https://developers.google.com/location-context/fused-location-provider)
+  integrated with OsmDroid
 
 ### Tile server optimization
 
@@ -145,6 +156,7 @@ The app is built upon many `OpenStreetMap` related services. There is an in-app 
 - Hungarian Hiking Layer (turistautak.openstreetmap.hu) - https://data2.openstreetmap.hu/
 - Komoot - Photon (Search engine) - https://photon.komoot.io/
 - OsmDroid - Tile render - https://github.com/osmdroid/osmdroid
+- Graphhopper - Routing API - https://www.graphhopper.com/
 
 ## Project License
 
