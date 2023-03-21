@@ -20,6 +20,7 @@ import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentRoutePlannerBinding
+import hu.mostoha.mobile.android.huki.extensions.applyTopPaddingForStatusBar
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.removeFragments
@@ -60,6 +61,7 @@ class RoutePlannerFragment : Fragment() {
     private val routeAttributesContainer by lazy {
         binding.routePlannerRouteAttributesContainer.routeAttributesContainer
     }
+    private val routePlannerContainer by lazy { binding.routePlannerContainer }
     private val saveButton by lazy { binding.routePlannerSaveButton }
     private val backButton by lazy { binding.routePlannerBackButton }
     private val graphhopperContainer by lazy { binding.routePlannerGraphhopperContainer }
@@ -89,6 +91,7 @@ class RoutePlannerFragment : Fragment() {
     }
 
     private fun initViews() {
+        routePlannerContainer.applyTopPaddingForStatusBar(requireActivity())
         initWaypoints()
         initPlaceFinderPopup()
 
