@@ -11,6 +11,7 @@ import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerUiModelMapper
+import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
@@ -273,6 +274,26 @@ class RoutePlannerViewModelTest {
                 val waypointItems = viewModel.waypointItems.value
                 assertThat(actualRoutePlanUiModel.triggerLocations).isEqualTo(waypointItems.map { it.location })
                 assertThat(actualRoutePlanUiModel.geoPoints).isEqualTo(DEFAULT_ROUTE_PLAN.wayPoints.toGeoPoints())
+            }
+        }
+    }
+
+    @Test
+    fun `When update pick location states, then updated PickLocationState is emitted`() {
+        runTestDefault {
+            val geoPoint = DEFAULT_PLACE_UI_MODEL_1.geoPoint
+
+            viewModel.pickLocationState.test {
+                assertThat(awaitItem()).isNull()
+
+                viewModel.startPickLocation()
+                assertThat(awaitItem()).isEqualTo(PickLocationState.Started)
+
+                viewModel.savePickedLocation(geoPoint)
+                assertThat(awaitItem()).isEqualTo(PickLocationState.LocationPicked(geoPoint))
+
+                viewModel.clearPickedLocation()
+                assertThat(awaitItem()).isNull()
             }
         }
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/home_marker_size_poi"
-    android:height="@dimen/home_marker_size_poi"
+    android:width="60dp"
+    android:height="60dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path

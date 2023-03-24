@@ -55,7 +55,7 @@ class PlaceFinderAdapter(
                 binding.placeFinderMyLocationButton.setOnClickListener {
                     onMyLocationClick.invoke()
                 }
-                binding.placeFinderManualLocationButton.setOnClickListener {
+                binding.placeFinderPickLocationButton.setOnClickListener {
                     onManualLocationClick.invoke()
                 }
 

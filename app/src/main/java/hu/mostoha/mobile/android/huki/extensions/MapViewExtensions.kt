@@ -6,20 +6,25 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.osmdroid.infowindow.MapInfoWindow
+import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
+import hu.mostoha.mobile.android.huki.osmdroid.infowindow.LocationPickerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.LocationPickerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OVERLAY_TYPE_ORDER_MAP
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import hu.mostoha.mobile.android.huki.util.getGradientColors
+import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.OverlayWithIW
@@ -180,7 +185,7 @@ fun MapView.addGpxMarker(
         icon = iconDrawable
 
         if (infoWindowTitle != null) {
-            infoWindow = MapInfoWindow(this@addGpxMarker, infoWindowTitle)
+            infoWindow = GpxMarkerInfoWindow(this@addGpxMarker, infoWindowTitle)
             title = infoWindowTitle
         } else {
             setOnMarkerClickListener { marker, _ ->
@@ -322,6 +327,60 @@ fun MapView.addRoutePlannerPolyline(
     return polyline
 }
 
+fun MapView.addLocationPickerMarker(
+    geoPoint: GeoPoint,
+    onSaveClick: (GeoPoint) -> Unit,
+    onCloseClick: (() -> Unit)? = null,
+): Marker {
+    removeOverlay(OverlayType.LOCATION_PICKER)
+
+    val mapView = this@addLocationPickerMarker
+    var markerGeoPoint = geoPoint
+
+    val marker = LocationPickerMarker(mapView).apply {
+        id = UUID.randomUUID().toString()
+        position = geoPoint
+        icon = R.drawable.ic_marker_location_picker.toDrawable(mapView.context)
+        infoWindow = LocationPickerInfoWindow(
+            mapView = mapView,
+            onSaveClick = {
+                closeInfoWindow()
+                mapView.removeOverlay(OverlayType.MAP_TOUCH_EVENTS)
+                mapView.removeOverlay(OverlayType.LOCATION_PICKER)
+                onSaveClick.invoke(markerGeoPoint)
+            },
+            onCloseClick = {
+                closeInfoWindow()
+                mapView.removeOverlay(OverlayType.MAP_TOUCH_EVENTS)
+                mapView.removeOverlay(OverlayType.LOCATION_PICKER)
+                onCloseClick?.invoke()
+            }
+        )
+        isDraggable = true
+        setOnMarkerDragListener(object : Marker.OnMarkerDragListener {
+            override fun onMarkerDrag(marker: Marker) {
+                // no-op
+            }
+
+            override fun onMarkerDragEnd(marker: Marker) {
+                markerGeoPoint = marker.position
+                showInfoWindow()
+            }
+
+            override fun onMarkerDragStart(marker: Marker) {
+                // no-op
+            }
+        })
+    }
+
+    overlays.add(marker)
+    invalidate()
+
+    marker.showInfoWindow()
+
+    return marker
+}
+
 fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {
     controller.setZoom(zoomLevel)
     controller.setCenter(geoPoint)
@@ -356,4 +415,18 @@ fun MapView.addZoomListener(onZoom: (event: ZoomEvent) -> Unit) {
             return true
         }
     })
+}
+
+fun MapView.addLongClickHandlerOverlay(onLongClick: (GeoPoint) -> Unit) {
+    val mapEventsOverlay = MapEventsOverlay(object : MapEventsReceiver {
+        override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
+            return false
+        }
+
+        override fun longPressHelper(p: GeoPoint): Boolean {
+            onLongClick.invoke(p)
+            return true
+        }
+    })
+    addOverlay(mapEventsOverlay, OverlayComparator)
 }

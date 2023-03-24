@@ -23,6 +23,7 @@ import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
@@ -36,12 +37,15 @@ import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextNotExists
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -90,7 +94,7 @@ class PlaceFinderUiTest {
         hiltRule.inject()
         osmConfiguration.init()
 
-        coEvery { asyncMyLocationProvider.getLastKnownLocationCoroutine() } returns null
+        answerTestLocationProvider()
     }
 
     @Test
@@ -127,6 +131,35 @@ class PlaceFinderUiTest {
             DistanceFormatter.format(wayDistance)
                 .resolve(testAppContext)
                 .isPopupTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenNullMyLocation_whenClickInPlaceFinder_thenStaticActionsDoesNotDisplay() {
+        answerTestPlaces()
+        coEvery { asyncMyLocationProvider.getLastKnownLocationCoroutine() } returns null
+
+        launchScenario<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            R.string.place_finder_my_location_button.isPopupTextNotExists()
+            R.string.place_finder_pick_location_button.isPopupTextNotExists()
+        }
+    }
+
+    @Test
+    fun givenValidMyLocation_whenClickInPlaceFinder_thenStaticActionsDisplays() {
+        answerTestPlaces()
+
+        launchScenario<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            R.string.place_finder_my_location_button.isPopupTextDisplayed()
+            R.string.place_finder_pick_location_button.isPopupTextDisplayed()
         }
     }
 
@@ -195,6 +228,12 @@ class PlaceFinderUiTest {
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_WAY
         )
+    }
+
+    private fun answerTestLocationProvider() {
+        every { asyncMyLocationProvider.startLocationProvider(any()) } returns true
+        every { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
+        coEvery { asyncMyLocationProvider.getLastKnownLocationCoroutine() } returns DEFAULT_MY_LOCATION.toMockLocation()
     }
 
     companion object {

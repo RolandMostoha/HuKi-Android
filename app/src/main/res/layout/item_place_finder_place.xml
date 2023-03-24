@@ -22,7 +22,7 @@
             android:layout_gravity="center_vertical"
             android:importantForAccessibility="no"
             android:paddingHorizontal="@dimen/space_medium"
-            tools:src="@drawable/ic_home_search_bar_type_relation" />
+            tools:src="@drawable/ic_place_type_relation" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/placeFinderDistanceText"

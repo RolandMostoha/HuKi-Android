@@ -60,6 +60,7 @@
 
     <style name="DefaultButton.Contained.Shadowless.Secondary.Small">
         <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="iconSize">@dimen/icon_size_small</item>
     </style>
 
     <style name="DefaultButton.IconOnly" parent="@style/Widget.MaterialComponents.Button.TextButton">
@@ -74,6 +75,7 @@
         <item name="shapeAppearance">@style/DefaultShapeAppearance.Button</item>
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">@color/colorStroke</item>
+        <item name="iconTint">@color/colorPrimary</item>
     </style>
 
     <style name="DefaultMaterialDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">

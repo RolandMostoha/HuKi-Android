@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.Tap
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -69,8 +70,22 @@ fun @receiver:StringRes Int.isPopupTextNotDisplayed() {
         .check(matches(not(ViewMatchers.isDisplayed())))
 }
 
+fun @receiver:StringRes Int.isPopupTextNotExists() {
+    onView(withText(this))
+        .inRoot(RootMatchers.isPlatformPopup())
+        .check(ViewAssertions.doesNotExist())
+}
+
 fun @receiver:IdRes Int.click() {
     onView(withId(this)).perform(ViewActions.click())
+}
+
+fun @receiver:IdRes Int.longClick() {
+    onView(withId(this)).perform(ViewActions.longClick())
+}
+
+fun @receiver:IdRes Int.longClickCenter() {
+    onView(withId(this)).perform(clickCenter(Tap.LONG))
 }
 
 fun @receiver:IdRes Int.clickWithSibling(@StringRes stringRes: Int) {

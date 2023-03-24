@@ -21,6 +21,8 @@ import hu.mostoha.mobile.android.huki.extensions.OffsetType
 import hu.mostoha.mobile.android.huki.extensions.addFragment
 import hu.mostoha.mobile.android.huki.extensions.addGpxMarker
 import hu.mostoha.mobile.android.huki.extensions.addGpxPolyline
+import hu.mostoha.mobile.android.huki.extensions.addLocationPickerMarker
+import hu.mostoha.mobile.android.huki.extensions.addLongClickHandlerOverlay
 import hu.mostoha.mobile.android.huki.extensions.addMapMovedListener
 import hu.mostoha.mobile.android.huki.extensions.addMarker
 import hu.mostoha.mobile.android.huki.extensions.addOverlay
@@ -51,14 +53,18 @@ import hu.mostoha.mobile.android.huki.extensions.toDrawable
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmLicencesOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
@@ -66,6 +72,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.contact.ContactBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.gpx.GpxDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesBottomSheetDialog
@@ -81,6 +88,7 @@ import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerViewModel
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_TILES_SCALE_FACTOR
+import hu.mostoha.mobile.android.huki.util.OSM_ID_UNAVAILABLE
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
@@ -229,10 +237,46 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             onMyLocationClick = {
                 clearSearchBarInput()
 
-                enableFollowingLocation(true)
+                lifecycleScope.launch {
+                    val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine() ?: return@launch
+                    val lastKnownGeoPoint = lastKnownLocation.toLocation().toGeoPoint()
+                    val placeUiModel = PlaceUiModel(
+                        osmId = OSM_ID_UNAVAILABLE,
+                        placeType = PlaceType.NODE,
+                        geoPoint = lastKnownGeoPoint,
+                        primaryText = LocationFormatter.format(lastKnownGeoPoint),
+                        secondaryText = R.string.place_details_my_location_text.toMessage(),
+                        iconRes = R.drawable.ic_place_type_node,
+                    )
+
+                    homeViewModel.loadPlace(placeUiModel)
+                }
             },
-            onManualLocationClick = {
-                // TODO Implement location picker
+            onPickLocationClick = {
+                clearSearchBarInput()
+
+                showSnackbar(
+                    binding.homeContainer,
+                    R.string.place_finder_pick_location_message.toMessage(),
+                    R.drawable.ic_place_finder_pick_location_message
+                )
+
+                homeMapView.addLongClickHandlerOverlay { geoPoint ->
+                    homeMapView.addLocationPickerMarker(
+                        geoPoint = geoPoint,
+                        onSaveClick = {
+                            val placeUiModel = PlaceUiModel(
+                                osmId = OSM_ID_UNAVAILABLE,
+                                placeType = PlaceType.NODE,
+                                geoPoint = geoPoint,
+                                primaryText = LocationFormatter.format(geoPoint),
+                                secondaryText = R.string.place_details_pick_location_text.toMessage(),
+                                iconRes = R.drawable.ic_place_type_node,
+                            )
+                            homeViewModel.loadPlace(placeUiModel)
+                        },
+                    )
+                }
             }
         )
     }
@@ -388,8 +432,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeAltitudeText.setTextOrGone(altitudeText)
     }
 
-    @Suppress("LongMethod")
     private fun initFlows() {
+        initHomeFlows()
+        initLayersFlows()
+        initPlaceFinderFlows()
+        initRoutePlannerFlows()
+    }
+
+    private fun initHomeFlows() {
         lifecycleScope.launch {
             homeViewModel.mapUiModel
                 .flowWithLifecycle(lifecycle)
@@ -423,15 +473,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
         }
         lifecycleScope.launch {
-            placeFinderViewModel.placeFinderItems
-                .flowWithLifecycle(lifecycle)
-                .collect { placeFinderItems ->
-                    placeFinderItems?.let { items ->
-                        placeFinderPopup.initPlaceFinderItems(homeSearchBarPopupAnchor, items)
-                    }
-                }
-        }
-        lifecycleScope.launch {
             homeViewModel.landscapes
                 .flowWithLifecycle(lifecycle)
                 .collect { landscapes ->
@@ -459,6 +500,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     binding.homeSearchBarProgress.visibleOrGone(isLoading)
                 }
         }
+    }
+
+    private fun initLayersFlows() {
         lifecycleScope.launch {
             layersViewModel.layersConfig
                 .flowWithLifecycle(lifecycle)
@@ -491,6 +535,30 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     initRoutePlan(routePlanUiModel)
                 }
         }
+    }
+
+    private fun initRoutePlannerFlows() {
+        lifecycleScope.launch {
+            routePlannerViewModel.pickLocationState
+                .flowWithLifecycle(lifecycle)
+                .collect { pickLocationState ->
+                    pickLocationState?.let { state ->
+                        if (state == PickLocationState.Started) {
+                            homeMapView.addLongClickHandlerOverlay { geoPoint ->
+                                homeMapView.addLocationPickerMarker(
+                                    geoPoint = geoPoint,
+                                    onSaveClick = {
+                                        routePlannerViewModel.savePickedLocation(geoPoint)
+                                    },
+                                    onCloseClick = {
+                                        routePlannerViewModel.clearPickedLocation()
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+        }
         lifecycleScope.launch {
             routePlannerViewModel.waypointItems
                 .flowWithLifecycle(lifecycle)
@@ -499,6 +567,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         homeRoutePlannerFab.show()
                     } else {
                         homeRoutePlannerFab.hide()
+                    }
+                }
+        }
+    }
+
+    private fun initPlaceFinderFlows() {
+        lifecycleScope.launch {
+            placeFinderViewModel.placeFinderItems
+                .flowWithLifecycle(lifecycle)
+                .collect { placeFinderItems ->
+                    placeFinderItems?.let { items ->
+                        placeFinderPopup.initPlaceFinderItems(homeSearchBarPopupAnchor, items)
                     }
                 }
         }
@@ -775,17 +855,21 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             gpxDetails = gpxDetailsUiModel,
             onCloseClick = { layersViewModel.clearGpxDetails() },
             onStartClick = {
-                val myLocationGeoPoint = myLocationOverlay?.myLocation
-                val geoPoints = if (myLocationGeoPoint != null) {
-                    listOfNotNull(myLocationGeoPoint, gpxDetailsUiModel.geoPoints.first())
-                } else {
-                    gpxDetailsUiModel.geoPoints
-                }
-                val boundingBox = BoundingBox
-                    .fromGeoPoints(geoPoints)
-                    .withOffset(homeMapView, OffsetType.DEFAULT)
+                lifecycleScope.launch {
+                    val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()
+                    val lastKnownGeoPoint = lastKnownLocation?.toLocation()?.toGeoPoint()
 
-                homeMapView.zoomToBoundingBox(boundingBox, true)
+                    val geoPoints = if (lastKnownGeoPoint != null) {
+                        listOfNotNull(lastKnownGeoPoint, gpxDetailsUiModel.geoPoints.first())
+                    } else {
+                        gpxDetailsUiModel.geoPoints
+                    }
+                    val boundingBox = BoundingBox
+                        .fromGeoPoints(geoPoints)
+                        .withOffset(homeMapView, OffsetType.DEFAULT)
+
+                    homeMapView.zoomToBoundingBox(boundingBox, true)
+                }
             }
         )
         bottomSheets.showOnly(gpxDetailsBottomSheet)

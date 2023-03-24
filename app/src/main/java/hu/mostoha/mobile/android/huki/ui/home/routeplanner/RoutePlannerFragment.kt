@@ -26,12 +26,16 @@ import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.removeFragments
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
+import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
@@ -185,22 +189,38 @@ class RoutePlannerFragment : Fragment() {
                 val waypointInput = lastEditedWaypointInput?.editText ?: return@PlaceFinderPopup
                 val lastEditedWaypoint = lastEditedWaypointItem ?: return@PlaceFinderPopup
 
+                waypointInput.clearFocusAndHideKeyboard()
+                placeFinderViewModel.cancelSearch()
+
                 routePlannerViewModel.updateWaypointWithMyLocation(
                     lastEditedWaypoint,
-                    Message.Res(R.string.place_finder_my_location),
-                    requireContext().getString(R.string.place_finder_my_location)
+                    Message.Res(R.string.place_finder_my_location_button),
+                    requireContext().getString(R.string.place_finder_my_location_button)
                 )
+            },
+            onPickLocationClick = {
+                val waypointInput = lastEditedWaypointInput?.editText ?: return@PlaceFinderPopup
 
                 waypointInput.clearFocusAndHideKeyboard()
                 placeFinderViewModel.cancelSearch()
-            },
-            onManualLocationClick = {
-                // TODO Handle manual pick
+
+                requireContext().showSnackbar(
+                    requireView(),
+                    R.string.place_finder_pick_location_message.toMessage(),
+                    R.drawable.ic_place_finder_pick_location_message
+                )
+
+                routePlannerViewModel.startPickLocation()
             }
         )
     }
 
     private fun initFlows() {
+        initRoutePlannerFlows()
+        initPlaceFinderFlows()
+    }
+
+    private fun initRoutePlannerFlows() {
         lifecycleScope.launch {
             routePlannerViewModel.waypointItems
                 .flowWithLifecycle(lifecycle)
@@ -246,6 +266,29 @@ class RoutePlannerFragment : Fragment() {
                     clearRoutePlanner()
                 }
         }
+        lifecycleScope.launch {
+            routePlannerViewModel.pickLocationState
+                .flowWithLifecycle(lifecycle)
+                .collect { pickLocationState ->
+                    pickLocationState?.let { state ->
+                        if (state is PickLocationState.LocationPicked) {
+                            val lastEditedWaypoint = lastEditedWaypointItem ?: return@collect
+                            val location = state.geoPoint.toLocation()
+                            val locationText = LocationFormatter.format(location)
+
+                            routePlannerViewModel.updateWaypoint(
+                                lastEditedWaypoint,
+                                locationText,
+                                location,
+                                locationText.text
+                            )
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun initPlaceFinderFlows() {
         lifecycleScope.launch {
             placeFinderViewModel.placeFinderItems
                 .flowWithLifecycle(lifecycle)

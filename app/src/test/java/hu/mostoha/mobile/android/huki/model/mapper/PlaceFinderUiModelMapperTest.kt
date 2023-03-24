@@ -62,7 +62,7 @@ class PlaceFinderUiModelMapperTest {
                         placeType = PlaceType.WAY,
                         primaryText = DEFAULT_PLACE_WAY.name.toMessage(),
                         secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.city}"),
-                        iconRes = R.drawable.ic_home_search_bar_type_way,
+                        iconRes = R.drawable.ic_place_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
                         isLandscape = false
@@ -86,7 +86,7 @@ class PlaceFinderUiModelMapperTest {
                         placeType = PlaceType.WAY,
                         primaryText = DEFAULT_PLACE_WAY.name.toMessage(),
                         secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.country}"),
-                        iconRes = R.drawable.ic_home_search_bar_type_way,
+                        iconRes = R.drawable.ic_place_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
                         isLandscape = false
@@ -112,7 +112,7 @@ class PlaceFinderUiModelMapperTest {
                         placeType = PlaceType.WAY,
                         primaryText = DEFAULT_PLACE_WAY.name.toMessage(),
                         secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.city}"),
-                        iconRes = R.drawable.ic_home_search_bar_type_way,
+                        iconRes = R.drawable.ic_place_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
                         isLandscape = false,

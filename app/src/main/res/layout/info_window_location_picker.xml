@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_map_info_window"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/space_medium"
+    android:paddingVertical="@dimen/space_small">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/locationPickerDoneButton"
+        style="@style/DefaultButton.IconOnly.Stroked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_large"
+        app:icon="@drawable/ic_location_picker_done" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/locationPickerCloseButton"
+        style="@style/DefaultButton.IconOnly.Stroked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_input_clear" />
+
+</LinearLayout>

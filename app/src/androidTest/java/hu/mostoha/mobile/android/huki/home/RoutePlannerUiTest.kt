@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
@@ -18,6 +19,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
@@ -28,6 +30,7 @@ import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
+import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.repository.*
@@ -37,8 +40,11 @@ import hu.mostoha.mobile.android.huki.util.espresso.*
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
+import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.Matchers.allOf
 import org.junit.Before
 import org.junit.Rule
@@ -51,7 +57,7 @@ import kotlin.time.Duration.Companion.minutes
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class)
+@UninstallModules(RepositoryModule::class, LocationModule::class)
 class RoutePlannerUiTest {
 
     @get:Rule
@@ -76,12 +82,17 @@ class RoutePlannerUiTest {
     @JvmField
     val routPlannerRepository: RoutePlannerRepository = mockk()
 
+    @BindValue
+    @JvmField
+    val asyncMyLocationProvider: AsyncMyLocationProvider = mockk(relaxed = true)
+
     @Before
     fun init() {
         hiltRule.inject()
         osmConfiguration.init()
         Intents.init()
 
+        answerTestLocationProvider()
         coEvery { placesRepository.getPlacesBy(any(), any()) } returns listOf(
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_WAY,
@@ -104,6 +115,14 @@ class RoutePlannerUiTest {
                 )
             )
         } returns DEFAULT_ROUTE_PLAN_2
+        coEvery {
+            routPlannerRepository.getRoutePlan(
+                listOf(
+                    DEFAULT_MY_LOCATION.copy(altitude = null),
+                    DEFAULT_PLACE_NODE.location,
+                )
+            )
+        } returns DEFAULT_ROUTE_PLAN
         coEvery { routPlannerRepository.saveRoutePlan(any()) } returns getTestGpxFileUri()
     }
 
@@ -183,6 +202,29 @@ class RoutePlannerUiTest {
             "600 m".isTextDisplayed()
             "300 m".isTextDisplayed()
             "02:00".isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenMyLocation_whenAddMyLocationWaypoint_thenRoutePlanUpdates() {
+        launchScenario<HomeActivity> {
+            val waypointName1 = "Dobogoko"
+
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, click()))
+            R.string.place_finder_my_location_button.clickWithTextInPopup()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.routePlannerRouteAttributesContainer.isDisplayed()
+            "13 km".isTextDisplayed()
+            "500 m".isTextDisplayed()
+            "200 m".isTextDisplayed()
+            "01:40".isTextDisplayed()
         }
     }
 
@@ -356,6 +398,12 @@ class RoutePlannerUiTest {
         }
 
         return Uri.fromFile(file)
+    }
+
+    private fun answerTestLocationProvider() {
+        every { asyncMyLocationProvider.startLocationProvider(any()) } returns true
+        every { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
+        coEvery { asyncMyLocationProvider.getLastKnownLocationCoroutine() } returns DEFAULT_MY_LOCATION.toMockLocation()
     }
 
     companion object {

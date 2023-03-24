@@ -32,7 +32,7 @@
             android:layout_marginStart="@dimen/space_extra_large"
             android:layout_marginEnd="@dimen/space_medium"
             android:padding="@dimen/space_extra_small"
-            tools:src="@drawable/ic_home_search_bar_type_relation" />
+            tools:src="@drawable/ic_place_type_relation" />
 
         <LinearLayout
             android:id="@+id/placeDetailsTextContainer"

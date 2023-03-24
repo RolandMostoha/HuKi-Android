@@ -113,7 +113,7 @@ class RoutePlannerUiModelMapperTest {
 
     @Test
     fun `Given waypoint items without string primary text, when mapToRoutePlanName, then formatted name returns with locations`() {
-        val startWaypointName = R.string.place_finder_my_location.toMessage()
+        val startWaypointName = R.string.place_finder_my_location_button.toMessage()
         val endWaypointName = "Barackos %^&".toMessage()
         val waypoints = listOf(
             WaypointItem(

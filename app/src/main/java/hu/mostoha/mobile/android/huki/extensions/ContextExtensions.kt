@@ -7,11 +7,15 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.ui.Message
+
 
 val Context.inflater: LayoutInflater
     get() = LayoutInflater.from(this)
@@ -30,8 +34,20 @@ fun Context.showToast(message: Message, length: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, message.resolve(this), length).show()
 }
 
-fun Context.showSnackbar(view: View, message: Message) {
-    Snackbar.make(view, message.resolve(this), Snackbar.LENGTH_LONG).show()
+fun Context.showSnackbar(view: View, message: Message, @DrawableRes icon: Int? = null) {
+    val snackbar = Snackbar.make(view, message.resolve(this), Snackbar.LENGTH_LONG)
+    val snackbarLayout = snackbar.view
+    val textView = snackbarLayout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+
+    textView.setTextAppearance(R.style.DefaultTextAppearance_SemiBold_Small)
+    snackbar.setBackgroundTint(ContextCompat.getColor(this, R.color.colorBackground))
+
+    if (icon != null) {
+        textView.setDrawableStart(icon)
+        textView.compoundDrawablePadding = resources.getDimensionPixelOffset(R.dimen.space_small)
+    }
+
+    snackbar.show()
 }
 
 fun Context.colorStateList(@ColorRes res: Int) = ContextCompat.getColorStateList(this, res)

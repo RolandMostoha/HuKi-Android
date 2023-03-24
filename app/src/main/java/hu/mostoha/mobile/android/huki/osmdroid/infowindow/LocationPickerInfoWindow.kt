@@ -6,7 +6,11 @@ import hu.mostoha.mobile.android.huki.R
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 
-class MapInfoWindow(mapView: MapView, private val title: String) : InfoWindow(R.layout.map_info_window, mapView) {
+class LocationPickerInfoWindow(
+    mapView: MapView,
+    private val onSaveClick: () -> Unit,
+    private val onCloseClick: () -> Unit,
+) : InfoWindow(R.layout.info_window_location_picker, mapView) {
 
     init {
         mView.setOnTouchListener { view, event ->
@@ -19,8 +23,12 @@ class MapInfoWindow(mapView: MapView, private val title: String) : InfoWindow(R.
     }
 
     override fun onOpen(item: Any?) {
-        val titleTextView = mView.findViewById<TextView>(R.id.mapInfoWindowTitle)
-        titleTextView.text = title
+        mView.findViewById<TextView>(R.id.locationPickerDoneButton).setOnClickListener {
+            onSaveClick.invoke()
+        }
+        mView.findViewById<TextView>(R.id.locationPickerCloseButton).setOnClickListener {
+            onCloseClick.invoke()
+        }
     }
 
     override fun onClose() {

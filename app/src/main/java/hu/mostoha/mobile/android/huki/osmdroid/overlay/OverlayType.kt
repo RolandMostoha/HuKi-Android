@@ -20,6 +20,7 @@ enum class OverlayType {
     GPX,
     ROUTE_PLANNER,
     MAP_TOUCH_EVENTS,
+    LOCATION_PICKER,
 }
 
 /**
@@ -33,4 +34,5 @@ val OVERLAY_TYPE_ORDER_MAP = mapOf(
     OverlayType.GPX to listOf(GpxMarker::class, GpxPolyline::class),
     OverlayType.ROUTE_PLANNER to listOf(RoutePlannerMarker::class, RoutePlannerPolyline::class),
     OverlayType.MAP_TOUCH_EVENTS to listOf(MapEventsOverlay::class),
+    OverlayType.LOCATION_PICKER to listOf(LocationPickerMarker::class),
 )

@@ -17,8 +17,12 @@
     <string name="search_bar_hint">Search for places</string>
 
     <string name="place_finder_empty_message">No results found</string>
-    <string name="place_finder_my_location">My Location</string>
-    <string name="place_finder_manual_location">Manual pick</string>
+    <string name="place_finder_my_location_button">My Location</string>
+    <string name="place_finder_pick_location_button">Pick location</string>
+    <string name="place_finder_pick_location_message">Pick the location with long click!</string>
+
+    <string name="place_details_my_location_text">Actual location</string>
+    <string name="place_details_pick_location_text">Chosen location</string>
 
     <string name="home_bottom_sheet_directions_button">Google Nav</string>
     <string name="home_bottom_sheet_hiking_trails_button">Hiking trails</string>

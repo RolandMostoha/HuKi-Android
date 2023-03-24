@@ -8,11 +8,11 @@ import org.osmdroid.util.GeoPoint
 data class PlaceUiModel(
     val osmId: String,
     val placeType: PlaceType,
-    val primaryText: Message,
-    val secondaryText: Message?,
-    @DrawableRes val iconRes: Int,
     val geoPoint: GeoPoint,
-    val boundingBox: BoundingBox?,
-    val isLandscape: Boolean,
+    val primaryText: Message,
+    @DrawableRes val iconRes: Int,
+    val isLandscape: Boolean = false,
+    val boundingBox: BoundingBox? = null,
+    val secondaryText: Message? = null,
     val distanceText: Message? = null
 )

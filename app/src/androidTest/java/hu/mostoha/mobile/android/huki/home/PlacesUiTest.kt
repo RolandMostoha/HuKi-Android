@@ -14,6 +14,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.extensions.GOOGLE_MAPS_DIRECTIONS_URL
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
@@ -22,12 +23,14 @@ import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
+import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
@@ -45,8 +48,10 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
+import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
@@ -59,8 +64,11 @@ import hu.mostoha.mobile.android.huki.util.espresso.isTextNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
+import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
@@ -73,7 +81,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class)
+@UninstallModules(RepositoryModule::class, LocationModule::class)
 class PlacesUiTest {
 
     @get:Rule
@@ -100,10 +108,16 @@ class PlacesUiTest {
     @JvmField
     val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
+    @BindValue
+    @JvmField
+    val asyncMyLocationProvider: AsyncMyLocationProvider = mockk(relaxed = true)
+
     @Before
     fun init() {
         hiltRule.inject()
         osmConfiguration.init()
+
+        answerTestLocationProvider()
     }
 
     @Test
@@ -391,6 +405,28 @@ class PlacesUiTest {
     }
 
     @Test
+    fun givenMyLocation_whenClickInPlaceFinder_thenPlaceDetailsDisplay() {
+        answerTestPlaces()
+        answerTestGeometries()
+        answerTestLocationProvider()
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            R.id.placeFinderMyLocationButton.clickInPopup()
+
+            R.string.place_details_my_location_text.isTextDisplayed()
+            LocationFormatter.format(DEFAULT_MY_LOCATION).text.isTextDisplayed()
+            R.id.homeMapView.hasOverlay<Marker>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
+        }
+    }
+
+    @Test
     fun givenNodePlace_whenRecreate_thenPlaceDetailsDisplayOnMapAgain() {
         answerTestPlaces()
         answerTestGeometries()
@@ -429,6 +465,12 @@ class PlacesUiTest {
         coEvery {
             placesRepository.getGeometry(DEFAULT_PLACE_RELATION.osmId, any())
         } returns DEFAULT_GEOMETRY_RELATION
+    }
+
+    private fun answerTestLocationProvider() {
+        every { asyncMyLocationProvider.startLocationProvider(any()) } returns true
+        every { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
+        coEvery { asyncMyLocationProvider.getLastKnownLocationCoroutine() } returns DEFAULT_MY_LOCATION.toMockLocation()
     }
 
     companion object {

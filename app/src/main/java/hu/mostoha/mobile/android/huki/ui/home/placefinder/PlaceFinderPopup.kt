@@ -11,7 +11,7 @@ class PlaceFinderPopup(
     private val context: Context,
     onPlaceClick: (PlaceUiModel) -> Unit,
     onMyLocationClick: () -> Unit,
-    onManualLocationClick: () -> Unit,
+    onPickLocationClick: () -> Unit,
 ) : ListPopupWindow(context) {
 
     companion object {
@@ -32,7 +32,7 @@ class PlaceFinderPopup(
                 dismiss()
             },
             onManualLocationClick = {
-                onManualLocationClick.invoke()
+                onPickLocationClick.invoke()
                 dismiss()
             },
         )
