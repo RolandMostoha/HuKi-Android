@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -76,5 +78,11 @@ fun Context.isDarkMode(): Boolean {
         Configuration.UI_MODE_NIGHT_NO -> false
         Configuration.UI_MODE_NIGHT_UNDEFINED -> false
         else -> false
+    }
+}
+
+fun postMain(block: () -> Unit) {
+    Handler(Looper.getMainLooper()).post {
+        block.invoke()
     }
 }

@@ -1,10 +1,9 @@
 package hu.mostoha.mobile.android.huki.ui.home.placedetails
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceDetailsBinding
 import hu.mostoha.mobile.android.huki.extensions.gone
+import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.startGoogleMapsDirectionsIntent
@@ -25,7 +24,7 @@ class PlaceDetailsBottomSheetDialog(
         onRoutePlanButtonClick: () -> Unit,
         onCloseButtonClick: () -> Unit
     ) {
-        Handler(Looper.getMainLooper()).post {
+        postMain {
             with(binding) {
                 val placeName = placeUiModel.primaryText.resolve(root.context)
 
@@ -67,7 +66,7 @@ class PlaceDetailsBottomSheetDialog(
         onHikingTrailsButtonClick: () -> Unit,
         onCloseButtonClick: () -> Unit
     ) {
-        Handler(Looper.getMainLooper()).post {
+        postMain {
             with(binding) {
                 val placeName = placeUiModel.primaryText.resolve(root.context)
 

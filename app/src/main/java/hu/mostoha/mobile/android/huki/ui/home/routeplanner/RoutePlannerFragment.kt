@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -20,7 +21,6 @@ import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentRoutePlannerBinding
-import hu.mostoha.mobile.android.huki.extensions.applyTopPaddingForStatusBar
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.removeFragments
@@ -95,7 +95,6 @@ class RoutePlannerFragment : Fragment() {
     }
 
     private fun initViews() {
-        routePlannerContainer.applyTopPaddingForStatusBar(requireActivity())
         initWaypoints()
         initPlaceFinderPopup()
 
@@ -271,20 +270,28 @@ class RoutePlannerFragment : Fragment() {
                 .flowWithLifecycle(lifecycle)
                 .collect { pickLocationState ->
                     pickLocationState?.let { state ->
-                        if (state is PickLocationState.LocationPicked) {
-                            val lastEditedWaypoint = lastEditedWaypointItem ?: return@collect
-                            val location = state.geoPoint.toLocation()
-                            val locationText = LocationFormatter.format(location)
-
-                            routePlannerViewModel.updateWaypoint(
-                                lastEditedWaypoint,
-                                locationText,
-                                location,
-                                locationText.text
-                            )
-                        }
+                        initLocationPicker(state)
                     }
                 }
+        }
+        lifecycleScope.launch {
+            routePlannerViewModel.topInsetSize
+                .flowWithLifecycle(lifecycle)
+                .collect { topInsetSize ->
+                    routePlannerContainer.updatePadding(
+                        top = resources.getDimensionPixelSize(R.dimen.space_small) + topInsetSize
+                    )
+                }
+        }
+    }
+
+    private fun initLocationPicker(state: PickLocationState) {
+        if (state is PickLocationState.LocationPicked) {
+            val lastEditedWaypoint = lastEditedWaypointItem ?: return
+            val location = state.geoPoint.toLocation()
+            val locationText = LocationFormatter.format(location)
+
+            routePlannerViewModel.updateWaypoint(lastEditedWaypoint, locationText, location, locationText.text)
         }
     }
 

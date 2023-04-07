@@ -71,7 +71,7 @@
     <dimen name="map_view_default_start_offset">80dp</dimen>
     <dimen name="map_view_default_end_offset">80dp</dimen>
     <dimen name="map_view_bottom_sheet_bottom_offset">220dp</dimen>
-    <dimen name="map_view_top_sheet_top_offset">320dp</dimen>
+    <dimen name="map_view_top_sheet_top_offset">325dp</dimen>
     <dimen name="map_view_top_sheet_bottom_offset">20dp</dimen>
     <dimen name="map_view_top_sheet_start_offset">@dimen/map_view_default_start_offset</dimen>
     <dimen name="map_view_top_sheet_end_offset">@dimen/map_view_default_end_offset</dimen>

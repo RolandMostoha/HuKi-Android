@@ -1,8 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.home.gpx
 
-import android.os.Handler
-import android.os.Looper
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetGpxDetailsBinding
+import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.startGoogleMapsDirectionsIntent
@@ -15,7 +14,7 @@ class GpxDetailsBottomSheetDialog(
 ) : BottomSheetDialog(binding) {
 
     fun initBottomSheet(gpxDetails: GpxDetailsUiModel, onCloseClick: () -> Unit, onStartClick: () -> Unit) {
-        Handler(Looper.getMainLooper()).post {
+        postMain {
             with(binding) {
                 val hasAltitudeValues = gpxDetails.altitudeUiModel != null
 

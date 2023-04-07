@@ -24,7 +24,7 @@
             app:cardBackgroundColor="@color/colorBackground"
             app:cardElevation="@dimen/default_elevation_map_interactive_views"
             app:layout_constraintEnd_toStartOf="@id/homeLayersFab"
-            app:layout_constraintStart_toEndOf="@id/homeRoutePlannerContainer"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearance="@style/DefaultShapeAppearance.InputField.OnMap"
             app:strokeColor="@color/colorStrokeOnMap"
@@ -190,6 +190,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/homeHeaderGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="homeSearchBarContainer, homeLayersFab, homeContactFab" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

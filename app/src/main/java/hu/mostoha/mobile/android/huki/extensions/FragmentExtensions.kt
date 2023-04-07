@@ -12,6 +12,13 @@ fun <T : Fragment> FragmentManager.addFragment(@IdRes containerId: Int, clazz: C
     }
 }
 
+fun FragmentManager.addFragment(@IdRes containerId: Int, fragment: Fragment) {
+    commit {
+        setReorderingAllowed(true)
+        add(containerId, fragment, null)
+    }
+}
+
 fun FragmentManager.removeFragments(@IdRes containerId: Int) {
     beginTransaction().apply {
         fragments.filter {

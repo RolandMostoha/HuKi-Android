@@ -12,7 +12,6 @@
     android:elevation="@dimen/default_elevation"
     android:focusable="true"
     android:paddingHorizontal="@dimen/space_medium"
-    android:paddingTop="@dimen/space_extra_extra_large"
     android:paddingBottom="@dimen/space_medium">
 
     <com.google.android.material.button.MaterialButton

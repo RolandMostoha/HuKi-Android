@@ -377,6 +377,18 @@ class RoutePlannerViewModelTest {
         }
     }
 
+    @Test
+    fun `When updateTopInsetSize, then new top inset size is emitted`() {
+        runTestDefault {
+            viewModel.topInsetSize.test {
+                viewModel.updateTopInsetSize(50)
+
+                assertThat(awaitItem()).isEqualTo(0)
+                assertThat(awaitItem()).isEqualTo(50)
+            }
+        }
+    }
+
     companion object {
         private val DEFAULT_PLACE_UI_MODEL_1 = PlaceUiModel(
             osmId = DEFAULT_NODE_OSM_ID,

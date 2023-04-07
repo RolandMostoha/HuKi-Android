@@ -185,10 +185,15 @@
             android:id="@+id/homeRoutePlannerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="@dimen/default_elevation_route_planner"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/homeHeaderGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="homeSearchBarContainer, homeLandscapeContainer, homeLayersFab, homeContactFab" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

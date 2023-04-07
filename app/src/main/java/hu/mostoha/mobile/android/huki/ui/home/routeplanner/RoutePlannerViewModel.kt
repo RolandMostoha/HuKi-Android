@@ -69,6 +69,10 @@ class RoutePlannerViewModel @Inject constructor(
     val pickLocationState: StateFlow<PickLocationState?> = _pickLocationState
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
+    private val _topInsetSize = MutableStateFlow(0)
+    val topInsetSize: StateFlow<Int> = _topInsetSize
+        .stateIn(viewModelScope, WhileViewSubscribed, 0)
+
     private val _routePlanGpxFileUri = MutableSharedFlow<Uri>()
     val routePlanGpxFileUri: SharedFlow<Uri> = _routePlanGpxFileUri.asSharedFlow()
 
@@ -229,6 +233,10 @@ class RoutePlannerViewModel @Inject constructor(
     fun clearRoutePlanner() {
         _routePlanUiModel.value = null
         _wayPointItems.value = emptyList()
+    }
+
+    fun updateTopInsetSize(topInsetSize: Int) {
+        _topInsetSize.value = topInsetSize
     }
 
     private fun List<WaypointItem>.reOrder(): List<WaypointItem> {

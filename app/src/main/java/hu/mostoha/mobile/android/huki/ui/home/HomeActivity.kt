@@ -3,12 +3,16 @@ package hu.mostoha.mobile.android.huki.ui.home
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,14 +35,15 @@ import hu.mostoha.mobile.android.huki.extensions.addPolyline
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerMarker
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
-import hu.mostoha.mobile.android.huki.extensions.applyTopMarginForStatusBar
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
+import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.hasOverlay
 import hu.mostoha.mobile.android.huki.extensions.hideOverlay
 import hu.mostoha.mobile.android.huki.extensions.isDarkMode
 import hu.mostoha.mobile.android.huki.extensions.isGpxFileIntent
 import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
 import hu.mostoha.mobile.android.huki.extensions.locationPermissions
+import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
 import hu.mostoha.mobile.android.huki.extensions.resolve
@@ -50,6 +55,7 @@ import hu.mostoha.mobile.android.huki.extensions.showOverlay
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
 import hu.mostoha.mobile.android.huki.extensions.toDrawable
+import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
@@ -129,14 +135,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeSearchBarInputLayout by lazy { binding.homeSearchBarInputLayout }
     private val homeSearchBarInput by lazy { binding.homeSearchBarInput }
     private val homeSearchBarPopupAnchor by lazy { binding.homeSearchBarPopupAnchor }
+    private val homeHeaderGroup by lazy { binding.homeHeaderGroup }
+
     private val homeMyLocationButton by lazy { binding.homeMyLocationButton }
     private val homeRoutePlannerFab by lazy { binding.homeRoutePlannerFab }
     private val homeLayersFab by lazy { binding.homeLayersFab }
-    private val homeInfoFab by lazy { binding.homeContactFab }
+    private val homeContactFab by lazy { binding.homeContactFab }
     private val homeAltitudeText by lazy { binding.homeAltitudeText }
 
     private lateinit var placeFinderPopup: PlaceFinderPopup
-
     private lateinit var placeDetailsBottomSheet: PlaceDetailsBottomSheetDialog
     private lateinit var hikingRoutesBottomSheet: HikingRoutesBottomSheetDialog
     private lateinit var gpxDetailsBottomSheet: GpxDetailsBottomSheetDialog
@@ -183,7 +190,20 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initWindow() {
         setStatusBarColor(android.R.color.transparent)
-        homeSearchBarContainer.applyTopMarginForStatusBar(this)
+
+        val searchBarTopMargin = homeSearchBarContainer.marginTop
+
+        ViewCompat.setOnApplyWindowInsetsListener(homeContainer) { _, windowInsetsCompat ->
+            val insets = windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            homeSearchBarContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                updateMargins(top = searchBarTopMargin + insets.top)
+            }
+
+            routePlannerViewModel.updateTopInsetSize(insets.top)
+
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initViews() {
@@ -317,7 +337,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             LayersBottomSheetDialogFragment().show(supportFragmentManager, LayersBottomSheetDialogFragment.TAG)
         }
 
-        homeInfoFab.setOnClickListener {
+        homeContactFab.setOnClickListener {
             ContactBottomSheetDialogFragment().show(supportFragmentManager, ContactBottomSheetDialogFragment.TAG)
         }
     }
@@ -370,7 +390,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             myLocationOverlay = MyLocationOverlay(lifecycleScope, myLocationProvider, homeMapView)
                 .apply {
                     runOnFirstFix {
-                        Handler(Looper.getMainLooper()).post {
+                        postMain {
                             if (isFollowLocationEnabled) {
                                 homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
                             } else {
@@ -563,10 +583,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             routePlannerViewModel.waypointItems
                 .flowWithLifecycle(lifecycle)
                 .collect { waypointItems ->
-                    if (waypointItems.isEmpty()) {
-                        homeRoutePlannerFab.show()
-                    } else {
-                        homeRoutePlannerFab.hide()
+                    postMain {
+                        if (waypointItems.isEmpty()) {
+                            homeHeaderGroup.visible()
+                            homeRoutePlannerFab.show()
+                        } else {
+                            homeHeaderGroup.gone()
+                            homeRoutePlannerFab.hide()
+                        }
                     }
                 }
         }

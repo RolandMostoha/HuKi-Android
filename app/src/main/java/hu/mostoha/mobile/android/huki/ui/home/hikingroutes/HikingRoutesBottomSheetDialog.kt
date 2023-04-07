@@ -1,8 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.home.hikingroutes
 
-import android.os.Handler
-import android.os.Looper
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetHikingRoutesBinding
+import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
@@ -15,7 +14,7 @@ class HikingRoutesBottomSheetDialog(
         onHikingRouteClick: (HikingRouteUiModel) -> Unit,
         onCloseClick: () -> Unit
     ) {
-        Handler(Looper.getMainLooper()).post {
+        postMain {
             with(binding) {
                 val hikingRoutesAdapter = HikingRoutesAdapter(
                     onItemClick = { hikingRoute ->
