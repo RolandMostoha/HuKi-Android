@@ -9,4 +9,6 @@
         android:width="@dimen/home_stroke_width_on_map"
         android:color="@color/colorStrokeOnMap" />
 
+    <padding android:bottom="5dp" />
+
 </shape>
