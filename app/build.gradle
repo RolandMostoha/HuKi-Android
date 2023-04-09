@@ -95,8 +95,8 @@ dependencies {
 
     // Design
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "com.google.android.material:material:1.7.0"
-    implementation "androidx.appcompat:appcompat:1.5.1"
+    implementation "com.google.android.material:material:1.8.0"
+    implementation "androidx.appcompat:appcompat:1.6.1"
 
     // Hilt
     def jetpackHiltVersion = "1.0.0"
@@ -113,6 +113,9 @@ dependencies {
     def lifecycleVersion = "2.5.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+
+    // Preferences
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     // Google Play Services Location
     implementation "com.google.android.gms:play-services-location:21.0.1"

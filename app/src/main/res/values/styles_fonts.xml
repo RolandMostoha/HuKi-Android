@@ -78,4 +78,8 @@
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
+    <style name="DefaultTextAppearance.Bold.Large">
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
 </resources>

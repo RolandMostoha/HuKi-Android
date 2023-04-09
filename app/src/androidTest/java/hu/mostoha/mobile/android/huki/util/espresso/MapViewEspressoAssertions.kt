@@ -9,6 +9,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.google.android.material.slider.Slider
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -40,6 +41,7 @@ inline fun <reified T : Overlay> hasOverlayMatcher(): BoundedMatcher<View, MapVi
         override fun describeTo(description: Description) {
             description.appendText("Has visible overlay with type ${T::class.java}")
         }
+
     }
 }
 
@@ -61,6 +63,7 @@ inline fun <reified T : Overlay> hasInvisibleOverlayMatcher(): BoundedMatcher<Vi
         override fun describeTo(description: Description) {
             description.appendText("Has invisible overlay with type ${T::class.java}")
         }
+
     }
 }
 
@@ -82,6 +85,7 @@ inline fun <reified T : Overlay> hasOverlayCountMatcher(count: Int): BoundedMatc
         override fun describeTo(description: Description) {
             description.appendText("Has $count overlay(s) with type ${T::class.java}")
         }
+
     }
 }
 
@@ -119,6 +123,7 @@ private fun hasBaseTileSourceMatcher(tileSource: ITileSource): BoundedMatcher<Vi
         override fun describeTo(description: Description) {
             description.appendText("Has base tile source: $tileSource")
         }
+
     }
 }
 
@@ -145,6 +150,7 @@ private fun hasCenterAndZoomMatcher(center: GeoPoint, zoom: Double): BoundedMatc
         }
 
         private fun Double.equalsDelta(other: Double) = abs(this - other) < 0.000001
+
     }
 }
 
@@ -168,5 +174,70 @@ private fun zoomToAction(zoomLevel: Double): ViewAction {
         override fun getDescription(): String {
             return "Sets the zoom level of MapView"
         }
+
+    }
+}
+
+fun @receiver:IdRes Int.hasTileScaleFactor(tileScaleFactor: Float) {
+    onView(withId(this)).check(matches(hasTileScaleFactorMatcher(tileScaleFactor)))
+}
+
+private fun hasTileScaleFactorMatcher(tileScaleFactor: Float): BoundedMatcher<View, MapView> {
+    return object : BoundedMatcher<View, MapView>(MapView::class.java) {
+
+        override fun matchesSafely(mapView: MapView?): Boolean {
+            if (mapView == null) return false
+
+            return mapView.tilesScaleFactor == tileScaleFactor
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("Failed: has tileScaleFactor: $tileScaleFactor")
+        }
+
+    }
+}
+
+fun @receiver:IdRes Int.setSliderValue(sliderValue: Float) {
+    onView(withId(this)).perform(setSliderValueAction(sliderValue))
+}
+
+private fun setSliderValueAction(sliderValue: Float): ViewAction {
+    return object : ViewAction {
+
+        override fun getConstraints(): Matcher<View> {
+            return ViewMatchers.isAssignableFrom(Slider::class.java)
+        }
+
+        override fun perform(uiController: UiController, view: View) {
+            val slider = view as Slider
+
+            slider.value = sliderValue
+        }
+
+        override fun getDescription(): String {
+            return "Sets the zoom level of MapView"
+        }
+
+    }
+}
+
+fun @receiver:IdRes Int.hasSliderValue(sliderValue: Float) {
+    onView(withId(this)).check(matches(hasSliderValueMatcher(sliderValue)))
+}
+
+private fun hasSliderValueMatcher(sliderValue: Float): BoundedMatcher<View, Slider> {
+    return object : BoundedMatcher<View, Slider>(Slider::class.java) {
+
+        override fun matchesSafely(slider: Slider?): Boolean {
+            if (slider == null) return false
+
+            return slider.value == sliderValue
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("Failed: has sliderValue: $sliderValue")
+        }
+
     }
 }

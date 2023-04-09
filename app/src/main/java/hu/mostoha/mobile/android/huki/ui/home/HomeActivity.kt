@@ -79,7 +79,6 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
-import hu.mostoha.mobile.android.huki.ui.home.contact.ContactBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.gpx.GpxDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
@@ -91,9 +90,10 @@ import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup.Compa
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerFragment
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerViewModel
+import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsBottomSheetDialogFragment
+import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsViewModel
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
-import hu.mostoha.mobile.android.huki.util.MAP_TILES_SCALE_FACTOR
 import hu.mostoha.mobile.android.huki.util.OSM_ID_UNAVAILABLE
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
@@ -125,6 +125,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val layersViewModel: LayersViewModel by viewModels()
     private val placeFinderViewModel: PlaceFinderViewModel by viewModels()
     private val routePlannerViewModel: RoutePlannerViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
@@ -140,7 +141,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeMyLocationButton by lazy { binding.homeMyLocationButton }
     private val homeRoutePlannerFab by lazy { binding.homeRoutePlannerFab }
     private val homeLayersFab by lazy { binding.homeLayersFab }
-    private val homeContactFab by lazy { binding.homeContactFab }
+    private val homeSettingsFab by lazy { binding.homeSettingsFab }
     private val homeAltitudeText by lazy { binding.homeAltitudeText }
 
     private lateinit var placeFinderPopup: PlaceFinderPopup
@@ -215,7 +216,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initMapView() {
         homeMapView.apply {
-            tilesScaleFactor = MAP_TILES_SCALE_FACTOR
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
             addOnFirstLayoutListener { _, _, _, _, _ ->
@@ -337,8 +337,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             LayersBottomSheetDialogFragment().show(supportFragmentManager, LayersBottomSheetDialogFragment.TAG)
         }
 
-        homeContactFab.setOnClickListener {
-            ContactBottomSheetDialogFragment().show(supportFragmentManager, ContactBottomSheetDialogFragment.TAG)
+        homeSettingsFab.setOnClickListener {
+            SettingsBottomSheetDialogFragment().show(supportFragmentManager, SettingsBottomSheetDialogFragment.TAG)
         }
     }
 
@@ -457,6 +457,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initLayersFlows()
         initPlaceFinderFlows()
         initRoutePlannerFlows()
+        initSettingsFlows()
     }
 
     private fun initHomeFlows() {
@@ -604,6 +605,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     placeFinderItems?.let { items ->
                         placeFinderPopup.initPlaceFinderItems(homeSearchBarPopupAnchor, items)
                     }
+                }
+        }
+    }
+
+    private fun initSettingsFlows() {
+        lifecycleScope.launch {
+            settingsViewModel.mapScaleFactor
+                .flowWithLifecycle(lifecycle)
+                .collect { mapScaleFactor ->
+                    homeMapView.tilesScaleFactor = mapScaleFactor
+                    homeMapView.invalidate()
                 }
         }
     }
