@@ -19,10 +19,17 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_HIKING_ROUTE = "select_hiking_route"
         private const val EVENT_SELECT_MY_LOCATION = "select_my_location"
         private const val EVENT_SELECT_ROUTE_PLANNER = "select_route_planner"
+        private const val EVENT_SELECT_ROUTE_PLANNER_PICK_LOCATION = "select_route_planner_pick_location"
+        private const val EVENT_SELECT_ROUTE_PLANNER_MY_LOCATION = "select_route_planner_my_location"
+        private const val EVENT_SELECT_ROUTE_PLANNER_DONE = "select_route_planner_done"
         private const val EVENT_SELECT_MAPS_DIRECTIONS = "select_maps_directions"
         private const val EVENT_GPX_IMPORT_CLICKED = "gpx_import_clicked"
         private const val EVENT_GPX_IMPORTED_BY_INTENT = "gpx_imported_by_intent"
         private const val EVENT_GPX_IMPORTED_BY_FILE_EXPLORER = "gpx_imported_by_file_explorer"
+        private const val EVENT_SELECT_SETTINGS = "select_settings"
+        private const val EVENT_SELECT_SETTINGS_MAP_SCALE = "select_settings_map_scale"
+        private const val EVENT_SELECT_SETTINGS_EMAIL = "select_settings_email"
+        private const val EVENT_SELECT_SETTINGS_GITHUB = "select_settings_github"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
         private const val EVENT_DESTROYED = "destroyed"
 
@@ -33,6 +40,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_LOAD_HIKING_ROUTE_FOR = "load_hiking_route_for"
         private const val PARAM_SELECTED_HIKING_ROUTE_DETAILS = "selected_hiking_route_details"
         private const val PARAM_NAVIGATION_PLACE_NAME = "navigation_place_name"
+        private const val PARAM_MAP_SCALE_PERCENTAGE = "map_scale_percentage"
         private const val PARAM_TILE_DOWNLOAD_REQUEST_COUNTER = "tile_download_request_counter"
         private const val PARAM_TILE_DOWNLOAD_OUT_OF_MEMORY = "tile_download_out_of_memory"
         private const val PARAM_TILE_DOWNLOAD_ERRORS = "tile_download_errors"
@@ -80,6 +88,18 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER, null)
     }
 
+    override fun routePlannerPickLocationClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_PICK_LOCATION, null)
+    }
+
+    override fun routePlannerMyLocationClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_MY_LOCATION, null)
+    }
+
+    override fun routePlannerDoneClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_DONE, null)
+    }
+
     override fun googleMapsClicked(destinationPlaceName: String) {
         firebaseAnalytics.logEvent(EVENT_SELECT_MAPS_DIRECTIONS) {
             param(PARAM_NAVIGATION_PLACE_NAME, destinationPlaceName)
@@ -96,6 +116,24 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun gpxImportedByFileExplorer() {
         firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED_BY_FILE_EXPLORER, null)
+    }
+
+    override fun settingsClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS, null)
+    }
+
+    override fun settingsMapScaleSet(mapScalePercentage: Long) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_MAP_SCALE) {
+            param(PARAM_MAP_SCALE_PERCENTAGE, mapScalePercentage)
+        }
+    }
+
+    override fun settingsEmailClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_EMAIL, null)
+    }
+
+    override fun settingsGitHubClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_GITHUB, null)
     }
 
     override fun copyrightClicked() {

@@ -18,6 +18,12 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun routePlannerClicked() = Unit
 
+    override fun routePlannerPickLocationClicked() = Unit
+
+    override fun routePlannerMyLocationClicked() = Unit
+
+    override fun routePlannerDoneClicked() = Unit
+
     override fun googleMapsClicked(destinationPlaceName: String) = Unit
 
     override fun gpxImportClicked() = Unit
@@ -25,6 +31,14 @@ class FakeAnalyticsService : AnalyticsService {
     override fun gpxImportedByIntent() = Unit
 
     override fun gpxImportedByFileExplorer() = Unit
+
+    override fun settingsClicked() = Unit
+
+    override fun settingsMapScaleSet(mapScalePercentage: Long) = Unit
+
+    override fun settingsEmailClicked() = Unit
+
+    override fun settingsGitHubClicked() = Unit
 
     override fun copyrightClicked() = Unit
 

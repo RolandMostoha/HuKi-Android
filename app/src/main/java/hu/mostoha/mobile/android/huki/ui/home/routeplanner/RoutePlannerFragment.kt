@@ -24,6 +24,7 @@ import hu.mostoha.mobile.android.huki.databinding.FragmentRoutePlannerBinding
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.removeFragments
+import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
@@ -66,7 +67,7 @@ class RoutePlannerFragment : Fragment() {
         binding.routePlannerRouteAttributesContainer.routeAttributesContainer
     }
     private val routePlannerContainer by lazy { binding.routePlannerContainer }
-    private val saveButton by lazy { binding.routePlannerSaveButton }
+    private val doneButton by lazy { binding.routePlannerDoneButton }
     private val backButton by lazy { binding.routePlannerBackButton }
     private val graphhopperContainer by lazy { binding.routePlannerGraphhopperContainer }
     private val errorText by lazy { binding.routePlannerErrorText }
@@ -98,7 +99,8 @@ class RoutePlannerFragment : Fragment() {
         initWaypoints()
         initPlaceFinderPopup()
 
-        saveButton.setOnClickListener {
+        doneButton.setOnClickListener {
+            analyticsService.routePlannerDoneClicked()
             routePlannerViewModel.saveRoutePlan()
         }
         backButton.setOnClickListener {
@@ -174,6 +176,8 @@ class RoutePlannerFragment : Fragment() {
                 val lastEditedWaypoint = lastEditedWaypointItem ?: return@PlaceFinderPopup
                 val searchText = waypointInput.text?.toString() ?: ""
 
+                analyticsService.placeFinderPlaceClicked(searchText, placeUiModel.primaryText.resolve(requireContext()))
+
                 waypointInput.clearFocusAndHideKeyboard()
                 placeFinderViewModel.cancelSearch()
 
@@ -185,6 +189,8 @@ class RoutePlannerFragment : Fragment() {
                 )
             },
             onMyLocationClick = {
+                analyticsService.routePlannerMyLocationClicked()
+
                 val waypointInput = lastEditedWaypointInput?.editText ?: return@PlaceFinderPopup
                 val lastEditedWaypoint = lastEditedWaypointItem ?: return@PlaceFinderPopup
 
@@ -198,6 +204,8 @@ class RoutePlannerFragment : Fragment() {
                 )
             },
             onPickLocationClick = {
+                analyticsService.routePlannerPickLocationClicked()
+
                 val waypointInput = lastEditedWaypointInput?.editText ?: return@PlaceFinderPopup
 
                 waypointInput.clearFocusAndHideKeyboard()
@@ -243,7 +251,7 @@ class RoutePlannerFragment : Fragment() {
             routePlannerViewModel.isRoutePlanLoading
                 .flowWithLifecycle(lifecycle)
                 .collect { isLoading ->
-                    saveButton.inProgress = isLoading
+                    doneButton.inProgress = isLoading
                 }
         }
         lifecycleScope.launch {
@@ -318,10 +326,10 @@ class RoutePlannerFragment : Fragment() {
                 routeAttributesUphillText.setMessage(routePlanUiModel.altitudeUiModel.uphillText)
                 routeAttributesDownhillText.setMessage(routePlanUiModel.altitudeUiModel.downhillText)
             }
-            saveButton.disabled = false
+            doneButton.disabled = false
         } else {
             routeAttributesContainer.gone()
-            saveButton.disabled = true
+            doneButton.disabled = true
         }
     }
 

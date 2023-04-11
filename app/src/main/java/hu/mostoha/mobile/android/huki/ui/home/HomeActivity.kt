@@ -338,6 +338,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
 
         homeSettingsFab.setOnClickListener {
+            analyticsService.settingsClicked()
             SettingsBottomSheetDialogFragment().show(supportFragmentManager, SettingsBottomSheetDialogFragment.TAG)
         }
     }

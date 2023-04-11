@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.ui.home.settings
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +11,19 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentSettingsBottomSheetDialogBinding
 import hu.mostoha.mobile.android.huki.extensions.hyperlinkStyle
 import hu.mostoha.mobile.android.huki.extensions.startEmailIntent
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
+import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.util.toPercentageFromScale
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
@@ -28,6 +33,9 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         private const val MAP_SCALE_FACTOR_TO = 300
         private const val MAP_SCALE_FACTOR_STEP = 10
     }
+
+    @Inject
+    lateinit var analyticsService: FirebaseAnalyticsService
 
     private val settingsViewModel: SettingsViewModel by activityViewModels()
 
@@ -60,6 +68,12 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         _binding = null
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+
+        analyticsService.settingsMapScaleSet(mapScaleSlider.value.toLong())
+    }
+
     private fun initDialog() {
         val sheet = requireDialog() as BottomSheetDialog
         sheet.behavior.skipCollapsed = true
@@ -80,6 +94,7 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
         emailText.hyperlinkStyle()
         emailText.setOnClickListener {
+            analyticsService.settingsEmailClicked()
             requireContext().startEmailIntent(
                 email = getString(R.string.settings_email),
                 subject = getString(R.string.settings_email_subject)
@@ -88,6 +103,7 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
         gitHubText.hyperlinkStyle()
         gitHubText.setOnClickListener {
+            analyticsService.settingsEmailClicked()
             requireContext().startUrlIntent(getString(R.string.settings_github_repository_url))
         }
     }

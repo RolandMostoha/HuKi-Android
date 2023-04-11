@@ -132,7 +132,7 @@ class RoutePlannerUiTest {
             R.id.homeRoutePlannerFab.click()
 
             R.id.homeRoutePlannerContainer.isDisplayed()
-            R.id.routePlannerSaveButton.isDisplayed()
+            R.id.routePlannerDoneButton.isDisplayed()
             R.id.routePlannerGraphhopperContainer.isDisplayed()
             R.id.homeRoutePlannerFab.isNotDisplayed()
         }
@@ -356,7 +356,7 @@ class RoutePlannerUiTest {
                 .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName2)))
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
 
-            R.id.routePlannerSaveButton.click()
+            R.id.routePlannerDoneButton.click()
 
             R.id.homeMapView.hasOverlay<GpxPolyline>()
         }

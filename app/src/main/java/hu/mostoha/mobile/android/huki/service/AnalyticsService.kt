@@ -18,6 +18,12 @@ interface AnalyticsService {
 
     fun routePlannerClicked()
 
+    fun routePlannerPickLocationClicked()
+
+    fun routePlannerMyLocationClicked()
+
+    fun routePlannerDoneClicked()
+
     fun googleMapsClicked(destinationPlaceName: String)
 
     fun gpxImportClicked()
@@ -25,6 +31,14 @@ interface AnalyticsService {
     fun gpxImportedByIntent()
 
     fun gpxImportedByFileExplorer()
+
+    fun settingsClicked()
+
+    fun settingsMapScaleSet(mapScalePercentage: Long)
+
+    fun settingsEmailClicked()
+
+    fun settingsGitHubClicked()
 
     fun copyrightClicked()
 

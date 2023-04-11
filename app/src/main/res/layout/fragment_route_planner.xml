@@ -82,7 +82,7 @@
         android:orientation="horizontal"
         android:paddingVertical="@dimen/space_small"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/routePlannerSaveButton"
+        app:layout_constraintEnd_toStartOf="@id/routePlannerDoneButton"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -106,7 +106,7 @@
     </LinearLayout>
 
     <hu.mostoha.mobile.android.huki.views.ProgressMaterialButton
-        android:id="@+id/routePlannerSaveButton"
+        android:id="@+id/routePlannerDoneButton"
         style="@style/DefaultButton.Contained.Shadowless.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
