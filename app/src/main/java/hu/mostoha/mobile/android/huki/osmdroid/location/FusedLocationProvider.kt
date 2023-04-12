@@ -10,7 +10,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import dagger.hilt.android.qualifiers.ApplicationContext
-import hu.mostoha.mobile.android.huki.util.MY_LOCATION_MIN_TIME_MS
+import hu.mostoha.mobile.android.huki.util.MY_LOCATION_MIN_INTERVAL_TIME_MS
 import hu.mostoha.mobile.android.huki.util.MY_LOCATION_TIME_MS
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -56,11 +56,10 @@ class FusedLocationProvider @Inject constructor(
             }
         }
 
-        val locationRequest = LocationRequest.create().apply {
-            interval = MY_LOCATION_TIME_MS
-            fastestInterval = MY_LOCATION_MIN_TIME_MS
-            priority = PRIORITY_HIGH_ACCURACY
-        }
+        val locationRequest = LocationRequest.Builder(MY_LOCATION_TIME_MS)
+            .setPriority(PRIORITY_HIGH_ACCURACY)
+            .setMinUpdateIntervalMillis(MY_LOCATION_MIN_INTERVAL_TIME_MS)
+            .build()
 
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
             .addOnSuccessListener {

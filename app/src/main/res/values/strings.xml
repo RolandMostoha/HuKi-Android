@@ -3,7 +3,7 @@
     <string name="huki_app_name">HuKi</string>
     <string name="huki_app_name_debug">HuKi-Debug</string>
 
-    <string name="common_percentage" translatable="false">%d\%%</string>
+    <string name="common_percentage" translatable="false">%1$d%%</string>
 
     <string name="error_message_unknown">Unexpected error has occurred!\nThe error has been sent for further investigation!</string>
     <string name="error_message_missing_osm_id">The place with the corresponding OSM ID does not exist.</string>
