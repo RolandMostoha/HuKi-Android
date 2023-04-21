@@ -177,7 +177,6 @@ class PlaceFinderViewModelTest {
             iconRes = 0,
             geoPoint = DEFAULT_PLACE.location.toGeoPoint(),
             boundingBox = null,
-            isLandscape = false
         )
     }
 

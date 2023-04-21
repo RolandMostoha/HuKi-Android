@@ -6,10 +6,9 @@ import android.net.MailTo
 import android.net.Uri
 import android.provider.Browser
 import androidx.core.app.ShareCompat
+import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import org.osmdroid.util.GeoPoint
 
-
-const val GOOGLE_MAPS_DIRECTIONS_URL = "https://www.google.com/maps/dir/?api=1&destination=%s,%s"
 
 fun Context.startGoogleMapsDirectionsIntent(geoPoint: GeoPoint) {
     val mapsUrl = GOOGLE_MAPS_DIRECTIONS_URL.format(geoPoint.latitude, geoPoint.longitude)

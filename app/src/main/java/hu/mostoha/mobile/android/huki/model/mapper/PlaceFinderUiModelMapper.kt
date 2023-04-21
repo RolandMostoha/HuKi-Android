@@ -66,7 +66,6 @@ class PlaceFinderUiModelMapper @Inject constructor() {
                 },
                 geoPoint = place.location.toGeoPoint(),
                 boundingBox = place.boundingBox,
-                isLandscape = false,
                 distanceText = location?.let { DistanceFormatter.format(place.location.distanceBetween(location)) }
             )
         }

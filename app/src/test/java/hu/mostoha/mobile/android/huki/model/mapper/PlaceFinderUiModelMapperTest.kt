@@ -65,7 +65,6 @@ class PlaceFinderUiModelMapperTest {
                         iconRes = R.drawable.ic_place_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
-                        isLandscape = false
                     )
                 )
             )
@@ -89,7 +88,6 @@ class PlaceFinderUiModelMapperTest {
                         iconRes = R.drawable.ic_place_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
-                        isLandscape = false
                     )
                 )
             )
@@ -115,7 +113,6 @@ class PlaceFinderUiModelMapperTest {
                         iconRes = R.drawable.ic_place_type_way,
                         geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
                         boundingBox = DEFAULT_PLACE_WAY.boundingBox,
-                        isLandscape = false,
                         distanceText = DistanceFormatter.format(DEFAULT_PLACE_WAY.location.distanceBetween(location))
                     )
                 )

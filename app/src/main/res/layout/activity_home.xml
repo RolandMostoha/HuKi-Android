@@ -238,6 +238,11 @@
         tools:visibility="gone" />
 
     <include
+        android:id="@+id/homeLandscapeDetailsBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_landscape_details"
+        tools:visibility="gone" />
+
+    <include
         android:id="@+id/homeHikingRoutesBottomSheetContainer"
         layout="@layout/layout_bottom_sheet_hiking_routes"
         tools:visibility="gone" />

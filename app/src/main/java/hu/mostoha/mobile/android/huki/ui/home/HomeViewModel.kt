@@ -14,6 +14,8 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
@@ -60,8 +62,12 @@ class HomeViewModel @Inject constructor(
     val placeDetails: StateFlow<PlaceDetailsUiModel?> = _placeDetails
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
-    private val _landscapes = MutableStateFlow<List<PlaceUiModel>?>(null)
-    val landscapes: StateFlow<List<PlaceUiModel>?> = _landscapes
+    private val _landscapes = MutableStateFlow<List<LandscapeUiModel>?>(null)
+    val landscapes: StateFlow<List<LandscapeUiModel>?> = _landscapes
+        .stateIn(viewModelScope, WhileViewSubscribed, null)
+
+    private val _landscapeDetails = MutableStateFlow<LandscapeDetailsUiModel?>(null)
+    val landscapeDetails: StateFlow<LandscapeDetailsUiModel?> = _landscapeDetails
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     private val _hikingRoutes = MutableStateFlow<List<HikingRoutesItem>?>(null)
@@ -92,8 +98,26 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
+    fun loadLandscapeDetails(landscapeUiModel: LandscapeUiModel) = viewModelScope.launch(dispatcher) {
+        placesInteractor.requestGeometryFlow(landscapeUiModel.osmId, landscapeUiModel.osmType)
+            .map { homeUiModelMapper.generateLandscapeDetails(landscapeUiModel, it) }
+            .onEach { _landscapeDetails.emit(it) }
+            .onStart {
+                clearFollowLocation()
+                clearHikingRoutes()
+                clearPlaceDetails()
+
+                showLoading(true)
+            }
+            .onCompletion { showLoading(false) }
+            .catch { showError(it) }
+            .collect()
+    }
+
     fun loadPlace(placeUiModel: PlaceUiModel) = viewModelScope.launch(dispatcher) {
         clearFollowLocation()
+        clearHikingRoutes()
+        clearLandscapeDetails()
 
         _placeDetails.emit(homeUiModelMapper.generatePlaceDetails(placeUiModel))
     }
@@ -105,6 +129,7 @@ class HomeViewModel @Inject constructor(
             .onStart {
                 clearFollowLocation()
                 clearHikingRoutes()
+                clearLandscapeDetails()
 
                 showLoading(true)
             }
@@ -133,6 +158,8 @@ class HomeViewModel @Inject constructor(
             .onEach { _placeDetails.emit(it) }
             .onStart {
                 clearFollowLocation()
+                clearPlaceDetails()
+                clearLandscapeDetails()
 
                 showLoading(true)
             }
@@ -169,12 +196,23 @@ class HomeViewModel @Inject constructor(
         _placeDetails.value = null
     }
 
+    fun clearLandscapeDetails() {
+        _landscapeDetails.value = null
+    }
+
     fun clearHikingRoutes() {
         _hikingRoutes.value = null
     }
 
     fun clearFollowLocation() {
         updateMyLocationConfig(isFollowLocationEnabled = false)
+    }
+
+    fun clearAllOverlay() {
+        clearPlaceDetails()
+        clearLandscapeDetails()
+        clearHikingRoutes()
+        clearFollowLocation()
     }
 
     private suspend fun showLoading(isLoading: Boolean) {

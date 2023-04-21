@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.ui.home
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
@@ -11,8 +12,6 @@ import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
-import hu.mostoha.mobile.android.huki.model.domain.Landscape
-import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
@@ -21,6 +20,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
@@ -38,9 +38,6 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_START_LATITU
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_START_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_WAY_GEOMETRY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_WAY_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
@@ -48,7 +45,9 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
+import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_URL
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
+import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_QUERY_URL
 import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.runTestDefault
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -101,7 +100,7 @@ class HomeViewModelTest {
     fun `Given location, when loadLandscapes, then landscapes are emitted`() =
         runTestDefault {
             val landscapes = listOf(DEFAULT_LANDSCAPE)
-            val landscapesUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
+            val landscapesUiModels = listOf(DEFAULT_LANDSCAPE_UI_MODEL)
 
             every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
             every { homeUiModelMapper.generateLandscapes(any()) } returns landscapesUiModels
@@ -422,7 +421,7 @@ class HomeViewModelTest {
 
     private fun mockLandscapes() {
         val landscapes = listOf(DEFAULT_LANDSCAPE)
-        val landscapeUiModels = listOf(DEFAULT_PLACE_UI_MODEL)
+        val landscapeUiModels = listOf(DEFAULT_LANDSCAPE_UI_MODEL)
 
         every { landscapeInteractor.requestGetLandscapesFlow() } returns flowOf(landscapes)
         every { homeUiModelMapper.generateLandscapes(any()) } returns landscapeUiModels
@@ -447,7 +446,6 @@ class HomeViewModelTest {
             iconRes = 0,
             geoPoint = DEFAULT_PLACE.location.toGeoPoint(),
             boundingBox = null,
-            isLandscape = false
         )
         private val DEFAULT_PLACE_DETAILS_UI_MODEL = PlaceDetailsUiModel(
             placeUiModel = DEFAULT_PLACE_UI_MODEL,
@@ -482,7 +480,6 @@ class HomeViewModelTest {
                 iconRes = 0,
                 geoPoint = GeoPoint(DEFAULT_HIKING_ROUTE_START_LATITUDE, DEFAULT_HIKING_ROUTE_START_LONGITUDE),
                 boundingBox = null,
-                isLandscape = false
             ),
             geometryUiModel = GeometryUiModel.Relation(
                 ways = listOf(
@@ -500,11 +497,16 @@ class HomeViewModelTest {
             south = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH,
             west = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_WEST
         )
-        private val DEFAULT_LANDSCAPE = Landscape(
-            osmId = DEFAULT_LANDSCAPE_OSM_ID,
-            name = R.string.landscape_bükk,
-            type = LandscapeType.MOUNTAIN_RANGE_HIGH,
-            center = Location(DEFAULT_LANDSCAPE_LATITUDE, DEFAULT_LANDSCAPE_LONGITUDE)
+        private val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.first()
+        private val DEFAULT_LANDSCAPE_UI_MODEL = LandscapeUiModel(
+            osmId = DEFAULT_LANDSCAPE.osmId,
+            osmType = DEFAULT_LANDSCAPE.osmType,
+            name = DEFAULT_LANDSCAPE.nameRes.toMessage(),
+            geoPoint = DEFAULT_LANDSCAPE.center.toGeoPoint(),
+            iconRes = R.drawable.ic_landscapes_plain_land,
+            markerRes = R.drawable.ic_marker_landscapes_plain_land,
+            kirandulastippekLink = KIRANDULASTIPPEK_URL,
+            termeszetjaroLinkTemplate = TERMESZETJARO_QUERY_URL,
         )
     }
 

@@ -1,5 +1,6 @@
 <resources>
 
+    <string name="landscape_budai_hegyseg">Budai-hegység</string>
     <string name="landscape_bükk">Bükk</string>
     <string name="landscape_balaton_felvidék">Balaton-felvidék</string>
     <string name="landscape_aggteleki_karszt">Aggteleki-karszt</string>
@@ -23,5 +24,8 @@
     <string name="landscape_zselic">Zselic</string>
     <string name="landscape_villányi_hegység">Villányi-hegység</string>
     <string name="landscape_kőszegi_hegység">Kőszegi-hegység</string>
+    <string name="landscape_soproni_hegység">Soproni-Hegység</string>
+    <string name="landscape_hortobágy">Hortobágy</string>
+    <string name="landscape_őrség">Őrség</string>
 
 </resources>

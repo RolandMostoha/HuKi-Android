@@ -8,6 +8,14 @@ interface AnalyticsService {
 
     fun loadLandscapeClicked(placeName: String)
 
+    fun landscapeKirandulastippekClicked(placeName: String)
+
+    fun landscapeKirandulastippekInfoClicked()
+
+    fun landscapeTermeszetjaroClicked(placeName: String)
+
+    fun landscapeTermeszetjaroInfoClicked()
+
     fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType)
 
     fun loadHikingRoutesClicked(placeName: String)

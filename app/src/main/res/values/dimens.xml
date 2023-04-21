@@ -10,12 +10,15 @@
     <dimen name="space_extra_large">20dp</dimen>
     <dimen name="space_extra_extra_large">25dp</dimen>
     <dimen name="space_huge">30dp</dimen>
+    <dimen name="space_extra_huge">40dp</dimen>
 
     <dimen name="text_size_extra_small">12sp</dimen>
     <dimen name="text_size_small">13sp</dimen>
     <dimen name="text_size_medium">15sp</dimen>
     <dimen name="text_size_large">17sp</dimen>
 
+    <dimen name="icon_size_extra_tiny">18dp</dimen>
+    <dimen name="icon_size_tiny">18dp</dimen>
     <dimen name="icon_size_extra_small">20dp</dimen>
     <dimen name="icon_size_small">22dp</dimen>
     <dimen name="icon_size_medium">24dp</dimen>
@@ -35,7 +38,7 @@
     <dimen name="default_corner_size_input_on_map">30dp</dimen>
     <dimen name="default_corner_size_drag_view">60dp</dimen>
     <dimen name="default_icon_only_button_size">50dp</dimen>
-    <dimen name="default_polygon_width">4dp</dimen>
+    <dimen name="default_polygon_width">2dp</dimen>
     <dimen name="default_polyline_width">6dp</dimen>
     <dimen name="default_polyline_fill_width">4dp</dimen>
     <dimen name="default_horizontal_separator_width">1dp</dimen>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/icon_size_extra_tiny"
+    android:height="@dimen/icon_size_extra_tiny"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+    <path
+        android:fillColor="@color/colorIconPolygonMarker"
+        android:pathData="M947.7,790.2l-871.4,0l271.1,-440.7l99.5,159.2l0.4,-0.6l8.9,14.3l8.9,14.2l62.4,99.9l17,-10.6l16.9,-10.6l-73.2,-117.2l-8.9,-14.2l-8.9,-14.3l141.4,-235.8z" />
+</vector>

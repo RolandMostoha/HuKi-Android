@@ -26,8 +26,14 @@
     <string name="place_details_my_location_text">Actual location</string>
     <string name="place_details_pick_location_text">Chosen location</string>
 
+    <string name="landscape_details_hiking_trails_button">Trails of landscape</string>
+    <string name="landscape_details_termeszetjaro_button">Természetjáró\'s trails</string>
+    <string name="landscape_details_termeszetjaro_info">After registration, you can import the downloaded GPX file to the application.</string>
+    <string name="landscape_details_kirandulastippek_button">Kirándulástippek\'s trails</string>
+    <string name="landscape_details_kirandulastippek_info">You can import the downloaded GPX file to the application.</string>
+
     <string name="home_bottom_sheet_directions_button">Google Nav</string>
-    <string name="home_bottom_sheet_hiking_trails_button">Hiking trails</string>
+    <string name="home_bottom_sheet_hiking_trails_button">Trails nearby</string>
     <string name="home_bottom_sheet_show_points_button">All points</string>
     <string name="home_bottom_sheet_route_plan_button">Route plan</string>
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>

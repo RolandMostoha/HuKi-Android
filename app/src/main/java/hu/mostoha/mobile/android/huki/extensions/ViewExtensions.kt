@@ -40,15 +40,21 @@ fun List<View>.showOnly(vararg views: View) {
 }
 
 fun List<BottomSheetDialog>.showOnly(vararg dialogs: BottomSheetDialog) {
-    forEach {
-        it.hide()
+    forEach { dialog ->
+        dialog.hide()
     }
-    dialogs.forEach { targetView ->
-        if (!this.contains(targetView)) {
+    dialogs.forEach { targetDialog ->
+        if (!this.contains(targetDialog)) {
             error("Exclusive dialog list does not contain the target dialog!")
         }
 
-        targetView.show()
+        targetDialog.show()
+    }
+}
+
+fun List<BottomSheetDialog>.hideAll() {
+    forEach { dialog ->
+        dialog.hide()
     }
 }
 

@@ -2,19 +2,10 @@ package hu.mostoha.mobile.android.huki.interactor
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
-import hu.mostoha.mobile.android.huki.model.domain.Landscape
-import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
-import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_2_LATITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_2_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_2_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -84,18 +75,8 @@ class LandscapeInteractorTest {
     }
 
     companion object {
-        private val DEFAULT_LANDSCAPE = Landscape(
-            osmId = DEFAULT_LANDSCAPE_OSM_ID,
-            name = R.string.landscape_bükk,
-            type = LandscapeType.MOUNTAIN_RANGE_LOW,
-            center = Location(DEFAULT_LANDSCAPE_LATITUDE, DEFAULT_LANDSCAPE_LONGITUDE)
-        )
-        private val DEFAULT_LANDSCAPE_2 = Landscape(
-            osmId = DEFAULT_LANDSCAPE_2_OSM_ID,
-            name = R.string.landscape_balaton_felvidék,
-            type = LandscapeType.MOUNTAIN_RANGE_LOW,
-            center = Location(DEFAULT_LANDSCAPE_2_LATITUDE, DEFAULT_LANDSCAPE_2_LONGITUDE)
-        )
+        private val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES[1]
+        private val DEFAULT_LANDSCAPE_2 = LOCAL_LANDSCAPES[2]
     }
 
 }

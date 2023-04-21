@@ -20,7 +20,7 @@
     <color name="colorDivider">#61DEDEDE</color>
     <color name="colorMarker">@color/colorPrimaryIcon</color>
     <color name="colorPolyline">#DE296b2c</color>
-    <color name="colorPolylineFill">#15474747</color>
+    <color name="colorPolylineFill">#DE9cc78a</color>
     <color name="colorPolylineHigh">#fd7c26</color>
     <color name="colorPolylineBorder">#000000</color>
     <color name="colorCopyright">#B3262626</color>
@@ -28,6 +28,10 @@
     <color name="colorStrokeGpxMarker">@color/colorMarker</color>
     <color name="colorFillGpxStartMarker">@color/colorBackground</color>
     <color name="colorIconGpxStartMarker">@color/colorPrimaryIcon</color>
+    <color name="colorStrokePolygonMarker">@color/colorMarker</color>
+    <color name="colorFillPolygonMarker">@color/colorBackground</color>
+    <color name="colorIconPolygonMarker">@color/colorPrimaryIcon</color>
+    <color name="colorInfoPopupBackground">@color/colorPrimary</color>
 
     <color name="colorSymbolStroke">#000000</color>
     <color name="colorSymbolBlue">#0000cc</color>

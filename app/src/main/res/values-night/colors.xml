@@ -17,11 +17,14 @@
     <color name="colorDivider">#61919191</color>
     <color name="colorMarker">@color/colorPrimary</color>
     <color name="colorPolyline">@color/colorPrimary</color>
-    <color name="colorPolylineFill">#1F6BBA6F</color>
+    <color name="colorPolylineFill">#616BBA6F</color>
     <color name="colorPolylineHigh">#ee6002</color>
     <color name="colorCopyright">#61ffffff</color>
     <color name="colorStrokeGpxMarker">#1a1a1a</color>
     <color name="colorFillGpxStartMarker">#DEDEDE</color>
     <color name="colorIconGpxStartMarker">@color/colorBackground</color>
+    <color name="colorStrokePolygonMarker">@color/colorPrimary</color>
+    <color name="colorFillPolygonMarker">@color/colorPrimary</color>
+    <color name="colorIconPolygonMarker">@color/colorStrokeGpxMarker</color>
 
 </resources>

@@ -3,7 +3,9 @@ package hu.mostoha.mobile.android.huki.extensions
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import androidx.annotation.DrawableRes
+import androidx.annotation.Px
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 
@@ -13,4 +15,14 @@ fun @receiver:DrawableRes Int.toBitmap(context: Context): Bitmap {
 
 fun @receiver:DrawableRes Int.toDrawable(context: Context): Drawable {
     return ContextCompat.getDrawable(context, this)!!
+}
+
+fun generateLayerDrawable(layers: List<Drawable>, @Px padding: Int? = null): LayerDrawable {
+    val layerDrawable = LayerDrawable(layers.toTypedArray())
+
+    padding?.let {
+        layerDrawable.setLayerInset(1, padding, padding, padding, padding)
+    }
+
+    return layerDrawable
 }

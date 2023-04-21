@@ -398,7 +398,6 @@ class RoutePlannerViewModelTest {
             iconRes = 0,
             geoPoint = GeoPoint(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
             boundingBox = null,
-            isLandscape = false
         )
         private val DEFAULT_PLACE_UI_MODEL_2 = PlaceUiModel(
             osmId = DEFAULT_WAY_OSM_ID,
@@ -408,7 +407,6 @@ class RoutePlannerViewModelTest {
             iconRes = 0,
             geoPoint = GeoPoint(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE),
             boundingBox = null,
-            isLandscape = false
         )
         private val DEFAULT_WAYPOINTS = listOf(
             Location(

@@ -14,6 +14,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
     companion object {
         private const val EVENT_SELECT_PLACE = "select_place"
         private const val EVENT_SELECT_LANDSCAPE = "select_landscape"
+        private const val EVENT_SELECT_LANDSCAPE_KIRANDULASTIPPEK = "select_landscape_kirandulastippek"
+        private const val EVENT_SELECT_LANDSCAPE_KIRANDULASTIPPEK_INFO = "select_landscape_kirandulastippek_info"
+        private const val EVENT_SELECT_LANDSCAPE_TERMESZETJARO = "select_landscape_termeszetjaro"
+        private const val EVENT_SELECT_LANDSCAPE_TERMESZETJARO_INFO = "select_landscape_termeszetjaro_info"
         private const val EVENT_SELECT_PLACE_DETAILS = "select_place_details"
         private const val EVENT_SEARCH_HIKING_ROUTES = "search_hiking_routes"
         private const val EVENT_SELECT_HIKING_ROUTE = "select_hiking_route"
@@ -60,6 +64,26 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_LANDSCAPE) {
             param(PARAM_SELECTED_LANDSCAPE, placeName)
         }
+    }
+
+    override fun landscapeKirandulastippekClicked(placeName: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_LANDSCAPE_KIRANDULASTIPPEK) {
+            param(PARAM_SELECTED_LANDSCAPE, placeName)
+        }
+    }
+
+    override fun landscapeKirandulastippekInfoClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_LANDSCAPE_KIRANDULASTIPPEK_INFO, null)
+    }
+
+    override fun landscapeTermeszetjaroClicked(placeName: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_LANDSCAPE_TERMESZETJARO) {
+            param(PARAM_SELECTED_LANDSCAPE, placeName)
+        }
+    }
+
+    override fun landscapeTermeszetjaroInfoClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_LANDSCAPE_TERMESZETJARO_INFO, null)
     }
 
     override fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType) {

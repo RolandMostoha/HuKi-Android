@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/DefaultBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/space_large"
+    app:behavior_hideable="true"
+    app:layout_insetEdge="bottom">
+
+    <View
+        style="@style/DragViewStyle"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_medium" />
+
+    <LinearLayout
+        android:id="@+id/landscapeDetailsContentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/landscapeDetailsImage"
+            android:layout_width="@dimen/place_details_bottom_sheet_image_size"
+            android:layout_height="@dimen/place_details_bottom_sheet_image_size"
+            android:layout_marginStart="@dimen/space_extra_large"
+            android:padding="@dimen/space_extra_small"
+            tools:src="@drawable/ic_landscapes_mountain_high" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/landscapeDetailsNameText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_medium"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
+            tools:text="Pilis-hegység" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/landscapeDetailsCloseButton"
+            style="@style/DefaultButton.IconOnly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_medium"
+            app:icon="@drawable/ic_bottom_sheet_clear" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_extra_huge"
+        android:layout_marginTop="@dimen/space_extra_small"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/landscapeDetailsHikingTrailsButton"
+            style="@style/DefaultButton.Contained.Shadowless.Secondary.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/landscape_details_hiking_trails_button" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/landscapeDetailsKirandulastippekButton"
+                style="@style/DefaultButton.Contained.Shadowless.Secondary.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/landscape_details_kirandulastippek_button" />
+
+            <hu.mostoha.mobile.android.huki.views.InfoButtonView
+                android:id="@+id/landscapeDetailsKirandulastippekInfoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                app:messageRes="@string/landscape_details_kirandulastippek_info" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/landscapeDetailsTermeszetjaroButton"
+                style="@style/DefaultButton.Contained.Shadowless.Secondary.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/space_huge"
+                android:text="@string/landscape_details_termeszetjaro_button" />
+
+            <hu.mostoha.mobile.android.huki.views.InfoButtonView
+                android:id="@+id/landscapeDetailsTermeszetjaroInfoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                app:messageRes="@string/landscape_details_termeszetjaro_info" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

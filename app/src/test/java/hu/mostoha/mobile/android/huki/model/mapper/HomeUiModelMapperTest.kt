@@ -2,26 +2,25 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
-import hu.mostoha.mobile.android.huki.model.domain.Landscape
-import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_JEL
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
@@ -34,6 +33,9 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY_CLOSED
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
+import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_QUERY_URL
+import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_URL
+import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_QUERY_URL
 import hu.mostoha.mobile.android.huki.util.calculateCenter
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -133,23 +135,70 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given landscape domain models, when generateLandscapes, then correct PlaceDetailsUiModel returns`() {
+    fun `Given landscape domain model, when generateLandscapes, then correct LandscapeUiModel returns`() {
         val landscape = DEFAULT_LANDSCAPE
 
         val places = mapper.generateLandscapes(listOf(landscape))
 
         assertThat(places).isEqualTo(
             listOf(
-                PlaceUiModel(
+                LandscapeUiModel(
                     osmId = landscape.osmId,
-                    placeType = PlaceType.WAY,
-                    primaryText = landscape.name.toMessage(),
-                    secondaryText = R.string.home_bottom_sheet_landscape_secondary.toMessage(),
-                    iconRes = R.drawable.ic_landscapes_mountain_low,
+                    osmType = landscape.osmType,
+                    name = landscape.nameRes.toMessage(),
                     geoPoint = landscape.center.toGeoPoint(),
-                    boundingBox = null,
-                    isLandscape = true
+                    iconRes = R.drawable.ic_landscapes_mountain_medium,
+                    markerRes = R.drawable.ic_marker_landscapes_mountain_medium,
+                    kirandulastippekLink = KIRANDULASTIPPEK_QUERY_URL.format(landscape.kirandulastippekTag),
+                    termeszetjaroLinkTemplate = TERMESZETJARO_QUERY_URL,
                 )
+            )
+        )
+    }
+
+    @Test
+    fun `Given landscape domain model with null kirandulastippek tag, when generateLandscapes, then correct LandscapeUiModel returns with default URL`() {
+        val landscape = DEFAULT_LANDSCAPE.copy(
+            kirandulastippekTag = null
+        )
+
+        val places = mapper.generateLandscapes(listOf(landscape))
+
+        assertThat(places).isEqualTo(
+            listOf(
+                LandscapeUiModel(
+                    osmId = landscape.osmId,
+                    osmType = landscape.osmType,
+                    name = landscape.nameRes.toMessage(),
+                    geoPoint = landscape.center.toGeoPoint(),
+                    iconRes = R.drawable.ic_landscapes_mountain_medium,
+                    markerRes = R.drawable.ic_marker_landscapes_mountain_medium,
+                    kirandulastippekLink = KIRANDULASTIPPEK_URL,
+                    termeszetjaroLinkTemplate = TERMESZETJARO_QUERY_URL,
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `Given landscape ui model and geometry, when generateLandscapeDetails, then correct LandscapeDetailSUiModel returns`() {
+        val landscape = DEFAULT_LANDSCAPE
+        val landscapeUiModel = mapper.generateLandscapes(listOf(landscape)).first()
+
+        val places = mapper.generateLandscapeDetails(landscapeUiModel, DEFAULT_CLOSED_WAY_GEOMETRY)
+
+        assertThat(places).isEqualTo(
+            LandscapeDetailsUiModel(
+                landscapeUiModel = landscapeUiModel,
+                geometryUiModel = GeometryUiModel.Relation(
+                    ways = listOf(
+                        GeometryUiModel.Way(
+                            osmId = DEFAULT_CLOSED_WAY_GEOMETRY.osmId,
+                            geoPoints = DEFAULT_CLOSED_WAY_GEOMETRY.locations.toGeoPoints(),
+                            isClosed = true
+                        )
+                    )
+                ),
             )
         )
     }
@@ -247,7 +296,6 @@ class HomeUiModelMapperTest {
                         .calculateCenter()
                         .toGeoPoint(),
                     boundingBox = null,
-                    isLandscape = false
                 ),
                 geometry
             )
@@ -283,14 +331,8 @@ class HomeUiModelMapperTest {
             iconRes = 0,
             geoPoint = GeoPoint(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
             boundingBox = null,
-            isLandscape = false
         )
-        private val DEFAULT_LANDSCAPE = Landscape(
-            osmId = DEFAULT_LANDSCAPE_OSM_ID,
-            name = R.string.landscape_bükk,
-            type = LandscapeType.MOUNTAIN_RANGE_LOW,
-            center = Location(DEFAULT_LANDSCAPE_LATITUDE, DEFAULT_LANDSCAPE_LONGITUDE)
-        )
+        private val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.first()
     }
 
 }

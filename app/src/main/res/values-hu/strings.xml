@@ -20,11 +20,18 @@
     <string name="place_finder_my_location_button">Pozícióm</string>
     <string name="place_finder_pick_location_button">Térképen</string>
     <string name="place_finder_pick_location_message">Hosszú klikkel jelöld ki a térképen a pozíciót!</string>
+
     <string name="place_details_my_location_text">Aktuális pozícióm</string>
     <string name="place_details_pick_location_text">Kiválasztott pozíció</string>
 
+    <string name="landscape_details_hiking_trails_button">Tájegység túraútjai</string>
+    <string name="landscape_details_termeszetjaro_button">Természetjáró túraajánló</string>
+    <string name="landscape_details_termeszetjaro_info">Regisztráció után a gyűjteményből letöltött GPX fájl importálható az alkalmazásba.</string>
+    <string name="landscape_details_kirandulastippek_button">Kirándulástippek túraajánló</string>
+    <string name="landscape_details_kirandulastippek_info">A gyűjteményből letöltött GPX fájl importálható az alkalmazásba.</string>
+
     <string name="home_bottom_sheet_directions_button">Google Nav</string>
-    <string name="home_bottom_sheet_hiking_trails_button">Túrautak</string>
+    <string name="home_bottom_sheet_hiking_trails_button">Túrautak a közelben</string>
     <string name="home_bottom_sheet_show_points_button">Összes pont</string>
     <string name="home_bottom_sheet_route_plan_button">Útvonalterv</string>
     <string name="home_bottom_sheet_landscape_secondary">Tájegység</string>

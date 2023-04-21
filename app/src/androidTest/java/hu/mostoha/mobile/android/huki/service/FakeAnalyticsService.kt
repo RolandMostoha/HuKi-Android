@@ -8,6 +8,14 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun loadLandscapeClicked(placeName: String) = Unit
 
+    override fun landscapeKirandulastippekClicked(placeName: String) = Unit
+
+    override fun landscapeKirandulastippekInfoClicked() = Unit
+
+    override fun landscapeTermeszetjaroClicked(placeName: String) = Unit
+
+    override fun landscapeTermeszetjaroInfoClicked() = Unit
+
     override fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType) = Unit
 
     override fun loadHikingRoutesClicked(placeName: String) = Unit

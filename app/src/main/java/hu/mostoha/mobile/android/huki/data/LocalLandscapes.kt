@@ -1,0 +1,226 @@
+package hu.mostoha.mobile.android.huki.data
+
+import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.model.domain.Landscape
+import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
+import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+
+/**
+ * Main landscapes of Hungary, focusing on the hiking related areas.
+ *
+ * It is a hardcoded data, coming from the following Overpass query:
+ * way["natural"="mountain_range"](45.75948,16.20229,48.62385,22.71053);
+ * relation["natural"="mountain_range"](45.75948,16.20229,48.62385,22.71053);
+ */
+@Suppress("MagicNumber")
+val LOCAL_LANDSCAPES = listOf(
+    Landscape(
+        osmId = "3716160",
+        osmType = PlaceType.RELATION,
+        nameRes = R.string.landscape_budai_hegyseg,
+        landscapeType = LandscapeType.MOUNTAIN_MEDIUM,
+        center = Location(47.5428510, 18.9336294),
+        kirandulastippekTag = "budapest",
+    ),
+    Landscape(
+        osmId = "279573777",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_bükk,
+        landscapeType = LandscapeType.MOUNTAIN_HIGH,
+        center = Location(48.0356833, 20.5239573),
+        kirandulastippekTag = "bukk",
+    ),
+    Landscape(
+        osmId = "279665387",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_balaton_felvidék,
+        landscapeType = LandscapeType.MOUNTAIN_WITH_LAKE,
+        center = Location(46.9474441, 17.7261084),
+        kirandulastippekTag = "balaton-felvidek",
+    ),
+    Landscape(
+        osmId = "279660398",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_aggteleki_karszt,
+        landscapeType = LandscapeType.CAVE_SYSTEM,
+        center = Location(48.4542508, 20.6350029),
+        kirandulastippekTag = "aggteleki-karszt",
+    ),
+    Landscape(
+        osmId = "279665961",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_mecsek,
+        landscapeType = LandscapeType.MOUNTAIN_MEDIUM,
+        center = Location(46.1675511, 18.2469531),
+        kirandulastippekTag = "pecs-baranya",
+    ),
+    Landscape(
+        osmId = "279583932",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_mátra,
+        landscapeType = LandscapeType.MOUNTAIN_HIGH,
+        center = Location(47.8902858, 19.9453253),
+        kirandulastippekTag = "matra",
+    ),
+    Landscape(
+        osmId = "279564162",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_börzsöny,
+        landscapeType = LandscapeType.MOUNTAIN_HIGH,
+        center = Location(47.9128315, 18.9494417),
+        kirandulastippekTag = "dunakanyar",
+    ),
+    Landscape(
+        osmId = "279561562",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_pilis_hegység,
+        landscapeType = LandscapeType.MOUNTAIN_MEDIUM,
+        center = Location(47.6627423, 18.8986191),
+        kirandulastippekTag = "budapest-kornyeke",
+    ),
+    Landscape(
+        osmId = "279561563",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_visegrádi_hegység,
+        landscapeType = LandscapeType.MOUNTAIN_WITH_CASTLE,
+        center = Location(47.7320692, 18.9181598),
+        kirandulastippekTag = "dunakanyar",
+    ),
+    Landscape(
+        osmId = "279665156",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_bakony,
+        landscapeType = LandscapeType.MOUNTAIN_MEDIUM,
+        center = Location(47.1624906, 17.7835194),
+        kirandulastippekTag = "bakony-veszprem",
+    ),
+    Landscape(
+        osmId = "279663379",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_gerecse_hegység,
+        landscapeType = LandscapeType.MOUNTAIN_MEDIUM,
+        center = Location(47.6177834, 18.5489089),
+        kirandulastippekTag = "vertes-gerecse-velencei-to",
+    ),
+    Landscape(
+        osmId = "279665573",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_keszthelyi_hegység,
+        landscapeType = LandscapeType.MOUNTAIN_WITH_LAKE,
+        center = Location(46.8503130, 17.2709995),
+        kirandulastippekTag = "keszthely-es-kornyeke",
+    ),
+    Landscape(
+        osmId = "279590728",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_cserhát,
+        landscapeType = LandscapeType.MOUNTAIN_MEDIUM,
+        center = Location(47.8788179, 19.4148133),
+        kirandulastippekTag = "palocfold",
+    ),
+    Landscape(
+        osmId = "279593581",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_heves_Borsodi_dombság,
+        landscapeType = LandscapeType.MOUNTAIN_LOW,
+        center = Location(48.1220709, 20.1976971),
+        kirandulastippekTag = null,
+    ),
+    Landscape(
+        osmId = "279651467",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_gödöllői_dombság,
+        landscapeType = LandscapeType.MOUNTAIN_LOW,
+        center = Location(47.4766676, 19.4366835),
+        kirandulastippekTag = "budapest-kornyeke",
+    ),
+    Landscape(
+        osmId = "279656183",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_kopasz_hegy,
+        landscapeType = LandscapeType.WINE_AREA,
+        center = Location(48.1260252, 21.3775780),
+        kirandulastippekTag = "zemplen",
+    ),
+    Landscape(
+        osmId = "279656184",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_zempléni_hegység,
+        landscapeType = LandscapeType.MOUNTAIN_MEDIUM,
+        center = Location(48.3440651, 21.4169262),
+        kirandulastippekTag = "zemplen",
+    ),
+    Landscape(
+        osmId = "279660793",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_cserehát,
+        landscapeType = LandscapeType.FOREST_AREA,
+        center = Location(48.3520520, 20.9643461),
+        kirandulastippekTag = "palocfold",
+    ),
+    Landscape(
+        osmId = "279663918",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_vértes,
+        landscapeType = LandscapeType.MOUNTAIN_LOW,
+        center = Location(47.4375701, 18.3625658),
+        kirandulastippekTag = "vertes-gerecse-velencei-to",
+    ),
+    Landscape(
+        osmId = "279664160",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_velencei_hegység,
+        landscapeType = LandscapeType.MOUNTAIN_WITH_LAKE,
+        center = Location(47.2654220, 18.5854126),
+        kirandulastippekTag = "vertes-gerecse-velencei-to",
+    ),
+    Landscape(
+        osmId = "279666014",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_zselic,
+        landscapeType = LandscapeType.STAR_GAZING_AREA,
+        center = Location(46.2185793, 17.8800546),
+        kirandulastippekTag = "tolna",
+    ),
+    Landscape(
+        osmId = "279667079",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_villányi_hegység,
+        landscapeType = LandscapeType.WINE_AREA,
+        center = Location(45.8827512, 18.2730710),
+        kirandulastippekTag = "pecs-baranya",
+    ),
+    Landscape(
+        osmId = "300323308",
+        osmType = PlaceType.WAY,
+        nameRes = R.string.landscape_kőszegi_hegység,
+        landscapeType = LandscapeType.MOUNTAIN_MEDIUM,
+        center = Location(47.3207697, 16.4054968),
+        kirandulastippekTag = "koszeg-es-szombathely-kornyeke",
+    ),
+    Landscape(
+        osmId = "11073175",
+        osmType = PlaceType.RELATION,
+        nameRes = R.string.landscape_soproni_hegység,
+        landscapeType = LandscapeType.MOUNTAIN_MEDIUM,
+        center = Location(47.6538256, 16.4890472),
+        kirandulastippekTag = "sopron-es-kornyeke",
+    ),
+    Landscape(
+        osmId = "6503266",
+        osmType = PlaceType.RELATION,
+        nameRes = R.string.landscape_hortobágy,
+        landscapeType = LandscapeType.PLAIN_LAND,
+        center = Location(47.49350, 21.05344),
+        kirandulastippekTag = "hortobagy-tisza-to-debrecen",
+    ),
+    Landscape(
+        osmId = "14364597",
+        osmType = PlaceType.RELATION,
+        nameRes = R.string.landscape_őrség,
+        landscapeType = LandscapeType.PLAIN_LAND,
+        center = Location(46.83921, 16.40093),
+        kirandulastippekTag = "orseg",
+    ),
+)

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/space_medium"
+    android:background="@drawable/background_info_popup"
+    android:orientation="horizontal">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/infoButtonPopupMessageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_medium"
+        android:layout_marginVertical="@dimen/space_small_medium"
+        android:drawableStart="@drawable/ic_info_view"
+        android:drawableEnd="@drawable/ic_info_popup_close"
+        android:drawablePadding="@dimen/space_medium"
+        android:drawableTint="@color/colorOnPrimary"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall"
+        android:textColor="@color/colorOnPrimary"
+        tools:text="Title text for info text" />
+
+</LinearLayout>

@@ -21,7 +21,6 @@
         android:fullBackupContent="false"
         android:icon="${appIcon}"
         android:label="${appNameHuki}"
-        android:supportsRtl="false"
         android:theme="@style/BaseTheme.HuKiTheme"
         tools:replace="android:label,android:allowBackup">
 

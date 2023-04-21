@@ -4,7 +4,9 @@ import androidx.annotation.StringRes
 
 data class Landscape(
     val osmId: String,
-    @StringRes val name: Int,
-    val type: LandscapeType,
-    val center: Location
+    val osmType: PlaceType,
+    @StringRes val nameRes: Int,
+    val landscapeType: LandscapeType,
+    val center: Location,
+    val kirandulastippekTag: String? = null,
 )

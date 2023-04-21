@@ -16,11 +16,6 @@ import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
-import hu.mostoha.mobile.android.huki.extensions.GOOGLE_MAPS_DIRECTIONS_URL
-import hu.mostoha.mobile.android.huki.model.domain.Geometry
-import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.Place
-import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
@@ -31,25 +26,16 @@ import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_CENTER_LATITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_CENTER_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_NAME
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_1_GEOMETRY
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_1_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_2_GEOMETRY
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_WAY_2_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_GEOMETRY_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_GEOMETRY_RELATION
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_GEOMETRY_WAY
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_RELATION
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
+import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
@@ -220,12 +206,9 @@ class PlacesUiTest {
     }
 
     @Test
-    fun givenSecondNodePlace_whenClickInSearchResults_thenSecondPlaceDisplaysOnBottomSheet() {
+    fun givenSecondPlace_whenClickInSearchResults_thenSecondPlaceDisplaysOnBottomSheet() {
+        answerTestPlaces()
         answerTestGeometries()
-        coEvery { placesRepository.getPlacesBy(any(), any()) } returns listOf(
-            DEFAULT_PLACE_NODE,
-            DEFAULT_PLACE_NODE_2
-        )
 
         launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
@@ -239,9 +222,9 @@ class PlacesUiTest {
             DEFAULT_PLACE_NODE.name.isTextDisplayed()
 
             R.id.homeSearchBarInput.typeText(searchText)
-            DEFAULT_PLACE_NODE_2.name.clickWithTextInPopup()
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
             R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
-            DEFAULT_PLACE_NODE_2.name.isTextDisplayed()
+            DEFAULT_PLACE_WAY.name.isTextDisplayed()
         }
     }
 
@@ -471,53 +454,6 @@ class PlacesUiTest {
         every { asyncMyLocationProvider.startLocationProvider(any()) } returns true
         every { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
         coEvery { asyncMyLocationProvider.getLastKnownLocationCoroutine() } returns DEFAULT_MY_LOCATION.toMockLocation()
-    }
-
-    companion object {
-        private const val DEFAULT_SEARCH_TEXT = "Dobogoko"
-        private val DEFAULT_PLACE_NODE = Place(
-            osmId = DEFAULT_NODE_OSM_ID,
-            name = DEFAULT_NODE_NAME,
-            placeType = PlaceType.NODE,
-            location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE)
-        )
-        private val DEFAULT_PLACE_NODE_2 = DEFAULT_PLACE_NODE.copy(name = DEFAULT_WAY_NAME)
-        private val DEFAULT_GEOMETRY_NODE = Geometry.Node(
-            osmId = DEFAULT_PLACE_NODE.osmId,
-            location = DEFAULT_PLACE_NODE.location
-        )
-        private val DEFAULT_PLACE_WAY = Place(
-            osmId = DEFAULT_WAY_OSM_ID,
-            name = DEFAULT_WAY_NAME,
-            placeType = PlaceType.WAY,
-            location = Location(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE)
-        )
-        private val DEFAULT_GEOMETRY_WAY = Geometry.Way(
-            osmId = DEFAULT_PLACE_WAY.osmId,
-            locations = DEFAULT_WAY_GEOMETRY.map { Location(it.first, it.second) },
-            distance = 100
-        )
-        private val DEFAULT_PLACE_RELATION = Place(
-            osmId = DEFAULT_RELATION_OSM_ID,
-            name = DEFAULT_RELATION_NAME,
-            placeType = PlaceType.RELATION,
-            location = Location(DEFAULT_RELATION_CENTER_LATITUDE, DEFAULT_RELATION_CENTER_LONGITUDE)
-        )
-        private val DEFAULT_GEOMETRY_RELATION = Geometry.Relation(
-            osmId = DEFAULT_PLACE_RELATION.osmId,
-            ways = listOf(
-                Geometry.Way(
-                    osmId = DEFAULT_RELATION_WAY_1_OSM_ID,
-                    locations = DEFAULT_RELATION_WAY_1_GEOMETRY.map { Location(it.first, it.second) },
-                    distance = 1500
-                ),
-                Geometry.Way(
-                    osmId = DEFAULT_RELATION_WAY_2_OSM_ID,
-                    locations = DEFAULT_RELATION_WAY_2_GEOMETRY.map { Location(it.first, it.second) },
-                    distance = 2000
-                )
-            )
-        )
     }
 
 }

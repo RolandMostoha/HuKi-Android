@@ -20,4 +20,8 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="InfoButtonView">
+        <attr name="messageRes" format="integer" />
+    </declare-styleable>
+
 </resources>
