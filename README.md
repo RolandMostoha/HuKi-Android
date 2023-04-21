@@ -53,13 +53,18 @@ Huge thanks to the Graphhopper team for the opportunity!
 
 - Tile render - [OsmDroid library](https://github.com/osmdroid/osmdroid)
 - Base layers - [Mapnik](https://mapnik.org/) and [OpenTopo](https://opentopomap.org/)
-- Hiking tiles - [TuraReteg.sqlitedb](https://data2.openstreetmap.hu/) privately hosted in an AWS S3 bucket
+- Hiking tiles - [TuraReteg.sqlitedb](https://data2.openstreetmap.hu/) privately hosted in an AWS S3
+  bucket
 - OpenStreetMap data provider - [Overpass API](https://wiki.openstreetmap.org/wiki/Overpass_API)
 - Search engine - [Photon](https://photon.komoot.io/)
 - Route planner - [Graphhopper Routing API](https://docs.graphhopper.com/#tag/Routing-API)
 - Location service
   - [Google Fused Location Provider](https://developers.google.com/location-context/fused-location-provider)
   integrated with OsmDroid
+- Hike recommendations
+    - [Kirándulástippek](https://kirandulastippek.hu/) link with area tags like `"budai-hegyseg"`
+    - [Természetjáró](https://www.termeszetjaro.hu/) link with search query parameter
+      like `&q=Budai-hegység`
 
 ### Tile server optimization
 
@@ -157,13 +162,15 @@ The app is built upon many `OpenStreetMap` related services. There is an in-app 
 - Komoot - Photon (Search engine) - https://photon.komoot.io/
 - OsmDroid - Tile render - https://github.com/osmdroid/osmdroid
 - Graphhopper - Routing API - https://www.graphhopper.com/
+- Kirándulástippek - Hike recommendation -  https://kirandulastippek.hu/
+- Természetjáró - Hike recommendation -  https://www.termeszetjaro.hu/
 
 ## Project License
 
 ```
 MIT License
 
-Copyright (c) 2020-2022 Roland Mostoha
+Copyright (c) 2020-2023 Roland Mostoha
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
