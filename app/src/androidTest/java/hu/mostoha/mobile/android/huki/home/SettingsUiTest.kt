@@ -71,7 +71,7 @@ class SettingsUiTest {
 
             pressBack()
 
-            R.id.homeMapView.hasTileScaleFactor(1f)
+            R.id.homeMapView.hasTileScaleFactor(1.0)
 
             R.id.homeSettingsFab.click()
 

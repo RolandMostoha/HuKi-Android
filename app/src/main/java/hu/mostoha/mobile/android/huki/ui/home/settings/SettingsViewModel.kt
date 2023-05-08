@@ -17,7 +17,7 @@ class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    val mapScaleFactor: StateFlow<Float> = settingsRepository.getMapScaleFactor()
+    val mapScaleFactor: StateFlow<Double> = settingsRepository.getMapScaleFactor()
         .stateIn(viewModelScope, WhileViewSubscribed, MAP_DEFAULT_SCALE_FACTOR)
 
     fun updateMapScale(percentage: Int) {

@@ -178,17 +178,17 @@ private fun zoomToAction(zoomLevel: Double): ViewAction {
     }
 }
 
-fun @receiver:IdRes Int.hasTileScaleFactor(tileScaleFactor: Float) {
+fun @receiver:IdRes Int.hasTileScaleFactor(tileScaleFactor: Double) {
     onView(withId(this)).check(matches(hasTileScaleFactorMatcher(tileScaleFactor)))
 }
 
-private fun hasTileScaleFactorMatcher(tileScaleFactor: Float): BoundedMatcher<View, MapView> {
+private fun hasTileScaleFactorMatcher(tileScaleFactor: Double): BoundedMatcher<View, MapView> {
     return object : BoundedMatcher<View, MapView>(MapView::class.java) {
 
         override fun matchesSafely(mapView: MapView?): Boolean {
             if (mapView == null) return false
 
-            return mapView.tilesScaleFactor == tileScaleFactor
+            return mapView.tilesScaleFactor == tileScaleFactor.toFloat()
         }
 
         override fun describeTo(description: Description) {

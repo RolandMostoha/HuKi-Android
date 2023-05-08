@@ -643,7 +643,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             settingsViewModel.mapScaleFactor
                 .flowWithLifecycle(lifecycle)
                 .collect { mapScaleFactor ->
-                    homeMapView.tilesScaleFactor = mapScaleFactor
+                    homeMapView.tilesScaleFactor = mapScaleFactor.toFloat()
                     homeMapView.invalidate()
                 }
         }

@@ -1,5 +1,7 @@
 package hu.mostoha.mobile.android.huki.util
 
+import kotlin.math.roundToInt
+
 /**
  * Maps the given [value] to 0.0..1.0 for the specified [min], [max] and [offset].
  *
@@ -15,10 +17,10 @@ fun linearInterpolation(min: Float, max: Float, offset: Float, value: Float): Fl
 
 const val PERCENTAGE_SCALAR = 100
 
-fun Float.toPercentageFromScale(): Int {
-    return (this * PERCENTAGE_SCALAR).toInt()
+fun Double.toPercentageFromScale(): Int {
+    return (this * PERCENTAGE_SCALAR).roundToInt()
 }
 
-fun Int.toScaleFromPercentage(): Float {
-    return this.toFloat() / PERCENTAGE_SCALAR
+fun Int.toScaleFromPercentage(): Double {
+    return this.toDouble() / PERCENTAGE_SCALAR
 }

@@ -12,14 +12,14 @@ class SettingsRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
 
-    fun getMapScaleFactor(): Flow<Float> {
+    fun getMapScaleFactor(): Flow<Double> {
         return dataStore.data
             .map { preferences ->
                 preferences[DataStoreConstants.Settings.MAP_SCALE_FACTOR] ?: MAP_DEFAULT_SCALE_FACTOR
             }
     }
 
-    suspend fun saveMapScaleFactor(mapScaleFactor: Float) {
+    suspend fun saveMapScaleFactor(mapScaleFactor: Double) {
         dataStore.edit { settings ->
             settings[DataStoreConstants.Settings.MAP_SCALE_FACTOR] = mapScaleFactor
         }
