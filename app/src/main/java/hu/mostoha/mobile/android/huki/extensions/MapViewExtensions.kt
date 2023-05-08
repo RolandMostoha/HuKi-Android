@@ -74,6 +74,13 @@ fun MapView.showOverlay(overlayId: String) {
     invalidate()
 }
 
+inline fun <reified T : OverlayWithIW> MapView.switchOverlayVisibility(overlayId: String) {
+    overlays.filterIsInstance<T>()
+        .filter { it.id == overlayId }
+        .forEach { it.isEnabled = !it.isEnabled }
+    invalidate()
+}
+
 fun MapView.removeOverlay(overlay: List<Overlay>) {
     overlay.forEach {
         overlays.remove(it)

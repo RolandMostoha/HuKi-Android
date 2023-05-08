@@ -58,6 +58,7 @@ import hu.mostoha.mobile.android.huki.extensions.showOnly
 import hu.mostoha.mobile.android.huki.extensions.showOverlay
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
+import hu.mostoha.mobile.android.huki.extensions.switchOverlayVisibility
 import hu.mostoha.mobile.android.huki.extensions.toDrawable
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
@@ -80,6 +81,7 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmLicencesOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
@@ -119,7 +121,6 @@ import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.PolyOverlayWithIW
 import org.osmdroid.views.overlay.TilesOverlay
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(R.layout.activity_home) {
@@ -1002,6 +1003,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
                     homeMapView.zoomToBoundingBox(boundingBox, true)
                 }
+            },
+            onHideClick = {
+                homeMapView.switchOverlayVisibility<GpxPolyline>(gpxDetailsUiModel.id)
             }
         )
         bottomSheets.showOnly(gpxDetailsBottomSheet)

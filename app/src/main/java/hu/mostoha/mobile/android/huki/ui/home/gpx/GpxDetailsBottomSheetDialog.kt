@@ -13,7 +13,12 @@ class GpxDetailsBottomSheetDialog(
     private val binding: LayoutBottomSheetGpxDetailsBinding
 ) : BottomSheetDialog(binding) {
 
-    fun initBottomSheet(gpxDetails: GpxDetailsUiModel, onCloseClick: () -> Unit, onStartClick: () -> Unit) {
+    fun initBottomSheet(
+        gpxDetails: GpxDetailsUiModel,
+        onCloseClick: () -> Unit,
+        onStartClick: () -> Unit,
+        onHideClick: () -> Unit,
+    ) {
         postMain {
             with(binding) {
                 val hasAltitudeValues = gpxDetails.altitudeUiModel != null
@@ -40,6 +45,10 @@ class GpxDetailsBottomSheetDialog(
                     onStartClick.invoke()
                     hide()
                 }
+                gpxDetailsVisibilityButton.setOnClickListener {
+                    onHideClick.invoke()
+                }
+
                 gpxDetailsGoogleMapsButton.setOnClickListener {
                     context.startGoogleMapsDirectionsIntent(gpxDetails.geoPoints.first())
                 }

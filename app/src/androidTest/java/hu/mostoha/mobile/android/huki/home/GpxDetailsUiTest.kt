@@ -41,6 +41,7 @@ import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithSibling
+import hu.mostoha.mobile.android.huki.util.espresso.hasInvisibleOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayCount
@@ -190,6 +191,21 @@ class GpxDetailsUiTest {
                     )
                 )
             )
+        }
+    }
+
+    @Test
+    fun givenGpxFile_whenNavigateSwitchVisibilityClicked_thenGpxPolylineHidesAndGpxMarkerStaysVisible() {
+        launchScenario<HomeActivity> {
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            R.id.gpxDetailsVisibilityButton.click()
+
+            R.id.homeMapView.hasOverlay<GpxMarker>()
+            R.id.homeMapView.hasInvisibleOverlay<GpxPolyline>()
         }
     }
 

@@ -38,8 +38,9 @@
     <string name="home_bottom_sheet_route_plan_button">Route plan</string>
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>
 
-    <string name="gpx_details_bottom_sheet_google_maps_button">Google Nav</string>
+    <string name="gpx_details_bottom_sheet_google_maps_button">To start</string>
     <string name="gpx_details_bottom_sheet_start_button">Start</string>
+    <string name="gpx_details_bottom_sheet_visibility_button">Visibility</string>
 
     <string name="map_place_name_routes_nearby">Hiking trails in map</string>
     <string name="map_place_name_node_routes_nearby">Hiking trails near %s</string>
