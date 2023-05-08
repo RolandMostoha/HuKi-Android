@@ -362,7 +362,6 @@ class RoutePlannerViewModelTest {
             coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
             coEvery { routePlannerRepository.saveRoutePlan(any()) } returns null
 
-
             viewModel.waypointItems.test {
                 viewModel.initWaypoints()
                 skipItems(2)

@@ -20,7 +20,6 @@ import java.text.Normalizer
 import javax.inject.Inject
 import kotlin.math.min
 
-
 class RoutePlannerUiModelMapper @Inject constructor() {
 
     fun mapToRoutePlanUiModel(name: String, triggerLocations: List<Location>, routePlan: RoutePlan): RoutePlanUiModel {

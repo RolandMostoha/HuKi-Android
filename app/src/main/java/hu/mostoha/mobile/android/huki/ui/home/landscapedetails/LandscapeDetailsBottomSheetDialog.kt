@@ -8,7 +8,6 @@ import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
-
 class LandscapeDetailsBottomSheetDialog(
     private val binding: LayoutBottomSheetLandscapeDetailsBinding,
     private val analyticsService: FirebaseAnalyticsService

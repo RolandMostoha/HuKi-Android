@@ -18,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.ui.Message
 
-
 val Context.inflater: LayoutInflater
     get() = LayoutInflater.from(this)
 

@@ -57,4 +57,3 @@ fun List<BottomSheetDialog>.hideAll() {
         dialog.hide()
     }
 }
-

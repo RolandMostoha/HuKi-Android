@@ -9,7 +9,6 @@ import androidx.core.app.ShareCompat
 import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import org.osmdroid.util.GeoPoint
 
-
 fun Context.startGoogleMapsDirectionsIntent(geoPoint: GeoPoint) {
     val mapsUrl = GOOGLE_MAPS_DIRECTIONS_URL.format(geoPoint.latitude, geoPoint.longitude)
 

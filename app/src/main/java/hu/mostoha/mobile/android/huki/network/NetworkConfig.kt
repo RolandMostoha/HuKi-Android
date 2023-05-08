@@ -1,6 +1,5 @@
 package hu.mostoha.mobile.android.huki.network
 
-
 object NetworkConfig {
 
     const val BASE_URL_OVERPASS = "https://overpass-api.de"

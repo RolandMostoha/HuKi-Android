@@ -3,7 +3,9 @@ apply plugin: "io.gitlab.arturbosch.detekt"
 detekt {
     config = files("${rootProject.projectDir}/tools/quality/HuKi-detekt.yml")
 
-    autoCorrect = true
+    allRules = true
+    buildUponDefaultConfig = true
+    autoCorrect = false
 }
 
 tasks.named("detekt").configure {
@@ -13,4 +15,8 @@ tasks.named("detekt").configure {
         txt.required.set(true)
         md.required.set(true)
     }
+}
+
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
 }
