@@ -103,7 +103,6 @@ import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsViewModel
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
-import hu.mostoha.mobile.android.huki.util.OSM_ID_UNAVAILABLE
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
@@ -120,6 +119,7 @@ import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.PolyOverlayWithIW
 import org.osmdroid.views.overlay.TilesOverlay
+import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -221,6 +221,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initViews() {
         initMapView()
         initSearchBar()
+        initPlaceFinderPopup()
         initFabs()
         initBottomSheets()
     }
@@ -247,12 +248,20 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeSearchBarInputLayout.setEndIconOnClickListener {
             clearSearchBarInput()
         }
+        homeSearchBarInput.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                placeFinderViewModel.initStaticActions()
+            }
+        }
         homeSearchBarInput.addTextChangedListener { editable ->
             val text = editable.toString()
-            if (text.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
+            if (homeSearchBarInput.hasFocus() && text.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
                 placeFinderViewModel.loadPlaces(text)
             }
         }
+    }
+
+    private fun initPlaceFinderPopup() {
         placeFinderPopup = PlaceFinderPopup(
             context = this,
             onPlaceClick = { placeUiModel ->
@@ -272,7 +281,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine() ?: return@launch
                     val lastKnownGeoPoint = lastKnownLocation.toLocation().toGeoPoint()
                     val placeUiModel = PlaceUiModel(
-                        osmId = OSM_ID_UNAVAILABLE,
+                        osmId = UUID.randomUUID().toString(),
                         placeType = PlaceType.NODE,
                         geoPoint = lastKnownGeoPoint,
                         primaryText = LocationFormatter.format(lastKnownGeoPoint),
@@ -297,7 +306,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         geoPoint = geoPoint,
                         onSaveClick = {
                             val placeUiModel = PlaceUiModel(
-                                osmId = OSM_ID_UNAVAILABLE,
+                                osmId = UUID.randomUUID().toString(),
                                 placeType = PlaceType.NODE,
                                 geoPoint = geoPoint,
                                 primaryText = LocationFormatter.format(geoPoint),

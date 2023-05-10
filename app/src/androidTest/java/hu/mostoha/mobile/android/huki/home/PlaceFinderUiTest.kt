@@ -216,10 +216,13 @@ class PlaceFinderUiTest {
             DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
             DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
 
+            R.string.place_finder_my_location_button.isPopupTextDisplayed()
+            R.string.place_finder_pick_location_button.isPopupTextDisplayed()
+
             scenario.recreate()
 
-            DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
-            DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
+            R.string.place_finder_my_location_button.isPopupTextDisplayed()
+            R.string.place_finder_pick_location_button.isPopupTextDisplayed()
         }
     }
 
