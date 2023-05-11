@@ -42,11 +42,14 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentSettingsBottomSheetDialogBinding? = null
     private val binding get() = _binding!!
 
+    private val mapScaleInfoButton by lazy { binding.settingsMapScaleInfoButton }
     private val mapScaleSliderFromText by lazy { binding.settingsMapScaleSliderFromText }
     private val mapScaleSliderToText by lazy { binding.settingsMapScaleSliderToText }
     private val mapScaleSlider by lazy { binding.settingsMapScaleSlider }
     private val emailText by lazy { binding.settingsEmailText }
     private val gitHubText by lazy { binding.settingsGitHubText }
+    private val googlePlayReviewButton by lazy { binding.settingsGooglePlayReviewButton }
+    private val facebookGroupText by lazy { binding.settingsFacebookText }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBottomSheetDialogBinding.inflate(inflater, container, false)
@@ -92,6 +95,9 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 settingsViewModel.updateMapScale(value.toInt())
             }
         }
+        mapScaleInfoButton.onClick = {
+            analyticsService.settingsMapScaleInfoClicked()
+        }
         emailText.hyperlinkStyle()
         emailText.setOnClickListener {
             analyticsService.settingsEmailClicked()
@@ -100,11 +106,19 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 subject = getString(R.string.settings_email_subject)
             )
         }
-
+        facebookGroupText.hyperlinkStyle()
+        facebookGroupText.setOnClickListener {
+            analyticsService.settingsFacebookGroupClicked()
+            requireContext().startUrlIntent(getString(R.string.settings_facebook_group))
+        }
         gitHubText.hyperlinkStyle()
         gitHubText.setOnClickListener {
-            analyticsService.settingsEmailClicked()
+            analyticsService.settingsGitHubClicked()
             requireContext().startUrlIntent(getString(R.string.settings_github_repository_url))
+        }
+        googlePlayReviewButton.setOnClickListener {
+            analyticsService.settingsGooglePlayReviewClicked()
+            requireContext().startUrlIntent(getString(R.string.settings_google_play_review_url))
         }
     }
 

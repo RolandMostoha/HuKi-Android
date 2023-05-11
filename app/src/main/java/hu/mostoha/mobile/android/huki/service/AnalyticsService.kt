@@ -42,11 +42,17 @@ interface AnalyticsService {
 
     fun settingsClicked()
 
+    fun settingsMapScaleInfoClicked()
+
     fun settingsMapScaleSet(mapScalePercentage: Long)
 
     fun settingsEmailClicked()
 
+    fun settingsFacebookGroupClicked()
+
     fun settingsGitHubClicked()
+
+    fun settingsGooglePlayReviewClicked()
 
     fun copyrightClicked()
 

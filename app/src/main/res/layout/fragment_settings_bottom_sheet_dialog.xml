@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,13 +15,26 @@
         android:text="@string/settings_title"
         android:textAppearance="@style/DefaultTextAppearance.Bold.Large" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/settingsMapScaleTitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_extra_large"
-        android:text="@string/settings_map_scale_title"
-        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/settingsMapScaleTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_map_scale_title"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+
+        <hu.mostoha.mobile.android.huki.views.InfoButtonView
+            android:id="@+id/settingsMapScaleInfoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:messageRes="@string/settings_map_scale_description" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,21 +65,10 @@
     </LinearLayout>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/settingsMapScaleDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:drawableStart="@drawable/ic_settings_info"
-        android:drawablePadding="@dimen/space_small"
-        android:gravity="center_vertical"
-        android:text="@string/settings_map_scale_description"
-        android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
-
-    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingsContactTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_extra_large"
+        android:layout_marginTop="@dimen/space_large"
         android:text="@string/settings_contact_title"
         android:textAppearance="@style/DefaultTextAppearance.Bold.Large" />
 
@@ -74,8 +77,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_small"
+        android:lineSpacingMultiplier="1.2"
         android:text="@string/settings_contact_subtitle"
-        android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+        android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingsEmailTitle"
@@ -94,10 +98,26 @@
         android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/settingsFacebookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
+        android:text="@string/settings_facebook_title"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/settingsFacebookText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
+        android:text="@string/settings_facebook_group"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingsGitHubTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginTop="@dimen/space_small"
         android:text="@string/settings_github_title"
         android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
 
@@ -108,5 +128,15 @@
         android:layout_marginTop="@dimen/space_small"
         android:text="@string/settings_github_repository_url"
         android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/settingsGooglePlayReviewButton"
+        style="@style/DefaultButton.Contained.Shadowless.Secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_large"
+        android:text="@string/settings_google_play_review_button"
+        app:icon="@drawable/ic_settings_play_review" />
 
 </LinearLayout>

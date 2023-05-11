@@ -42,11 +42,17 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun settingsClicked() = Unit
 
+    override fun settingsMapScaleInfoClicked() = Unit
+
     override fun settingsMapScaleSet(mapScalePercentage: Long) = Unit
 
     override fun settingsEmailClicked() = Unit
 
+    override fun settingsFacebookGroupClicked() = Unit
+
     override fun settingsGitHubClicked() = Unit
+
+    override fun settingsGooglePlayReviewClicked() = Unit
 
     override fun copyrightClicked() = Unit
 

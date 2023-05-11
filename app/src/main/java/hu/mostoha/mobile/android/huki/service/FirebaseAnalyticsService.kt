@@ -31,9 +31,12 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_GPX_IMPORTED_BY_INTENT = "gpx_imported_by_intent"
         private const val EVENT_GPX_IMPORTED_BY_FILE_EXPLORER = "gpx_imported_by_file_explorer"
         private const val EVENT_SELECT_SETTINGS = "select_settings"
+        private const val EVENT_SELECT_SETTINGS_MAP_SCALE_INFO = "select_settings_map_scale_info"
         private const val EVENT_SELECT_SETTINGS_MAP_SCALE = "select_settings_map_scale"
         private const val EVENT_SELECT_SETTINGS_EMAIL = "select_settings_email"
+        private const val EVENT_SELECT_SETTINGS_FACEBOOK_GROUP = "select_settings_facebook_group"
         private const val EVENT_SELECT_SETTINGS_GITHUB = "select_settings_github"
+        private const val EVENT_SELECT_SETTINGS_GOOGLE_PLAY_REVIEW = "select_settings_gps_review"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
         private const val EVENT_DESTROYED = "destroyed"
 
@@ -146,6 +149,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS, null)
     }
 
+    override fun settingsMapScaleInfoClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_MAP_SCALE_INFO, null)
+    }
+
     override fun settingsMapScaleSet(mapScalePercentage: Long) {
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_MAP_SCALE) {
             param(PARAM_MAP_SCALE_PERCENTAGE, mapScalePercentage)
@@ -156,8 +163,16 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_EMAIL, null)
     }
 
+    override fun settingsFacebookGroupClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_FACEBOOK_GROUP, null)
+    }
+
     override fun settingsGitHubClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_GITHUB, null)
+    }
+
+    override fun settingsGooglePlayReviewClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_GOOGLE_PLAY_REVIEW, null)
     }
 
     override fun copyrightClicked() {

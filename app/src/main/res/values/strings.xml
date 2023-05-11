@@ -89,11 +89,15 @@
     <string name="settings_map_scale_title">Map display magnification</string>
     <string name="settings_map_scale_description">Magnification can reduce image quality</string>
     <string name="settings_contact_title">Contact</string>
-    <string name="settings_contact_subtitle">The app is open-source and I would be happy to receive bug reports or ideas.</string>
+    <string name="settings_contact_subtitle">I\'d be happy to receive any feedback, my goal is to create a useful app for everybody.</string>
     <string name="settings_email_title">Email:</string>
     <string name="settings_github_title">GitHub repository:</string>
+    <string name="settings_facebook_title">Facebook group:</string>
     <string name="settings_email" translatable="false">huki.app@gmail.com</string>
     <string name="settings_email_subject" translatable="false">[HuKi]</string>
     <string name="settings_github_repository_url" translatable="false">https://github.com/RolandMostoha/HuKi-Android/</string>
+    <string name="settings_facebook_group" translatable="false">https://www.facebook.com/groups/1300247710836131/</string>
+    <string name="settings_google_play_review_button">Google Play review</string>
+    <string name="settings_google_play_review_url" translatable="false">https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki</string>
 
 </resources>
