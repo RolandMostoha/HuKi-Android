@@ -18,6 +18,7 @@ android {
         versionCode gitVersionCode
         versionName gitVersionName
         buildConfigField("String", "GRAPHHOPPER_API_KEY", getGraphhopperApiKey())
+        resourceConfigurations += ["en", "hu"]
 
         testInstrumentationRunner "hu.mostoha.mobile.android.huki.HiltTestRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
