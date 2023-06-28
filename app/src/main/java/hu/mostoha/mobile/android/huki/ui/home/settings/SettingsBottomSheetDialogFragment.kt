@@ -49,7 +49,6 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val emailText by lazy { binding.settingsEmailText }
     private val gitHubText by lazy { binding.settingsGitHubText }
     private val googlePlayReviewButton by lazy { binding.settingsGooglePlayReviewButton }
-    private val facebookGroupText by lazy { binding.settingsFacebookText }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBottomSheetDialogBinding.inflate(inflater, container, false)
@@ -105,11 +104,6 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 email = getString(R.string.settings_email),
                 subject = getString(R.string.settings_email_subject)
             )
-        }
-        facebookGroupText.hyperlinkStyle()
-        facebookGroupText.setOnClickListener {
-            analyticsService.settingsFacebookGroupClicked()
-            requireContext().startUrlIntent(getString(R.string.settings_facebook_group))
         }
         gitHubText.hyperlinkStyle()
         gitHubText.setOnClickListener {

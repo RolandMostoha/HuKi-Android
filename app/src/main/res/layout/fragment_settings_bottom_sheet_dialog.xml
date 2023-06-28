@@ -98,22 +98,6 @@
         android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/settingsFacebookTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_small"
-        android:text="@string/settings_facebook_title"
-        android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/settingsFacebookText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_small"
-        android:text="@string/settings_facebook_group"
-        android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
-
-    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingsGitHubTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
