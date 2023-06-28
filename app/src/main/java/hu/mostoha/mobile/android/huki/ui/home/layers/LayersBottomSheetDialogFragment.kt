@@ -114,6 +114,7 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
         val adapter = LayersAdapter(
             onLayerClick = { layerItem ->
+                analyticsService.onLayerSelected(layerItem.layerType)
                 layersViewModel.selectLayer(layerItem.layerType)
             },
             onActionButtonClick = { layerType ->

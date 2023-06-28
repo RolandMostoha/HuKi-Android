@@ -100,7 +100,6 @@ class RoutePlannerFragment : Fragment() {
         initPlaceFinderPopup()
 
         doneButton.setOnClickListener {
-            analyticsService.routePlannerDoneClicked()
             routePlannerViewModel.saveRoutePlan()
         }
         backButton.setOnClickListener {
@@ -268,7 +267,7 @@ class RoutePlannerFragment : Fragment() {
             routePlannerViewModel.routePlanGpxFileUri
                 .flowWithLifecycle(lifecycle)
                 .collect { gpxFileUri ->
-                    layersViewModel.loadGpx(gpxFileUri)
+                    layersViewModel.loadRoutePlannerGpx(gpxFileUri)
 
                     clearRoutePlanner()
                 }

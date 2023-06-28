@@ -22,6 +22,7 @@ import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,6 +56,7 @@ class RoutePlannerViewModel @Inject constructor(
     private val routePlannerRepository: RoutePlannerRepository,
     private val routePlannerUiModelMapper: RoutePlannerUiModelMapper,
     private val myLocationProvider: AsyncMyLocationProvider,
+    private val analyticsService: AnalyticsService,
 ) : ViewModel() {
 
     private val _routePlanUiModel = MutableStateFlow<RoutePlanUiModel?>(null)
@@ -219,6 +221,8 @@ class RoutePlannerViewModel @Inject constructor(
     fun saveRoutePlan() {
         viewModelScope.launch(ioDispatcher) {
             val routePlan = _routePlanUiModel.value ?: return@launch
+
+            analyticsService.routePlanSaved(routePlan)
 
             val fileUri = routePlannerRepository.saveRoutePlan(routePlan)
 

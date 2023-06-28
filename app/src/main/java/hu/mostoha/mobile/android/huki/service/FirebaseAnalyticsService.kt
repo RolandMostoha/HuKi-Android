@@ -4,7 +4,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
+import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.osmdroid.CounterProvider
 import org.osmdroid.tileprovider.util.Counters
 import javax.inject.Inject
@@ -28,8 +30,13 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_ROUTE_PLANNER_DONE = "select_route_planner_done"
         private const val EVENT_SELECT_MAPS_DIRECTIONS = "select_maps_directions"
         private const val EVENT_GPX_IMPORT_CLICKED = "gpx_import_clicked"
+        private const val EVENT_GPX_IMPORTED = "gpx_imported"
         private const val EVENT_GPX_IMPORTED_BY_INTENT = "gpx_imported_by_intent"
         private const val EVENT_GPX_IMPORTED_BY_FILE_EXPLORER = "gpx_imported_by_file_explorer"
+        private const val EVENT_LAYER_MAPNIK_SELECTED = "layer_mapnik_selected"
+        private const val EVENT_LAYER_OPEN_TOPO_SELECTED = "layer_open_topo_selected"
+        private const val EVENT_LAYER_HIKING_SELECTED = "layer_hiking_selected"
+        private const val EVENT_LAYER_GPX_SELECTED = "layer_gpx_selected"
         private const val EVENT_SELECT_SETTINGS = "select_settings"
         private const val EVENT_SELECT_SETTINGS_MAP_SCALE_INFO = "select_settings_map_scale_info"
         private const val EVENT_SELECT_SETTINGS_MAP_SCALE = "select_settings_map_scale"
@@ -52,6 +59,9 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_TILE_DOWNLOAD_OUT_OF_MEMORY = "tile_download_out_of_memory"
         private const val PARAM_TILE_DOWNLOAD_ERRORS = "tile_download_errors"
         private const val PARAM_TILE_CACHE_OUT_OF_MEMORY = "tile_cache_out_of_memory"
+        private const val PARAM_IMPORTED_GPX_NAME = "imported_gpx_name"
+        private const val PARAM_ROUTE_PLANNER_WAYPOINT_COUNT = "route_planner_waypoint_count"
+        private const val PARAM_ROUTE_PLANNER_DISTANCE = "route_planner_distance"
     }
 
     private var firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
@@ -123,8 +133,19 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_MY_LOCATION, null)
     }
 
-    override fun routePlannerDoneClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_DONE, null)
+    override fun routePlanSaved(routePlan: RoutePlanUiModel) {
+        val waypointCount = routePlan.wayPoints.size
+        val distance = routePlan.distanceText.formatArgs
+            .firstOrNull()
+            ?.toString()
+            ?.toDoubleOrNull()
+
+        firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_DONE) {
+            param(PARAM_ROUTE_PLANNER_WAYPOINT_COUNT, waypointCount.toLong())
+            if (distance != null) {
+                param(PARAM_ROUTE_PLANNER_DISTANCE, distance)
+            }
+        }
     }
 
     override fun googleMapsClicked(destinationPlaceName: String) {
@@ -137,12 +158,32 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_GPX_IMPORT_CLICKED, null)
     }
 
+    override fun gpxImported(fileName: String) {
+        val nameWithoutExtension = fileName.substringBeforeLast(".")
+
+        firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED) {
+            param(PARAM_IMPORTED_GPX_NAME, nameWithoutExtension)
+        }
+    }
+
     override fun gpxImportedByIntent() {
         firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED_BY_INTENT, null)
     }
 
     override fun gpxImportedByFileExplorer() {
         firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED_BY_FILE_EXPLORER, null)
+    }
+
+    override fun onLayerSelected(layerType: LayerType) {
+        firebaseAnalytics.logEvent(
+            when (layerType) {
+                LayerType.MAPNIK -> EVENT_LAYER_MAPNIK_SELECTED
+                LayerType.OPEN_TOPO -> EVENT_LAYER_OPEN_TOPO_SELECTED
+                LayerType.HUNGARIAN_HIKING_LAYER -> EVENT_LAYER_HIKING_SELECTED
+                LayerType.GPX -> EVENT_LAYER_GPX_SELECTED
+            },
+            null
+        )
     }
 
     override fun settingsClicked() {

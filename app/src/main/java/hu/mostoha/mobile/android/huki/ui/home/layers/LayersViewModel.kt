@@ -18,6 +18,7 @@ import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +40,8 @@ class LayersViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
     private val hikingTileUrlProvider: HikingTileUrlProvider,
     private val layersInteractor: LayersInteractor,
-    private val layersUiModelMapper: LayersUiModelMapper
+    private val layersUiModelMapper: LayersUiModelMapper,
+    private val analyticsService: AnalyticsService,
 ) : ViewModel() {
 
     private lateinit var hikingLayerZoomRanges: List<TileZoomRange>
@@ -87,6 +89,19 @@ class LayersViewModel @Inject constructor(
     }
 
     suspend fun loadGpx(uri: Uri?) {
+        layersInteractor.requestGpxDetails(uri)
+            .onEach {
+                val gpxDetails = layersUiModelMapper.mapGpxDetails(it)
+
+                analyticsService.gpxImported(gpxDetails.name)
+
+                _gpxDetailsUiModel.emit(gpxDetails)
+            }
+            .catch { showError(it) }
+            .collect()
+    }
+
+    suspend fun loadRoutePlannerGpx(uri: Uri?) {
         layersInteractor.requestGpxDetails(uri)
             .onEach { _gpxDetailsUiModel.emit(layersUiModelMapper.mapGpxDetails(it)) }
             .catch { showError(it) }

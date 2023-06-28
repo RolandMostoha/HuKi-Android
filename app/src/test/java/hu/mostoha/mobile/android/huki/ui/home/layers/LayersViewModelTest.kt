@@ -19,6 +19,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.LayersUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.calculateTravelTime
@@ -39,13 +40,10 @@ class LayersViewModelTest {
     private lateinit var viewModel: LayersViewModel
 
     private val exceptionLogger = mockk<ExceptionLogger>()
-
     private val layersInteractor = mockk<LayersInteractor>()
-
     private val tileUrlProvider = mockk<HikingTileUrlProvider>()
-
     private val gpxFileUri = mockk<Uri>()
-
+    private val analyticsService = mockk<AnalyticsService>(relaxed = true)
     private val layersUiModelMapper = LayersUiModelMapper()
 
     @get:Rule
@@ -60,7 +58,8 @@ class LayersViewModelTest {
             exceptionLogger,
             tileUrlProvider,
             layersInteractor,
-            layersUiModelMapper
+            layersUiModelMapper,
+            analyticsService,
         )
     }
 

@@ -16,6 +16,7 @@ import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
@@ -50,13 +51,10 @@ class RoutePlannerViewModelTest {
     private lateinit var viewModel: RoutePlannerViewModel
 
     private val exceptionLogger = mockk<ExceptionLogger>()
-
     private val routePlannerRepository = mockk<RoutePlannerRepository>()
-
     private val routePlannerUiModelMapper = RoutePlannerUiModelMapper()
-
     private val myLocationProvider = mockk<AsyncMyLocationProvider>()
-
+    private val analyticsService = mockk<AnalyticsService>(relaxed = true)
     private val gpxFileUri = mockk<Uri>()
 
     @get:Rule
@@ -70,7 +68,8 @@ class RoutePlannerViewModelTest {
             exceptionLogger,
             routePlannerRepository,
             routePlannerUiModelMapper,
-            myLocationProvider
+            myLocationProvider,
+            analyticsService,
         )
     }
 

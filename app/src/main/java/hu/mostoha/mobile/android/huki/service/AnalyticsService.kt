@@ -1,6 +1,8 @@
 package hu.mostoha.mobile.android.huki.service
 
+import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 
 interface AnalyticsService {
 
@@ -30,15 +32,19 @@ interface AnalyticsService {
 
     fun routePlannerMyLocationClicked()
 
-    fun routePlannerDoneClicked()
+    fun routePlanSaved(routePlan: RoutePlanUiModel)
 
     fun googleMapsClicked(destinationPlaceName: String)
 
     fun gpxImportClicked()
 
+    fun gpxImported(fileName: String)
+
     fun gpxImportedByIntent()
 
     fun gpxImportedByFileExplorer()
+
+    fun onLayerSelected(layerType: LayerType)
 
     fun settingsClicked()
 

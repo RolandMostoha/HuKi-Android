@@ -1,6 +1,8 @@
 package hu.mostoha.mobile.android.huki.service
 
+import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 
 class FakeAnalyticsService : AnalyticsService {
 
@@ -30,15 +32,19 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun routePlannerMyLocationClicked() = Unit
 
-    override fun routePlannerDoneClicked() = Unit
+    override fun routePlanSaved(routePlan: RoutePlanUiModel) = Unit
 
     override fun googleMapsClicked(destinationPlaceName: String) = Unit
 
     override fun gpxImportClicked() = Unit
 
+    override fun gpxImported(fileName: String) = Unit
+
     override fun gpxImportedByIntent() = Unit
 
     override fun gpxImportedByFileExplorer() = Unit
+
+    override fun onLayerSelected(layerType: LayerType) = Unit
 
     override fun settingsClicked() = Unit
 
