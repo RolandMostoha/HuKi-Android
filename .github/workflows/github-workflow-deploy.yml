@@ -83,9 +83,9 @@ jobs:
           gcloud firebase test android run
           --type instrumentation
           --app ${{ env.ARTIFACT_PATHNAME_APK }}
-          --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
-          --device model=b0q,version=26,locale=en,orientation=portrait
-          --device model=cactus,locale=hu,orientation=portrait
+          --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}0
+          --device model=b0q,version=33,locale=en,orientation=portrait
+          --device model=cactus,version=27,locale=hu,orientation=portrait
           --use-orchestrator
           --environment-variables clearPackageData=true
 
