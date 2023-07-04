@@ -4,6 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
+import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.service.FakeAnalyticsService
 import javax.inject.Singleton
@@ -18,5 +20,9 @@ class TestServiceModule {
     @Singleton
     @Provides
     fun provideAnalyticsService(): AnalyticsService = FakeAnalyticsService()
+
+    @Singleton
+    @Provides
+    fun provideExceptionLogger(): ExceptionLogger = FakeExceptionLogger()
 
 }

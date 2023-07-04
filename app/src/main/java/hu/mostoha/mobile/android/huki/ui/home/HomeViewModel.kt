@@ -8,7 +8,7 @@ import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
-import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation

@@ -143,6 +143,10 @@ fun @receiver:IdRes Int.swipeDown() {
     onView(withId(this)).perform(ViewActions.swipeDown())
 }
 
+fun @receiver:IdRes Int.selectTab(tabIndex: Int) {
+    onView(withId(this)).perform(selectTabAtPosition(tabIndex))
+}
+
 fun waitFor(millis: Long) {
     onView(isRoot()).perform(waitForAction(millis))
 }

@@ -74,6 +74,7 @@
     <string name="accessibility_home_fab_route_planner">Route planner</string>
     <string name="accessibility_home_fab_my_location">My location</string>
     <string name="accessibility_home_fab_settings">Settings</string>
+    <string name="accessibility_home_fab_gpx_history">GPX History</string>
 
     <string name="licences_osm_copyright_notice">© OpenStreetMap contributors</string>
     <string name="licences_title">Licenses</string>
@@ -97,5 +98,16 @@
     <string name="settings_github_repository_url" translatable="false">https://github.com/RolandMostoha/HuKi-Android/</string>
     <string name="settings_google_play_review_button">Google Play review</string>
     <string name="settings_google_play_review_url" translatable="false">https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki</string>
+
+    <string name="gpx_history_title">GPX History</string>
+    <string name="gpx_history_tab_route_planner">Route Planner</string>
+    <string name="gpx_history_tab_external_gpx">External GPX</string>
+    <string name="gpx_history_item_route_planner_empty">Your created route plans will be listed here in the future.</string>
+    <string name="gpx_history_item_external_empty">Your imported GPX files will be listed here in the future.</string>
+    <string name="gpx_history_item_route_planner_date_template">Created: %s</string>
+    <string name="gpx_history_item_external_date_template">Imported: %s</string>
+    <string name="gpx_history_item_open_button_title">Open</string>
+    <string name="gpx_history_item_share_button_title">Share</string>
+    <string name="gpx_history_item_error">Error occurred during GPX file directory loading.</string>
 
 </resources>

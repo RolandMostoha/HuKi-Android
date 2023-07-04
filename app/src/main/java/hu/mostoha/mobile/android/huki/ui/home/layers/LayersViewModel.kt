@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
 import hu.mostoha.mobile.android.huki.interactor.LayersInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
-import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
@@ -101,8 +101,8 @@ class LayersViewModel @Inject constructor(
             .collect()
     }
 
-    suspend fun loadRoutePlannerGpx(uri: Uri?) {
-        layersInteractor.requestGpxDetails(uri)
+    suspend fun loadRoutePlannerGpx(uri: Uri) {
+        layersInteractor.requestRoutePlannerGpxDetails(uri)
             .onEach { _gpxDetailsUiModel.emit(layersUiModelMapper.mapGpxDetails(it)) }
             .catch { showError(it) }
             .collect()

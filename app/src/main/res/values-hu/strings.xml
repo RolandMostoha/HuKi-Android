@@ -70,6 +70,7 @@
     <string name="accessibility_home_fab_route_planner">Útvonaltervező</string>
     <string name="accessibility_home_fab_my_location">Saját pozícióm</string>
     <string name="accessibility_home_fab_settings">Beállítások</string>
+    <string name="accessibility_home_fab_gpx_history">GPX történet</string>
 
     <string name="licences_osm_copyright_notice">© OpenStreetMap közreműködők</string>
     <string name="licences_title">Licencek</string>
@@ -89,5 +90,16 @@
     <string name="settings_email_title">Email:</string>
     <string name="settings_github_title">GitHub repository:</string>
     <string name="settings_google_play_review_button">Google Play értékelés</string>
+
+    <string name="gpx_history_title">GPX Előzmények</string>
+    <string name="gpx_history_tab_route_planner">Útvonaltervező</string>
+    <string name="gpx_history_tab_external_gpx">Importált GPX</string>
+    <string name="gpx_history_item_route_planner_empty">A létrehozott útvonalterveid itt fognak megjelenni a jövőben.</string>
+    <string name="gpx_history_item_external_empty">Az importált GPX fájlok itt is megtekinthetőek majd a jövőben.</string>
+    <string name="gpx_history_item_route_planner_date_template">Létrehozva: %s</string>
+    <string name="gpx_history_item_external_date_template">Importálva: %s</string>
+    <string name="gpx_history_item_open_button_title">Megnyitás</string>
+    <string name="gpx_history_item_share_button_title">Megosztás</string>
+    <string name="gpx_history_item_error">Hiba történt GPX fájlok beolvasása közben.</string>
 
 </resources>

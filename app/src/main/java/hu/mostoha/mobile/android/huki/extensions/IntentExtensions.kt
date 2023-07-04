@@ -6,6 +6,9 @@ import android.net.MailTo
 import android.net.Uri
 import android.provider.Browser
 import androidx.core.app.ShareCompat
+import androidx.core.content.FileProvider
+import androidx.core.net.toFile
+import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import org.osmdroid.util.GeoPoint
 
@@ -55,8 +58,10 @@ fun Intent.isGpxFileIntent(): Boolean {
 }
 
 fun Context.shareFile(uri: Uri) {
+    val shareProviderUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", uri.toFile())
+
     ShareCompat.IntentBuilder(this)
-        .setStream(uri)
+        .setStream(shareProviderUri)
         .setType("*/*")
         .startChooser()
 }

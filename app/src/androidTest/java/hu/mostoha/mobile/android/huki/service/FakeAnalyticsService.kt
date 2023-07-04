@@ -60,6 +60,12 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun settingsGooglePlayReviewClicked() = Unit
 
+    override fun gpxHistoryClicked() = Unit
+
+    override fun gpxHistoryItemOpened() = Unit
+
+    override fun gpxHistoryItemShared() = Unit
+
     override fun copyrightClicked() = Unit
 
     override fun destroyed() = Unit

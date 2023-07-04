@@ -3,8 +3,8 @@ package hu.mostoha.mobile.android.huki.interactor
 import android.net.Uri
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
+import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange

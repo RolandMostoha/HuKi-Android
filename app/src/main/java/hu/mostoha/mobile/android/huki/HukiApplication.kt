@@ -8,7 +8,7 @@ import com.amplifyframework.storage.s3.AWSS3StoragePlugin
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.HiltAndroidApp
-import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import timber.log.Timber
 import javax.inject.Inject

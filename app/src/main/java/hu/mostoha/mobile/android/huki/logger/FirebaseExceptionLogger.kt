@@ -1,14 +1,14 @@
-package hu.mostoha.mobile.android.huki.interactor.exception
+package hu.mostoha.mobile.android.huki.logger
 
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
-class ExceptionLogger @Inject constructor() {
+class FirebaseExceptionLogger @Inject constructor() : ExceptionLogger {
 
     private val crashlytics = Firebase.crashlytics
 
-    fun recordException(throwable: Throwable) {
+    override fun recordException(throwable: Throwable) {
         crashlytics.recordException(throwable)
     }
 

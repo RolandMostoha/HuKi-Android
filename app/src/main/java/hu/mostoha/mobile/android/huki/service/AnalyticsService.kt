@@ -60,6 +60,12 @@ interface AnalyticsService {
 
     fun settingsGooglePlayReviewClicked()
 
+    fun gpxHistoryClicked()
+
+    fun gpxHistoryItemOpened()
+
+    fun gpxHistoryItemShared()
+
     fun copyrightClicked()
 
     fun destroyed()

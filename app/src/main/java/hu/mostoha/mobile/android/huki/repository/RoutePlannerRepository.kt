@@ -1,14 +1,13 @@
 package hu.mostoha.mobile.android.huki.repository
 
-import android.content.Context
 import android.net.Uri
 import com.codebutchery.androidgpx.data.GPXDocument
 import com.codebutchery.androidgpx.data.GPXSegment
 import com.codebutchery.androidgpx.data.GPXTrack
 import com.codebutchery.androidgpx.data.GPXTrackPoint
 import com.codebutchery.androidgpx.print.GPXFilePrinter
-import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.configuration.GpxConfiguration
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
@@ -24,9 +23,9 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class RoutePlannerRepository @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val graphhopperService: GraphhopperService,
-    private val routePlannerNetworkModelMapper: RoutePlannerNetworkModelMapper
+    private val routePlannerNetworkModelMapper: RoutePlannerNetworkModelMapper,
+    private val gpxConfiguration: GpxConfiguration,
 ) {
 
     suspend fun getRoutePlan(waypoints: List<Location>): RoutePlan {
@@ -38,7 +37,7 @@ class RoutePlannerRepository @Inject constructor(
     }
 
     suspend fun saveRoutePlan(routePlan: RoutePlanUiModel): Uri? {
-        val filesDir = context.filesDir
+        val routePlannerFilesDirPath = gpxConfiguration.getRoutePlannerGpxDirectory()
         val geoPoints = routePlan.geoPoints
 
         val gpxTrack = GPXTrack()
@@ -54,7 +53,7 @@ class RoutePlannerRepository @Inject constructor(
 
         val gpxTracks = listOf(gpxTrack)
         val gpxDocument = GPXDocument(emptyList(), gpxTracks, emptyList())
-        val filePath = "${filesDir.path}/${routePlan.name}"
+        val filePath = "$routePlannerFilesDirPath/${routePlan.name}.gpx"
 
         val fileName = saveGpxFile(filePath, gpxDocument)
         val file = File(fileName)

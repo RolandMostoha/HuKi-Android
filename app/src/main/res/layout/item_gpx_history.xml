@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/space_medium">
+
+    <!-- Name -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/gpxHistoryItemName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_medium"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Aggtelek-Józsvafő.gpx" />
+
+    <!-- Date -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/gpxHistoryDateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small_medium"
+        android:paddingHorizontal="@dimen/space_medium"
+        android:paddingBottom="@dimen/space_small"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gpxHistoryItemName"
+        tools:text="Létrehozva: 2023.03.31 14:00" />
+
+    <!-- Share Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/gpxHistoryItemShareButton"
+        style="@style/DefaultButton.Contained.Shadowless.Secondary.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_medium"
+        android:text="@string/gpx_history_item_share_button_title"
+        app:icon="@drawable/ic_gpx_history_item_share"
+        app:layout_constraintEnd_toStartOf="@id/gpxHistoryItemOpenButton"
+        app:layout_constraintTop_toBottomOf="@id/gpxHistoryDateText" />
+
+    <!-- Open Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/gpxHistoryItemOpenButton"
+        style="@style/DefaultButton.Contained.Shadowless.Primary.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_medium"
+        android:text="@string/gpx_history_item_open_button_title"
+        app:icon="@drawable/ic_gpx_history_item_open"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gpxHistoryDateText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

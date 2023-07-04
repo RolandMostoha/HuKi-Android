@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.huki.interactor
 
 import android.net.Uri
-import hu.mostoha.mobile.android.huki.interactor.exception.ExceptionLogger
+import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
@@ -23,6 +23,13 @@ class LayersInteractor @Inject constructor(
     fun requestGpxDetails(fileUri: Uri?): Flow<GpxDetails> {
         return transformRequestToFlow(
             request = { layersRepository.getGpxDetails(fileUri) },
+            exceptionLogger = exceptionLogger
+        )
+    }
+
+    fun requestRoutePlannerGpxDetails(fileUri: Uri): Flow<GpxDetails> {
+        return transformRequestToFlow(
+            request = { layersRepository.getRoutePlannerGpxDetails(fileUri) },
             exceptionLogger = exceptionLogger
         )
     }

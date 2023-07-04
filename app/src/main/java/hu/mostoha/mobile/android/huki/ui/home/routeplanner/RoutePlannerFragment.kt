@@ -72,11 +72,7 @@ class RoutePlannerFragment : Fragment() {
     private val graphhopperContainer by lazy { binding.routePlannerGraphhopperContainer }
     private val errorText by lazy { binding.routePlannerErrorText }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRoutePlannerBinding.inflate(inflater, container, false)
 
         return binding.root

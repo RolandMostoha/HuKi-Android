@@ -803,7 +803,7 @@ formatting:
     autoCorrect: true
   NoWildcardImports:
     active: false
-    autoCorrect: true
+    autoCorrect: false
   PackageName:
     active: true
     autoCorrect: true

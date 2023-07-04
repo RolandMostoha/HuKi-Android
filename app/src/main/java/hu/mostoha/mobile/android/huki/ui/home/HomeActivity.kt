@@ -88,6 +88,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBa
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.gpx.GpxDetailsBottomSheetDialog
+import hu.mostoha.mobile.android.huki.ui.home.gpx.history.GpxHistoryFragment
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.landscapedetails.LandscapeDetailsBottomSheetDialog
@@ -152,6 +153,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeRoutePlannerFab by lazy { binding.homeRoutePlannerFab }
     private val homeLayersFab by lazy { binding.homeLayersFab }
     private val homeSettingsFab by lazy { binding.homeSettingsFab }
+    private val homeGpxHistoryFab by lazy { binding.homeGpxHistoryFab }
     private val homeAltitudeText by lazy { binding.homeAltitudeText }
 
     private lateinit var placeFinderPopup: PlaceFinderPopup
@@ -364,6 +366,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeSettingsFab.setOnClickListener {
             analyticsService.settingsClicked()
             SettingsBottomSheetDialogFragment().show(supportFragmentManager, SettingsBottomSheetDialogFragment.TAG)
+        }
+
+        homeGpxHistoryFab.setOnClickListener {
+            analyticsService.gpxHistoryClicked()
+            supportFragmentManager.addFragment(R.id.homeFragmentContainer, GpxHistoryFragment::class.java)
         }
     }
 

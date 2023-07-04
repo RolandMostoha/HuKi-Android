@@ -82,4 +82,8 @@
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>
 
+    <style name="DefaultTabTextAppearance" parent="DefaultTextAppearance.SemiBold.Medium">
+        <item name="android:textColor">@color/colorSymbolRed</item>
+    </style>
+
 </resources>

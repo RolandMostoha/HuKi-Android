@@ -31,7 +31,7 @@
     <dimen name="default_elevation_map_interactive_views">5dp</dimen>
     <dimen name="default_elevation_map_overlay_views">1dp</dimen>
     <dimen name="default_elevation_fab">10dp</dimen>
-    <dimen name="default_elevation_route_planner">11dp</dimen>
+    <dimen name="default_elevation_fragments">11dp</dimen>
     <dimen name="default_text_size">@dimen/text_size_medium</dimen>
     <dimen name="default_corner_size_surface">10dp</dimen>
     <dimen name="default_corner_size_input">25dp</dimen>
@@ -44,6 +44,7 @@
     <dimen name="default_horizontal_separator_width">1dp</dimen>
     <dimen name="default_dashed_divider_width">2dp</dimen>
     <dimen name="default_divider_height">1dp</dimen>
+    <dimen name="default_tab_indicator_height">4dp</dimen>
 
     <dimen name="progress_fab_progress_bar_size_mini">46dp</dimen>
     <dimen name="progress_fab_progress_bar_size_normal">64dp</dimen>

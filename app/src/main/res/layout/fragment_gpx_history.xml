@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gpxHistoryContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@color/colorBackground"
+    android:paddingTop="@dimen/space_extra_large">
+
+    <!-- Header -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/gpxHistoryToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorBackground"
+        android:elevation="@dimen/default_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_route_planner_back"
+        app:navigationIconTint="@color/colorPrimaryIconStrong"
+        app:title="@string/gpx_history_title"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/DefaultTextAppearance.Bold.Large" />
+
+    <!-- Tabs -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/gpxHistoryTabLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/default_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gpxHistoryToolbar"
+        android:backgroundTint="@color/colorBackground"
+        app:tabIconTint="@color/selector_tab_text_color"
+        app:tabIndicator="@drawable/background_gpx_history_tab_indicator"
+        app:tabIndicatorHeight="@dimen/default_tab_indicator_height"
+        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabSelectedTextAppearance="@style/DefaultTextAppearance.Bold.Medium"
+        app:tabTextAppearance="@style/DefaultTabTextAppearance"
+        app:tabPaddingBottom="@dimen/space_small"
+        app:tabTextColor="@color/selector_tab_text_color">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_gpx_history_route_planner"
+            android:text="@string/gpx_history_tab_route_planner" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_gpx_history_external"
+            android:text="@string/gpx_history_tab_external_gpx" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gpxHistoryList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gpxHistoryTabLayout"
+        tools:itemCount="3"
+        tools:listitem="@layout/item_gpx_history" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

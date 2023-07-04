@@ -44,6 +44,9 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_SETTINGS_FACEBOOK_GROUP = "select_settings_facebook_group"
         private const val EVENT_SELECT_SETTINGS_GITHUB = "select_settings_github"
         private const val EVENT_SELECT_SETTINGS_GOOGLE_PLAY_REVIEW = "select_settings_gps_review"
+        private const val EVENT_SELECT_GPX_HISTORY = "select_gpx_history"
+        private const val EVENT_OPEN_GPX_HISTORY_ITEM = "open_gpx_history_item"
+        private const val EVENT_SHARE_GPX_HISTORY_ITEM = "share_gpx_history_item"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
         private const val EVENT_DESTROYED = "destroyed"
 
@@ -214,6 +217,18 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun settingsGooglePlayReviewClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_GOOGLE_PLAY_REVIEW, null)
+    }
+
+    override fun gpxHistoryClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_GPX_HISTORY, null)
+    }
+
+    override fun gpxHistoryItemOpened() {
+        firebaseAnalytics.logEvent(EVENT_OPEN_GPX_HISTORY_ITEM, null)
+    }
+
+    override fun gpxHistoryItemShared() {
+        firebaseAnalytics.logEvent(EVENT_SHARE_GPX_HISTORY_ITEM, null)
     }
 
     override fun copyrightClicked() {

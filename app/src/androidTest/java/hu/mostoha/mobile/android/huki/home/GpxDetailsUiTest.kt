@@ -19,9 +19,11 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
+import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
@@ -88,7 +90,12 @@ class GpxDetailsUiTest {
 
     @BindValue
     @JvmField
-    val layersRepository: LayersRepository = FileBasedLayersRepository(testAppContext, LayersDomainModelMapper())
+    val layersRepository: LayersRepository = FileBasedLayersRepository(
+        testAppContext,
+        LayersDomainModelMapper(),
+        HukiGpxConfiguration(testAppContext),
+        FakeExceptionLogger(),
+    )
 
     @BindValue
     @JvmField
