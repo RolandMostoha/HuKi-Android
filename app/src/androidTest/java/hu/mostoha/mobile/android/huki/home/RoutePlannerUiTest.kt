@@ -280,15 +280,21 @@ class RoutePlannerUiTest {
                 .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
 
+            waitFor(300)
+
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName2)))
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
 
             R.string.route_planner_accessibility_add_waypoint.clickWithContentDescription()
 
+            waitFor(300)
+
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(2, typeText(waypointName3)))
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
+
+            waitFor(300)
 
             R.string.route_planner_accessibility_remove_waypoint.clickWithContentDescription()
 

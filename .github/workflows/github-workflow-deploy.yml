@@ -85,7 +85,7 @@ jobs:
           --app ${{ env.ARTIFACT_PATHNAME_APK }}
           --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
           --device model=b0q,version=33,locale=en,orientation=portrait
-          --device model=dreamlte,version=28,locale=hu,orientation=portrait
+          --device model=blueline,version=28,locale=hu,orientation=portrait
           --use-orchestrator
           --environment-variables clearPackageData=true
 
