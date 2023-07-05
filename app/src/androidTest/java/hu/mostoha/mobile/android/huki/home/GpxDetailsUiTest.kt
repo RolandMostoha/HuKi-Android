@@ -115,7 +115,6 @@ class GpxDetailsUiTest {
         every { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
     }
 
-    @Ignore("Dialog is stuck in Firebase Test Lab")
     @Test
     fun whenImportGpxClicked_thenOpenFileIntentIsFired() {
         launchScenario<HomeActivity> {

@@ -95,19 +95,14 @@ class GpxHistoryUiTest {
             DEFAULT_PLACE_WAY,
             DEFAULT_PLACE_RELATION
         )
-        coEvery {
-            routPlannerRepository.getRoutePlan(
-                listOf(
-                    DEFAULT_PLACE_NODE.location,
-                    DEFAULT_PLACE_WAY.location
-                )
-            )
-        } returns DEFAULT_ROUTE_PLAN
+        coEvery { routPlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
         coEvery { routPlannerRepository.saveRoutePlan(any()) } returns getTestRoutePlannerGpxUri()
     }
 
     @Test
     fun whenGpxHistoryFabIsClicked_thenGpxHistoryDisplays() {
+        gpxConfiguration.clearAllGpxFiles()
+
         launchScenario<HomeActivity> {
             R.id.homeGpxHistoryFab.click()
 
@@ -118,6 +113,7 @@ class GpxHistoryUiTest {
     @Test
     fun givenEmptyRoutePlannerGpxList_whenGpxHistoryOpens_thenEmptyViewDisplays() {
         gpxConfiguration.clearAllGpxFiles()
+
         launchScenario<HomeActivity> {
             R.id.homeGpxHistoryFab.click()
 
@@ -127,6 +123,8 @@ class GpxHistoryUiTest {
 
     @Test
     fun givenImportedGpx_whenGpxHistoryOpens_thenGpxFileDisplays() {
+        gpxConfiguration.clearAllGpxFiles()
+
         launchScenario<HomeActivity> {
             intending(IntentMatchers.hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
 
@@ -143,6 +141,8 @@ class GpxHistoryUiTest {
 
     @Test
     fun givenExternalGpxFileInHistory_whenClickOpen_thenGpxDetailsDisplays() {
+        gpxConfiguration.clearAllGpxFiles()
+
         launchScenario<HomeActivity> {
             intending(IntentMatchers.hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
 
@@ -160,6 +160,9 @@ class GpxHistoryUiTest {
 
     @Test
     fun givenRoutePlannerGpxFileInHistory_whenClickOpen_thenGpxDetailsDisplays() {
+        gpxConfiguration.clearAllGpxFiles()
+        getTestRoutePlannerGpxUri()
+
         launchScenario<HomeActivity> {
             val waypointName1 = "Dobogoko"
             val waypointName2 = "Ram-hegy"
@@ -172,6 +175,7 @@ class GpxHistoryUiTest {
                 .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(1, ViewActions.typeText(waypointName2)))
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
             R.id.routePlannerDoneButton.click()
+
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeGpxHistoryFab.click()
@@ -183,6 +187,8 @@ class GpxHistoryUiTest {
 
     @Test
     fun whenBackButtonIsClicked_thenHomeDisplays() {
+        gpxConfiguration.clearAllGpxFiles()
+
         launchScenario<HomeActivity> {
             R.id.homeGpxHistoryFab.click()
 

@@ -74,7 +74,7 @@ class LayersViewModel @Inject constructor(
 
                     hikingLayer.emit(getHikingLayerSpec(zoomRanges))
                 }
-                .catch { showError(it) }
+                .catch { Timber.e(it) }
                 .collect()
         }
     }

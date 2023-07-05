@@ -80,7 +80,6 @@ class SettingsUiTest {
         }
     }
 
-    @Ignore("Dialog is stuck in Firebase Test Lab")
     @Test
     fun whenClickOnEmail_thenEmailIntentIsFired() {
         launchScenario<HomeActivity> {
