@@ -9,6 +9,7 @@ import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -376,7 +377,7 @@ class RoutePlannerUiTest {
 
             R.id.routePlannerGraphhopperContainer.click()
 
-            Intents.intended(
+            intended(
                 allOf(
                     hasAction(Intent.ACTION_VIEW),
                     hasData(testAppContext.getString(R.string.route_planner_graphhopper_url))
