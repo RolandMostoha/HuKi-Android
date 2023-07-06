@@ -9,7 +9,7 @@
     android:clickable="true"
     android:focusable="true"
     android:background="@color/colorBackground"
-    android:paddingTop="@dimen/space_extra_extra_large">
+    android:paddingTop="@dimen/space_huge">
 
     <!-- Header -->
     <com.google.android.material.appbar.MaterialToolbar
