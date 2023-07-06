@@ -195,16 +195,19 @@ class RoutePlannerUiTest {
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            waitForPopup()
 
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName2)))
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            waitForPopup()
 
             R.string.route_planner_accessibility_add_waypoint.clickWithContentDescription()
 
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(2, typeText(waypointName3)))
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
+            waitForPopup()
 
             R.id.routePlannerRouteAttributesContainer.isDisplayed()
             "15 km".isTextDisplayed()
@@ -279,22 +282,19 @@ class RoutePlannerUiTest {
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-
-            waitFor(300)
+            waitForPopup()
 
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName2)))
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            waitForPopup()
 
             R.string.route_planner_accessibility_add_waypoint.clickWithContentDescription()
-
-            waitFor(300)
 
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(2, typeText(waypointName3)))
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
-
-            waitFor(300)
+            waitForPopup()
 
             R.string.route_planner_accessibility_remove_waypoint.clickWithContentDescription()
 
@@ -405,6 +405,10 @@ class RoutePlannerUiTest {
 
             R.id.routePlannerContainer.isDisplayed()
         }
+    }
+
+    private fun waitForPopup() {
+        waitFor(300)
     }
 
     private fun getTestGpxFileUri(): Uri {
