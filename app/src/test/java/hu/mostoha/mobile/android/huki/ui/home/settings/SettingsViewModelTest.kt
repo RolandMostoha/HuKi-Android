@@ -2,7 +2,9 @@ package hu.mostoha.mobile.android.huki.ui.home.settings
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_SCALE_FACTOR
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.runTestDefault
@@ -23,6 +25,7 @@ class SettingsViewModelTest {
     private lateinit var viewModel: SettingsViewModel
 
     private val settingsRepository = mockk<SettingsRepository>()
+    private val analyticsService = mockk<AnalyticsService>(relaxed = true)
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -30,8 +33,12 @@ class SettingsViewModelTest {
     @Before
     fun setUp() {
         every { settingsRepository.getMapScaleFactor() } returns flowOf(2.0)
+        every { settingsRepository.getTheme() } returns flowOf(Theme.SYSTEM)
 
-        viewModel = SettingsViewModel(settingsRepository)
+        viewModel = SettingsViewModel(
+            settingsRepository,
+            analyticsService,
+        )
     }
 
     @Test
@@ -56,6 +63,32 @@ class SettingsViewModelTest {
             advanceUntilIdle()
 
             coVerify { settingsRepository.saveMapScaleFactor(mapScaleFactor) }
+        }
+    }
+
+    @Test
+    fun `Given theme different than actual theme, when updateTheme, then theme is saved`() {
+        runTestDefault {
+            coEvery { settingsRepository.saveTheme(any()) } returns Unit
+
+            viewModel.updateTheme(Theme.LIGHT)
+
+            advanceUntilIdle()
+
+            coVerify { settingsRepository.saveTheme(Theme.LIGHT) }
+        }
+    }
+
+    @Test
+    fun `Given the same theme than the actual one, when updateTheme, then theme is not saved`() {
+        runTestDefault {
+            coEvery { settingsRepository.saveTheme(any()) } returns Unit
+
+            viewModel.updateTheme(Theme.SYSTEM)
+
+            advanceUntilIdle()
+
+            coVerify(inverse = true) { settingsRepository.saveTheme(Theme.LIGHT) }
         }
     }
 

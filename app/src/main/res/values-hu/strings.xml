@@ -85,6 +85,10 @@
     <string name="settings_title">Beállítások</string>
     <string name="settings_map_scale_title">Térkép alakzatainak nagyítása</string>
     <string name="settings_map_scale_description">A nagyítás ronthat az alakzatok minőségén</string>
+    <string name="settings_theme_title">Téma</string>
+    <string name="settings_theme_system">Rendszer</string>
+    <string name="settings_theme_light">Világos</string>
+    <string name="settings_theme_dark">Sötét</string>
     <string name="settings_contact_title">Kapcsolat</string>
     <string name="settings_contact_subtitle">Örömmel fogadok bármilyen visszajelzést, a célom hogy másnak is hasznos legyen az alkalmazás!</string>
     <string name="settings_email_title">Email:</string>

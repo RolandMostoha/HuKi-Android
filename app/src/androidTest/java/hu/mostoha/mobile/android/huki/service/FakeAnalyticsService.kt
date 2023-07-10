@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.service
 
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 
 class FakeAnalyticsService : AnalyticsService {
@@ -54,11 +55,11 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun settingsEmailClicked() = Unit
 
-    override fun settingsFacebookGroupClicked() = Unit
-
     override fun settingsGitHubClicked() = Unit
 
     override fun settingsGooglePlayReviewClicked() = Unit
+
+    override fun settingsThemeClicked(theme: Theme) = Unit
 
     override fun gpxHistoryClicked() = Unit
 

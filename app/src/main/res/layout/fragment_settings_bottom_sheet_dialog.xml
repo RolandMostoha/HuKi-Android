@@ -8,12 +8,16 @@
     android:paddingHorizontal="@dimen/space_large"
     android:paddingVertical="@dimen/space_large">
 
+    <!-- Settings -->
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingsTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/settings_title"
         android:textAppearance="@style/DefaultTextAppearance.Bold.Large" />
+
+    <!-- Map scale factor title -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,6 +39,8 @@
             app:messageRes="@string/settings_map_scale_description" />
 
     </LinearLayout>
+
+    <!-- Map scale factor slider -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,11 +70,59 @@
 
     </LinearLayout>
 
+    <!-- Theme -->
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/settingsThemeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_theme_title"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+
+    <RadioGroup
+        android:id="@+id/settingsThemeRadioGroup"
+        android:checkedButton="@id/settingsThemeSystem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/settingsThemeSystem"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/space_medium"
+            android:paddingHorizontal="@dimen/space_extra_small"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+            android:text="@string/settings_theme_system" />
+
+        <RadioButton
+            android:id="@+id/settingsThemeLight"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/space_medium"
+            android:paddingHorizontal="@dimen/space_extra_small"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+            android:text="@string/settings_theme_light" />
+
+        <RadioButton
+            android:id="@+id/settingsThemeDark"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/space_medium"
+            android:paddingHorizontal="@dimen/space_extra_small"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+            android:text="@string/settings_theme_dark" />
+
+    </RadioGroup>
+
+    <!-- Contact -->
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingsContactTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_large"
+        android:layout_marginTop="@dimen/space_medium"
         android:text="@string/settings_contact_title"
         android:textAppearance="@style/DefaultTextAppearance.Bold.Large" />
 

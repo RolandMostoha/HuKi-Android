@@ -89,6 +89,10 @@
     <string name="settings_title">Settings</string>
     <string name="settings_map_scale_title">Map display magnification</string>
     <string name="settings_map_scale_description">Magnification can reduce image quality</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
     <string name="settings_contact_title">Contact</string>
     <string name="settings_contact_subtitle">I\'d be happy to receive any feedback, my goal is to create a useful app for everybody.</string>
     <string name="settings_email_title">Email:</string>

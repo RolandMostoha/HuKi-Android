@@ -8,6 +8,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.marginTop
@@ -65,6 +66,7 @@ import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
@@ -226,6 +228,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initPlaceFinderPopup()
         initFabs()
         initBottomSheets()
+        initSettingsFlows()
     }
 
     private fun initMapView() {
@@ -500,7 +503,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initLayersFlows()
         initPlaceFinderFlows()
         initRoutePlannerFlows()
-        initSettingsFlows()
+        initMapSettingsFlows()
     }
 
     private fun initHomeFlows() {
@@ -654,13 +657,29 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initSettingsFlows() {
+    private fun initMapSettingsFlows() {
         lifecycleScope.launch {
             settingsViewModel.mapScaleFactor
                 .flowWithLifecycle(lifecycle)
                 .collect { mapScaleFactor ->
                     homeMapView.tilesScaleFactor = mapScaleFactor.toFloat()
                     homeMapView.invalidate()
+                }
+        }
+    }
+
+    private fun initSettingsFlows() {
+        lifecycleScope.launch {
+            settingsViewModel.theme
+                .flowWithLifecycle(lifecycle)
+                .collect { theme ->
+                    AppCompatDelegate.setDefaultNightMode(
+                        when (theme) {
+                            Theme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                            Theme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+                            Theme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
+                        }
+                    )
                 }
         }
     }

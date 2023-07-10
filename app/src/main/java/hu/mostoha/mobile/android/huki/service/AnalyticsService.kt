@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.service
 
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 
 interface AnalyticsService {
@@ -54,11 +55,11 @@ interface AnalyticsService {
 
     fun settingsEmailClicked()
 
-    fun settingsFacebookGroupClicked()
-
     fun settingsGitHubClicked()
 
     fun settingsGooglePlayReviewClicked()
+
+    fun settingsThemeClicked(theme: Theme)
 
     fun gpxHistoryClicked()
 

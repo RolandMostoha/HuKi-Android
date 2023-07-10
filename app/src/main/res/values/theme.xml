@@ -10,6 +10,7 @@
         <!-- New MaterialComponents attributes -->
         <item name="colorOnSecondary">@color/colorPrimaryText</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
 
         <item name="materialAlertDialogTheme">@style/DefaultMaterialDialog</item>
 

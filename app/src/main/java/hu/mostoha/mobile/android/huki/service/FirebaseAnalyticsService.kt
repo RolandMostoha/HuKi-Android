@@ -6,6 +6,7 @@ import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.osmdroid.CounterProvider
 import org.osmdroid.tileprovider.util.Counters
@@ -41,9 +42,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_SETTINGS_MAP_SCALE_INFO = "select_settings_map_scale_info"
         private const val EVENT_SELECT_SETTINGS_MAP_SCALE = "select_settings_map_scale"
         private const val EVENT_SELECT_SETTINGS_EMAIL = "select_settings_email"
-        private const val EVENT_SELECT_SETTINGS_FACEBOOK_GROUP = "select_settings_facebook_group"
         private const val EVENT_SELECT_SETTINGS_GITHUB = "select_settings_github"
         private const val EVENT_SELECT_SETTINGS_GOOGLE_PLAY_REVIEW = "select_settings_gps_review"
+        private const val EVENT_SELECT_SETTINGS_THEME_LIGHT = "select_settings_theme_light"
+        private const val EVENT_SELECT_SETTINGS_THEME_DARK = "select_settings_theme_dark"
         private const val EVENT_SELECT_GPX_HISTORY = "select_gpx_history"
         private const val EVENT_OPEN_GPX_HISTORY_ITEM = "open_gpx_history_item"
         private const val EVENT_SHARE_GPX_HISTORY_ITEM = "share_gpx_history_item"
@@ -207,16 +209,22 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_EMAIL, null)
     }
 
-    override fun settingsFacebookGroupClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_FACEBOOK_GROUP, null)
-    }
-
     override fun settingsGitHubClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_GITHUB, null)
     }
 
     override fun settingsGooglePlayReviewClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_GOOGLE_PLAY_REVIEW, null)
+    }
+
+    override fun settingsThemeClicked(theme: Theme) {
+        when (theme) {
+            Theme.LIGHT -> firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_THEME_LIGHT, null)
+            Theme.DARK -> firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_THEME_DARK, null)
+            Theme.SYSTEM -> {
+                /** no-op **/
+            }
+        }
     }
 
     override fun gpxHistoryClicked() {

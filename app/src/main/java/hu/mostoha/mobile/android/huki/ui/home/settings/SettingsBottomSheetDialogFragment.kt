@@ -17,6 +17,7 @@ import hu.mostoha.mobile.android.huki.databinding.FragmentSettingsBottomSheetDia
 import hu.mostoha.mobile.android.huki.extensions.hyperlinkStyle
 import hu.mostoha.mobile.android.huki.extensions.startEmailIntent
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
+import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.util.toPercentageFromScale
 import kotlinx.coroutines.flow.first
@@ -46,6 +47,9 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val mapScaleSliderFromText by lazy { binding.settingsMapScaleSliderFromText }
     private val mapScaleSliderToText by lazy { binding.settingsMapScaleSliderToText }
     private val mapScaleSlider by lazy { binding.settingsMapScaleSlider }
+    private val themeSystemRadioButton by lazy { binding.settingsThemeSystem }
+    private val themeLightRadioButton by lazy { binding.settingsThemeLight }
+    private val themeDarkRadioButton by lazy { binding.settingsThemeDark }
     private val emailText by lazy { binding.settingsEmailText }
     private val gitHubText by lazy { binding.settingsGitHubText }
     private val googlePlayReviewButton by lazy { binding.settingsGooglePlayReviewButton }
@@ -97,6 +101,21 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         mapScaleInfoButton.onClick = {
             analyticsService.settingsMapScaleInfoClicked()
         }
+        themeSystemRadioButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                settingsViewModel.updateTheme(Theme.SYSTEM)
+            }
+        }
+        themeLightRadioButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                settingsViewModel.updateTheme(Theme.LIGHT)
+            }
+        }
+        themeDarkRadioButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                settingsViewModel.updateTheme(Theme.DARK)
+            }
+        }
         emailText.hyperlinkStyle()
         emailText.setOnClickListener {
             analyticsService.settingsEmailClicked()
@@ -123,6 +142,17 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 .first()
 
             mapScaleSlider.value = mapScaleFactor.toPercentageFromScale().toFloat()
+        }
+        lifecycleScope.launch {
+            val theme = settingsViewModel.theme
+                .flowWithLifecycle(lifecycle)
+                .first()
+
+            when (theme) {
+                Theme.SYSTEM -> themeSystemRadioButton.isChecked = true
+                Theme.LIGHT -> themeLightRadioButton.isChecked = true
+                Theme.DARK -> themeDarkRadioButton.isChecked = true
+            }
         }
     }
 
