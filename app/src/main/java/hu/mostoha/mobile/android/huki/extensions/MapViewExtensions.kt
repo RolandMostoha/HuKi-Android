@@ -24,6 +24,7 @@ import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
@@ -489,6 +490,12 @@ fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {
 
 fun MapView.animateCenterAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {
     controller.animateTo(geoPoint, zoomLevel, MAP_ANIMATION_DURATION)
+}
+
+fun MapView.zoomToBoundingBoxPostMain(boundingBox: BoundingBox, animated: Boolean) {
+    postMain {
+        this.zoomToBoundingBox(boundingBox, animated)
+    }
 }
 
 fun MapView.addMapMovedListener(onMapMoved: () -> Unit) {

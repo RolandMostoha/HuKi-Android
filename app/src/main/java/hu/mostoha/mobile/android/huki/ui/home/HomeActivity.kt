@@ -64,6 +64,7 @@ import hu.mostoha.mobile.android.huki.extensions.toDrawable
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
+import hu.mostoha.mobile.android.huki.extensions.zoomToBoundingBoxPostMain
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
@@ -235,9 +236,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.apply {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
-            addOnFirstLayoutListener { _, _, _, _, _ ->
-                initFlows()
-            }
             addMapMovedListener {
                 homeViewModel.clearHikingRoutes()
                 hikingRoutesBottomSheet.hide()
@@ -245,6 +243,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             addOverlay(OsmLicencesOverlay(this@HomeActivity, analyticsService), OverlayComparator)
             if (isDarkMode()) {
                 overlayManager.tilesOverlay.setColorFilter(getColorScaledMatrix(getColor(R.color.colorScaleDarkMap)))
+            }
+            addOnFirstLayoutListener { _, _, _, _, _ ->
+                initFlows()
             }
         }
     }
@@ -518,7 +519,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             .toOsmBoundingBox()
                             .withOffset(homeMapView, OffsetType.DEFAULT)
                     }
-                    homeMapView.zoomToBoundingBox(boundingBox, false)
+                    homeMapView.zoomToBoundingBoxPostMain(boundingBox, false)
                 }
         }
         lifecycleScope.launch {
