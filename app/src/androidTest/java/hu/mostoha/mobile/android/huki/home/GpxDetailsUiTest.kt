@@ -60,7 +60,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -176,7 +175,6 @@ class GpxDetailsUiTest {
         }
     }
 
-    @Ignore("Dialog is stuck in Firebase Test Lab")
     @Test
     fun givenGpxFile_whenNavigateToStartClicked_thenGoogleMapsDirectionsIntentIsFired() {
         launchScenario<HomeActivity> {

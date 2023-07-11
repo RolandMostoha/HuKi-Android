@@ -26,7 +26,6 @@ import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toPercentageFromScale
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -80,7 +79,6 @@ class SettingsUiTest {
         }
     }
 
-    @Ignore("Dialog is stuck in Firebase Test Lab")
     @Test
     fun whenClickOnEmail_thenEmailIntentIsFired() {
         launchScenario<HomeActivity> {
@@ -98,7 +96,6 @@ class SettingsUiTest {
         }
     }
 
-    @Ignore("Dialog is stuck in Firebase Test Lab")
     @Test
     fun whenClickOnGitHubRepositoryText_thenBrowserIntentIsFired() {
         launchScenario<HomeActivity> {

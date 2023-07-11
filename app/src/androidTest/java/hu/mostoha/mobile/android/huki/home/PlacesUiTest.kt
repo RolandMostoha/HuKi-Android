@@ -59,7 +59,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -184,7 +183,6 @@ class PlacesUiTest {
         }
     }
 
-    @Ignore("Dialog is stuck in Firebase Test Lab")
     @Test
     fun givenNodePlace_whenClickOnNavigation_thenGoogleMapsDirectionsIntentIsFired() {
         Intents.init()
@@ -237,7 +235,6 @@ class PlacesUiTest {
         }
     }
 
-    @Ignore("Dialog is stuck in Firebase Test Lab")
     @Test
     fun givenNodePlace_whenClickDirections_thenGoogleMapsDirectionsIntentIsFired() {
         Intents.init()
