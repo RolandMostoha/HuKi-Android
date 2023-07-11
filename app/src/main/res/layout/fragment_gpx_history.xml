@@ -8,8 +8,7 @@
     android:animateLayoutChanges="true"
     android:clickable="true"
     android:focusable="true"
-    android:background="@color/colorBackground"
-    android:paddingTop="@dimen/space_huge">
+    android:background="@color/colorBackground">
 
     <!-- Header -->
     <com.google.android.material.appbar.MaterialToolbar

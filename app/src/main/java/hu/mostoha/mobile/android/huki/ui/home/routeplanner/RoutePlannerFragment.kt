@@ -31,6 +31,7 @@ import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
+import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
@@ -40,6 +41,7 @@ import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
+import hu.mostoha.mobile.android.huki.util.ResultSharedViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -51,6 +53,7 @@ class RoutePlannerFragment : Fragment() {
 
     private val routePlannerViewModel: RoutePlannerViewModel by activityViewModels()
     private val layersViewModel: LayersViewModel by activityViewModels()
+    private val insetSharedViewModel: ResultSharedViewModel<InsetResult> by activityViewModels()
     private val placeFinderViewModel: PlaceFinderViewModel by viewModels()
 
     private var _binding: FragmentRoutePlannerBinding? = null
@@ -220,6 +223,7 @@ class RoutePlannerFragment : Fragment() {
     private fun initFlows() {
         initRoutePlannerFlows()
         initPlaceFinderFlows()
+        initInsetFlows()
     }
 
     private fun initRoutePlannerFlows() {
@@ -277,15 +281,6 @@ class RoutePlannerFragment : Fragment() {
                     }
                 }
         }
-        lifecycleScope.launch {
-            routePlannerViewModel.topInsetSize
-                .flowWithLifecycle(lifecycle)
-                .collect { topInsetSize ->
-                    routePlannerContainer.updatePadding(
-                        top = resources.getDimensionPixelSize(R.dimen.space_small) + topInsetSize
-                    )
-                }
-        }
     }
 
     private fun initLocationPicker(state: PickLocationState) {
@@ -307,6 +302,20 @@ class RoutePlannerFragment : Fragment() {
                         val parent = lastEditedWaypointInput?.parent as? View ?: return@collect
 
                         placeFinderPopup.initPlaceFinderItems(parent, items)
+                    }
+                }
+        }
+    }
+
+    private fun initInsetFlows() {
+        lifecycleScope.launch {
+            insetSharedViewModel.result
+                .flowWithLifecycle(lifecycle)
+                .collect { result ->
+                    if (result != null) {
+                        routePlannerContainer.updatePadding(
+                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.topInset,
+                        )
                     }
                 }
         }

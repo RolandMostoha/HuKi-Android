@@ -74,6 +74,7 @@ import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
@@ -107,6 +108,7 @@ import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsViewModel
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
+import hu.mostoha.mobile.android.huki.util.ResultSharedViewModel
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
@@ -140,6 +142,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val placeFinderViewModel: PlaceFinderViewModel by viewModels()
     private val routePlannerViewModel: RoutePlannerViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
+    private val insetSharedViewModel: ResultSharedViewModel<InsetResult> by viewModels()
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
@@ -217,7 +220,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 updateMargins(top = searchBarTopMargin + insets.top)
             }
 
-            routePlannerViewModel.updateTopInsetSize(insets.top)
+            insetSharedViewModel.updateResult(InsetResult(insets.top))
 
             WindowInsetsCompat.CONSUMED
         }

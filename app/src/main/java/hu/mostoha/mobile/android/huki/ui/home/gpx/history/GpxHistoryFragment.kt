@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -18,8 +19,10 @@ import hu.mostoha.mobile.android.huki.databinding.FragmentGpxHistoryBinding
 import hu.mostoha.mobile.android.huki.extensions.removeFragments
 import hu.mostoha.mobile.android.huki.extensions.shareFile
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
+import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
+import hu.mostoha.mobile.android.huki.util.ResultSharedViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,12 +34,14 @@ class GpxHistoryFragment : Fragment() {
 
     private val viewModel: GpxHistoryViewModel by viewModels()
     private val layersViewModel: LayersViewModel by activityViewModels()
+    private val insetSharedViewModel: ResultSharedViewModel<InsetResult> by activityViewModels()
 
     private var _binding: FragmentGpxHistoryBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var gpxHistoryAdapter: GpxHistoryAdapter
 
+    private val gpxHistoryContainer by lazy { binding.gpxHistoryContainer }
     private val gpxHistoryList by lazy { binding.gpxHistoryList }
     private val gpxHistoryTabLayout by lazy { binding.gpxHistoryTabLayout }
     private val toolbar by lazy { binding.gpxHistoryToolbar }
@@ -124,6 +129,17 @@ class GpxHistoryFragment : Fragment() {
                 .flowWithLifecycle(lifecycle)
                 .collect {
                     gpxHistoryTabLayout.selectTab(gpxHistoryTabLayout.getTabAt(it.ordinal))
+                }
+        }
+        lifecycleScope.launch {
+            insetSharedViewModel.result
+                .flowWithLifecycle(lifecycle)
+                .collect { result ->
+                    if (result != null) {
+                        gpxHistoryContainer.updatePadding(
+                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.topInset,
+                        )
+                    }
                 }
         }
     }

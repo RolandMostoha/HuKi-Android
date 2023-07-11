@@ -239,10 +239,6 @@ class RoutePlannerViewModel @Inject constructor(
         _wayPointItems.value = emptyList()
     }
 
-    fun updateTopInsetSize(topInsetSize: Int) {
-        _topInsetSize.value = topInsetSize
-    }
-
     private fun List<WaypointItem>.reOrder(): List<WaypointItem> {
         val orderedWaypoints = this.mapIndexed { index, waypointItem ->
             waypointItem.copy(order = index)
