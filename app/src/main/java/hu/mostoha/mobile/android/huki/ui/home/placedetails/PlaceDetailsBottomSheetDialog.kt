@@ -10,12 +10,12 @@ import hu.mostoha.mobile.android.huki.extensions.startGoogleMapsDirectionsIntent
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
-import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
 class PlaceDetailsBottomSheetDialog(
     private val binding: LayoutBottomSheetPlaceDetailsBinding,
-    private val analyticsService: FirebaseAnalyticsService
+    private val analyticsService: AnalyticsService
 ) : BottomSheetDialog(binding) {
 
     fun initNodeBottomSheet(

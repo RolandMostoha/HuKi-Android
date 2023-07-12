@@ -18,7 +18,7 @@ import hu.mostoha.mobile.android.huki.extensions.hyperlinkStyle
 import hu.mostoha.mobile.android.huki.extensions.startEmailIntent
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.model.domain.Theme
-import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.toPercentageFromScale
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -36,7 +36,7 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     @Inject
-    lateinit var analyticsService: FirebaseAnalyticsService
+    lateinit var analyticsService: AnalyticsService
 
     private val settingsViewModel: SettingsViewModel by activityViewModels()
 

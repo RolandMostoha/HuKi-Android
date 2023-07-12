@@ -20,7 +20,7 @@ import hu.mostoha.mobile.android.huki.extensions.removeFragments
 import hu.mostoha.mobile.android.huki.extensions.shareFile
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.ui.InsetResult
-import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.util.ResultSharedViewModel
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class GpxHistoryFragment : Fragment() {
 
     @Inject
-    lateinit var analyticsService: FirebaseAnalyticsService
+    lateinit var analyticsService: AnalyticsService
 
     private val viewModel: GpxHistoryViewModel by viewModels()
     private val layersViewModel: LayersViewModel by activityViewModels()
@@ -68,7 +68,7 @@ class GpxHistoryFragment : Fragment() {
     private fun initViews() {
         gpxHistoryAdapter = GpxHistoryAdapter(
             onGpxOpen = { gpxHistoryItem ->
-                analyticsService.gpxHistoryItemOpened()
+                analyticsService.gpxHistoryItemOpened(gpxHistoryItem.gpxType)
 
                 lifecycleScope.launch {
                     when (gpxHistoryItem.gpxType) {

@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.service
 
+import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
@@ -63,7 +64,7 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun gpxHistoryClicked() = Unit
 
-    override fun gpxHistoryItemOpened() = Unit
+    override fun gpxHistoryItemOpened(gpxType: GpxType) = Unit
 
     override fun gpxHistoryItemShared() = Unit
 

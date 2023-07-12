@@ -11,14 +11,14 @@ import com.marcoscg.licenser.Library
 import com.marcoscg.licenser.License
 import com.marcoscg.licenser.LicenserDialog
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import org.osmdroid.views.MapView
 import org.osmdroid.views.Projection
 import org.osmdroid.views.overlay.Overlay
 
 class OsmLicencesOverlay(
     private val context: Context,
-    private val analyticsService: FirebaseAnalyticsService
+    private val analyticsService: AnalyticsService
 ) : Overlay() {
 
     private var textPaint: Paint = TextPaint().apply {

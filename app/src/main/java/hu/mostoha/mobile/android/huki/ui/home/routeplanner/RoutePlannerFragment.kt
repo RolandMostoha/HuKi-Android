@@ -36,7 +36,7 @@ import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
-import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
@@ -49,7 +49,7 @@ import javax.inject.Inject
 class RoutePlannerFragment : Fragment() {
 
     @Inject
-    lateinit var analyticsService: FirebaseAnalyticsService
+    lateinit var analyticsService: AnalyticsService
 
     private val routePlannerViewModel: RoutePlannerViewModel by activityViewModels()
     private val layersViewModel: LayersViewModel by activityViewModels()

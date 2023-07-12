@@ -89,7 +89,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
-import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.gpx.GpxDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.gpx.history.GpxHistoryFragment
@@ -135,7 +135,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     lateinit var myLocationProvider: AsyncMyLocationProvider
 
     @Inject
-    lateinit var analyticsService: FirebaseAnalyticsService
+    lateinit var analyticsService: AnalyticsService
 
     private val homeViewModel: HomeViewModel by viewModels()
     private val layersViewModel: LayersViewModel by viewModels()

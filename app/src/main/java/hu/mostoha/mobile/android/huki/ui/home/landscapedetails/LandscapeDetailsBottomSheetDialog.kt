@@ -5,12 +5,12 @@ import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
-import hu.mostoha.mobile.android.huki.service.FirebaseAnalyticsService
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
 class LandscapeDetailsBottomSheetDialog(
     private val binding: LayoutBottomSheetLandscapeDetailsBinding,
-    private val analyticsService: FirebaseAnalyticsService
+    private val analyticsService: AnalyticsService
 ) : BottomSheetDialog(binding) {
 
     fun initLandscapeDetailsBottomSheet(

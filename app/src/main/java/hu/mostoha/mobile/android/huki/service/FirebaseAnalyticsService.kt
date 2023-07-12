@@ -4,6 +4,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
+import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
@@ -48,6 +49,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_SETTINGS_THEME_DARK = "select_settings_theme_dark"
         private const val EVENT_SELECT_GPX_HISTORY = "select_gpx_history"
         private const val EVENT_OPEN_GPX_HISTORY_ITEM = "open_gpx_history_item"
+        private const val EVENT_OPEN_ROUTE_PLANNER_HISTORY_ITEM = "open_route_planner_history_item"
         private const val EVENT_SHARE_GPX_HISTORY_ITEM = "share_gpx_history_item"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
         private const val EVENT_DESTROYED = "destroyed"
@@ -231,8 +233,11 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_GPX_HISTORY, null)
     }
 
-    override fun gpxHistoryItemOpened() {
-        firebaseAnalytics.logEvent(EVENT_OPEN_GPX_HISTORY_ITEM, null)
+    override fun gpxHistoryItemOpened(gpxType: GpxType) {
+        when (gpxType) {
+            GpxType.ROUTE_PLANNER -> firebaseAnalytics.logEvent(EVENT_OPEN_ROUTE_PLANNER_HISTORY_ITEM, null)
+            GpxType.EXTERNAL -> firebaseAnalytics.logEvent(EVENT_OPEN_GPX_HISTORY_ITEM, null)
+        }
     }
 
     override fun gpxHistoryItemShared() {
