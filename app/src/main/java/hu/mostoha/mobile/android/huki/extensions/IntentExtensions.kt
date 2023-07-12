@@ -11,15 +11,21 @@ import androidx.core.net.toFile
 import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import org.osmdroid.util.GeoPoint
+import timber.log.Timber
 
 fun Context.startGoogleMapsDirectionsIntent(geoPoint: GeoPoint) {
     val mapsUrl = GOOGLE_MAPS_DIRECTIONS_URL.format(geoPoint.latitude, geoPoint.longitude)
+
+    Timber.d("Google Maps direction intent started with URL: $mapsUrl")
 
     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl)))
 }
 
 fun Context.startUrlIntent(url: String) {
+    Timber.d("URL Intent started with URL: $url")
+
     val uri = Uri.parse(url)
+
     val intent = Intent(Intent.ACTION_VIEW, uri)
     intent.putExtra(Browser.EXTRA_APPLICATION_ID, packageName)
 

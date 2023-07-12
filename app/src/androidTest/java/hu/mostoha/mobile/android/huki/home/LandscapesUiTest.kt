@@ -35,7 +35,7 @@ import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_GEOMETRY_LANDS
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_LANDSCAPE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_QUERY_URL
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_QUERY_URL
+import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_AREA_URL
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
@@ -55,6 +55,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.net.URLEncoder
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -183,7 +184,12 @@ class LandscapesUiTest {
             intended(
                 allOf(
                     hasAction(Intent.ACTION_VIEW),
-                    hasData(TERMESZETJARO_QUERY_URL.format(testAppContext.getString(landscape.nameRes)))
+                    hasData(
+                        TERMESZETJARO_AREA_URL.format(
+                            landscape.termeszetjaroTag!!.areaId,
+                            URLEncoder.encode(landscape.termeszetjaroTag!!.areaName, "UTF-8"),
+                        )
+                    )
                 )
             )
         }

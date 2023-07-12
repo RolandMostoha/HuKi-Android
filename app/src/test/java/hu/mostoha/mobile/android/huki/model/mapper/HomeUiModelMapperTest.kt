@@ -35,11 +35,13 @@ import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_QUERY_URL
 import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_URL
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_QUERY_URL
+import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_AREA_URL
+import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_URL
 import hu.mostoha.mobile.android.huki.util.calculateCenter
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.osmdroid.util.GeoPoint
+import java.net.URLEncoder
 
 class HomeUiModelMapperTest {
 
@@ -150,16 +152,20 @@ class HomeUiModelMapperTest {
                     iconRes = R.drawable.ic_landscapes_mountain_medium,
                     markerRes = R.drawable.ic_marker_landscapes_mountain_medium,
                     kirandulastippekLink = KIRANDULASTIPPEK_QUERY_URL.format(landscape.kirandulastippekTag),
-                    termeszetjaroLinkTemplate = TERMESZETJARO_QUERY_URL,
+                    termeszetjaroLink = TERMESZETJARO_AREA_URL.format(
+                        landscape.termeszetjaroTag!!.areaId,
+                        URLEncoder.encode(landscape.termeszetjaroTag!!.areaName, "UTF-8")
+                    ),
                 )
             )
         )
     }
 
     @Test
-    fun `Given landscape domain model with null kirandulastippek tag, when generateLandscapes, then correct LandscapeUiModel returns with default URL`() {
+    fun `Given landscape domain model with null kirandulastippek and termeszetjaro tag, when generateLandscapes, then correct LandscapeUiModel returns with default URL`() {
         val landscape = DEFAULT_LANDSCAPE.copy(
-            kirandulastippekTag = null
+            kirandulastippekTag = null,
+            termeszetjaroTag = null,
         )
 
         val places = mapper.generateLandscapes(listOf(landscape))
@@ -174,7 +180,7 @@ class HomeUiModelMapperTest {
                     iconRes = R.drawable.ic_landscapes_mountain_medium,
                     markerRes = R.drawable.ic_marker_landscapes_mountain_medium,
                     kirandulastippekLink = KIRANDULASTIPPEK_URL,
-                    termeszetjaroLinkTemplate = TERMESZETJARO_QUERY_URL,
+                    termeszetjaroLink = TERMESZETJARO_URL,
                 )
             )
         )

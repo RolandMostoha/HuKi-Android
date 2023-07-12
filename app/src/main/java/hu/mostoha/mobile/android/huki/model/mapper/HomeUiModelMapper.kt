@@ -20,8 +20,10 @@ import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_QUERY_URL
 import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_URL
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_QUERY_URL
+import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_AREA_URL
+import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_URL
 import hu.mostoha.mobile.android.huki.util.calculateCenter
+import java.net.URLEncoder
 import javax.inject.Inject
 
 class HomeUiModelMapper @Inject constructor() {
@@ -54,7 +56,14 @@ class HomeUiModelMapper @Inject constructor() {
                 } else {
                     KIRANDULASTIPPEK_URL
                 },
-                termeszetjaroLinkTemplate = TERMESZETJARO_QUERY_URL,
+                termeszetjaroLink = if (landscape.termeszetjaroTag != null) {
+                    TERMESZETJARO_AREA_URL.format(
+                        landscape.termeszetjaroTag.areaId,
+                        URLEncoder.encode(landscape.termeszetjaroTag.areaName, "UTF-8")
+                    )
+                } else {
+                    TERMESZETJARO_URL
+                },
             )
         }
     }

@@ -38,8 +38,7 @@ class LandscapeDetailsBottomSheetDialog(
                 }
                 landscapeDetailsTermeszetjaroButton.setOnClickListener {
                     analyticsService.landscapeTermeszetjaroClicked(placeName)
-                    val url = landscapeDetailsUiModel.landscapeUiModel.termeszetjaroLinkTemplate.format(placeName)
-                    context.startUrlIntent(url)
+                    context.startUrlIntent(landscapeDetailsUiModel.landscapeUiModel.termeszetjaroLink)
                 }
                 landscapeDetailsTermeszetjaroInfoButton.onClick = {
                     analyticsService.landscapeTermeszetjaroInfoClicked()

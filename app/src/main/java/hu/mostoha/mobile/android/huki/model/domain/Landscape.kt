@@ -9,4 +9,5 @@ data class Landscape(
     val landscapeType: LandscapeType,
     val center: Location,
     val kirandulastippekTag: String? = null,
+    val termeszetjaroTag: TermeszetjaroTag? = null,
 )

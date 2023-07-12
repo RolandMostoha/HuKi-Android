@@ -12,5 +12,5 @@ data class LandscapeUiModel(
     @DrawableRes val iconRes: Int,
     @DrawableRes val markerRes: Int,
     val kirandulastippekLink: String,
-    val termeszetjaroLinkTemplate: String,
+    val termeszetjaroLink: String,
 )
