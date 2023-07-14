@@ -164,13 +164,17 @@ class RoutePlannerViewModel @Inject constructor(
 
     fun updateWaypointWithMyLocation(waypointItem: WaypointItem, name: Message, searchText: String) {
         viewModelScope.launch(defaultDispatcher) {
-            val myLocation = myLocationProvider.getLastKnownLocationCoroutine() ?: return@launch
+            val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()
+            if (lastKnownLocation == null) {
+                _routePlanErrorMessage.emit(Message.Res(R.string.place_finder_my_location_error_null_location))
+                return@launch
+            }
 
             _wayPointItems.update { wayPointItemList ->
                 wayPointItemList.update(waypointItem) { wayPointItem ->
                     wayPointItem.copy(
                         primaryText = name,
-                        location = myLocation.toLocation(),
+                        location = lastKnownLocation.toLocation(),
                         searchText = searchText
                     )
                 }

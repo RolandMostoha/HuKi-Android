@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -55,6 +56,7 @@ import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
 import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
+import hu.mostoha.mobile.android.huki.extensions.showErrorSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showOnly
 import hu.mostoha.mobile.android.huki.extensions.showOverlay
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
@@ -77,6 +79,7 @@ import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
@@ -106,9 +109,10 @@ import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerFragment
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerViewModel
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
-import hu.mostoha.mobile.android.huki.util.ResultSharedViewModel
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
@@ -142,7 +146,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val placeFinderViewModel: PlaceFinderViewModel by viewModels()
     private val routePlannerViewModel: RoutePlannerViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
-    private val insetSharedViewModel: ResultSharedViewModel<InsetResult> by viewModels()
+    private val insetSharedViewModel: InsetSharedViewModel by viewModels()
+    private val permissionSharedViewModel: PermissionSharedViewModel by viewModels()
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
@@ -268,6 +273,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 placeFinderViewModel.loadPlaces(text)
             }
         }
+        homeSearchBarInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                clearSearchBarInput()
+                true
+            } else {
+                false
+            }
+        }
     }
 
     private fun initPlaceFinderPopup() {
@@ -286,28 +299,40 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             onMyLocationClick = {
                 clearSearchBarInput()
 
-                lifecycleScope.launch {
-                    val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine() ?: return@launch
-                    val lastKnownGeoPoint = lastKnownLocation.toLocation().toGeoPoint()
-                    val placeUiModel = PlaceUiModel(
-                        osmId = UUID.randomUUID().toString(),
-                        placeType = PlaceType.NODE,
-                        geoPoint = lastKnownGeoPoint,
-                        primaryText = LocationFormatter.format(lastKnownGeoPoint),
-                        secondaryText = R.string.place_details_my_location_text.toMessage(),
-                        iconRes = R.drawable.ic_place_type_node,
-                    )
-
-                    homeViewModel.loadPlace(placeUiModel)
+                when {
+                    isLocationPermissionGranted() -> {
+                        lifecycleScope.launch {
+                            val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()
+                            if (lastKnownLocation == null) {
+                                showErrorSnackbar(
+                                    homeContainer,
+                                    R.string.place_finder_my_location_error_null_location.toMessage(),
+                                )
+                                return@launch
+                            }
+                            val lastKnownGeoPoint = lastKnownLocation.toLocation().toGeoPoint()
+                            val placeUiModel = PlaceUiModel(
+                                osmId = UUID.randomUUID().toString(),
+                                placeType = PlaceType.NODE,
+                                geoPoint = lastKnownGeoPoint,
+                                primaryText = LocationFormatter.format(lastKnownGeoPoint),
+                                secondaryText = R.string.place_details_my_location_text.toMessage(),
+                                iconRes = R.drawable.ic_place_type_node,
+                            )
+                            homeViewModel.loadPlace(placeUiModel)
+                        }
+                    }
+                    shouldShowLocationRationale() -> showLocationRationaleDialog()
+                    else -> permissionLauncher.launch(locationPermissions)
                 }
             },
             onPickLocationClick = {
                 clearSearchBarInput()
 
                 showSnackbar(
-                    binding.homeContainer,
+                    homeContainer,
                     R.string.place_finder_pick_location_message.toMessage(),
-                    R.drawable.ic_place_finder_pick_location_message
+                    R.drawable.ic_snackbar_place_finder_pick_location
                 )
 
                 homeMapView.addLongClickHandlerOverlay { geoPoint ->
@@ -563,7 +588,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeViewModel.errorMessage
                 .flowWithLifecycle(lifecycle)
                 .collect { errorMessage ->
-                    showSnackbar(homeContainer, errorMessage)
+                    showErrorSnackbar(homeContainer, errorMessage)
                 }
         }
         lifecycleScope.launch {
@@ -654,8 +679,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             placeFinderViewModel.placeFinderItems
                 .flowWithLifecycle(lifecycle)
                 .collect { placeFinderItems ->
-                    placeFinderItems?.let { items ->
-                        placeFinderPopup.initPlaceFinderItems(homeSearchBarPopupAnchor, items)
+                    if (placeFinderItems != null) {
+                        placeFinderPopup.initPlaceFinderItems(homeSearchBarPopupAnchor, placeFinderItems)
+                    } else {
+                        placeFinderPopup.clearPlaceFinderItems()
                     }
                 }
         }
@@ -684,6 +711,19 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             Theme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
                         }
                     )
+                }
+        }
+        lifecycleScope.launch {
+            permissionSharedViewModel.result
+                .flowWithLifecycle(lifecycle)
+                .collect { result ->
+                    if (PermissionResult.LOCATION_PERMISSION_NEEDED == result) {
+                        when {
+                            shouldShowLocationRationale() -> showLocationRationaleDialog()
+                            else -> permissionLauncher.launch(locationPermissions)
+                        }
+                    }
+                    permissionSharedViewModel.clearResult()
                 }
         }
     }

@@ -23,6 +23,7 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentRoutePlannerBinding
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.gone
+import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
 import hu.mostoha.mobile.android.huki.extensions.removeFragments
 import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setMessage
@@ -31,8 +32,8 @@ import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
-import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
@@ -41,7 +42,8 @@ import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
-import hu.mostoha.mobile.android.huki.util.ResultSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -53,8 +55,9 @@ class RoutePlannerFragment : Fragment() {
 
     private val routePlannerViewModel: RoutePlannerViewModel by activityViewModels()
     private val layersViewModel: LayersViewModel by activityViewModels()
-    private val insetSharedViewModel: ResultSharedViewModel<InsetResult> by activityViewModels()
     private val placeFinderViewModel: PlaceFinderViewModel by viewModels()
+    private val insetSharedViewModel: InsetSharedViewModel by activityViewModels()
+    private val permissionSharedViewModel: PermissionSharedViewModel by activityViewModels()
 
     private var _binding: FragmentRoutePlannerBinding? = null
     private val binding get() = _binding!!
@@ -123,6 +126,11 @@ class RoutePlannerFragment : Fragment() {
 
                 placeFinderViewModel.loadPlaces(text)
             },
+            onSearchTextDoneAction = { textInputEditText ->
+                textInputEditText.text?.clear()
+                textInputEditText.clearFocusAndHideKeyboard()
+                placeFinderViewModel.cancelSearch()
+            },
             onAddWaypointClicked = {
                 routePlannerViewModel.addEmptyWaypoint()
             },
@@ -189,17 +197,21 @@ class RoutePlannerFragment : Fragment() {
             onMyLocationClick = {
                 analyticsService.routePlannerMyLocationClicked()
 
-                val waypointInput = lastEditedWaypointInput?.editText ?: return@PlaceFinderPopup
-                val lastEditedWaypoint = lastEditedWaypointItem ?: return@PlaceFinderPopup
+                if (requireContext().isLocationPermissionGranted()) {
+                    val waypointInput = lastEditedWaypointInput?.editText ?: return@PlaceFinderPopup
+                    val lastEditedWaypoint = lastEditedWaypointItem ?: return@PlaceFinderPopup
 
-                waypointInput.clearFocusAndHideKeyboard()
-                placeFinderViewModel.cancelSearch()
+                    waypointInput.clearFocusAndHideKeyboard()
+                    placeFinderViewModel.cancelSearch()
 
-                routePlannerViewModel.updateWaypointWithMyLocation(
-                    lastEditedWaypoint,
-                    Message.Res(R.string.place_finder_my_location_button),
-                    requireContext().getString(R.string.place_finder_my_location_button)
-                )
+                    routePlannerViewModel.updateWaypointWithMyLocation(
+                        lastEditedWaypoint,
+                        Message.Res(R.string.place_finder_my_location_button),
+                        requireContext().getString(R.string.place_finder_my_location_button)
+                    )
+                } else {
+                    permissionSharedViewModel.updateResult(PermissionResult.LOCATION_PERMISSION_NEEDED)
+                }
             },
             onPickLocationClick = {
                 analyticsService.routePlannerPickLocationClicked()
@@ -212,7 +224,7 @@ class RoutePlannerFragment : Fragment() {
                 requireContext().showSnackbar(
                     requireView(),
                     R.string.place_finder_pick_location_message.toMessage(),
-                    R.drawable.ic_place_finder_pick_location_message
+                    R.drawable.ic_snackbar_place_finder_pick_location
                 )
 
                 routePlannerViewModel.startPickLocation()
@@ -298,10 +310,12 @@ class RoutePlannerFragment : Fragment() {
             placeFinderViewModel.placeFinderItems
                 .flowWithLifecycle(lifecycle)
                 .collect { placeFinderItems ->
-                    placeFinderItems?.let { items ->
+                    if (placeFinderItems != null) {
                         val parent = lastEditedWaypointInput?.parent as? View ?: return@collect
 
-                        placeFinderPopup.initPlaceFinderItems(parent, items)
+                        placeFinderPopup.initPlaceFinderItems(parent, placeFinderItems)
+                    } else {
+                        placeFinderPopup.clearPlaceFinderItems()
                     }
                 }
         }

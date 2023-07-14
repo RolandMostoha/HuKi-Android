@@ -51,6 +51,10 @@ fun Context.showSnackbar(view: View, message: Message, @DrawableRes icon: Int? =
     snackbar.show()
 }
 
+fun Context.showErrorSnackbar(view: View, message: Message) {
+    showSnackbar(view, message, R.drawable.ic_snackbar_error)
+}
+
 fun Context.colorStateList(@ColorRes res: Int) = ContextCompat.getColorStateList(this, res)
 
 fun Context.registerReceiver(

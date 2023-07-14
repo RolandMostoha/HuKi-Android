@@ -18,6 +18,7 @@
 
     <string name="place_finder_empty_message">Nincs találat</string>
     <string name="place_finder_my_location_button">Pozícióm</string>
+    <string name="place_finder_my_location_error_null_location">Nem találtunk aktuális pozíciót. Kérlek javíts a GPS jelerősségen.</string>
     <string name="place_finder_pick_location_button">Térképen</string>
     <string name="place_finder_pick_location_message">Hosszú klikkel jelöld ki a térképen a pozíciót!</string>
 
@@ -59,7 +60,7 @@
     <string name="layers_gpx_import_button_title">Import GPX</string>
 
     <string name="route_planner_waypoint_hint">Helység vagy pozíció</string>
-    <string name="route_planner_done_button">Kész</string>
+    <string name="route_planner_done_button">Mentés</string>
     <string name="route_planner_general_error_message">Hiba történt. Kérlek frissítsd a terved!</string>
     <string name="route_planner_error_file_save_unsuccsessful">Hiba történt a GPX fájl mentése közben!</string>
     <string name="route_planner_accessibility_add_waypoint">Új állomás hozzáadása</string>

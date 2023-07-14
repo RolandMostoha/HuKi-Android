@@ -55,7 +55,7 @@ class PlaceFinderUiModelMapperTest {
         val placeFinderItems = mapper.mapPlaceFinderItems(places)
 
         assertThat(placeFinderItems).isEqualTo(
-            listOf(
+            listOf(PlaceFinderItem.StaticActions).plus(
                 PlaceFinderItem.Place(
                     PlaceUiModel(
                         osmId = DEFAULT_PLACE_WAY.osmId,
@@ -78,7 +78,7 @@ class PlaceFinderUiModelMapperTest {
         val placeFinderItems = mapper.mapPlaceFinderItems(places)
 
         assertThat(placeFinderItems).isEqualTo(
-            listOf(
+            listOf(PlaceFinderItem.StaticActions).plus(
                 PlaceFinderItem.Place(
                     PlaceUiModel(
                         osmId = DEFAULT_PLACE_WAY.osmId,

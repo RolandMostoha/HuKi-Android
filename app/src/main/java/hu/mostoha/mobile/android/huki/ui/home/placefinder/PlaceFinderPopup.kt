@@ -70,4 +70,9 @@ class PlaceFinderPopup(
         }
     }
 
+    fun clearPlaceFinderItems() {
+        dismiss()
+        placeFinderAdapter.submitList(emptyList())
+    }
+
 }

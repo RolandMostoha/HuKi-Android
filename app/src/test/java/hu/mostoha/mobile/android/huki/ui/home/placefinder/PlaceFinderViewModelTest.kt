@@ -50,11 +50,8 @@ class PlaceFinderViewModelTest {
     @Before
     fun setUp() {
         coEvery { myLocationProvider.getLastKnownLocationCoroutine() } returns null
-        coEvery { placeFinderUiModelMapper.getStaticActions(true) } returns listOf(PlaceFinderItem.StaticActions)
-        coEvery { placeFinderUiModelMapper.getStaticActions(false) } returns emptyList()
 
         viewModel = PlaceFinderViewModel(
-            mainCoroutineRule.testDispatcher,
             TestAppConfiguration(),
             placesInteractor,
             myLocationProvider,
@@ -75,7 +72,7 @@ class PlaceFinderViewModelTest {
                 viewModel.loadPlaces(searchText)
 
                 assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.Loading))
+                assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.StaticActions, PlaceFinderItem.Loading))
                 assertThat(awaitItem()).isEqualTo(placeFinderItems)
             }
         }
@@ -126,7 +123,7 @@ class PlaceFinderViewModelTest {
             viewModel.placeFinderItems.test {
                 viewModel.loadPlaces(searchText)
                 assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.Loading))
+                assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.StaticActions, PlaceFinderItem.Loading))
                 assertThat(awaitItem()).isEqualTo(placeFinderItems)
 
                 viewModel.cancelSearch()
@@ -152,7 +149,7 @@ class PlaceFinderViewModelTest {
                 viewModel.loadPlaces("")
 
                 assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.Loading))
+                assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.StaticActions, PlaceFinderItem.Loading))
                 assertThat(awaitItem()).isEqualTo(placeFinderItems)
             }
         }

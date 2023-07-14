@@ -8,6 +8,7 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.Tap
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
@@ -34,6 +35,10 @@ fun @receiver:IdRes Int.isNotDisplayed() {
 
 fun @receiver:IdRes Int.isNotCompletelyDisplayed() {
     onView(withId(this)).check(matches(not(isCompletelyDisplayed())))
+}
+
+fun @receiver:IdRes Int.withTextDisplayed(text: String) {
+    onView(withId(this)).check(matches(withText(text)))
 }
 
 fun @receiver:IdRes Int.typeText(text: String) {
@@ -74,6 +79,23 @@ fun @receiver:StringRes Int.isPopupTextNotExists() {
     onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
         .check(ViewAssertions.doesNotExist())
+}
+
+fun String.isPopupTextNotDisplayed() {
+    onView(withText(this))
+        .inRoot(RootMatchers.isPlatformPopup())
+        .check(matches(not(isDisplayed())))
+}
+
+fun String.isPopupTextNotExists() {
+    onView(withText(this))
+        .inRoot(RootMatchers.isPlatformPopup())
+        .check(ViewAssertions.doesNotExist())
+}
+
+fun @receiver:StringRes Int.isSnackbarMessageDisplayed() {
+    onView(withId(com.google.android.material.R.id.snackbar_text))
+        .check(matches(withText(this)))
 }
 
 fun @receiver:IdRes Int.click() {
@@ -121,6 +143,10 @@ fun String.clickWithTextInPopup() {
     onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
         .perform(ViewActions.click())
+}
+
+fun @receiver:IdRes Int.clickImeActionButton() {
+    onView(withId(this)).perform(pressImeActionButton())
 }
 
 fun @receiver:StringRes Int.isDisplayedWithContentDescription() {

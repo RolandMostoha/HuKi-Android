@@ -2,9 +2,11 @@ package hu.mostoha.mobile.android.huki.ui.home.routeplanner
 
 import android.content.Context
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ItemRoutePlannerWaypointBinding
@@ -18,6 +20,7 @@ import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
 class WaypointAdapter(
     private val onSearchTextFocused: (TextInputLayout, WaypointItem) -> Unit,
     private val onSearchTextChanged: (TextInputLayout, WaypointItem, String) -> Unit,
+    private val onSearchTextDoneAction: (TextInputEditText) -> Unit,
     private val onAddWaypointClicked: () -> Unit,
     private val onReturnClicked: (WaypointItem) -> Unit,
     private val onRemoveWaypointClicked: (WaypointItem) -> Unit,
@@ -82,6 +85,14 @@ class WaypointAdapter(
 
                 if (routePlannerWaypointInput.hasFocus() && text.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
                     onSearchTextChanged.invoke(routePlannerWaypointInputLayout, wayPointItem, text)
+                }
+            }
+            routePlannerWaypointInput.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    onSearchTextDoneAction.invoke(routePlannerWaypointInput)
+                    true
+                } else {
+                    false
                 }
             }
             routePlannerWaypointInputLayout.setEndIconOnClickListener {}

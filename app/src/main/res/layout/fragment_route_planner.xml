@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_small"
         android:layout_marginTop="@dimen/space_large"
-        android:drawableStart="@drawable/ic_search_bar_error"
+        android:drawableStart="@drawable/ic_route_planner_error"
         android:gravity="start|center_vertical"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"

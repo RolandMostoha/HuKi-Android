@@ -11,6 +11,8 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
+import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import org.junit.Before
 import org.junit.Rule
@@ -40,6 +42,18 @@ class MapWithoutLocationUiTest {
         launchScenario<HomeActivity> {
             R.id.homeMapView.hasNoOverlay<MyLocationOverlay>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
+        }
+    }
+
+    @Test
+    fun givenNoLocationPermission_whenClickInPlaceFinder_thenStaticActionsDisplay() {
+        launchScenario<HomeActivity> {
+            val searchText = " "
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            R.string.place_finder_my_location_button.isPopupTextDisplayed()
+            R.string.place_finder_pick_location_button.isPopupTextDisplayed()
         }
     }
 

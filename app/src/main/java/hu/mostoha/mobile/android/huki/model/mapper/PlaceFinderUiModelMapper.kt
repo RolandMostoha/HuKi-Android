@@ -16,14 +16,6 @@ import javax.inject.Inject
 
 class PlaceFinderUiModelMapper @Inject constructor() {
 
-    fun getStaticActions(hasLastKnownLocation: Boolean): List<PlaceFinderItem.StaticActions> {
-        return if (hasLastKnownLocation) {
-            listOf(PlaceFinderItem.StaticActions)
-        } else {
-            emptyList()
-        }
-    }
-
     fun mapPlaceFinderItems(places: List<Place>, location: Location? = null): List<PlaceFinderItem> {
         return if (places.isEmpty()) {
             listOf(
@@ -35,11 +27,7 @@ class PlaceFinderUiModelMapper @Inject constructor() {
         } else {
             val placeList = mapPlaces(places, location).map { placeUiModel -> PlaceFinderItem.Place(placeUiModel) }
 
-            if (location != null) {
-                getStaticActions(true).plus(placeList)
-            } else {
-                placeList
-            }
+            listOf(PlaceFinderItem.StaticActions).plus(placeList)
         }
     }
 

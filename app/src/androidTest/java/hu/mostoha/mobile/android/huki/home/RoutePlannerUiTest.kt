@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.home
 
+import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -15,6 +16,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.rule.GrantPermissionRule
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -65,6 +67,12 @@ class RoutePlannerUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration

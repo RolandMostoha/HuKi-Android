@@ -19,10 +19,9 @@ import hu.mostoha.mobile.android.huki.databinding.FragmentGpxHistoryBinding
 import hu.mostoha.mobile.android.huki.extensions.removeFragments
 import hu.mostoha.mobile.android.huki.extensions.shareFile
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
-import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
-import hu.mostoha.mobile.android.huki.util.ResultSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,7 +33,7 @@ class GpxHistoryFragment : Fragment() {
 
     private val viewModel: GpxHistoryViewModel by viewModels()
     private val layersViewModel: LayersViewModel by activityViewModels()
-    private val insetSharedViewModel: ResultSharedViewModel<InsetResult> by activityViewModels()
+    private val insetSharedViewModel: InsetSharedViewModel by activityViewModels()
 
     private var _binding: FragmentGpxHistoryBinding? = null
     private val binding get() = _binding!!

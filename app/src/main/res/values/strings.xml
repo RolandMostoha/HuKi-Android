@@ -20,6 +20,7 @@
 
     <string name="place_finder_empty_message">No results found</string>
     <string name="place_finder_my_location_button">My Location</string>
+    <string name="place_finder_my_location_error_null_location">No last known location found. Please fix your GPS signal.</string>
     <string name="place_finder_pick_location_button">Pick location</string>
     <string name="place_finder_pick_location_message">Pick the location with long click!</string>
 
@@ -61,7 +62,7 @@
     <string name="layers_gpx_import_button_title">Import GPX</string>
 
     <string name="route_planner_waypoint_hint">Place or location</string>
-    <string name="route_planner_done_button">Done</string>
+    <string name="route_planner_done_button">Save</string>
     <string name="route_planner_general_error_message">Error occurred. Please update your plan!</string>
     <string name="route_planner_error_file_save_unsuccsessful">Error occurred during saving your plan to GPX file!</string>
     <string name="route_planner_powered_by" translatable="false">Powered by</string>

@@ -38,9 +38,12 @@ import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
 import hu.mostoha.mobile.android.huki.util.distanceBetween
+import hu.mostoha.mobile.android.huki.util.espresso.clickImeActionButton
+import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
-import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextNotExists
+import hu.mostoha.mobile.android.huki.util.espresso.isSnackbarMessageDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
+import hu.mostoha.mobile.android.huki.util.espresso.withTextDisplayed
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -119,6 +122,23 @@ class PlaceFinderUiTest {
     }
 
     @Test
+    fun givenSearchText_whenClickDoneImeAction_thenInputIsCleared() {
+        answerTestPlaces()
+
+        launchScenario<HomeActivity> {
+            val searchText = "Mecsek"
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
+            DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
+
+            R.id.homeSearchBarInput.clickImeActionButton()
+
+            R.id.homeSearchBarInput.withTextDisplayed("")
+        }
+    }
+
+    @Test
     fun givenPlacesWithLocation_whenTypingInSearchBar_thenPlacesSearchResultDisplaysWithDistance() {
         answerTestPlaces()
 
@@ -142,17 +162,21 @@ class PlaceFinderUiTest {
     }
 
     @Test
-    fun givenNullMyLocation_whenClickInPlaceFinder_thenStaticActionsDoesNotDisplay() {
+    fun givenNullMyLocation_whenClickMyLocationButton_thenSnackbarErrorMessageDisplays() {
         answerTestPlaces()
         coEvery { asyncMyLocationProvider.getLastKnownLocationCoroutine() } returns null
 
         launchScenario<HomeActivity> {
-            val searchText = "Mecsek"
+            val searchText = " "
 
             R.id.homeSearchBarInput.typeText(searchText)
 
-            R.string.place_finder_my_location_button.isPopupTextNotExists()
-            R.string.place_finder_pick_location_button.isPopupTextNotExists()
+            R.string.place_finder_my_location_button.isPopupTextDisplayed()
+            R.string.place_finder_pick_location_button.isPopupTextDisplayed()
+
+            R.id.placeFinderMyLocationButton.clickInPopup()
+
+            R.string.place_finder_my_location_error_null_location.isSnackbarMessageDisplayed()
         }
     }
 

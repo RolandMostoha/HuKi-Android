@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.configuration.AppConfiguration
-import hu.mostoha.mobile.android.huki.di.module.DefaultDispatcher
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
@@ -12,7 +11,6 @@ import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceFinderUiModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +26,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlaceFinderViewModel @Inject constructor(
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     private val appConfiguration: AppConfiguration,
     private val placesInteractor: PlacesInteractor,
     private val myLocationProvider: AsyncMyLocationProvider,
@@ -42,12 +39,7 @@ class PlaceFinderViewModel @Inject constructor(
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     fun initStaticActions() {
-        viewModelScope.launch(defaultDispatcher) {
-            val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation()
-            val staticActions = placeFinderUiModelMapper.getStaticActions(lastKnownLocation != null)
-
-            _placeFinderItems.value = staticActions
-        }
+        _placeFinderItems.value = listOf(PlaceFinderItem.StaticActions)
     }
 
     fun loadPlaces(searchText: String) {
@@ -68,7 +60,7 @@ class PlaceFinderViewModel @Inject constructor(
                     }
                 }
                 .onStart {
-                    val staticActions = placeFinderUiModelMapper.getStaticActions(lastKnownLocation != null)
+                    val staticActions = listOf(PlaceFinderItem.StaticActions)
 
                     _placeFinderItems.emit(staticActions.plus(PlaceFinderItem.Loading))
 
