@@ -50,7 +50,7 @@ fun List<Location>.calculateCenter(): Location {
 
 private const val ZOOM_LEVEL_MAP_SCALE = 591_657_550
 private const val ZOOM_LEVEL_MAP_OFFSET = 4
-private const val ZOOM_LEVEL_MAX = 20
+private const val ZOOM_LEVEL_MAX = 16
 
 /**
  * Algorithm for reasonable zoom level by accuracy: https://gis.stackexchange.com/a/7443
