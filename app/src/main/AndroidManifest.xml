@@ -135,6 +135,10 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
+        <meta-data
+            android:name="firebase_analytics_collection_deactivated"
+            android:value="${analyticsDisabled}" />
+
     </application>
 
     <queries>

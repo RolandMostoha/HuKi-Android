@@ -32,8 +32,9 @@ android {
         debug {
             applicationIdSuffix '.debug'
             manifestPlaceholders = [
-                    appNameHuki: "@string/huki_app_name_debug",
-                    appIcon    : "@mipmap/ic_launcher_debug"
+                    appNameHuki      : "@string/huki_app_name_debug",
+                    appIcon          : "@mipmap/ic_launcher_debug",
+                    analyticsDisabled: true,
             ]
             archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
             firebaseCrashlytics {
@@ -42,8 +43,9 @@ android {
         }
         release {
             manifestPlaceholders = [
-                    appNameHuki: "@string/huki_app_name",
-                    appIcon    : "@mipmap/ic_launcher"
+                    appNameHuki      : "@string/huki_app_name",
+                    appIcon          : "@mipmap/ic_launcher",
+                    analyticsDisabled: false,
             ]
             archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
             minifyEnabled true
