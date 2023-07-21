@@ -88,6 +88,7 @@ jobs:
           --device model=Pixel2.arm,version=28,locale=hu,orientation=portrait
           --use-orchestrator
           --environment-variables clearPackageData=true
+          --num-flaky-test-attempts=2
 
   release:
     needs: [ lint, unit_tests, android_tests ]
