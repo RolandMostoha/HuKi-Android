@@ -1,0 +1,2951 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gpx
+ version="1.0"
+ creator="EasyGPS 1.1.6b1 - http://www.topografix.com"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="http://www.topografix.com/GPX/1/0"
+ xmlns:topografix="http://www.topografix.com/GPX/Private/TopoGrafix/0/1"
+ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd http://www.topografix.com/GPX/Private/TopoGrafix/0/1 http://www.topografix.com/GPX/Private/TopoGrafix/0/1/topografix.xsd">
+<time>2023-07-21T07:01:33Z</time>
+<bounds minlat="45" minlon="16" maxlat="49" maxlon="23"/>
+<wpt lat="47.597133333333" lon="19.084683333333">
+<ele>111</ele>
+<time>2023-02-19T06:00:14Z</time>
+<name>GCSZIL</name>
+<cmt>4948 - 2023.02.19 06:00</cmt>
+<desc><![CDATA[Szilas-patak zarolada:2.0/2.0,H,R230219,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=6102</url>
+<urlname><![CDATA[GCSZIL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5572" lon="19.139416666667">
+<ele>154</ele>
+<time>2023-02-10T10:10:15Z</time>
+<name>GCNEVE</name>
+<cmt>4947 - 2023.02.10 10:10</cmt>
+<desc><![CDATA[Nevesincs-to:1.5/1.5,H,R230210,U230713]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5779</url>
+<urlname><![CDATA[GCNEVE]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.483183333333" lon="19.067333333333">
+<ele>103</ele>
+<time>2022-10-11T10:19:30Z</time>
+<name>GCFTC</name>
+<cmt>4934 - 2022.10.11 10:19</cmt>
+<desc><![CDATA[A Ferencvarosi Torna Clu:2.5/1.5,M,R221011,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=6309</url>
+<urlname><![CDATA[GCFTC]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4799" lon="19.145383333333">
+<ele>148</ele>
+<time>2022-10-07T08:07:53Z</time>
+<name>GCOHGY</name>
+<cmt>4931 - 2022.10.07 08:07</cmt>
+<desc><![CDATA[Ohegy-park:2.0/1.0,H,R221007,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=6314</url>
+<urlname><![CDATA[GCOHGY]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.40735" lon="19.012783333333">
+<ele>101</ele>
+<time>2022-06-08T10:28:29Z</time>
+<name>GCROKE</name>
+<cmt>4921 - 2022.06.08 10:28</cmt>
+<desc><![CDATA[Budatetenyi Rozsakert:2.0/2.0,H,R220608,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=6196</url>
+<urlname><![CDATA[GCROKE]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.499866666667" lon="19.051083333333">
+<ele>110</ele>
+<time>2022-02-06T10:04:23Z</time>
+<name>GCRELM</name>
+<cmt>4897 - 2022.02.06 10:04</cmt>
+<desc><![CDATA[Retro Elmenykozpont:2.0/1.5,H,R220206,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=6257</url>
+<urlname><![CDATA[GCRELM]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.58245" lon="19.10675">
+<ele>103</ele>
+<time>2021-08-06T19:52:49Z</time>
+<name>GCSPUJ</name>
+<cmt>4850 - 2021.08.06 19:52</cmt>
+<desc><![CDATA[Sportos Ujpest: Szilas-p:3.0/1.5,M,R210806,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5812</url>
+<urlname><![CDATA[GCSPUJ]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.485566666667" lon="19.112466666667">
+<ele>120</ele>
+<time>2021-07-17T14:23:49Z</time>
+<name>GCKozM</name>
+<cmt>4830 - 2021.07.17 14:23</cmt>
+<desc><![CDATA[Kozlekedesi Muzeum az Es:1.0/1.0,E,R210717,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=6141</url>
+<urlname><![CDATA[GCKozM]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5121" lon="19.159816666667">
+<ele>127</ele>
+<time>2021-05-29T08:00:54Z</time>
+<name>GCXX05</name>
+<cmt>4771 - 2021.05.29 08:00</cmt>
+<desc><![CDATA[20 eves a geocaching.hu :2.5/1.5,H,R210529,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=6035</url>
+<urlname><![CDATA[GCXX05]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.527716666667" lon="19.024733333333">
+<ele>210</ele>
+<time>2021-05-21T09:59:42Z</time>
+<name>GCSZBG</name>
+<cmt>4764 - 2021.05.21 09:59</cmt>
+<desc><![CDATA[Szemlo-hegyi-barlang es :3.0/2.0,H,R210521,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5855</url>
+<urlname><![CDATA[GCSZBG]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.461116666667" lon="19.07155">
+<ele>109</ele>
+<time>2021-04-25T09:11:23Z</time>
+<name>GCBATL</name>
+<cmt>4752 - 2021.04.25 09:11</cmt>
+<desc><![CDATA[Budapesti Atletikai Stad:1.5/2.0,M,R210425,U230708]]></desc>
+<url>https://geocaching.hu/caches.geo?id=6079</url>
+<urlname><![CDATA[GCBATL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4714" lon="19.24505">
+<ele>160</ele>
+<time>2021-04-04T09:01:55Z</time>
+<name>GCRKSK</name>
+<cmt>4742 - 2021.04.04 09:01</cmt>
+<desc><![CDATA[Rakoshegy kulturalis ert:2.0/1.5,M,R210404,U230706]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5935</url>
+<urlname><![CDATA[GCRKSK]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.481066666667" lon="19.010866666667">
+<ele>227</ele>
+<time>2021-03-28T10:21:53Z</time>
+<name>GCSASL</name>
+<cmt>4740 - 2021.03.28 10:21</cmt>
+<desc><![CDATA[Sas-hegy - Menedek a bet:1.5/1.5,M,R210328,U230703]]></desc>
+<url>https://geocaching.hu/caches.geo?id=6022</url>
+<urlname><![CDATA[GCSASL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.511916666667" lon="19.168383333333">
+<ele>151</ele>
+<time>2020-12-24T08:00:26Z</time>
+<name>GCALAK</name>
+<cmt>4720 - 2020.12.24 08:00</cmt>
+<desc><![CDATA[Szemafor gyujtemeny - va:2.0/1.0,H,R201224,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5961</url>
+<urlname><![CDATA[GCALAK]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.567883333333" lon="19.09635">
+<ele>100</ele>
+<time>2020-10-10T08:52:59Z</time>
+<name>GC105</name>
+<cmt>4703 - 2020.10.10 08:52</cmt>
+<desc><![CDATA[Ujpesti Tuzoltoskanzen:2.0/1.0,H,R201010,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5926</url>
+<urlname><![CDATA[GC105]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.533316666667" lon="19.202366666667">
+<ele>152</ele>
+<time>2020-10-09T05:19:06Z</time>
+<name>GCARP</name>
+<cmt>4700 - 2020.10.09 05:19</cmt>
+<desc><![CDATA[Arpadfoldi seta:2.0/2.0,M,R201009,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5933</url>
+<urlname><![CDATA[GCARP]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.510433333333" lon="19.19485">
+<ele>145</ele>
+<time>2020-09-28T11:08:07Z</time>
+<name>GCMTYS</name>
+<cmt>4695 - 2020.09.28 11:08</cmt>
+<desc><![CDATA[Matyasfoldi villanegyed:3.0/2.0,M,R200928,U230702]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5920</url>
+<urlname><![CDATA[GCMTYS]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.459316666667" lon="19.1929">
+<ele>145</ele>
+<time>2020-09-27T23:06:29Z</time>
+<name>GChako</name>
+<cmt>4694 - 2020.09.27 23:06</cmt>
+<desc><![CDATA[Hatarkovek az erdo szele:3.5/1.0,H,R200927,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5928</url>
+<urlname><![CDATA[GChako]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.493416666667" lon="19.03265">
+<ele>158</ele>
+<time>2020-09-12T22:00:00Z</time>
+<name>GCPOMP</name>
+<cmt>4691 - 2020.09.12 22:00</cmt>
+<desc><![CDATA[Csukas Istvan - A nemzet:2.0/1.0,M,R200912,U221230]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5899</url>
+<urlname><![CDATA[GCPOMP]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.463666666667" lon="19.168966666667">
+<ele>139</ele>
+<time>2020-09-09T22:35:27Z</time>
+<name>GCDG1</name>
+<cmt>4690 - 2020.09.09 22:35</cmt>
+<desc><![CDATA[Sportliget - Frizbi golf:2.0/1.5,M,R200909,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5910</url>
+<urlname><![CDATA[GCDG1]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.44055" lon="19.19505">
+<ele>130</ele>
+<time>2020-08-19T23:19:00Z</time>
+<name>GCBURM</name>
+<cmt>4686 - 2020.08.19 23:19</cmt>
+<desc><![CDATA[Nagy-Burma vasut:3.5/2.0,M,R200819,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5901</url>
+<urlname><![CDATA[GCBURM]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.437166666667" lon="19.210233333333">
+<ele>120</ele>
+<time>2020-07-29T19:52:00Z</time>
+<name>GCMEKT</name>
+<cmt>4681 - 2020.07.29 19:52</cmt>
+<desc><![CDATA[Magyarorszag elso (es eg:2.5/1.0,H,R200729,U230717]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5897</url>
+<urlname><![CDATA[GCMEKT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.489366666667" lon="18.981433333333">
+<ele>423</ele>
+<time>2020-07-05T19:35:43Z</time>
+<name>GCADOT</name>
+<cmt>4664 - 2020.07.05 19:35</cmt>
+<desc><![CDATA[Szechenyi-hegyi adotoron:2.0/2.0,H,R200705,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5887</url>
+<urlname><![CDATA[GCADOT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.390516666667" lon="19.010016666667">
+<ele>98</ele>
+<time>2020-06-02T20:46:02Z</time>
+<name>GCHOD</name>
+<cmt>4645 - 2020.06.02 20:46</cmt>
+<desc><![CDATA[Nagytetenyi hodok:2.0/1.5,H,R200602,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5863</url>
+<urlname><![CDATA[GCHOD]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4666" lon="19.209333333333">
+<ele>151</ele>
+<time>2020-02-12T10:41:52Z</time>
+<name>GCKEER</name>
+<cmt>4615 - 2020.02.12 10:41</cmt>
+<desc><![CDATA[Kereszturi erdo:2.5/2.0,H,R200212,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5793</url>
+<urlname><![CDATA[GCKEER]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.514983333333" lon="19.1019">
+<ele>104</ele>
+<time>2020-02-10T05:16:04Z</time>
+<name>GCUSA</name>
+<cmt>4614 - 2020.02.10 05:16</cmt>
+<desc><![CDATA[Itt van Amerika!:2.0/1.0,M,R200210,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5787</url>
+<urlname><![CDATA[GCUSA]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.564466666667" lon="19.133716666667">
+<ele>106</ele>
+<time>2019-12-24T08:00:27Z</time>
+<name>GCLIMA</name>
+<cmt>4599 - 2019.12.24 08:00</cmt>
+<desc><![CDATA[Liva-malom:2.0/1.5,H,R191224,U230710]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5770</url>
+<urlname><![CDATA[GCLIMA]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.556216666667" lon="18.974">
+<ele>283</ele>
+<time>2019-07-24T08:05:23Z</time>
+<name>GCJGTS</name>
+<cmt>4568 - 2019.07.24 08:05</cmt>
+<desc><![CDATA[Jane Goodall tanosveny:2.0/2.0,M,R190724,U230706]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5704</url>
+<urlname><![CDATA[GCJGTS]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.491" lon="18.940516666667">
+<ele>286</ele>
+<time>2019-07-04T10:41:58Z</time>
+<name>GCBUK1</name>
+<cmt>4560 - 2019.07.04 10:41</cmt>
+<desc><![CDATA[Budai kirandulasok 1.:1.5/3.5,M,R190704,U230620]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5696</url>
+<urlname><![CDATA[GCBUK1]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.479533333333" lon="19.031166666667">
+<ele>150</ele>
+<time>2019-05-22T09:44:32Z</time>
+<name>GCelet</name>
+<cmt>4553 - 2019.05.22 09:44</cmt>
+<desc><![CDATA[Veradas:5.0/1.0,H,R190522,U230629]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5679</url>
+<urlname><![CDATA[GCelet]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.561333333333" lon="19.053216666667">
+<ele>104</ele>
+<time>2018-12-30T18:07:20Z</time>
+<name>GCODUK</name>
+<cmt>4529 - 2018.12.30 18:07</cmt>
+<desc><![CDATA[Graphisoft Park odui:2.0/2.0,H,R181230,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5595</url>
+<urlname><![CDATA[GCODUK]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.428366666667" lon="19.042766666667">
+<ele>108</ele>
+<time>2018-06-26T12:02:18Z</time>
+<name>GCSZMO</name>
+<cmt>4458 - 2018.06.26 12:02</cmt>
+<desc><![CDATA[Memento Szmolenszkert:1.5/1.5,H,R180626,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5540</url>
+<urlname><![CDATA[GCSZMO]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.50395" lon="19.044933333333">
+<ele>120</ele>
+<time>2018-05-23T14:57:59Z</time>
+<name>GCCIPO</name>
+<cmt>4453 - 2018.05.23 14:57</cmt>
+<desc><![CDATA[Cipok a Duna-parton:2.0/1.0,V,R180523,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5509</url>
+<urlname><![CDATA[GCCIPO]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.494966666667" lon="18.945683333333">
+<ele>344</ele>
+<time>2018-04-26T15:54:57Z</time>
+<name>GCBEML</name>
+<cmt>4442 - 2018.04.26 15:54</cmt>
+<desc><![CDATA[Budakeszi emlekhely:2.0/2.0,H,R180426,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5477</url>
+<urlname><![CDATA[GCBEML]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.534983333333" lon="19.03145">
+<ele>140</ele>
+<time>2018-03-26T20:44:16Z</time>
+<name>GCKisC</name>
+<cmt>4432 - 2018.03.26 20:44</cmt>
+<desc><![CDATA[Kiscelli kalvaria:2.0/2.0,H,R180326,U230717]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5438</url>
+<urlname><![CDATA[GCKisC]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.542866666667" lon="18.939533333333">
+<ele>388</ele>
+<time>2018-03-10T17:26:21Z</time>
+<name>GCFF</name>
+<cmt>4422 - 2018.03.10 17:26</cmt>
+<desc><![CDATA[Fekete-fej:2.0/3.0,H,R180310,U230711]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5368</url>
+<urlname><![CDATA[GCFF]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.52815" lon="19.191833333333">
+<ele>140</ele>
+<time>2018-03-09T19:44:19Z</time>
+<name>GCKPUT</name>
+<cmt>4369 - 2018.03.09 19:44</cmt>
+<desc><![CDATA[Szilas menti kerekparut:2.0/1.5,M,R180309,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5333</url>
+<urlname><![CDATA[GCKPUT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4859" lon="19.031133333333">
+<ele>148</ele>
+<time>2018-03-06T10:02:16Z</time>
+<name>GCVNEZ</name>
+<cmt>4367 - 2018.03.06 10:02</cmt>
+<desc><![CDATA[Vonatnezes kilatassal:2.0/1.0,H,R180306,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5452</url>
+<urlname><![CDATA[GCVNEZ]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4383" lon="19.08915">
+<ele>100</ele>
+<time>2018-02-07T16:56:09Z</time>
+<name>GCRSD</name>
+<cmt>4358 - 2018.02.07 16:56</cmt>
+<desc><![CDATA[Duna-parti seta Erzsebet:2.0/2.0,M,R180207,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5383</url>
+<urlname><![CDATA[GCRSD]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.51045" lon="19.046933333333">
+<ele>100</ele>
+<time>2018-01-11T21:30:57Z</time>
+<name>GCOP</name>
+<cmt>4348 - 2018.01.11 21:30</cmt>
+<desc><![CDATA[Olimpia park:2.0/1.0,H,R180111,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5384</url>
+<urlname><![CDATA[GCOP]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5176" lon="19.167">
+<ele>165</ele>
+<time>2017-12-23T14:10:13Z</time>
+<name>GCskil</name>
+<cmt>4340 - 2017.12.23 14:10</cmt>
+<desc><![CDATA[Sashalmi kilato:1.0/1.0,H,R171223,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5347</url>
+<urlname><![CDATA[GCskil]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.52405" lon="19.2312">
+<ele>214</ele>
+<time>2017-12-15T06:52:42Z</time>
+<name>GCCTET</name>
+<cmt>4335 - 2017.12.15 06:52</cmt>
+<desc><![CDATA[Cinkotai Evangelikus tem:2.0/2.0,H,R171215,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5359</url>
+<urlname><![CDATA[GCCTET]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.573166666667" lon="18.9761">
+<ele>377</ele>
+<time>2017-11-26T10:02:59Z</time>
+<name>GCTHKI</name>
+<cmt>4332 - 2017.11.26 10:02</cmt>
+<desc><![CDATA[Tok-hegyi kilatasok:2.5/2.5,M,R171126,U230705]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5348</url>
+<urlname><![CDATA[GCTHKI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.488833333333" lon="19.05905">
+<ele>130</ele>
+<time>2017-11-19T16:28:25Z</time>
+<name>GCPFAL</name>
+<cmt>4330 - 2017.11.19 16:28</cmt>
+<desc><![CDATA[A pesti varosfal:2.5/1.0,M,R171119,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5330</url>
+<urlname><![CDATA[GCPFAL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.51155" lon="18.974583333333">
+<ele>269</ele>
+<time>2017-10-09T18:51:46Z</time>
+<name>GC4FOR</name>
+<cmt>4319 - 2017.10.09 18:51</cmt>
+<desc><![CDATA[Budai negy forras seta:2.5/1.5,M,R171009,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5325</url>
+<urlname><![CDATA[GC4FOR]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.496583333333" lon="19.072333333333">
+<ele>112</ele>
+<time>2017-09-16T20:42:22Z</time>
+<name>GCBLVT</name>
+<cmt>4311 - 2017.09.16 20:42</cmt>
+<desc><![CDATA[Viztorony a Belvarosban:2.5/1.0,H,R170916,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5275</url>
+<urlname><![CDATA[GCBLVT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.490483333333" lon="19.192216666667">
+<ele>125</ele>
+<time>2017-07-28T12:48:37Z</time>
+<name>GCFRTS</name>
+<cmt>4296 - 2017.07.28 12:48</cmt>
+<desc><![CDATA[Felsorakosi-retek tanosv:2.0/2.0,M,R170728,U230702]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5243</url>
+<urlname><![CDATA[GCFRTS]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5313" lon="19.050916666667">
+<ele>106</ele>
+<time>2017-06-13T19:38:21Z</time>
+<name>GCMszv</name>
+<cmt>4276 - 2017.06.13 19:38</cmt>
+<desc><![CDATA[Margitszigeti viztorony:2.0/1.5,H,R170613,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5170</url>
+<urlname><![CDATA[GCMszv]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.46935" lon="19.088833333333">
+<ele>113</ele>
+<time>2017-04-23T19:34:40Z</time>
+<name>GCMRE</name>
+<cmt>4259 - 2017.04.23 19:34</cmt>
+<desc><![CDATA[Malenkij robot-emlekhely:1.5/1.0,H,R170423,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5207</url>
+<urlname><![CDATA[GCMRE]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.51475" lon="19.054283333333">
+<ele>113</ele>
+<time>2016-12-11T12:45:45Z</time>
+<name>GCFlip</name>
+<cmt>4222 - 2016.12.11 12:45</cmt>
+<desc><![CDATA[Flippermuzeum:1.0/1.0,H,R161211,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5148</url>
+<urlname><![CDATA[GCFlip]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.524483333333" lon="18.9687">
+<ele>291</ele>
+<time>2016-10-09T10:08:23Z</time>
+<name>GCKaha</name>
+<cmt>4209 - 2016.10.09 10:08</cmt>
+<desc><![CDATA[Kapolnatol a Ferenc-halo:2.0/2.0,M,R161009,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5120</url>
+<urlname><![CDATA[GCKaha]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.468783333333" lon="19.092983333333">
+<ele>134</ele>
+<time>2016-10-05T12:34:07Z</time>
+<name>GCFC</name>
+<cmt>4207 - 2016.10.05 12:34</cmt>
+<desc><![CDATA[Ferencvaros - az orszag :2.0/1.5,V,R161005,U230523]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3696</url>
+<urlname><![CDATA[GCFC]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.439883333333" lon="19.187116666667">
+<ele>132</ele>
+<time>2016-07-04T16:17:18Z</time>
+<name>GCSzLo</name>
+<cmt>4181 - 2016.07.04 16:17</cmt>
+<desc><![CDATA[A pusztaszentlorinci Sze:1.0/1.0,H,R160704,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5083</url>
+<urlname><![CDATA[GCSzLo]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.480516666667" lon="19.24785">
+<ele>138</ele>
+<time>2016-06-04T12:08:35Z</time>
+<name>GCPOVI</name>
+<cmt>4163 - 2016.06.04 12:08</cmt>
+<desc><![CDATA[Podmaniczky-Vigyazo kast:2.0/1.5,H,R160604,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5049</url>
+<urlname><![CDATA[GCPOVI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5625" lon="19.1067">
+<ele>110</ele>
+<time>2016-03-18T17:51:08Z</time>
+<name>GCUVIZ</name>
+<cmt>4137 - 2016.03.18 17:51</cmt>
+<desc><![CDATA[Ujpesti Viztorony:1.0/1.5,H,R160318,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=5037</url>
+<urlname><![CDATA[GCUVIZ]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.6024" lon="19.097116666667">
+<ele>120</ele>
+<time>2015-12-01T21:19:59Z</time>
+<name>GCHOMT</name>
+<cmt>4100 - 2015.12.01 21:19</cmt>
+<desc><![CDATA[Homoktovis tanosveny:2.0/2.0,H,R151201,U230304]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4986</url>
+<urlname><![CDATA[GCHOMT]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.518916666667" lon="19.113583333333">
+<ele>110</ele>
+<time>2015-08-20T12:21:01Z</time>
+<name>GCBOSI</name>
+<cmt>4044 - 2015.08.20 12:21</cmt>
+<desc><![CDATA[Bosnyak ter:2.0/1.0,H,R150820,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4929</url>
+<urlname><![CDATA[GCBOSI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.446466666667" lon="19.218133333333">
+<ele>147</ele>
+<time>2015-05-30T20:42:58Z</time>
+<name>GCargo</name>
+<cmt>4006 - 2015.05.30 20:42</cmt>
+<desc><![CDATA[Cargo-domb:2.0/2.0,H,R150530,U230521]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4871</url>
+<urlname><![CDATA[GCargo]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.489433333333" lon="19.05865">
+<ele>105</ele>
+<time>2015-02-01T19:26:51Z</time>
+<name>GCHIRE</name>
+<cmt>3950 - 2015.02.01 19:26</cmt>
+<desc><![CDATA[Hires emberek:1.0/1.0,X,R150201,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4773</url>
+<urlname><![CDATA[GCHIRE]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.514166666667" lon="18.977066666667">
+<ele>338</ele>
+<time>2014-12-10T08:16:48Z</time>
+<name>GCOrom</name>
+<cmt>3925 - 2014.12.10 08:16</cmt>
+<desc><![CDATA[Hunyad-orom (novenyparad:3.0/2.0,H,R141210,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3190</url>
+<urlname><![CDATA[GCOrom]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4925" lon="19.05125">
+<ele>100</ele>
+<time>2014-11-14T15:32:53Z</time>
+<name>GCPEST</name>
+<cmt>3903 - 2014.11.14 15:32</cmt>
+<desc><![CDATA[Contra-Aquincum:1.0/1.0,V,R141114,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4680</url>
+<urlname><![CDATA[GCPEST]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.508916666667" lon="19.054233333333">
+<ele>123</ele>
+<time>2014-04-12T09:24:21Z</time>
+<name>GCoxio</name>
+<cmt>3782 - 2014.04.12 09:24</cmt>
+<desc><![CDATA[Dr. Kresz Geza Mentomuze:1.0/1.5,H,R140412,U230707]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4512</url>
+<urlname><![CDATA[GCoxio]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.543083333333" lon="18.989016666667">
+<ele>305</ele>
+<time>2014-02-10T21:54:23Z</time>
+<name>GCOrsz</name>
+<cmt>3758 - 2014.02.10 21:54</cmt>
+<desc><![CDATA[Oroszlan-szikla:2.0/2.0,V,R140210,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4491</url>
+<urlname><![CDATA[GCOrsz]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.51025" lon="19.071033333333">
+<ele>107</ele>
+<time>2014-01-01T20:51:26Z</time>
+<name>GCStLi</name>
+<cmt>3745 - 2014.01.01 20:51</cmt>
+<desc><![CDATA[Steinschneider Lilly - a:2.0/1.0,V,R140101,U230711]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4455</url>
+<urlname><![CDATA[GCStLi]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.404583333333" lon="19.0712">
+<ele>110</ele>
+<time>2013-12-01T16:44:44Z</time>
+<name>GCcske</name>
+<cmt>3729 - 2013.12.01 16:44</cmt>
+<desc><![CDATA[Csepeli kiserdo:2.0/2.0,H,R131201,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4452</url>
+<urlname><![CDATA[GCcske]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.46465" lon="19.118133333333">
+<ele>163</ele>
+<time>2013-09-29T18:59:06Z</time>
+<name>GCNTLT</name>
+<cmt>3667 - 2013.09.29 18:59</cmt>
+<desc><![CDATA[Nyomortelepbol Lakotelep:3.0/1.5,M,R130929,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4345</url>
+<urlname><![CDATA[GCNTLT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.545316666667" lon="19.01465">
+<ele>280</ele>
+<time>2013-08-30T21:13:59Z</time>
+<name>GCKoTa</name>
+<cmt>3631 - 2013.08.30 21:13</cmt>
+<desc><![CDATA[Kotaraj:2.5/2.5,V,R130830,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4344</url>
+<urlname><![CDATA[GCKoTa]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.540366666667" lon="19.03855">
+<ele>103</ele>
+<time>2013-08-29T11:52:34Z</time>
+<name>GCVEZO</name>
+<cmt>3628 - 2013.08.29 11:52</cmt>
+<desc><![CDATA[Vezess ovatosan!:1.5/1.5,V,R130829,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4339</url>
+<urlname><![CDATA[GCVEZO]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5119" lon="19.00635">
+<ele>148</ele>
+<time>2013-06-12T13:32:51Z</time>
+<name>GCIROK</name>
+<cmt>3562 - 2013.06.12 13:32</cmt>
+<desc><![CDATA[Irok es koltok Pasareten:2.0/1.0,M,R130612,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4270</url>
+<urlname><![CDATA[GCIROK]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.507016666667" lon="18.987683333333">
+<ele>284</ele>
+<time>2013-05-29T23:06:29Z</time>
+<name>GCGKAP</name>
+<cmt>3555 - 2013.05.29 23:06</cmt>
+<desc><![CDATA[Galgoczy kapolna:2.0/1.0,H,R130529,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4261</url>
+<urlname><![CDATA[GCGKAP]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.52935" lon="19.037983333333">
+<ele>104</ele>
+<time>2013-05-28T17:29:19Z</time>
+<name>GCPF</name>
+<cmt>3554 - 2013.05.28 17:29</cmt>
+<desc><![CDATA[Puskas Ferenc szobor:2.0/1.0,V,R130528,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4223</url>
+<urlname><![CDATA[GCPF]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.534266666667" lon="19.124133333333">
+<ele>110</ele>
+<time>2012-12-28T15:47:27Z</time>
+<name>GCPTIT</name>
+<cmt>3473 - 2012.12.28 15:47</cmt>
+<desc><![CDATA[Pestujhely titkai:1.5/1.5,H,R121228,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4164</url>
+<urlname><![CDATA[GCPTIT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.517166666667" lon="18.98035">
+<ele>186</ele>
+<time>2012-11-21T21:46:11Z</time>
+<name>GCVILI</name>
+<cmt>3450 - 2012.11.21 21:46</cmt>
+<desc><![CDATA[Elhagyott villamosvegall:1.0/1.0,H,R121121,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4150</url>
+<urlname><![CDATA[GCVILI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5765" lon="19.0422">
+<ele>112</ele>
+<time>2012-11-08T15:01:51Z</time>
+<name>GCMOCS</name>
+<cmt>3437 - 2012.11.08 15:01</cmt>
+<desc><![CDATA[Mocsaros tanosveny:2.0/1.5,M,R121108,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3925</url>
+<urlname><![CDATA[GCMOCS]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.504133333333" lon="19.059666666667">
+<ele>109</ele>
+<time>2012-09-26T18:53:17Z</time>
+<name>GCHOFI</name>
+<cmt>3407 - 2012.09.26 18:53</cmt>
+<desc><![CDATA[Hofi es a Halhatatlanok:2.0/1.0,H,R120926,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4089</url>
+<urlname><![CDATA[GCHOFI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.497883333333" lon="19.041266666667">
+<ele>115</ele>
+<time>2012-08-26T14:10:50Z</time>
+<name>GCLANG</name>
+<cmt>3382 - 2012.08.26 14:10</cmt>
+<desc><![CDATA[Lanchid, a nagy oreg:2.5/1.0,H,R120826,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=4066</url>
+<urlname><![CDATA[GCLANG]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.481366666667" lon="19.0389">
+<ele>131</ele>
+<time>2012-06-21T17:44:14Z</time>
+<name>GCBUAR</name>
+<cmt>3295 - 2012.06.21 17:44</cmt>
+<desc><![CDATA[Budai Arboretum:1.0/1.0,H,R120621,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3962</url>
+<urlname><![CDATA[GCBUAR]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.486183333333" lon="18.9567">
+<ele>403</ele>
+<time>2012-06-09T19:26:24Z</time>
+<name>GCIrha</name>
+<cmt>3288 - 2012.06.09 19:26</cmt>
+<desc><![CDATA[Irhas-arok:2.5/2.5,M,R120609,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3938</url>
+<urlname><![CDATA[GCIrha]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.526866666667" lon="18.954983333333">
+<ele>359</ele>
+<time>2012-03-31T19:33:16Z</time>
+<name>GCBSKR</name>
+<cmt>3203 - 2012.03.31 19:33</cmt>
+<desc><![CDATA[Budaszentlorinci palos k:1.5/1.5,V,R120331,U230616]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3857</url>
+<urlname><![CDATA[GCBSKR]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.495933333333" lon="19.048333333333">
+<ele>110</ele>
+<time>2012-01-26T11:34:42Z</time>
+<name>GCVIG</name>
+<cmt>3165 - 2012.01.26 11:34</cmt>
+<desc><![CDATA[Vigado-ter:1.0/1.0,V,R120126,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3638</url>
+<urlname><![CDATA[GCVIG]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.50175" lon="19.0752">
+<ele>105</ele>
+<time>2012-01-11T08:08:33Z</time>
+<name>GCRKT</name>
+<cmt>3151 - 2012.01.11 08:08</cmt>
+<desc><![CDATA[Rozsak tere:1.5/1.0,H,R120111,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3771</url>
+<urlname><![CDATA[GCRKT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.446933333333" lon="18.98505">
+<ele>126</ele>
+<time>2011-11-17T11:19:19Z</time>
+<name>GCLHBS</name>
+<cmt>3115 - 2011.11.17 11:19</cmt>
+<desc><![CDATA[Budaorsi Repuloter: - eg:1.5/1.5,H,R111117,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3721</url>
+<urlname><![CDATA[GCLHBS]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.498433333333" lon="19.052083333333">
+<ele>110</ele>
+<time>2011-09-09T11:21:35Z</time>
+<name>GCSZET</name>
+<cmt>3056 - 2011.09.09 11:21</cmt>
+<desc><![CDATA[Szerelem az Erzsebet ter:1.0/1.0,V,R110909,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3586</url>
+<urlname><![CDATA[GCSZET]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.423866666667" lon="18.988766666667">
+<ele>200</ele>
+<time>2011-08-14T17:46:04Z</time>
+<name>GCTEFE</name>
+<cmt>3036 - 2011.08.14 17:46</cmt>
+<desc><![CDATA[Tetenyi-fennsik Tanosven:2.5/2.0,M,R110814,U230705]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3624</url>
+<urlname><![CDATA[GCTEFE]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.389333333333" lon="19.1625">
+<ele>114</ele>
+<time>2011-08-13T20:20:01Z</time>
+<name>GCSRVT</name>
+<cmt>3035 - 2011.08.13 20:20</cmt>
+<desc><![CDATA[Soroksari Viztorony:2.0/1.5,H,R110813,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3565</url>
+<urlname><![CDATA[GCSRVT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.496016666667" lon="19.081433333333">
+<ele>110</ele>
+<time>2011-08-08T12:00:31Z</time>
+<name>GCtuo</name>
+<cmt>3026 - 2011.08.08 12:00</cmt>
+<desc><![CDATA[Tuzolto emlekhelyek:1.0/1.0,M,R110808,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3613</url>
+<urlname><![CDATA[GCtuo]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.562183333333" lon="19.0896">
+<ele>110</ele>
+<time>2011-07-18T18:10:02Z</time>
+<name>GCUJP</name>
+<cmt>3005 - 2011.07.18 18:10</cmt>
+<desc><![CDATA[Ujpest Varoskozpont:1.0/1.0,H,R110718,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3597</url>
+<urlname><![CDATA[GCUJP]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.40395" lon="19.0257">
+<ele>102</ele>
+<time>2011-07-08T09:42:40Z</time>
+<name>GCHRS</name>
+<cmt>2996 - 2011.07.08 09:42</cmt>
+<desc><![CDATA[Harosi-obol:3.0/2.5,H,R110708,U230629]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3577</url>
+<urlname><![CDATA[GCHRS]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.516066666667" lon="19.167666666667">
+<ele>151</ele>
+<time>2011-06-29T19:30:02Z</time>
+<name>GCSAHA</name>
+<cmt>2989 - 2011.06.29 19:30</cmt>
+<desc><![CDATA[Havashalom Park:3.0/1.0,H,R110629,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3571</url>
+<urlname><![CDATA[GCSAHA]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.48795" lon="19.02245">
+<ele>140</ele>
+<time>2011-06-28T19:50:02Z</time>
+<name>GCGEKE</name>
+<cmt>2986 - 2011.06.28 19:50</cmt>
+<desc><![CDATA[Gesztenyes-kert:4.0/1.0,V,R110628,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3564</url>
+<urlname><![CDATA[GCGEKE]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.552433333333" lon="19.024816666667">
+<ele>145</ele>
+<time>2011-06-11T23:33:55Z</time>
+<name>GCBbcs</name>
+<cmt>2977 - 2011.06.11 23:33</cmt>
+<desc><![CDATA[Budapesti bemutato csill:2.0/2.0,M,R110611,U230522]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3547</url>
+<urlname><![CDATA[GCBbcs]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.437816666667" lon="18.988466666667">
+<ele>224</ele>
+<time>2011-05-21T17:14:36Z</time>
+<name>GCVdsz</name>
+<cmt>2969 - 2011.05.21 17:14</cmt>
+<desc><![CDATA[Vadasz-hegy:2.0/3.0,V,R110521,U230704]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3524</url>
+<urlname><![CDATA[GCVdsz]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.530166666667" lon="19.220616666667">
+<ele>160</ele>
+<time>2011-04-27T14:34:15Z</time>
+<name>GCCAPR</name>
+<cmt>2953 - 2011.04.27 14:34</cmt>
+<desc><![CDATA[Caprera-forras:1.5/1.0,H,R110427,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3517</url>
+<urlname><![CDATA[GCCAPR]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.581883333333" lon="19.074366666667">
+<ele>100</ele>
+<time>2011-04-23T11:50:01Z</time>
+<name>GCPSZI</name>
+<cmt>2950 - 2011.04.23 11:50</cmt>
+<desc><![CDATA[Palotai-sziget:2.0/2.0,H,R110423,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3520</url>
+<urlname><![CDATA[GCPSZI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.576183333333" lon="19.0253">
+<ele>138</ele>
+<time>2011-03-14T12:30:01Z</time>
+<name>GCpogi</name>
+<cmt>2921 - 2011.03.14 12:30</cmt>
+<desc><![CDATA[Pogany torony:1.0/1.0,H,R110314,U230705]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3484</url>
+<urlname><![CDATA[GCpogi]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.460383333333" lon="19.0715">
+<ele>99</ele>
+<time>2011-01-23T11:12:16Z</time>
+<name>GCKzs</name>
+<cmt>2898 - 2011.01.23 11:12</cmt>
+<desc><![CDATA[Kvassay-zsilip, avagy a :2.5/1.0,H,R110123,U221215]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3454</url>
+<urlname><![CDATA[GCKzs]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.511233333333" lon="19.035583333333">
+<ele>170</ele>
+<time>2010-09-23T20:20:05Z</time>
+<name>GCMEKI</name>
+<cmt>2833 - 2010.09.23 20:20</cmt>
+<desc><![CDATA[Mechwart Multi:1.5/1.5,M,R100923,U230717]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3383</url>
+<urlname><![CDATA[GCMEKI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.54975" lon="19.0477">
+<ele>130</ele>
+<time>2010-09-04T13:03:43Z</time>
+<name>GCGRAF</name>
+<cmt>2826 - 2010.09.04 13:03</cmt>
+<desc><![CDATA[Filatorigat - Magyar gra:2.0/1.0,H,R100904,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3369</url>
+<urlname><![CDATA[GCGRAF]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5387" lon="19.04485">
+<ele>116</ele>
+<time>2010-07-22T11:10:01Z</time>
+<name>GCBOTI</name>
+<cmt>2793 - 2010.07.22 11:10</cmt>
+<desc><![CDATA[Belso-Obuda templomai:1.0/1.0,M,R100722,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3317</url>
+<urlname><![CDATA[GCBOTI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.561033333333" lon="18.945333333333">
+<ele>274</ele>
+<time>2010-03-13T18:19:36Z</time>
+<name>GCMAKE</name>
+<cmt>2688 - 2010.03.13 18:19</cmt>
+<desc><![CDATA[Mariaremetei Kegytemplom:1.0/1.0,M,R100313,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3209</url>
+<urlname><![CDATA[GCMAKE]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.500283333333" lon="19.032166666667">
+<ele>165</ele>
+<time>2010-02-26T21:00:01Z</time>
+<name>GCSZKH</name>
+<cmt>2685 - 2010.02.26 21:00</cmt>
+<desc><![CDATA[Sziklakorhaz:1.0/1.0,H,R100226,U230629]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3204</url>
+<urlname><![CDATA[GCSZKH]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.490383333333" lon="19.068716666667">
+<ele>110</ele>
+<time>2010-02-25T10:55:14Z</time>
+<name>GCJVKT</name>
+<cmt>2684 - 2010.02.25 10:55</cmt>
+<desc><![CDATA[Jozsefvaros kicsiny tere:3.5/1.0,M,R100225,U230517]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3143</url>
+<urlname><![CDATA[GCJVKT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.484916666667" lon="19.0765">
+<ele>110</ele>
+<time>2010-01-28T12:00:05Z</time>
+<name>GCgrnd</name>
+<cmt>2679 - 2010.01.28 12:00</cmt>
+<desc><![CDATA[Veszelyben a grund!:1.0/1.0,M,R100128,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3192</url>
+<urlname><![CDATA[GCgrnd]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5447" lon="18.95615">
+<ele>269</ele>
+<time>2009-10-01T08:15:16Z</time>
+<name>GCfaze</name>
+<cmt>2619 - 2009.10.01 08:15</cmt>
+<desc><![CDATA[Fazekas-hegyi kilatohely:1.0/1.5,H,R091001,U230708]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3102</url>
+<urlname><![CDATA[GCfaze]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.518566666667" lon="19.0444">
+<ele>112</ele>
+<time>2009-09-29T21:50:01Z</time>
+<name>GCACHE</name>
+<cmt>2618 - 2009.09.29 21:50</cmt>
+<desc><![CDATA[Nevezetes fak a Margitsz:4.0/1.5,M,R090929,U230708]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3114</url>
+<urlname><![CDATA[GCACHE]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.513283333333" lon="19.10215">
+<ele>112</ele>
+<time>2009-09-17T16:50:02Z</time>
+<name>GCELGI</name>
+<cmt>2599 - 2009.09.17 16:50</cmt>
+<desc><![CDATA[Eotvos Lorand Geofizikai:2.0/1.0,H,R090917,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3093</url>
+<urlname><![CDATA[GCELGI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.514183333333" lon="19.082666666667">
+<ele>112</ele>
+<time>2009-09-09T21:40:01Z</time>
+<name>GCMUJE</name>
+<cmt>2591 - 2009.09.09 21:40</cmt>
+<desc><![CDATA[Varosligeti Mujegpalya:1.0/1.0,H,R090909,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3081</url>
+<urlname><![CDATA[GCMUJE]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.49925" lon="18.97475">
+<ele>460</ele>
+<time>2009-09-01T23:00:01Z</time>
+<name>GCIHVT</name>
+<cmt>2578 - 2009.09.01 23:00</cmt>
+<desc><![CDATA[Istenhegyi viztorony:1.5/1.0,H,R090901,U230613]]></desc>
+<url>https://geocaching.hu/caches.geo?id=3065</url>
+<urlname><![CDATA[GCIHVT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.532516666667" lon="19.039633333333">
+<ele>103</ele>
+<time>2009-08-01T02:32:17Z</time>
+<name>GCAmfi</name>
+<cmt>2531 - 2009.08.01 02:32</cmt>
+<desc><![CDATA[Katonavarosi Amfiteatrum:2.0/1.5,H,R090801,U230710]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2795</url>
+<urlname><![CDATA[GCAmfi]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.566216666667" lon="18.960816666667">
+<ele>261</ele>
+<time>2009-07-24T21:28:17Z</time>
+<name>GCKLEH</name>
+<cmt>2517 - 2009.07.24 21:28</cmt>
+<desc><![CDATA[Grof Klebelsberg emlekei:1.0/1.0,M,R090724,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2997</url>
+<urlname><![CDATA[GCKLEH]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.48975" lon="19.0445">
+<ele>142</ele>
+<time>2009-05-29T18:57:00Z</time>
+<name>GCGEVI</name>
+<cmt>2448 - 2009.05.29 18:57</cmt>
+<desc><![CDATA[Szent Gellert szobor es :1.5/2.0,H,R090529,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2889</url>
+<urlname><![CDATA[GCGEVI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.59535" lon="19.042433333333">
+<ele>110</ele>
+<time>2009-05-08T17:40:03Z</time>
+<name>GCgott</name>
+<cmt>2421 - 2009.05.08 17:40</cmt>
+<desc><![CDATA[Gotes-to:1.5/1.5,V,R090508,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2884</url>
+<urlname><![CDATA[GCgott]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.430666666667" lon="19.065083333333">
+<ele>113</ele>
+<time>2009-04-26T13:59:50Z</time>
+<name>GCCsM</name>
+<cmt>2409 - 2009.04.26 13:59</cmt>
+<desc><![CDATA[Csepel Muvek:3.5/3.0,M,R090426,U230630]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2839</url>
+<urlname><![CDATA[GCCsM]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5159" lon="19.078533333333">
+<ele>114</ele>
+<time>2009-04-22T14:37:40Z</time>
+<name>GCMILL</name>
+<cmt>2405 - 2009.04.22 14:37</cmt>
+<desc><![CDATA[A Millenniumi Foldalatti:1.5/1.5,H,R090422,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2859</url>
+<urlname><![CDATA[GCMILL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.495816666667" lon="19.060083333333">
+<ele>130</ele>
+<time>2009-02-19T19:13:40Z</time>
+<name>GCGETO</name>
+<cmt>2366 - 2009.02.19 19:13</cmt>
+<desc><![CDATA[Budapesti Getto:1.0/1.0,M,R090219,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2800</url>
+<urlname><![CDATA[GCGETO]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.412816666667" lon="19.09185">
+<ele>118</ele>
+<time>2009-02-07T12:31:21Z</time>
+<name>GCTAM</name>
+<cmt>2360 - 2009.02.07 12:31</cmt>
+<desc><![CDATA[Tamariska domb:2.0/2.5,H,R090207,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2801</url>
+<urlname><![CDATA[GCTAM]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.505466666667" lon="19.047933333333">
+<ele>120</ele>
+<time>2008-12-04T03:30:02Z</time>
+<name>GCJPLT</name>
+<cmt>2316 - 2008.12.04 03:30</cmt>
+<desc><![CDATA[Ujepulet:3.0/1.0,M,R081204,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2752</url>
+<urlname><![CDATA[GCJPLT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.435533333333" lon="19.091416666667">
+<ele>115</ele>
+<time>2008-11-29T21:00:01Z</time>
+<name>GCGULT</name>
+<cmt>2313 - 2008.11.29 21:00</cmt>
+<desc><![CDATA[Gubacsi lakotelep:2.5/1.0,M,R081129,U230305]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2743</url>
+<urlname><![CDATA[GCGULT]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.5963" lon="19.033616666667">
+<ele>218</ele>
+<time>2008-11-02T22:50:01Z</time>
+<name>GCAGI</name>
+<cmt>2289 - 2008.11.02 22:50</cmt>
+<desc><![CDATA[Forras a hegyen:2.5/1.5,H,R081102,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2705</url>
+<urlname><![CDATA[GCAGI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.435666666667" lon="19.175866666667">
+<ele>123</ele>
+<time>2008-10-29T18:40:02Z</time>
+<name>GCPLKK</name>
+<cmt>2273 - 2008.10.29 18:40</cmt>
+<desc><![CDATA[Szent Lorinc Kapolna es :1.5/1.5,M,R081029,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2696</url>
+<urlname><![CDATA[GCPLKK]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.498" lon="19.1965">
+<ele>159</ele>
+<time>2008-10-17T13:20:01Z</time>
+<name>GCMaty</name>
+<cmt>2254 - 2008.10.17 13:20</cmt>
+<desc><![CDATA[Matyasfoldi seta:2.0/1.5,M,R081017,U230702]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2669</url>
+<urlname><![CDATA[GCMaty]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4597" lon="19.0588">
+<ele>145</ele>
+<time>2008-09-15T21:53:28Z</time>
+<name>GCKOPI</name>
+<cmt>2231 - 2008.09.15 21:53</cmt>
+<desc><![CDATA[Fure lepni szabad!:1.0/1.0,V,R080915,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2397</url>
+<urlname><![CDATA[GCKOPI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.51295" lon="19.047233333333">
+<ele>108</ele>
+<time>2008-08-27T23:00:02Z</time>
+<name>GCDMS</name>
+<cmt>2202 - 2008.08.27 23:00</cmt>
+<desc><![CDATA[Duna menti seta Ujlipotv:1.0/1.0,M,R080827,U230705]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2602</url>
+<urlname><![CDATA[GCDMS]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.410866666667" lon="18.990666666667">
+<ele>162</ele>
+<time>2008-06-29T07:19:57Z</time>
+<name>GCSZDH</name>
+<cmt>2128 - 2008.06.29 07:19</cmt>
+<desc><![CDATA[Szent Donat-hegyi emlekh:1.5/3.0,H,R080629,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2246</url>
+<urlname><![CDATA[GCSZDH]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.46565" lon="19.116316666667">
+<ele>100</ele>
+<time>2008-05-29T14:46:56Z</time>
+<name>GCJALT</name>
+<cmt>2100 - 2008.05.29 14:46</cmt>
+<desc><![CDATA[Jozsef Attila lakotelep,:2.0/2.0,M,R080529,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1797</url>
+<urlname><![CDATA[GCJALT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.477266666667" lon="19.101083333333">
+<ele>119</ele>
+<time>2008-04-25T12:52:52Z</time>
+<name>GCNeLi</name>
+<cmt>2032 - 2008.04.25 12:52</cmt>
+<desc><![CDATA[Nepligeti seta:2.0/1.5,M,R080425,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1971</url>
+<urlname><![CDATA[GCNeLi]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.48675" lon="19.132216666667">
+<ele>123</ele>
+<time>2008-04-19T11:11:55Z</time>
+<name>GCTeKo</name>
+<cmt>2026 - 2008.04.19 11:11</cmt>
+<desc><![CDATA[Szep templomok Kobanyan:1.0/1.0,M,R080419,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2380</url>
+<urlname><![CDATA[GCTeKo]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.474033333333" lon="19.0613">
+<ele>103</ele>
+<time>2008-02-24T19:10:06Z</time>
+<name>GCINFO</name>
+<cmt>1974 - 2008.02.24 19:10</cmt>
+<desc><![CDATA[Infopark:2.0/1.0,M,R080224,U230614]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2322</url>
+<urlname><![CDATA[GCINFO]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.481133333333" lon="19.054516666667">
+<ele>112</ele>
+<time>2008-02-04T06:00:17Z</time>
+<name>GCBME</name>
+<cmt>1944 - 2008.02.04 06:00</cmt>
+<desc><![CDATA[Muegyetem:1.0/1.0,V,R080204,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2277</url>
+<urlname><![CDATA[GCBME]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.429216666667" lon="19.036716666667">
+<ele>115</ele>
+<time>2008-01-24T22:58:01Z</time>
+<name>GCPro</name>
+<cmt>1935 - 2008.01.24 22:58</cmt>
+<desc><![CDATA[Promontori kalvariajaras:1.0/1.5,M,R080124,U230702]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2271</url>
+<urlname><![CDATA[GCPro]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.513683333333" lon="19.003233333333">
+<ele>154</ele>
+<time>2007-10-14T14:30:45Z</time>
+<name>GCPASA</name>
+<cmt>1860 - 2007.10.14 14:30</cmt>
+<desc><![CDATA[Pasareti seta:1.5/1.0,M,R071014,U230713]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1874</url>
+<urlname><![CDATA[GCPASA]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.423783333333" lon="19.090716666667">
+<ele>158</ele>
+<time>2007-07-10T18:12:43Z</time>
+<name>GCKDo</name>
+<cmt>1727 - 2007.07.10 18:12</cmt>
+<desc><![CDATA[Kis-Duna obol:2.5/2.0,M,R070710,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=2030</url>
+<urlname><![CDATA[GCKDo]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.529483333333" lon="19.0516">
+<ele>105</ele>
+<time>2005-08-12T17:30:02Z</time>
+<name>GCSPIR</name>
+<cmt>1248 - 2005.08.12 17:30</cmt>
+<desc><![CDATA[Szellemjaro Geolada:1.5/1.5,X,R050812,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1409</url>
+<urlname><![CDATA[GCSPIR]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.44865" lon="19.263183333333">
+<ele>207</ele>
+<time>2005-01-29T15:20:00Z</time>
+<name>GCLHBP</name>
+<cmt>1125 - 2005.01.29 15:20</cmt>
+<desc><![CDATA[Viztorony, templom, rada:2.0/2.5,M,R050129,U230629]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1261</url>
+<urlname><![CDATA[GCLHBP]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.491333333333" lon="19.0389">
+<ele>129</ele>
+<time>2004-12-29T10:40:01Z</time>
+<name>GCKRZ</name>
+<cmt>1107 - 2004.12.29 10:40</cmt>
+<desc><![CDATA[Krisztina Zoldjei:2.5/1.0,M,R041229,U230710]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1239</url>
+<urlname><![CDATA[GCKRZ]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.590633333333" lon="19.108916666667">
+<ele>95</ele>
+<time>2004-11-20T14:54:02Z</time>
+<name>GCRoss</name>
+<cmt>1095 - 2004.11.20 14:54</cmt>
+<desc><![CDATA[Homoktovis:2.5/1.5,H,R041120,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1228</url>
+<urlname><![CDATA[GCRoss]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.436066666667" lon="19.101733333333">
+<ele>117</ele>
+<time>2004-10-14T07:40:02Z</time>
+<name>GCESET</name>
+<cmt>1083 - 2004.10.14 07:40</cmt>
+<desc><![CDATA[Erzsebeti seta:1.0/1.0,M,R041014,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1206</url>
+<urlname><![CDATA[GCESET]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.514983333333" lon="19.077833333333">
+<ele>108</ele>
+<time>2004-10-05T09:50:03Z</time>
+<name>GCAndr</name>
+<cmt>1078 - 2004.10.05 09:50</cmt>
+<desc><![CDATA[Andrassy ut:4.0/1.0,M,R041005,U230707]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1201</url>
+<urlname><![CDATA[GCAndr]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.53565" lon="18.99935">
+<ele>367</ele>
+<time>2004-09-18T19:50:02Z</time>
+<name>GCKIL</name>
+<cmt>1068 - 2004.09.18 19:50</cmt>
+<desc><![CDATA[Arpad kilato:2.5/2.5,H,R040918,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1122</url>
+<urlname><![CDATA[GCKIL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.470283333333" lon="19.070533333333">
+<ele>115</ele>
+<time>2004-08-17T13:40:03Z</time>
+<name>GCLABY</name>
+<cmt>1041 - 2004.08.17 13:40</cmt>
+<desc><![CDATA[Labirintus:1.0/1.0,M,R040817,U230706]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1155</url>
+<urlname><![CDATA[GCLABY]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4747" lon="18.978633333333">
+<ele>269</ele>
+<time>2004-08-07T11:00:02Z</time>
+<name>GCRupp</name>
+<cmt>1029 - 2004.08.07 11:00</cmt>
+<desc><![CDATA[Rupp-hegy, avagy Kis est:1.5/1.5,H,R040807,U230524]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1145</url>
+<urlname><![CDATA[GCRupp]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.444533333333" lon="19.0268">
+<ele>112</ele>
+<time>2004-08-01T21:30:02Z</time>
+<name>GCKEKT</name>
+<cmt>1025 - 2004.08.01 21:30</cmt>
+<desc><![CDATA[Kelenvolgyi mini to:1.5/1.5,H,R040801,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1138</url>
+<urlname><![CDATA[GCKEKT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5335" lon="19.089966666667">
+<ele>112</ele>
+<time>2004-07-18T13:20:01Z</time>
+<name>GCGMBA</name>
+<cmt>1020 - 2004.07.18 13:20</cmt>
+<desc><![CDATA[Gomba cache:2.0/2.0,V,R040718,U230606]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1125</url>
+<urlname><![CDATA[GCGMBA]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.550133333333" lon="19.01175">
+<ele>324</ele>
+<time>2004-06-27T16:00:00Z</time>
+<name>GCKBrl</name>
+<cmt>996 - 2004.06.27 16:00</cmt>
+<desc><![CDATA[Tabor-hegyi-barlang:2.0/3.0,H,R040627,U230704]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1089</url>
+<urlname><![CDATA[GCKBrl]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.478383333333" lon="19.095533333333">
+<ele>118</ele>
+<time>2004-06-25T16:15:00Z</time>
+<name>GCTVT</name>
+<cmt>994 - 2004.06.25 16:15</cmt>
+<desc><![CDATA[A regi Rezso ter:2.5/1.0,M,R040625,U230627]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1090</url>
+<urlname><![CDATA[GCTVT]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.50745" lon="19.018383333333">
+<ele>151</ele>
+<time>2004-06-23T20:10:00Z</time>
+<name>GCVMMM</name>
+<cmt>993 - 2004.06.23 20:10</cmt>
+<desc><![CDATA[VarosMajori MikroMulti:1.5/1.0,M,R040623,U230717]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1084</url>
+<urlname><![CDATA[GCVMMM]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.54845" lon="19.15325">
+<ele>122</ele>
+<time>2004-05-26T18:00:00Z</time>
+<name>GCSzp</name>
+<cmt>968 - 2004.05.26 18:00</cmt>
+<desc><![CDATA[Szilas patak:1.5/1.5,H,R040526,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1059</url>
+<urlname><![CDATA[GCSzp]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.56835" lon="19.064683333333">
+<ele>111</ele>
+<time>2004-05-23T00:00:00Z</time>
+<name>GCRMPR</name>
+<cmt>965 - 2004.05.23</cmt>
+<desc><![CDATA[Romai-part:1.0/1.0,M,R040523,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1054</url>
+<urlname><![CDATA[GCRMPR]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.57165" lon="18.982716666667">
+<ele>444</ele>
+<time>2004-05-21T16:50:00Z</time>
+<name>GCTOP</name>
+<cmt>962 - 2004.05.21 16:50</cmt>
+<desc><![CDATA[A Csucs csucsa:3.5/3.0,H,R040521,U230115]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1048</url>
+<urlname><![CDATA[GCTOP]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.50055" lon="19.054283333333">
+<ele>108</ele>
+<time>2004-05-10T16:22:00Z</time>
+<name>GCBzlk</name>
+<cmt>946 - 2004.05.10 16:22</cmt>
+<desc><![CDATA[Szent Istvan Bazilika:1.5/1.5,M,R040510,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1036</url>
+<urlname><![CDATA[GCBzlk]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.468833333333" lon="19.078166666667">
+<ele>150</ele>
+<time>2004-05-08T12:10:00Z</time>
+<name>GCVaev</name>
+<cmt>941 - 2004.05.08 12:10</cmt>
+<desc><![CDATA[Vae victis! (Jaj a legyo:1.5/1.5,H,R040508,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1032</url>
+<urlname><![CDATA[GCVaev]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.419333333333" lon="19.03075">
+<ele>136</ele>
+<time>2004-04-20T23:00:00Z</time>
+<name>GCBfok</name>
+<cmt>922 - 2004.04.20 23:00</cmt>
+<desc><![CDATA[Mult es jovo?:1.0/1.0,V,R040420,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=1011</url>
+<urlname><![CDATA[GCBfok]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.515916666667" lon="18.968616666667">
+<ele>338</ele>
+<time>2004-04-11T21:00:00Z</time>
+<name>GCTUND</name>
+<cmt>909 - 2004.04.11 21:00</cmt>
+<desc><![CDATA[Tunder-szikla:3.0/2.5,H,R040411,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=996</url>
+<urlname><![CDATA[GCTUND]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.54245" lon="19.067633333333">
+<ele>101</ele>
+<time>2004-04-08T16:40:00Z</time>
+<name>GCRKSP</name>
+<cmt>900 - 2004.04.08 16:40</cmt>
+<desc><![CDATA[Patakmenti horgaszat:4.0/1.5,M,R040408,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=989</url>
+<urlname><![CDATA[GCRKSP]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.534433333333" lon="19.022166666667">
+<ele>236</ele>
+<time>2004-04-05T14:00:00Z</time>
+<name>GCLIK</name>
+<cmt>897 - 2004.04.05 14:00</cmt>
+<desc><![CDATA[Barlangasz-LIK:5.0/5.0,M,R040405,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=987</url>
+<urlname><![CDATA[GCLIK]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.42755" lon="19.137633333333">
+<ele>120</ele>
+<time>2004-03-29T16:00:00Z</time>
+<name>GCGuba</name>
+<cmt>891 - 2004.03.29 16:00</cmt>
+<desc><![CDATA[Gubacsipuszta:1.5/2.0,H,R040329,U230629]]></desc>
+<url>https://geocaching.hu/caches.geo?id=981</url>
+<urlname><![CDATA[GCGuba]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.523783333333" lon="19.0274">
+<ele>240</ele>
+<time>2004-03-19T13:30:00Z</time>
+<name>GCtalp</name>
+<cmt>878 - 2004.03.19 13:30</cmt>
+<desc><![CDATA[Talpalatnyi zold:1.0/1.0,M,R040319,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=969</url>
+<urlname><![CDATA[GCtalp]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.513833333333" lon="19.0856">
+<ele>115</ele>
+<time>2004-03-14T17:00:00Z</time>
+<name>GCHIDE</name>
+<cmt>872 - 2004.03.14 17:00</cmt>
+<desc><![CDATA[Mikrolada a Varosligetbe:2.5/2.0,H,R040314,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=963</url>
+<urlname><![CDATA[GCHIDE]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.489633333333" lon="18.942066666667">
+<ele>307</ele>
+<time>2004-03-14T15:51:00Z</time>
+<name>GCVegv</name>
+<cmt>871 - 2004.03.14 15:51</cmt>
+<desc><![CDATA[Vegvari-szikla:2.0/4.5,M,R040314,U230613]]></desc>
+<url>https://geocaching.hu/caches.geo?id=959</url>
+<urlname><![CDATA[GCVegv]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.49505" lon="19.054683333333">
+<ele>130</ele>
+<time>2004-03-11T20:06:00Z</time>
+<name>GC1848</name>
+<cmt>863 - 2004.03.11 20:06</cmt>
+<desc><![CDATA[Tortenelmi tettek nyomab:1.5/1.0,M,R040311,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=953</url>
+<urlname><![CDATA[GC1848]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.54135" lon="18.96345">
+<ele>235</ele>
+<time>2004-03-08T20:22:00Z</time>
+<name>GCkisv</name>
+<cmt>862 - 2004.03.08 20:22</cmt>
+<desc><![CDATA[Magyarorszagi kisvasutak:2.0/1.5,H,R040308,U230621]]></desc>
+<url>https://geocaching.hu/caches.geo?id=951</url>
+<urlname><![CDATA[GCkisv]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.556916666667" lon="19.054833333333">
+<ele>110</ele>
+<time>2004-02-29T11:50:00Z</time>
+<name>GCISTI</name>
+<cmt>857 - 2004.02.29 11:50</cmt>
+<desc><![CDATA[Hajogyari sziget:1.5/1.0,H,R040229,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=945</url>
+<urlname><![CDATA[GCISTI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4773" lon="19.101116666667">
+<ele>107</ele>
+<time>2004-02-28T07:00:00Z</time>
+<name>GCCITO</name>
+<cmt>856 - 2004.02.28 07:00</cmt>
+<desc><![CDATA[Szemetszedo geolada:2.0/2.0,X,R040228,U230506]]></desc>
+<url>https://geocaching.hu/caches.geo?id=924</url>
+<urlname><![CDATA[GCCITO]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.460166666667" lon="19.003033333333">
+<ele>139</ele>
+<time>2004-02-08T15:24:00Z</time>
+<name>GColim</name>
+<cmt>844 - 2004.02.08 15:24</cmt>
+<desc><![CDATA[Olimpiai park:1.0/2.0,M,R040208,U230717]]></desc>
+<url>https://geocaching.hu/caches.geo?id=929</url>
+<urlname><![CDATA[GColim]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.532483333333" lon="19.01705">
+<ele>215</ele>
+<time>2003-12-24T12:00:00Z</time>
+<name>GCPMB</name>
+<cmt>817 - 2003.12.24 12:00</cmt>
+<desc><![CDATA[Palvolgyi es Matyas barl:1.0/1.5,H,R031224,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=906</url>
+<urlname><![CDATA[GCPMB]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.537233333333" lon="19.027616666667">
+<ele>160</ele>
+<time>2003-12-06T13:25:00Z</time>
+<name>GCKCEL</name>
+<cmt>803 - 2003.12.06 13:25</cmt>
+<desc><![CDATA[Kiscell:2.0/2.5,M,R031206,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=893</url>
+<urlname><![CDATA[GCKCEL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.566033333333" lon="19.07445">
+<ele>98</ele>
+<time>2003-11-16T00:00:00Z</time>
+<name>GCNEPS</name>
+<cmt>792 - 2003.11.16</cmt>
+<desc><![CDATA[Nepsziget:2.0/1.0,H,R031116,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=877</url>
+<urlname><![CDATA[GCNEPS]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4318" lon="18.9885">
+<ele>163</ele>
+<time>2003-11-02T12:00:00Z</time>
+<name>GCKAMV</name>
+<cmt>777 - 2003.11.02 12:00</cmt>
+<desc><![CDATA[Kamaraerdo:2.0/1.5,H,R031102,U230705]]></desc>
+<url>https://geocaching.hu/caches.geo?id=865</url>
+<urlname><![CDATA[GCKAMV]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.51225" lon="18.9615">
+<ele>419</ele>
+<time>2003-10-20T13:00:00Z</time>
+<name>GCMEKH</name>
+<cmt>763 - 2003.10.20 13:00</cmt>
+<desc><![CDATA[Meg egy kilatohely:1.0/2.0,H,R031020,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=851</url>
+<urlname><![CDATA[GCMEKH]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.475" lon="19.200283333333">
+<ele>140</ele>
+<time>2003-10-15T15:30:00Z</time>
+<name>GC1956</name>
+<cmt>755 - 2003.10.15 15:30</cmt>
+<desc><![CDATA[Fohajtas az 56-os aldoza:1.0/1.0,H,R031015,U230713]]></desc>
+<url>https://geocaching.hu/caches.geo?id=844</url>
+<urlname><![CDATA[GC1956]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.471716666667" lon="19.070516666667">
+<ele>118</ele>
+<time>2003-10-13T13:30:00Z</time>
+<name>GCGOHI</name>
+<cmt>754 - 2003.10.13 13:30</cmt>
+<desc><![CDATA[Gobbi Hilda:1.0/1.0,V,R031013,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=843</url>
+<urlname><![CDATA[GCGOHI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.431283333333" lon="19.03215">
+<ele>157</ele>
+<time>2003-09-25T18:00:00Z</time>
+<name>GCTORL</name>
+<cmt>729 - 2003.09.25 18:00</cmt>
+<desc><![CDATA[Torley-mauzoleum:1.0/1.0,H,R030925,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=818</url>
+<urlname><![CDATA[GCTORL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.505583333333" lon="19.246116666667">
+<ele>171</ele>
+<time>2003-09-14T00:00:00Z</time>
+<name>GCTAJV</name>
+<cmt>723 - 2003.09.14</cmt>
+<desc><![CDATA[Cinkotai-kiserdo:1.0/1.0,H,R030914,U230530]]></desc>
+<url>https://geocaching.hu/caches.geo?id=812</url>
+<urlname><![CDATA[GCTAJV]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.462333333333" lon="19.043666666667">
+<ele>130</ele>
+<time>2003-08-02T00:01:00Z</time>
+<name>GCAyur</name>
+<cmt>666 - 2003.08.02 00:01</cmt>
+<desc><![CDATA[Fantasy Budapest:3.5/2.0,M,R030802,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=755</url>
+<urlname><![CDATA[GCAyur]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.496733333333" lon="19.047933333333">
+<ele>106</ele>
+<time>2003-08-01T15:00:00Z</time>
+<name>GCship</name>
+<cmt>665 - 2003.08.01 15:00</cmt>
+<desc><![CDATA[Tengeresz Emlekek:1.0/1.0,V,R030801,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=753</url>
+<urlname><![CDATA[GCship]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4422" lon="19.283583333333">
+<ele>130</ele>
+<time>2003-07-20T14:00:00Z</time>
+<name>GCXVII</name>
+<cmt>643 - 2003.07.20 14:00</cmt>
+<desc><![CDATA[Merzse-mocsar:2.0/3.0,H,R030720,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=729</url>
+<urlname><![CDATA[GCXVII]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5073" lon="19.039383333333">
+<ele>108</ele>
+<time>2003-07-18T10:11:00Z</time>
+<name>GCPAAI</name>
+<cmt>639 - 2003.07.18 10:11</cmt>
+<desc><![CDATA[En es a Parlament... no :2.0/1.0,V,R030718,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=726</url>
+<urlname><![CDATA[GCPAAI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.482566666667" lon="18.963766666667">
+<ele>449</ele>
+<time>2003-07-17T12:17:00Z</time>
+<name>GCfrah</name>
+<cmt>638 - 2003.07.17 12:17</cmt>
+<desc><![CDATA[Frank - hegy:2.0/2.5,H,R030717,U230610]]></desc>
+<url>https://geocaching.hu/caches.geo?id=725</url>
+<urlname><![CDATA[GCfrah]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.397716666667" lon="19.1506">
+<ele>113</ele>
+<time>2003-07-14T15:00:00Z</time>
+<name>GCbotk</name>
+<cmt>631 - 2003.07.14 15:00</cmt>
+<desc><![CDATA[Botanikus Kert:1.5/1.0,H,R030714,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=719</url>
+<urlname><![CDATA[GCbotk]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5995" lon="19.055366666667">
+<ele>111</ele>
+<time>2003-07-13T17:00:00Z</time>
+<name>GCreft</name>
+<cmt>630 - 2003.07.13 17:00</cmt>
+<desc><![CDATA[Reformatus templom:2.0/1.5,H,R030713,U230708]]></desc>
+<url>https://geocaching.hu/caches.geo?id=720</url>
+<urlname><![CDATA[GCreft]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.398333333333" lon="19.10875">
+<ele>104</ele>
+<time>2003-07-01T17:00:00Z</time>
+<name>GCSSR</name>
+<cmt>621 - 2003.07.01 17:00</cmt>
+<desc><![CDATA[Molnar-sziget:2.0/1.5,M,R030701,U230618]]></desc>
+<url>https://geocaching.hu/caches.geo?id=711</url>
+<urlname><![CDATA[GCSSR]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.472583333333" lon="19.05955">
+<ele>96</ele>
+<time>2003-06-23T18:00:00Z</time>
+<name>GCmepl</name>
+<cmt>619 - 2003.06.23 18:00</cmt>
+<desc><![CDATA[Mindentudas Egyeteme:1.0/1.0,V,R030623,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=706</url>
+<urlname><![CDATA[GCmepl]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.530566666667" lon="18.955233333333">
+<ele>424</ele>
+<time>2003-05-24T16:30:00Z</time>
+<name>GCtani</name>
+<cmt>598 - 2003.05.24 16:30</cmt>
+<desc><![CDATA[Tani babi (Nagy-Hars-heg:3.0/3.5,M,R030524,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=689</url>
+<urlname><![CDATA[GCtani]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.526516666667" lon="19.050083333333">
+<ele>105</ele>
+<time>2003-05-12T17:00:00Z</time>
+<name>GCMUSZ</name>
+<cmt>594 - 2003.05.12 17:00</cmt>
+<desc><![CDATA[Nyulak szigete:2.0/1.5,H,R030512,U230717]]></desc>
+<url>https://geocaching.hu/caches.geo?id=682</url>
+<urlname><![CDATA[GCMUSZ]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.390616666667" lon="18.98885">
+<ele>107</ele>
+<time>2003-05-07T18:20:00Z</time>
+<name>GCmuz</name>
+<cmt>588 - 2003.05.07 18:20</cmt>
+<desc><![CDATA[Kastelymuzeum:1.0/1.0,V,R030507,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=674</url>
+<urlname><![CDATA[GCmuz]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.48275" lon="19.1373">
+<ele>123</ele>
+<time>2003-05-01T17:15:00Z</time>
+<name>GCBUD</name>
+<cmt>582 - 2003.05.01 17:15</cmt>
+<desc><![CDATA[Budapest mertani kozeppo:1.5/1.0,H,R030501,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=666</url>
+<urlname><![CDATA[GCBUD]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4551" lon="19.046666666667">
+<ele>103</ele>
+<time>2003-04-30T03:30:00Z</time>
+<name>GCBUMM</name>
+<cmt>578 - 2003.04.30 03:30</cmt>
+<desc><![CDATA[Barokk loportar:1.0/1.0,H,R030430,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=661</url>
+<urlname><![CDATA[GCBUMM]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.512983333333" lon="19.0545">
+<ele>101</ele>
+<time>2003-04-15T17:00:00Z</time>
+<name>GCLyme</name>
+<cmt>559 - 2003.04.15 17:00</cmt>
+<desc><![CDATA[Kullancs ambulancia:1.0/1.0,V,R030415,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=641</url>
+<urlname><![CDATA[GCLyme]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.466566666667" lon="19.031966666667">
+<ele>148</ele>
+<time>2003-04-12T16:11:00Z</time>
+<name>GCBika</name>
+<cmt>550 - 2003.04.12 16:11</cmt>
+<desc><![CDATA[Kelenfoldi Szabadidopark:1.0/1.0,V,R030412,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=633</url>
+<urlname><![CDATA[GCBika]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.488283333333" lon="18.976366666667">
+<ele>360</ele>
+<time>2003-04-07T09:40:00Z</time>
+<name>GCFark</name>
+<cmt>546 - 2003.04.07 09:40</cmt>
+<desc><![CDATA[Farkasvolgy:2.0/2.0,M,R030407,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=630</url>
+<urlname><![CDATA[GCFark]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4693" lon="18.9962">
+<ele>175</ele>
+<time>2003-03-31T15:00:00Z</time>
+<name>GCRETI</name>
+<cmt>540 - 2003.03.31 15:00</cmt>
+<desc><![CDATA[Retisas:1.0/1.5,M,R030331,U230518]]></desc>
+<url>https://geocaching.hu/caches.geo?id=622</url>
+<urlname><![CDATA[GCRETI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4393" lon="19.00715">
+<ele>199</ele>
+<time>2003-03-28T12:00:00Z</time>
+<name>GCKANA</name>
+<cmt>529 - 2003.03.28 12:00</cmt>
+<desc><![CDATA[Kanai apatsag romjai:2.0/2.0,H,R030328,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=614</url>
+<urlname><![CDATA[GCKANA]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.509916666667" lon="19.04295">
+<ele>100</ele>
+<time>2003-03-15T21:00:00Z</time>
+<name>GCEHID</name>
+<cmt>515 - 2003.03.15 21:00</cmt>
+<desc><![CDATA[Ahova maskor sokkal nehe:2.0/1.0,V,R030315,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=599</url>
+<urlname><![CDATA[GCEHID]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.514783333333" lon="19.043383333333">
+<ele>96</ele>
+<time>2003-03-04T16:16:00Z</time>
+<name>GCXC01</name>
+<cmt>509 - 2003.03.04 16:16</cmt>
+<desc><![CDATA[Hidlab:1.0/3.0,V,R030304,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=592</url>
+<urlname><![CDATA[GCXC01]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.577283333333" lon="19.006333333333">
+<ele>119</ele>
+<time>2003-02-16T16:00:00Z</time>
+<name>GCMesi</name>
+<cmt>499 - 2003.02.16 16:00</cmt>
+<desc><![CDATA[Aranyhegyi-patak:2.0/2.0,H,R030216,U230629]]></desc>
+<url>https://geocaching.hu/caches.geo?id=582</url>
+<urlname><![CDATA[GCMesi]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.484783333333" lon="19.052266666667">
+<ele>109</ele>
+<time>2003-02-12T12:00:00Z</time>
+<name>GCszkk</name>
+<cmt>498 - 2003.02.12 12:00</cmt>
+<desc><![CDATA[Szobor, kapolna, kereszt:1.0/1.5,M,R030212,U230628]]></desc>
+<url>https://geocaching.hu/caches.geo?id=581</url>
+<urlname><![CDATA[GCszkk]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.490666666667" lon="19.0485">
+<ele>100</ele>
+<time>2003-01-29T15:00:00Z</time>
+<name>GCPATK</name>
+<cmt>491 - 2003.01.29 15:00</cmt>
+<desc><![CDATA[Ordog-arok:3.0/3.0,M,R030129,U230701]]></desc>
+<url>https://geocaching.hu/caches.geo?id=575</url>
+<urlname><![CDATA[GCPATK]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.503033333333" lon="19.011383333333">
+<ele>250</ele>
+<time>2003-01-12T14:00:00Z</time>
+<name>GCvics</name>
+<cmt>487 - 2003.01.12 14:00</cmt>
+<desc><![CDATA[Kis Svabhegy:2.0/2.0,H,R030112,U230622]]></desc>
+<url>https://geocaching.hu/caches.geo?id=571</url>
+<urlname><![CDATA[GCvics]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.483283333333" lon="19.145">
+<ele>147</ele>
+<time>2002-12-21T11:00:00Z</time>
+<name>GCCST</name>
+<cmt>467 - 2002.12.21 11:00</cmt>
+<desc><![CDATA[Csosztorony:1.0/1.0,H,R021221,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=551</url>
+<urlname><![CDATA[GCCST]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4961" lon="19.097033333333">
+<ele>135</ele>
+<time>2002-12-05T13:00:00Z</time>
+<name>GCSIRK</name>
+<cmt>464 - 2002.12.05 13:00</cmt>
+<desc><![CDATA[Fiumei uti Sirkert:1.0/1.0,H,R021205,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=547</url>
+<urlname><![CDATA[GCSIRK]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.494383333333" lon="19.041883333333">
+<ele>178</ele>
+<time>2002-11-24T14:30:00Z</time>
+<name>GCIFI</name>
+<cmt>458 - 2002.11.24 14:30</cmt>
+<desc><![CDATA[Budai Ifjusagi Park:1.0/1.5,V,R021124,U230713]]></desc>
+<url>https://geocaching.hu/caches.geo?id=540</url>
+<urlname><![CDATA[GCIFI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.467683333333" lon="19.163733333333">
+<ele>125</ele>
+<time>2002-09-25T16:40:00Z</time>
+<name>GCBaTO</name>
+<cmt>427 - 2002.09.25 16:40</cmt>
+<desc><![CDATA[To a varosban:1.0/1.0,M,R020925,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=509</url>
+<urlname><![CDATA[GCBaTO]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.50605" lon="19.09735">
+<ele>110</ele>
+<time>2002-09-18T11:00:00Z</time>
+<name>GCMAFI</name>
+<cmt>421 - 2002.09.18 11:00</cmt>
+<desc><![CDATA[Egy valodi (bar virtuali:1.5/1.0,H,R020918,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=503</url>
+<urlname><![CDATA[GCMAFI]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5423" lon="19.095633333333">
+<ele>114</ele>
+<time>2002-09-15T16:00:00Z</time>
+<name>GCFUST</name>
+<cmt>419 - 2002.09.15 16:00</cmt>
+<desc><![CDATA[Lokopark:1.0/1.0,V,R020915,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=501</url>
+<urlname><![CDATA[GCFUST]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.515083333333" lon="19.067416666667">
+<ele>85</ele>
+<time>2002-08-31T18:00:00Z</time>
+<name>GCalul</name>
+<cmt>405 - 2002.08.31 18:00</cmt>
+<desc><![CDATA[Aluljaro Classic:1.5/1.5,V,R020831,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=481</url>
+<urlname><![CDATA[GCalul]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.495933333333" lon="19.06025">
+<ele>129</ele>
+<time>2002-08-25T00:00:00Z</time>
+<name>GCZSF</name>
+<cmt>393 - 2002.08.25</cmt>
+<desc><![CDATA[Dohany utcai zsinagoga:1.0/1.0,M,R020825,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=464</url>
+<urlname><![CDATA[GCZSF]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5126" lon="19.089933333333">
+<ele>110</ele>
+<time>2002-08-11T21:30:00Z</time>
+<name>GCfuit</name>
+<cmt>373 - 2002.08.11 21:30</cmt>
+<desc><![CDATA[Varosligeti fenyves:1.0/1.0,V,R020811,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=442</url>
+<urlname><![CDATA[GCfuit]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.512033333333" lon="19.080733333333">
+<ele>110</ele>
+<time>2002-07-19T18:30:00Z</time>
+<name>GCfenn</name>
+<cmt>329 - 2002.07.19 18:30</cmt>
+<desc><![CDATA[Foldunk a magasbol NETCA:1.0/1.0,V,R020719,U230713]]></desc>
+<url>https://geocaching.hu/caches.geo?id=400</url>
+<urlname><![CDATA[GCfenn]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4898" lon="19.038766666667">
+<ele>144</ele>
+<time>2002-07-10T12:40:00Z</time>
+<name>GCTH2O</name>
+<cmt>317 - 2002.07.10 12:40</cmt>
+<desc><![CDATA[Kincs a fold alatt:2.0/1.5,V,R020710,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=386</url>
+<urlname><![CDATA[GCTH2O]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.555516666667" lon="19.003433333333">
+<ele>437</ele>
+<time>2002-07-05T19:00:00Z</time>
+<name>GC3hat</name>
+<cmt>297 - 2002.07.05 19:00</cmt>
+<desc><![CDATA[Harmashatar-hegy:2.0/2.0,M,R020705,U230705]]></desc>
+<url>https://geocaching.hu/caches.geo?id=369</url>
+<urlname><![CDATA[GC3hat]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.497366666667" lon="19.0404">
+<ele>110</ele>
+<time>2002-06-27T22:00:00Z</time>
+<name>GCNULL</name>
+<cmt>288 - 2002.06.27 22:00</cmt>
+<desc><![CDATA[A 0 kilometerko:2.5/1.5,H,R020627,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=360</url>
+<urlname><![CDATA[GCNULL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5634" lon="19.048583333333">
+<ele>112</ele>
+<time>2002-06-22T20:00:00Z</time>
+<name>GCSPQR</name>
+<cmt>285 - 2002.06.22 20:00</cmt>
+<desc><![CDATA[AQVINCVM:1.5/1.5,M,R020622,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=357</url>
+<urlname><![CDATA[GCSPQR]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.541683333333" lon="19.045733333333">
+<ele>103</ele>
+<time>2002-06-17T00:00:00Z</time>
+<name>GCeso</name>
+<cmt>280 - 2002.06.17</cmt>
+<desc><![CDATA[Varakozok szoborcsoport:1.0/1.0,V,R020617,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=352</url>
+<urlname><![CDATA[GCeso]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.476016666667" lon="19.0405">
+<ele>102</ele>
+<time>2002-06-16T12:00:00Z</time>
+<name>GCtav</name>
+<cmt>278 - 2002.06.16 12:00</cmt>
+<desc><![CDATA[Legenda:1.5/1.0,H,R020616,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=350</url>
+<urlname><![CDATA[GCtav]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.531883333333" lon="18.986183333333">
+<ele>249</ele>
+<time>2002-06-15T11:00:00Z</time>
+<name>GCzttr</name>
+<cmt>272 - 2002.06.15 11:00</cmt>
+<desc><![CDATA[Nagy-Szikla (Apathy-szik:1.5/1.5,H,R020615,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=344</url>
+<urlname><![CDATA[GCzttr]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.504766666667" lon="19.039883333333">
+<ele>103</ele>
+<time>2002-06-14T21:45:00Z</time>
+<name>GCnyug</name>
+<cmt>271 - 2002.06.14 21:45</cmt>
+<desc><![CDATA[Nyugi (de csak, ha suket:1.0/1.0,V,R020614,U230612]]></desc>
+<url>https://geocaching.hu/caches.geo?id=341</url>
+<urlname><![CDATA[GCnyug]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.425983333333" lon="18.9981">
+<ele>200</ele>
+<time>2002-06-11T15:00:00Z</time>
+<name>GCSzpk</name>
+<cmt>268 - 2002.06.11 15:00</cmt>
+<desc><![CDATA[Szoborpark:1.5/1.5,H,R020611,U230719]]></desc>
+<url>https://geocaching.hu/caches.geo?id=340</url>
+<urlname><![CDATA[GCSzpk]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5039" lon="19.028683333333">
+<ele>177</ele>
+<time>2002-06-05T17:22:00Z</time>
+<name>GCfMKU</name>
+<cmt>264 - 2002.06.05 17:22</cmt>
+<desc><![CDATA[Matyas kiraly udvaraban:1.0/1.5,M,R020605,U230629]]></desc>
+<url>https://geocaching.hu/caches.geo?id=336</url>
+<urlname><![CDATA[GCfMKU]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4688" lon="19.10085">
+<ele>127</ele>
+<time>2002-05-22T23:00:00Z</time>
+<name>GCtksz</name>
+<cmt>241 - 2002.05.22 23:00</cmt>
+<desc><![CDATA[A tavkozles szelleme:1.0/1.0,H,R020522,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=311</url>
+<urlname><![CDATA[GCtksz]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5362" lon="18.985433333333">
+<ele>237</ele>
+<time>2002-04-24T20:00:00Z</time>
+<name>GClibc</name>
+<cmt>209 - 2002.04.24 20:00</cmt>
+<desc><![CDATA[Libanoni cedrus:1.0/1.5,V,R020424,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=273</url>
+<urlname><![CDATA[GClibc]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.45535" lon="19.124416666667">
+<ele>146</ele>
+<time>2002-04-23T18:00:00Z</time>
+<name>GCWeke</name>
+<cmt>208 - 2002.04.23 18:00</cmt>
+<desc><![CDATA[Wekerletelep:1.0/1.0,M,R020423,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=271</url>
+<urlname><![CDATA[GCWeke]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.511866666667" lon="19.247883333333">
+<ele>153</ele>
+<time>2002-04-07T15:30:00Z</time>
+<name>GCNapl</name>
+<cmt>186 - 2002.04.07 15:30</cmt>
+<desc><![CDATA[Naplas-to:1.0/1.0,M,R020407,U230710]]></desc>
+<url>https://geocaching.hu/caches.geo?id=246</url>
+<urlname><![CDATA[GCNapl]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.48945" lon="19.0464">
+<ele>114</ele>
+<time>2002-04-06T16:30:00Z</time>
+<name>GCturk</name>
+<cmt>184 - 2002.04.06 16:30</cmt>
+<desc><![CDATA[Torok emlekek Budan (es :2.0/1.5,M,R020406,U230702]]></desc>
+<url>https://geocaching.hu/caches.geo?id=240</url>
+<urlname><![CDATA[GCturk]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.487616666667" lon="19.044066666667">
+<ele>218</ele>
+<time>2002-04-05T22:00:00Z</time>
+<name>GCGKIL</name>
+<cmt>179 - 2002.04.05 22:00</cmt>
+<desc><![CDATA[Gellerthegyi-kilatas:1.0/1.0,V,R020405,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=239</url>
+<urlname><![CDATA[GCGKIL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.564616666667" lon="18.98065">
+<ele>295</ele>
+<time>2002-03-30T12:40:00Z</time>
+<name>GCGER</name>
+<cmt>157 - 2002.03.30 12:40</cmt>
+<desc><![CDATA[Gercse:3.0/2.0,H,R020330,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=217</url>
+<urlname><![CDATA[GCGER]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.527733333333" lon="18.98025">
+<ele>198</ele>
+<time>2002-03-30T09:50:00Z</time>
+<name>GCkast</name>
+<cmt>156 - 2002.03.30 09:50</cmt>
+<desc><![CDATA[Templom es vadaszkastely:1.0/1.0,M,R020330,U230214]]></desc>
+<url>https://geocaching.hu/caches.geo?id=226</url>
+<urlname><![CDATA[GCkast]]></urlname>
+<sym>Medical Facility</sym>
+<type><![CDATA[Medical Facility]]></type>
+</wpt>
+
+<wpt lat="47.508666666667" lon="19.04805">
+<ele>115</ele>
+<time>2002-03-27T17:45:00Z</time>
+<name>GCPARL</name>
+<cmt>152 - 2002.03.27 17:45</cmt>
+<desc><![CDATA[Parlament:1.5/1.0,H,R020327,U230718]]></desc>
+<url>https://geocaching.hu/caches.geo?id=211</url>
+<urlname><![CDATA[GCPARL]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.425066666667" lon="19.1933">
+<ele>130</ele>
+<time>2002-03-23T15:34:00Z</time>
+<name>GCERDO</name>
+<cmt>143 - 2002.03.23 15:34</cmt>
+<desc><![CDATA[Lorinci kiserdo:2.0/2.5,H,R020323,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=200</url>
+<urlname><![CDATA[GCERDO]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.56005" lon="19.05865">
+<ele>110</ele>
+<time>2002-03-18T10:50:00Z</time>
+<name>GCpop</name>
+<cmt>140 - 2002.03.18 10:50</cmt>
+<desc><![CDATA[Pop, csajok, stb:1.5/2.0,H,R020318,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=198</url>
+<urlname><![CDATA[GCpop]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.538766666667" lon="19.00005">
+<ele>352</ele>
+<time>2002-03-15T16:30:00Z</time>
+<name>GCtric</name>
+<cmt>125 - 2002.03.15 16:30</cmt>
+<desc><![CDATA[Apati Nemzeti Tricolor:2.5/4.0,M,R020315,U230619]]></desc>
+<url>https://geocaching.hu/caches.geo?id=184</url>
+<urlname><![CDATA[GCtric]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4911" lon="18.98965">
+<ele>378</ele>
+<time>2002-03-09T16:50:00Z</time>
+<name>GCBPMA</name>
+<cmt>118 - 2002.03.09 16:50</cmt>
+<desc><![CDATA[Budapest madartavlatbol:2.0/3.0,M,R020309,U230628]]></desc>
+<url>https://geocaching.hu/caches.geo?id=175</url>
+<urlname><![CDATA[GCBPMA]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.385183333333" lon="18.9721">
+<ele>109</ele>
+<time>2002-03-09T11:17:00Z</time>
+<name>GCzipp</name>
+<cmt>116 - 2002.03.09 11:17</cmt>
+<desc><![CDATA[Magyarorszag Geoladaolog:1.0/1.0,H,R020309,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=173</url>
+<urlname><![CDATA[GCzipp]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.484416666667" lon="18.944483333333">
+<ele>355</ele>
+<time>2002-02-24T13:30:00Z</time>
+<name>GCPTRG</name>
+<cmt>102 - 2002.02.24 13:30</cmt>
+<desc><![CDATA[Piktortegla-ureg:1.5/2.0,H,R020224,U230620]]></desc>
+<url>https://geocaching.hu/caches.geo?id=156</url>
+<urlname><![CDATA[GCPTRG]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.48505" lon="19.051883333333">
+<ele>153</ele>
+<time>2002-02-11T16:30:00Z</time>
+<name>GCkrhj</name>
+<cmt>091 - 2002.02.11 16:30</cmt>
+<desc><![CDATA[Keresztes hadjarat:4.0/1.5,M,R020211,U230619]]></desc>
+<url>https://geocaching.hu/caches.geo?id=141</url>
+<urlname><![CDATA[GCkrhj]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5639" lon="19.052333333333">
+<ele>106</ele>
+<time>2002-02-09T15:00:00Z</time>
+<name>GCgazm</name>
+<cmt>086 - 2002.02.09 15:00</cmt>
+<desc><![CDATA[Gazgyari megallo 2.:3.0/1.0,H,R020209,U230712]]></desc>
+<url>https://geocaching.hu/caches.geo?id=136</url>
+<urlname><![CDATA[GCgazm]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.4864" lon="19.047416666667">
+<ele>217</ele>
+<time>2002-02-03T16:50:00Z</time>
+<name>GCGhkm</name>
+<cmt>081 - 2002.02.03 16:50</cmt>
+<desc><![CDATA[Gellerthegyi kezdomeridi:2.0/3.0,H,R020203,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=129</url>
+<urlname><![CDATA[GCGhkm]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.518766666667" lon="18.958">
+<ele>512</ele>
+<time>2002-01-26T00:00:00Z</time>
+<name>GCHete</name>
+<cmt>073 - 2002.01.26</cmt>
+<desc><![CDATA[Hegyvidek teteje:1.5/2.5,H,R020126,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=106</url>
+<urlname><![CDATA[GCHete]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.529133333333" lon="19.0518">
+<ele>110</ele>
+<time>2002-01-22T00:00:00Z</time>
+<name>GCszms</name>
+<cmt>071 - 2002.01.22</cmt>
+<desc><![CDATA[Szent Margit sirja:1.5/1.0,V,R020122,U230716]]></desc>
+<url>https://geocaching.hu/caches.geo?id=103</url>
+<urlname><![CDATA[GCszms]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.529733333333" lon="18.965033333333">
+<ele>356</ele>
+<time>2002-01-13T00:00:00Z</time>
+<name>GChars</name>
+<cmt>063 - 2002.01.13</cmt>
+<desc><![CDATA[Kis-Hars-hegy:3.0/1.5,H,R020113,U230714]]></desc>
+<url>https://geocaching.hu/caches.geo?id=96</url>
+<urlname><![CDATA[GChars]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5367" lon="18.951916666667">
+<ele>363</ele>
+<time>2001-11-24T00:00:00Z</time>
+<name>GCsosz</name>
+<cmt>052 - 2001.11.24</cmt>
+<desc><![CDATA[A sotetseg szaja:2.0/2.0,H,R011124,U230625]]></desc>
+<url>https://geocaching.hu/caches.geo?id=84</url>
+<urlname><![CDATA[GCsosz]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.477866666667" lon="19.1063">
+<ele>121</ele>
+<time>2001-11-15T00:00:00Z</time>
+<name>GCeTBP</name>
+<cmt>048 - 2001.11.15</cmt>
+<desc><![CDATA[eTrex-Budapest:2.0/1.0,H,R011115,U230720]]></desc>
+<url>https://geocaching.hu/caches.geo?id=80</url>
+<urlname><![CDATA[GCeTBP]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.5021" lon="18.959566666667">
+<ele>443</ele>
+<time>2001-09-20T00:00:00Z</time>
+<name>GCNoFo</name>
+<cmt>022 - 2001.09.20</cmt>
+<desc><![CDATA[Normafa Fokusza:1.0/1.5,H,R010920,U230709]]></desc>
+<url>https://geocaching.hu/caches.geo?id=43</url>
+<urlname><![CDATA[GCNoFo]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.590483333333" lon="19.034833333333">
+<ele>233</ele>
+<time>2001-09-15T17:40:00Z</time>
+<name>GCKL2</name>
+<cmt>020 - 2001.09.15 17:40</cmt>
+<desc><![CDATA[Kilatas2 (Roka-hegy):2.0/2.5,H,R010915,U230715]]></desc>
+<url>https://geocaching.hu/caches.geo?id=37</url>
+<urlname><![CDATA[GCKL2]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.542033333333" lon="18.990416666667">
+<ele>354</ele>
+<time>2001-09-08T00:00:00Z</time>
+<name>GCKL1</name>
+<cmt>019 - 2001.09.08</cmt>
+<desc><![CDATA[Kilatas:3.5/3.5,H,R010908,U230710]]></desc>
+<url>https://geocaching.hu/caches.geo?id=33</url>
+<urlname><![CDATA[GCKL1]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+<wpt lat="47.55205" lon="18.988866666667">
+<ele>448</ele>
+<time>2001-07-18T00:00:00Z</time>
+<name>GCerep</name>
+<cmt>004 - 2001.07.18</cmt>
+<desc><![CDATA[Erdei repuloter:1.5/2.5,H,R010718,U230521]]></desc>
+<url>https://geocaching.hu/caches.geo?id=40</url>
+<urlname><![CDATA[GCerep]]></urlname>
+<sym>Geocache</sym>
+<type><![CDATA[Geocache]]></type>
+</wpt>
+
+</gpx>

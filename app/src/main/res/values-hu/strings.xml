@@ -40,6 +40,7 @@
     <string name="gpx_details_bottom_sheet_google_maps_button">Kezdőponthoz</string>
     <string name="gpx_details_bottom_sheet_start_button">Indulás</string>
     <string name="gpx_details_bottom_sheet_visibility_button">Láthatóság</string>
+    <string name="gpx_details_bottom_sheet_waypoints_only_counter_template">%d állomás</string>
 
     <string name="map_place_name_routes_nearby">Túraútvonalak a térképen</string>
     <string name="map_place_name_node_routes_nearby">%s közelében</string>

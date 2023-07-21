@@ -5,7 +5,6 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.toGpxWaypoints
 import hu.mostoha.mobile.android.huki.model.domain.toLocationsTriple
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
@@ -24,6 +23,7 @@ import io.ticofab.androidgpxparser.parser.domain.TrackSegment
 import io.ticofab.androidgpxparser.parser.domain.WayPoint
 import org.junit.Assert.assertThrows
 import org.junit.Test
+import kotlin.time.Duration
 
 class LayersDomainModelMapperTest {
 
@@ -78,8 +78,8 @@ class LayersDomainModelMapperTest {
                 travelTime = expectedLocations.calculateTravelTime(),
                 distance = expectedLocations.calculateDistance(),
                 altitudeRange = Pair(0, 0),
-                incline = expectedLocations.calculateIncline(),
-                decline = expectedLocations.calculateDecline(),
+                incline = 0,
+                decline = 0,
             )
         )
     }
@@ -98,7 +98,7 @@ class LayersDomainModelMapperTest {
                 id = gpxDetails.id,
                 fileName = fileName,
                 locations = expectedLocations,
-                gpxWaypoints = gpx.wayPoints.toGpxWaypoints(),
+                gpxWaypoints = mapper.mapGpxWaypoints(gpx.wayPoints),
                 travelTime = expectedLocations.calculateTravelTime(),
                 distance = expectedLocations.calculateDistance(),
                 altitudeRange = Pair(
@@ -111,6 +111,28 @@ class LayersDomainModelMapperTest {
                 ),
                 incline = expectedLocations.calculateIncline(),
                 decline = expectedLocations.calculateDecline(),
+            )
+        )
+    }
+
+    @Test
+    fun `Given GPX with waypoints only, when mapGpxDetails, then GPX Details returns`() {
+        val fileName = "dera_szurdok_routes.gpx"
+        val gpx = DEFAULT_GPX_WAYPOINTS_ONLY
+
+        val gpxDetails = mapper.mapGpxDetails(fileName, gpx)
+
+        assertThat(gpxDetails).isEqualTo(
+            GpxDetails(
+                id = gpxDetails.id,
+                fileName = fileName,
+                locations = emptyList(),
+                gpxWaypoints = mapper.mapGpxWaypoints(gpx.wayPoints),
+                travelTime = Duration.ZERO,
+                distance = 0,
+                altitudeRange = Pair(0, 0),
+                incline = 0,
+                decline = 0,
             )
         )
     }
@@ -135,6 +157,7 @@ class LayersDomainModelMapperTest {
         private val DEFAULT_GPX_CLOSED = createGpxTrack(DEFAULT_GPX_WAY_CLOSED.toLocationsTriple())
         private val DEFAULT_GPX_WITHOUT_ALTITUDE = createGpxTrack(DEFAULT_GPX_WAY_OPEN.toLocationsTriple(), false)
         private val DEFAULT_GPX_ROUTES = createGpxRoute(DEFAULT_GPX_WAY_OPEN.toLocationsTriple())
+        private val DEFAULT_GPX_WAYPOINTS_ONLY = createWaypoints(DEFAULT_GPX_WAY_OPEN.toLocationsTriple())
 
         private fun createGpxTrack(locations: List<Location>, withElevation: Boolean = true): Gpx {
             return Gpx.Builder()
@@ -197,6 +220,25 @@ class LayersDomainModelMapperTest {
                             .build()
                     )
                 )
+                .setTracks(emptyList())
+                .build()
+        }
+
+        private fun createWaypoints(locations: List<Location>): Gpx {
+            return Gpx.Builder()
+                .setWayPoints(
+                    listOf(
+                        WayPoint.Builder()
+                            .setName(DEFAULT_ROUTE_PLAN_WAYPOINT_1_NAME)
+                            .setDesc("Description")
+                            .setCmt("Cmt")
+                            .setLatitude(locations.first().latitude)
+                            .setLongitude(locations.first().longitude)
+                            .setElevation(locations.first().altitude)
+                            .build() as WayPoint,
+                    )
+                )
+                .setRoutes(emptyList())
                 .setTracks(emptyList())
                 .build()
         }

@@ -2,22 +2,23 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
+import hu.mostoha.mobile.android.huki.model.domain.GpxWaypoint
 import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.toGpxWaypoints
 import hu.mostoha.mobile.android.huki.util.calculateDecline
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import hu.mostoha.mobile.android.huki.util.calculateIncline
 import hu.mostoha.mobile.android.huki.util.calculateTravelTime
 import io.ticofab.androidgpxparser.parser.domain.Gpx
+import io.ticofab.androidgpxparser.parser.domain.WayPoint
 import javax.inject.Inject
 
 class LayersDomainModelMapper @Inject constructor() {
 
-    companion object {
-        private const val GPX_GEO_POINTS_LIMIT = 2
-    }
-
     fun mapGpxDetails(fileName: String, gpx: Gpx): GpxDetails {
+        if (gpx.tracks.isEmpty() && gpx.routes.isEmpty() && gpx.wayPoints.isEmpty()) {
+            throw GpxParseFailedException(IllegalArgumentException("GPX must contain one track, route or waypoint"))
+        }
+
         val locations = when {
             gpx.tracks.isNotEmpty() -> {
                 gpx.tracks
@@ -34,34 +35,45 @@ class LayersDomainModelMapper @Inject constructor() {
                         Location(routePoint.latitude, routePoint.longitude, routePoint.elevation)
                     }
             }
-            else -> throw GpxParseFailedException(IllegalArgumentException("Tracks and routes are empty"))
+            else -> emptyList()
         }
 
-        if (locations.isEmpty() || locations.size < GPX_GEO_POINTS_LIMIT) {
-            throw GpxParseFailedException(IllegalArgumentException("Tracks and routes are empty"))
-        }
-
-        val gpxWaypoints = gpx.wayPoints.toGpxWaypoints()
+        val gpxWaypoints = mapGpxWaypoints(gpx.wayPoints)
 
         val minAltitude = locations
             .mapNotNull { it.altitude }
             .minOrNull() ?: 0.0
-
         val maxAltitude = locations
             .mapNotNull { it.altitude }
             .maxOrNull() ?: 0.0
-        val distance = locations.calculateDistance()
 
         return GpxDetails(
             fileName = fileName,
             locations = locations,
             gpxWaypoints = gpxWaypoints,
-            distance = distance,
+            distance = locations.calculateDistance(),
             travelTime = locations.calculateTravelTime(),
             altitudeRange = minAltitude.toInt() to maxAltitude.toInt(),
             incline = locations.calculateIncline(),
             decline = locations.calculateDecline(),
         )
+    }
+
+    fun mapGpxWaypoints(waypoints: MutableList<WayPoint>): List<GpxWaypoint> {
+        return waypoints.map {
+            val name = listOfNotNull(
+                it.name,
+                it.desc
+                    ?.split(":")
+                    ?.joinToString("\n"),
+                it.cmt,
+            ).joinToString("\n")
+
+            GpxWaypoint(
+                name = name,
+                location = Location(it.latitude, it.longitude, it.elevation),
+            )
+        }
     }
 
 }

@@ -255,6 +255,23 @@ class GpxDetailsUiTest {
     }
 
     @Test
+    fun givenGpxFileWithWaypointsOnly_whenImportGpxClicked_thenGpxDetailsBottomSheetIsDisplayed() {
+        launchScenario<HomeActivity> {
+            R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
+
+            val activityResult = getTestGpxFileResult(TEST_GPX_NAME_WAYPOINTS_ONLY)
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(activityResult)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
+            R.id.homeMapView.hasOverlayCount<GpxMarker>(245)
+            R.id.gpxDetailsWaypointsOnlyText.isDisplayed()
+        }
+    }
+
+    @Test
     fun givenSecondGpxFile_whenImportGpxClicked_thenPreviousGpxIsCleared() {
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
@@ -304,6 +321,7 @@ class GpxDetailsUiTest {
         private const val TEST_GPX_NAME = "dera_szurdok.gpx"
         private const val TEST_GPX_NAME_WITHOUT_ALTITUDE = "dera_szurdok_without_altitude.gpx"
         private const val TEST_GPX_NAME_WITH_WAYPOINTS = "sorrento_with_waypoints.gpx"
+        private const val TEST_GPX_NAME_WAYPOINTS_ONLY = "budapest_geocache.gpx"
         private val TEST_GPX_START_LOCATION = Location(47.68498711287975, 18.91935557126999)
         private val DEFAULT_MY_LOCATION = Location(
             DEFAULT_MY_LOCATION_LATITUDE,

@@ -59,30 +59,35 @@ class LayersUiModelMapper @Inject constructor() {
     }
 
     fun mapGpxDetails(gpxDetails: GpxDetails): GpxDetailsUiModel {
-        val locations = gpxDetails.locations
-        val geoPoints = locations.map { it.toGeoPoint() }
-        val startLocation = geoPoints.first().toLocation()
-        val endLocation = geoPoints.last().toLocation()
-        val isRouteClosed = startLocation.distanceBetween(endLocation) <= WAY_CLOSED_DISTANCE_THRESHOLD_METER
-        val edgeWaypoints = if (isRouteClosed) {
-            listOf(
-                WaypointUiModel(
-                    startLocation.toGeoPoint(),
-                    waypointType = WaypointType.END,
+        val geoPoints = gpxDetails.locations.map { it.toGeoPoint() }
+
+        val edgeWaypoints = if (geoPoints.size >= 2) {
+            val startLocation = geoPoints.first().toLocation()
+            val endLocation = geoPoints.last().toLocation()
+            val isRouteClosed = startLocation.distanceBetween(endLocation) <= WAY_CLOSED_DISTANCE_THRESHOLD_METER
+            if (isRouteClosed) {
+                listOf(
+                    WaypointUiModel(
+                        startLocation.toGeoPoint(),
+                        waypointType = WaypointType.END,
+                    )
                 )
-            )
+            } else {
+                listOf(
+                    WaypointUiModel(
+                        startLocation.toGeoPoint(),
+                        waypointType = WaypointType.START,
+                    ),
+                    WaypointUiModel(
+                        endLocation.toGeoPoint(),
+                        waypointType = WaypointType.END,
+                    ),
+                )
+            }
         } else {
-            listOf(
-                WaypointUiModel(
-                    startLocation.toGeoPoint(),
-                    waypointType = WaypointType.START,
-                ),
-                WaypointUiModel(
-                    endLocation.toGeoPoint(),
-                    waypointType = WaypointType.END,
-                ),
-            )
+            emptyList()
         }
+
         val gpxWaypoints = gpxDetails.gpxWaypoints.map { waypoint ->
             WaypointUiModel(
                 geoPoint = waypoint.location.toGeoPoint(),
@@ -90,6 +95,7 @@ class LayersUiModelMapper @Inject constructor() {
                 name = waypoint.name?.toMessage(),
             )
         }
+
         val altitudeRange = gpxDetails.altitudeRange
 
         return GpxDetailsUiModel(
@@ -97,9 +103,21 @@ class LayersUiModelMapper @Inject constructor() {
             name = gpxDetails.fileName,
             geoPoints = geoPoints,
             waypoints = gpxWaypoints + edgeWaypoints,
-            boundingBox = BoundingBox.fromGeoPoints(geoPoints).toDomainBoundingBox(),
-            travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
-            distanceText = DistanceFormatter.format(gpxDetails.distance),
+            boundingBox = if (geoPoints.size >= 2) {
+                BoundingBox.fromGeoPoints(geoPoints).toDomainBoundingBox()
+            } else {
+                BoundingBox.fromGeoPoints(gpxWaypoints.map { it.geoPoint }).toDomainBoundingBox()
+            },
+            travelTimeText = if (gpxDetails.travelTime.inWholeSeconds > 0) {
+                gpxDetails.travelTime.formatHoursAndMinutes().toMessage()
+            } else {
+                null
+            },
+            distanceText = if (gpxDetails.distance > 0) {
+                DistanceFormatter.format(gpxDetails.distance)
+            } else {
+                null
+            },
             altitudeUiModel = if (altitudeRange.first != 0 && altitudeRange.second != 0) {
                 AltitudeUiModel(
                     minAltitudeText = DistanceFormatter.format(altitudeRange.first),
