@@ -25,9 +25,7 @@ class LayersInteractorTest {
     private lateinit var layersInteractor: LayersInteractor
 
     private val layersRepository = mockk<LayersRepository>()
-
     private val exceptionLogger = mockk<ExceptionLogger>()
-
     private val gpxFileUri = mockk<Uri>()
 
     @Before

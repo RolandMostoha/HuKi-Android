@@ -71,7 +71,7 @@ fun Uri.getFileName(context: Context): String {
             val displayName = cursor.getString(displayNameColumnIndex)
             cursor.close()
 
-            displayName.substringBeforeLast(".")
+            displayName.removeFileExtension()
         }
         ContentResolver.SCHEME_FILE -> {
             // Like [file://data/user/0/com.example.app/cache/sample.png]
@@ -105,7 +105,11 @@ fun Uri.getFileName(context: Context): String {
         }
         else -> {
             // Http uri [https://example.com/sample.png]
-            toString().substringBeforeLast(".").substringAfterLast("/")
+            toString().removeFileExtension().substringAfterLast("/")
         }
     }
+}
+
+fun String.removeFileExtension(): String {
+    return this.substringBeforeLast(".")
 }

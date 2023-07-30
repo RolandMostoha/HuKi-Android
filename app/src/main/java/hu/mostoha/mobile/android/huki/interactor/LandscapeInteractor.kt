@@ -15,7 +15,7 @@ class LandscapeInteractor @Inject constructor(
 ) {
 
     fun requestGetLandscapesFlow(location: Location? = null): Flow<List<Landscape>> {
-        val landscapesFlow = transformRequestToFlow(
+        val landscapesFlow = flowWithExceptions(
             request = { landscapeRepository.getLandscapes() },
             exceptionLogger = exceptionLogger
         )

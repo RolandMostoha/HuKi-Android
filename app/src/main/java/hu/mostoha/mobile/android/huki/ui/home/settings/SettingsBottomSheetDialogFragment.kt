@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentSettingsBottomSheetDialogBinding
+import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import hu.mostoha.mobile.android.huki.extensions.hyperlinkStyle
 import hu.mostoha.mobile.android.huki.extensions.startEmailIntent
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
@@ -62,6 +63,8 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (view.parent as View).clearBackground()
 
         initDialog()
         initViews()

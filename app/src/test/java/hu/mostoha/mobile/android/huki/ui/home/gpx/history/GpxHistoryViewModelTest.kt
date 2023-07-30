@@ -9,11 +9,13 @@ import hu.mostoha.mobile.android.huki.model.domain.GpxHistory
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistoryItem
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.mapper.GpxHistoryUiModelMapper
+import hu.mostoha.mobile.android.huki.model.ui.GpxRenameResult
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.runTestDefault
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -28,18 +30,18 @@ class GpxHistoryViewModelTest {
 
     private val exceptionLogger = mockk<ExceptionLogger>()
     private val layersRepository = mockk<LayersRepository>()
-    private val gpxFileUri = mockk<Uri>()
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun setUp() {
+        every { DEFAULT_GPX_FILE_URI.lastPathSegment } returns "dera_szurdok.gpx"
         coEvery { layersRepository.getGpxHistory() } returns GpxHistory(
             routePlannerGpxList = listOf(
                 GpxHistoryItem(
                     name = "dera_szurdok.gpx",
-                    fileUri = gpxFileUri,
+                    fileUri = DEFAULT_GPX_FILE_URI,
                     lastModified = LocalDateTime.of(2023, 6, 2, 16, 0),
                 )
             ),
@@ -50,7 +52,18 @@ class GpxHistoryViewModelTest {
             exceptionLogger,
             layersRepository,
             GpxHistoryUiModelMapper(),
+            mainCoroutineRule.testDispatcher,
         )
+    }
+
+    @Test
+    fun `When init, then gpx history file names return GPX file names without file extension`() {
+        runTestDefault {
+            viewModel.gpxHistoryFileNames.test {
+                assertThat(awaitItem()).isEqualTo(emptyList<String>())
+                assertThat(awaitItem()).isEqualTo(listOf("dera_szurdok"))
+            }
+        }
     }
 
     @Test
@@ -58,19 +71,7 @@ class GpxHistoryViewModelTest {
         runTestDefault {
             viewModel.gpxHistoryAdapterItems.test {
                 assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(
-                    listOf(
-                        GpxHistoryAdapterModel.Item(
-                            name = "dera_szurdok.gpx",
-                            gpxType = GpxType.ROUTE_PLANNER,
-                            fileUri = gpxFileUri,
-                            dateText = Message.Res(
-                                R.string.gpx_history_item_route_planner_date_template,
-                                listOf("2023.06.02 16:00")
-                            ),
-                        )
-                    )
-                )
+                assertThat(awaitItem()).isEqualTo(listOf(DEFAULT_ROUTE_PLANNER_GPX_HISTORY_ITEM))
             }
         }
     }
@@ -82,7 +83,7 @@ class GpxHistoryViewModelTest {
             externalGpxList = listOf(
                 GpxHistoryItem(
                     name = "dera_szurdok.gpx",
-                    fileUri = gpxFileUri,
+                    fileUri = DEFAULT_GPX_FILE_URI,
                     lastModified = LocalDateTime.of(2023, 6, 2, 16, 0),
                 )
             ),
@@ -95,17 +96,13 @@ class GpxHistoryViewModelTest {
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(
                     listOf(
-                        GpxHistoryAdapterModel.Item(
-                            name = "dera_szurdok.gpx",
-                            gpxType = GpxType.EXTERNAL,
-                            fileUri = gpxFileUri,
-                            dateText = Message.Res(
-                                R.string.gpx_history_item_external_date_template,
-                                listOf("2023.06.02 16:00")
-                            ),
+                        GpxHistoryAdapterModel.InfoView(
+                            message = R.string.gpx_history_item_route_planner_empty,
+                            iconRes = R.drawable.ic_gpx_history_empty
                         )
                     )
                 )
+                assertThat(awaitItem()).isEqualTo(listOf(DEFAULT_EXTERNAL_GPX_HISTORY_ITEM))
             }
         }
     }
@@ -117,6 +114,7 @@ class GpxHistoryViewModelTest {
                 viewModel.tabSelected(GpxHistoryTab.EXTERNAL)
 
                 assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(listOf(DEFAULT_ROUTE_PLANNER_GPX_HISTORY_ITEM))
                 assertThat(awaitItem()).isEqualTo(
                     listOf(
                         GpxHistoryAdapterModel.InfoView(
@@ -127,6 +125,54 @@ class GpxHistoryViewModelTest {
                 )
             }
         }
+    }
+
+    @Test
+    fun `Given error, when delete GPX, then error message is emitted`() {
+        runTestDefault {
+            coEvery { layersRepository.deleteGpx(any()) } throws Exception("Error")
+
+            viewModel.errorMessage.test {
+                viewModel.deleteGpx(DEFAULT_GPX_FILE_URI)
+
+                assertThat(awaitItem()).isEqualTo(Message.Res(R.string.gpx_history_rename_operation_error))
+            }
+        }
+    }
+
+    @Test
+    fun `Given error, when rename GPX, then error message is emitted`() {
+        runTestDefault {
+            coEvery { layersRepository.renameGpx(any(), any()) } throws Exception("Error")
+
+            viewModel.errorMessage.test {
+                viewModel.renameGpx(GpxRenameResult(DEFAULT_GPX_FILE_URI, "new_name"))
+
+                assertThat(awaitItem()).isEqualTo(Message.Res(R.string.gpx_history_rename_operation_error))
+            }
+        }
+    }
+
+    companion object {
+        private val DEFAULT_GPX_FILE_URI = mockk<Uri>()
+        private val DEFAULT_ROUTE_PLANNER_GPX_HISTORY_ITEM = GpxHistoryAdapterModel.Item(
+            name = "dera_szurdok.gpx",
+            gpxType = GpxType.ROUTE_PLANNER,
+            fileUri = DEFAULT_GPX_FILE_URI,
+            dateText = Message.Res(
+                R.string.gpx_history_item_route_planner_date_template,
+                listOf("2023.06.02 16:00")
+            ),
+        )
+        private val DEFAULT_EXTERNAL_GPX_HISTORY_ITEM = GpxHistoryAdapterModel.Item(
+            name = "dera_szurdok.gpx",
+            gpxType = GpxType.EXTERNAL,
+            fileUri = DEFAULT_GPX_FILE_URI,
+            dateText = Message.Res(
+                R.string.gpx_history_item_external_date_template,
+                listOf("2023.06.02 16:00")
+            ),
+        )
     }
 
 }

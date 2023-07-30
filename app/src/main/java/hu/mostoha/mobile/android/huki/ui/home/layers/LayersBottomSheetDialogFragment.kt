@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.databinding.FragmentLayersBottomSheetDialogBinding
+import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -62,6 +63,8 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (view.parent as View).clearBackground()
 
         initDialog()
         initFlows()

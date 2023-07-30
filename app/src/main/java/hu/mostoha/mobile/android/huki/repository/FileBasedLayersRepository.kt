@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.repository
 
 import android.content.Context
 import android.net.Uri
+import androidx.core.net.toFile
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.R
@@ -109,6 +110,25 @@ class FileBasedLayersRepository @Inject constructor(
         }
 
         return GpxHistory(routePlannerGpxHistoryItems, externalGpxGpxHistoryItems)
+    }
+
+    override suspend fun deleteGpx(fileUri: Uri) {
+        fileUri.toFile().delete()
+    }
+
+    override suspend fun renameGpx(fileUri: Uri, newName: String) {
+        val sourceFile = fileUri.toFile()
+        val targetFile = File(sourceFile.parent, "$newName.gpx")
+
+        if (!targetFile.exists()) {
+            targetFile.createNewFile()
+        }
+
+        val isSuccessful = sourceFile.renameTo(targetFile)
+
+        if (!isSuccessful) {
+            error("Renaming GPX file was unsuccessful. source: $sourceFile, target: $targetFile")
+        }
     }
 
 }

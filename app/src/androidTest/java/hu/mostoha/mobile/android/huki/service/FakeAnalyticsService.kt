@@ -68,6 +68,10 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun gpxHistoryItemShared() = Unit
 
+    override fun gpxHistoryItemDelete() = Unit
+
+    override fun gpxHistoryItemRename() = Unit
+
     override fun copyrightClicked() = Unit
 
     override fun destroyed() = Unit

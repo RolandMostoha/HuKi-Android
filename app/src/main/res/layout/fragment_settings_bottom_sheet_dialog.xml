@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/background_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -81,9 +82,9 @@
 
     <RadioGroup
         android:id="@+id/settingsThemeRadioGroup"
-        android:checkedButton="@id/settingsThemeSystem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:checkedButton="@id/settingsThemeSystem"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -93,8 +94,8 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/space_medium"
             android:paddingHorizontal="@dimen/space_extra_small"
-            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
-            android:text="@string/settings_theme_system" />
+            android:text="@string/settings_theme_system"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
 
         <RadioButton
             android:id="@+id/settingsThemeLight"
@@ -102,8 +103,8 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/space_medium"
             android:paddingHorizontal="@dimen/space_extra_small"
-            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
-            android:text="@string/settings_theme_light" />
+            android:text="@string/settings_theme_light"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
 
         <RadioButton
             android:id="@+id/settingsThemeDark"
@@ -111,8 +112,8 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/space_medium"
             android:paddingHorizontal="@dimen/space_extra_small"
-            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
-            android:text="@string/settings_theme_dark" />
+            android:text="@string/settings_theme_dark"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
 
     </RadioGroup>
 

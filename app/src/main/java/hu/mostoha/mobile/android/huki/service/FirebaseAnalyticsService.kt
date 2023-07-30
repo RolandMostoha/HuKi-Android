@@ -4,6 +4,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
+import hu.mostoha.mobile.android.huki.extensions.removeFileExtension
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
@@ -51,6 +52,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_OPEN_GPX_HISTORY_ITEM = "open_gpx_history_item"
         private const val EVENT_OPEN_ROUTE_PLANNER_HISTORY_ITEM = "open_route_planner_history_item"
         private const val EVENT_SHARE_GPX_HISTORY_ITEM = "share_gpx_history_item"
+        private const val EVENT_DELETE_GPX_HISTORY_ITEM = "delete_gpx_history_item"
+        private const val EVENT_RENAME_GPX_HISTORY_ITEM = "rename_gpx_history_item"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
         private const val EVENT_DESTROYED = "destroyed"
 
@@ -166,7 +169,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
     }
 
     override fun gpxImported(fileName: String) {
-        val nameWithoutExtension = fileName.substringBeforeLast(".")
+        val nameWithoutExtension = fileName.removeFileExtension()
 
         firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED) {
             param(PARAM_IMPORTED_GPX_NAME, nameWithoutExtension)
@@ -242,6 +245,14 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun gpxHistoryItemShared() {
         firebaseAnalytics.logEvent(EVENT_SHARE_GPX_HISTORY_ITEM, null)
+    }
+
+    override fun gpxHistoryItemDelete() {
+        firebaseAnalytics.logEvent(EVENT_DELETE_GPX_HISTORY_ITEM, null)
+    }
+
+    override fun gpxHistoryItemRename() {
+        firebaseAnalytics.logEvent(EVENT_RENAME_GPX_HISTORY_ITEM, null)
     }
 
     override fun copyrightClicked() {

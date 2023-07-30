@@ -13,6 +13,7 @@
     <color name="colorPrimaryTextDisabled">#61262626</color>
     <color name="colorSecondaryText">#B3262626</color>
     <color name="colorBackground">#ffffff</color>
+    <color name="colorBackgroundLight">#F8F9FA</color>
     <color name="colorError">#c62828</color>
     <color name="colorStroke">#DEDEDE</color>
     <color name="colorStrokeOnMap">#C4C4C4</color>

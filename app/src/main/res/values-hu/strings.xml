@@ -107,5 +107,14 @@
     <string name="gpx_history_item_open_button_title">Megnyitás</string>
     <string name="gpx_history_item_share_button_title">Megosztás</string>
     <string name="gpx_history_item_error">Hiba történt GPX fájlok beolvasása közben.</string>
+    <string name="gpx_history_menu_action_rename">Átnevezés</string>
+    <string name="gpx_history_menu_action_delete">Törlés</string>
+    <string name="gpx_history_rename_input_hint">GPX átnevezése</string>
+    <string name="gpx_history_rename_save_button">Mentés</string>
+    <string name="gpx_history_rename_cancel_button">Mégsem</string>
+    <string name="gpx_history_rename_error_empty">A file neve nem lehet üres!</string>
+    <string name="gpx_history_rename_error_already_exists">A GPX fájl ezzel a névvel már létezik!</string>
+    <string name="gpx_history_rename_error_invalid_chars">A fájl neve nem tartalmazhat speciális karaktereket!</string>
+    <string name="gpx_history_rename_operation_error">Hiba történt a művelet során! Kérlek próbáld újra.</string>
 
 </resources>

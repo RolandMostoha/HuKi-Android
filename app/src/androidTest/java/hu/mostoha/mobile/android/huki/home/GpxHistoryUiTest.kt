@@ -186,6 +186,56 @@ class GpxHistoryUiTest {
     }
 
     @Test
+    fun givenRoutePlannerGpxFileInHistory_whenClickDelete_thenListItemIsRemoved() {
+        gpxConfiguration.clearAllGpxFiles()
+        getTestRoutePlannerGpxUri()
+
+        launchScenario<HomeActivity> {
+            val waypointName1 = "Dobogoko"
+            val waypointName2 = "Ram-hegy"
+
+            R.id.homeRoutePlannerFab.click()
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(0, ViewActions.typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(1, ViewActions.typeText(waypointName2)))
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            R.id.routePlannerDoneButton.click()
+
+            R.id.gpxDetailsCloseButton.click()
+
+            R.id.homeGpxHistoryFab.click()
+            R.id.gpxHistoryActionsButton.click()
+            R.string.gpx_history_menu_action_delete.clickWithTextInPopup()
+
+            R.string.gpx_history_item_route_planner_empty.isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenRoutePlannerGpxFileInHistory_whenClickRename_thenListItemIsUpdated() {
+        gpxConfiguration.clearAllGpxFiles()
+
+        launchScenario<HomeActivity> {
+            intending(IntentMatchers.hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+            R.id.gpxDetailsCloseButton.click()
+
+            R.id.homeGpxHistoryFab.click()
+            R.id.gpxHistoryTabLayout.selectTab(1)
+            R.id.gpxHistoryActionsButton.click()
+            R.string.gpx_history_menu_action_rename.clickWithTextInPopup()
+            R.id.gpxRenameInput.typeText("New file name")
+            R.id.gpxRenameSaveButton.click()
+
+            "New file name.gpx".isTextDisplayed()
+        }
+    }
+
+    @Test
     fun whenBackButtonIsClicked_thenHomeDisplays() {
         gpxConfiguration.clearAllGpxFiles()
 

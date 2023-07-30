@@ -17,7 +17,7 @@ import timber.log.Timber
  * @param exceptionLogger the logger for recording execution errors.
  * @return the request wrapped in a [Flow].
  */
-fun <T> transformRequestToFlow(request: suspend () -> T, exceptionLogger: ExceptionLogger): Flow<T> {
+fun <T> flowWithExceptions(request: suspend () -> T, exceptionLogger: ExceptionLogger): Flow<T> {
     return flow {
         try {
             val result = request.invoke()

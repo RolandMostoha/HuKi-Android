@@ -68,6 +68,10 @@ interface AnalyticsService {
 
     fun gpxHistoryItemShared()
 
+    fun gpxHistoryItemDelete()
+
+    fun gpxHistoryItemRename()
+
     fun copyrightClicked()
 
     fun destroyed()

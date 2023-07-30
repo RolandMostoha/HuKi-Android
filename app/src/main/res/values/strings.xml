@@ -115,5 +115,15 @@
     <string name="gpx_history_item_open_button_title">Open</string>
     <string name="gpx_history_item_share_button_title">Share</string>
     <string name="gpx_history_item_error">Error occurred during GPX file directory loading.</string>
+    <string name="gpx_history_menu_action_rename">Rename</string>
+    <string name="gpx_history_menu_action_delete">Delete</string>
+    <string name="gpx_history_rename_input_hint">Rename GPX</string>
+    <string name="gpx_history_rename_save_button">Save</string>
+    <string name="gpx_history_rename_cancel_button">Cancel</string>
+    <string name="gpx_history_rename_error_empty">File name cannot be empty!</string>
+    <string name="gpx_history_rename_error_already_exists">The GPX file already exists!</string>
+    <string name="gpx_history_rename_error_invalid_chars">The file name contains invalid characters!</string>
+    <string name="gpx_history_rename_operation_error">Error occurred during the operation! Please try it again.</string>
+    <string name="gpx_history_rename_postfix" translatable="false">.gpx</string>
 
 </resources>

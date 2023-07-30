@@ -14,21 +14,21 @@ class LayersInteractor @Inject constructor(
 ) {
 
     fun requestHikingLayerZoomRanges(): Flow<List<TileZoomRange>> {
-        return transformRequestToFlow(
+        return flowWithExceptions(
             request = { layersRepository.getHikingLayerZoomRanges() },
             exceptionLogger = exceptionLogger
         )
     }
 
     fun requestGpxDetails(fileUri: Uri?): Flow<GpxDetails> {
-        return transformRequestToFlow(
+        return flowWithExceptions(
             request = { layersRepository.getGpxDetails(fileUri) },
             exceptionLogger = exceptionLogger
         )
     }
 
     fun requestRoutePlannerGpxDetails(fileUri: Uri): Flow<GpxDetails> {
-        return transformRequestToFlow(
+        return flowWithExceptions(
             request = { layersRepository.getRoutePlannerGpxDetails(fileUri) },
             exceptionLogger = exceptionLogger
         )

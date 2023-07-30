@@ -17,21 +17,21 @@ class PlacesInteractor @Inject constructor(
 ) {
 
     fun requestGetPlacesByFlow(searchText: String, location: Location? = null): Flow<List<Place>> {
-        return transformRequestToFlow(
+        return flowWithExceptions(
             request = { placesRepository.getPlacesBy(searchText, location) },
             exceptionLogger = exceptionLogger
         )
     }
 
     fun requestGeometryFlow(osmId: String, placeType: PlaceType): Flow<Geometry> {
-        return transformRequestToFlow(
+        return flowWithExceptions(
             request = { placesRepository.getGeometry(osmId, placeType) },
             exceptionLogger = exceptionLogger
         )
     }
 
     fun requestGetHikingRoutesFlow(boundingBox: BoundingBox): Flow<List<HikingRoute>> {
-        return transformRequestToFlow(
+        return flowWithExceptions(
             request = { placesRepository.getHikingRoutes(boundingBox) },
             exceptionLogger = exceptionLogger
         )

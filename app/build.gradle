@@ -101,6 +101,7 @@ dependencies {
     implementation "com.google.android.material:material:1.8.0"
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "com.github.douglasjunior:android-simple-tooltip:1.1.0"
+    implementation "com.github.skydoves:powermenu:2.2.4"
 
     // Hilt
     def jetpackHiltVersion = "1.0.0"

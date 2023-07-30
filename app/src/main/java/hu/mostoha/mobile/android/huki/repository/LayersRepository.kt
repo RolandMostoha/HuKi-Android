@@ -15,4 +15,8 @@ interface LayersRepository {
 
     suspend fun getGpxHistory(): GpxHistory
 
+    suspend fun deleteGpx(fileUri: Uri)
+
+    suspend fun renameGpx(fileUri: Uri, newName: String)
+
 }

@@ -1,5 +1,8 @@
 package hu.mostoha.mobile.android.huki.extensions
 
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.view.View
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
@@ -56,4 +59,10 @@ fun List<BottomSheetDialog>.hideAll() {
     forEach { dialog ->
         dialog.hide()
     }
+}
+
+fun View.clearBackground() {
+    backgroundTintMode = PorterDuff.Mode.CLEAR
+    backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+    setBackgroundColor(Color.TRANSPARENT)
 }

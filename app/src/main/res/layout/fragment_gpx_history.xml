@@ -58,9 +58,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gpxHistoryList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingTop="@dimen/space_medium"
+        android:background="@color/colorBackgroundLight"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="3"
         tools:listitem="@layout/item_gpx_history" />
