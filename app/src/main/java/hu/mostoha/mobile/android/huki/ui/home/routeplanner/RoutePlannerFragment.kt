@@ -43,6 +43,8 @@ import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEventSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEvents
 import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -58,6 +60,7 @@ class RoutePlannerFragment : Fragment() {
     private val placeFinderViewModel: PlaceFinderViewModel by viewModels()
     private val insetSharedViewModel: InsetSharedViewModel by activityViewModels()
     private val permissionSharedViewModel: PermissionSharedViewModel by activityViewModels()
+    private val mapTouchEventSharedViewModel: MapTouchEventSharedViewModel by activityViewModels()
 
     private var _binding: FragmentRoutePlannerBinding? = null
     private val binding get() = _binding!!
@@ -235,7 +238,7 @@ class RoutePlannerFragment : Fragment() {
     private fun initFlows() {
         initRoutePlannerFlows()
         initPlaceFinderFlows()
-        initInsetFlows()
+        initSharedFlows()
     }
 
     private fun initRoutePlannerFlows() {
@@ -321,7 +324,7 @@ class RoutePlannerFragment : Fragment() {
         }
     }
 
-    private fun initInsetFlows() {
+    private fun initSharedFlows() {
         lifecycleScope.launch {
             insetSharedViewModel.result
                 .flowWithLifecycle(lifecycle)
@@ -330,6 +333,16 @@ class RoutePlannerFragment : Fragment() {
                         routePlannerContainer.updatePadding(
                             top = resources.getDimensionPixelSize(R.dimen.space_small) + result.topInset,
                         )
+                    }
+                }
+        }
+        lifecycleScope.launch {
+            mapTouchEventSharedViewModel.event
+                .flowWithLifecycle(lifecycle)
+                .collect { event ->
+                    if (event == MapTouchEvents.MAP_TOUCHED) {
+                        lastEditedWaypointInput?.clearFocus()
+                        placeFinderViewModel.cancelSearch()
                     }
                 }
         }

@@ -4,6 +4,7 @@ import android.Manifest
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,8 +39,12 @@ import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
 import hu.mostoha.mobile.android.huki.util.distanceBetween
+import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickImeActionButton
 import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
+import hu.mostoha.mobile.android.huki.util.espresso.hasFocus
+import hu.mostoha.mobile.android.huki.util.espresso.hasNoFocus
+import hu.mostoha.mobile.android.huki.util.espresso.isKeyboardShown
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isSnackbarMessageDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
@@ -118,6 +123,25 @@ class PlaceFinderUiTest {
 
             DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
             DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenPlaceFinderOpen_whenClickInMap_thenInputIsCleared() {
+        answerTestPlaces()
+
+        launchScenario<HomeActivity> {
+            assertThat(isKeyboardShown()).isFalse()
+            R.id.homeSearchBarInput.hasNoFocus()
+
+            R.id.homeSearchBarInput.click()
+
+            assertThat(isKeyboardShown()).isTrue()
+            R.id.homeSearchBarInput.hasFocus()
+
+            R.id.homeMapView.click()
+
+            R.id.homeSearchBarInput.hasNoFocus()
         }
     }
 

@@ -110,6 +110,8 @@ import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerViewModel
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEventSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEvents
 import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
@@ -148,6 +150,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val insetSharedViewModel: InsetSharedViewModel by viewModels()
     private val permissionSharedViewModel: PermissionSharedViewModel by viewModels()
+    private val mapTouchEventSharedViewModel: MapTouchEventSharedViewModel by viewModels()
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
@@ -254,6 +257,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
             addOnFirstLayoutListener { _, _, _, _, _ ->
                 initFlows()
+            }
+            setOnTouchListener { view, _ ->
+                view.performClick()
+                clearSearchBarInput()
+                lifecycleScope.launch {
+                    mapTouchEventSharedViewModel.updateEvent(MapTouchEvents.MAP_TOUCHED)
+                }
+                false
             }
         }
     }

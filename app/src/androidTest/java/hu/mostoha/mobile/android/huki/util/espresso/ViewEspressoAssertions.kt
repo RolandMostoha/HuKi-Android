@@ -1,6 +1,8 @@
 package hu.mostoha.mobile.android.huki.util.espresso
 
+import android.content.Context
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
@@ -20,6 +22,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
@@ -91,6 +94,14 @@ fun String.isPopupTextNotExists() {
     onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
         .check(ViewAssertions.doesNotExist())
+}
+
+fun @receiver:StringRes Int.hasFocus() {
+    onView(withId(this)).check(matches(ViewMatchers.hasFocus()))
+}
+
+fun @receiver:StringRes Int.hasNoFocus() {
+    onView(withId(this)).check(matches(not(ViewMatchers.hasFocus())))
 }
 
 fun @receiver:StringRes Int.isSnackbarMessageDisplayed() {
@@ -171,6 +182,15 @@ fun @receiver:IdRes Int.swipeDown() {
 
 fun @receiver:IdRes Int.selectTab(tabIndex: Int) {
     onView(withId(this)).perform(selectTabAtPosition(tabIndex))
+}
+
+fun isKeyboardShown(): Boolean {
+    val inputMethodManager = InstrumentationRegistry
+        .getInstrumentation()
+        .targetContext
+        .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+    return inputMethodManager.isAcceptingText
 }
 
 fun waitFor(millis: Long) {

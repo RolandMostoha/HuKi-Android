@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.intent.Intents
@@ -51,6 +52,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -163,6 +165,23 @@ class RoutePlannerUiTest {
 
             R.id.homeRoutePlannerContainer.isNotDisplayed()
             R.id.homeRoutePlannerFab.isDisplayed()
+        }
+    }
+
+    @Test
+    fun givenPlaceFinderOpen_whenClickInMap_thenWaypointInputIsCleared() {
+        launchScenario<HomeActivity> {
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, typeText("as")))
+                .check(matches(hasFocus()))
+
+            R.id.homeMapView.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(scrollToPosition<ViewHolder>(0))
+                .check(matches(not(hasFocus())))
         }
     }
 

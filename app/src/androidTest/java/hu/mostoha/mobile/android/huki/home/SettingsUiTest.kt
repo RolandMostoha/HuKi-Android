@@ -19,6 +19,7 @@ import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_SCALE_FACTOR
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.hasSliderValue
 import hu.mostoha.mobile.android.huki.util.espresso.hasTileScaleFactor
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.setSliderValue
 import hu.mostoha.mobile.android.huki.util.launchScenario
@@ -54,7 +55,11 @@ class SettingsUiTest {
         launchScenario<HomeActivity> {
             R.id.homeSettingsFab.click()
 
-            R.string.settings_title.isTextDisplayed()
+            R.id.settingsContainer.isDisplayed()
+            R.string.settings_map_scale_title.isTextDisplayed()
+            R.string.settings_theme_title.isTextDisplayed()
+            R.string.settings_offline_mode_title.isTextDisplayed()
+            R.string.settings_contact_title.isTextDisplayed()
         }
     }
 
