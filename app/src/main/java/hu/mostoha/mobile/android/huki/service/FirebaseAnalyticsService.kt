@@ -48,6 +48,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_SETTINGS_GOOGLE_PLAY_REVIEW = "select_settings_gps_review"
         private const val EVENT_SELECT_SETTINGS_THEME_LIGHT = "select_settings_theme_light"
         private const val EVENT_SELECT_SETTINGS_THEME_DARK = "select_settings_theme_dark"
+        private const val EVENT_SELECT_SETTINGS_OFFLINE_MODE_INFO = "select_settings_offline_mode_info"
         private const val EVENT_SELECT_GPX_HISTORY = "select_gpx_history"
         private const val EVENT_OPEN_GPX_HISTORY_ITEM = "open_gpx_history_item"
         private const val EVENT_OPEN_ROUTE_PLANNER_HISTORY_ITEM = "open_route_planner_history_item"
@@ -230,6 +231,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
                 /** no-op **/
             }
         }
+    }
+
+    override fun settingsOfflineModeInfoClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_OFFLINE_MODE_INFO, null)
     }
 
     override fun gpxHistoryClicked() {

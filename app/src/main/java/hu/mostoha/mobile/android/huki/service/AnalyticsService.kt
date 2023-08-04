@@ -62,6 +62,8 @@ interface AnalyticsService {
 
     fun settingsThemeClicked(theme: Theme)
 
+    fun settingsOfflineModeInfoClicked()
+
     fun gpxHistoryClicked()
 
     fun gpxHistoryItemOpened(gpxType: GpxType)

@@ -88,13 +88,15 @@
     <string name="licences_osmdroid">OsmDroid - Tile render</string>
     <string name="licences_ok_button_title">OK</string>
 
-    <string name="settings_title">Settings</string>
     <string name="settings_map_scale_title">Map display magnification</string>
     <string name="settings_map_scale_description">Magnification can reduce image quality</string>
     <string name="settings_theme_title">Theme</string>
     <string name="settings_theme_system">System</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
+    <string name="settings_offline_mode_title">Offline mode</string>
+    <string name="settings_offline_mode_description">The app saves all of the visited parts of the map, so these can be used offline.</string>
+    <string name="settings_offline_mode_description_long">All of the visited parts of the map are saved in a database for 14 days, which can be used offline.\n\nThe only thing to do, is to visit the necessary parts (meanwhile the app downloads them), in all of the desired zoom levels.\n\nThis is only needed if it\'s known that there won\'t be proper internet connection during the trip.\n\nIt can be tested by switching to airplane mode and make sure that all of the desired map parts are visible.</string>
     <string name="settings_contact_title">Contact</string>
     <string name="settings_contact_subtitle">I\'d be happy to receive any feedback, my goal is to create a useful app for everybody.</string>
     <string name="settings_email_title">Email:</string>

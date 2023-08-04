@@ -62,6 +62,8 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun settingsThemeClicked(theme: Theme) = Unit
 
+    override fun settingsOfflineModeInfoClicked() = Unit
+
     override fun gpxHistoryClicked() = Unit
 
     override fun gpxHistoryItemOpened(gpxType: GpxType) = Unit

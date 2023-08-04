@@ -51,6 +51,7 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val themeSystemRadioButton by lazy { binding.settingsThemeSystem }
     private val themeLightRadioButton by lazy { binding.settingsThemeLight }
     private val themeDarkRadioButton by lazy { binding.settingsThemeDark }
+    private val offlineModeInfoButton by lazy { binding.settingsOfflineModeInfoButton }
     private val emailText by lazy { binding.settingsEmailText }
     private val gitHubText by lazy { binding.settingsGitHubText }
     private val googlePlayReviewButton by lazy { binding.settingsGooglePlayReviewButton }
@@ -118,6 +119,9 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
             if (isChecked) {
                 settingsViewModel.updateTheme(Theme.DARK)
             }
+        }
+        offlineModeInfoButton.onClick = {
+            analyticsService.settingsOfflineModeInfoClicked()
         }
         emailText.hyperlinkStyle()
         emailText.setOnClickListener {

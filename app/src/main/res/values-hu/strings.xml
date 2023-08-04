@@ -84,13 +84,15 @@
     <string name="licences_osmdroid">OsmDroid - Tile render</string>
     <string name="licences_ok_button_title">Rendben</string>
 
-    <string name="settings_title">Beállítások</string>
     <string name="settings_map_scale_title">Térkép alakzatainak nagyítása</string>
     <string name="settings_map_scale_description">A nagyítás ronthat az alakzatok minőségén</string>
     <string name="settings_theme_title">Téma</string>
     <string name="settings_theme_system">Rendszer</string>
     <string name="settings_theme_light">Világos</string>
     <string name="settings_theme_dark">Sötét</string>
+    <string name="settings_offline_mode_title">Offline működés</string>
+    <string name="settings_offline_mode_description">Az app minden betöltött térkép részletet eltárol, így ezek a részek offline is használhatóak.</string>
+    <string name="settings_offline_mode_description_long">Minden megtekintett térkép részlet bekerül egy 14 napos adatbázisba, ami offline is használható.\n\nCsupán annyi a teendő, hogy ezeket előre be kell járni a térképen (ekkor az app letölti a csempéket), lehetőleg minden zoom szinten amire szükség lesz a túrán.\n\nErre a műveletre csak akkor van szükség, ha előre tudjuk hogy hosszabb ideig nem lesz internet kapcsolatunk.\n\nEgyszerűen kipróbálható, pl. repülőgép üzemmódba téve megnézzük hogy minden térkép rész látható-e amit szeretnénk.</string>
     <string name="settings_contact_title">Kapcsolat</string>
     <string name="settings_contact_subtitle">Örömmel fogadok bármilyen visszajelzést, a célom hogy másnak is hasznos legyen az alkalmazás!</string>
     <string name="settings_email_title">Email:</string>

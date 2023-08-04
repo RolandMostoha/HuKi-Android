@@ -2,21 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/background_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/background_bottom_sheet"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/space_large"
     android:paddingVertical="@dimen/space_large">
-
-    <!-- Settings -->
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/settingsTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_title"
-        android:textAppearance="@style/DefaultTextAppearance.Bold.Large" />
 
     <!-- Map scale factor title -->
 
@@ -31,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings_map_scale_title"
-            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+            android:textAppearance="@style/DefaultTextAppearance.Bold.Medium" />
 
         <hu.mostoha.mobile.android.huki.views.InfoButtonView
             android:id="@+id/settingsMapScaleInfoButton"
@@ -77,8 +68,9 @@
         android:id="@+id/settingsThemeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
         android:text="@string/settings_theme_title"
-        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+        android:textAppearance="@style/DefaultTextAppearance.Bold.Medium" />
 
     <RadioGroup
         android:id="@+id/settingsThemeRadioGroup"
@@ -117,6 +109,39 @@
 
     </RadioGroup>
 
+    <!-- Offline mode -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/settingsOfflineModeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_offline_mode_title"
+            android:textAppearance="@style/DefaultTextAppearance.Bold.Medium" />
+
+        <hu.mostoha.mobile.android.huki.views.InfoButtonView
+            android:id="@+id/settingsOfflineModeInfoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:messageRes="@string/settings_offline_mode_description_long" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/settingsOfflineModeDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.2"
+        android:drawableStart="@drawable/ic_settings_success"
+        android:drawablePadding="@dimen/space_medium"
+        android:text="@string/settings_offline_mode_description"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall" />
+
     <!-- Contact -->
 
     <com.google.android.material.textview.MaterialTextView
@@ -125,7 +150,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_medium"
         android:text="@string/settings_contact_title"
-        android:textAppearance="@style/DefaultTextAppearance.Bold.Large" />
+        android:textAppearance="@style/DefaultTextAppearance.Bold.Medium" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingsContactSubtitle"
