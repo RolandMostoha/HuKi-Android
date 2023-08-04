@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.google.android.material.slider.Slider
+import hu.mostoha.mobile.android.huki.util.equalsDelta
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -17,7 +18,6 @@ import org.osmdroid.tileprovider.tilesource.ITileSource
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Overlay
-import kotlin.math.abs
 
 inline fun <reified T : Overlay> @receiver:IdRes Int.hasOverlay() {
     onView(withId(this)).check(matches(hasOverlayMatcher<T>()))
@@ -140,16 +140,16 @@ private fun hasCenterAndZoomMatcher(center: GeoPoint, zoom: Double): BoundedMatc
             val actualCenter = mapView.mapCenter
             val actualZoom = mapView.zoomLevelDouble
 
-            return center.latitude.equalsDelta(actualCenter.latitude) &&
-                center.longitude.equalsDelta(actualCenter.longitude) &&
+            val locationMatchThreshold = 0.000001
+
+            return center.latitude.equalsDelta(actualCenter.latitude, locationMatchThreshold) &&
+                center.longitude.equalsDelta(actualCenter.longitude, locationMatchThreshold) &&
                 zoom.toInt() == actualZoom.toInt()
         }
 
         override fun describeTo(description: Description) {
             description.appendText("Failed: has center: $center and zoom: $zoom")
         }
-
-        private fun Double.equalsDelta(other: Double) = abs(this - other) < 0.000001
 
     }
 }

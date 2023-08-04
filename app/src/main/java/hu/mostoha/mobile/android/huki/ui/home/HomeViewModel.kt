@@ -175,14 +175,12 @@ class HomeViewModel @Inject constructor(
     fun updateMyLocationConfig(
         isLocationPermissionEnabled: Boolean? = null,
         isFollowLocationEnabled: Boolean? = null,
-        isAnimationEnabled: Boolean? = null
     ) {
         _myLocationUiModel.update { locationUiModel ->
             var model = locationUiModel
 
             isLocationPermissionEnabled?.let { model = model.copy(isLocationPermissionEnabled = it) }
             isFollowLocationEnabled?.let { model = model.copy(isFollowLocationEnabled = it) }
-            isAnimationEnabled?.let { model = model.copy(isAnimationEnabled = it) }
 
             model
         }

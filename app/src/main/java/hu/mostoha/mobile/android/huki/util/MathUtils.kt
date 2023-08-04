@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.util
 
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 /**
@@ -24,3 +25,7 @@ fun Double.toPercentageFromScale(): Int {
 fun Int.toScaleFromPercentage(): Double {
     return this.toDouble() / PERCENTAGE_SCALAR
 }
+
+fun Double.equalsDelta(other: Double, difference: Double) = abs(this - other) < difference
+
+fun Float.equalsDelta(other: Float, difference: Float) = abs(this - other) < difference

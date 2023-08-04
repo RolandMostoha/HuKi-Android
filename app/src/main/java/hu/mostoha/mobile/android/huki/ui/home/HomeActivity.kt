@@ -370,7 +370,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeViewModel.updateMyLocationConfig(
                         isLocationPermissionEnabled = true,
                         isFollowLocationEnabled = true,
-                        isAnimationEnabled = true
                     )
                 }
                 shouldShowLocationRationale() -> showLocationRationaleDialog()
@@ -453,14 +452,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeViewModel.updateMyLocationConfig(
                         isLocationPermissionEnabled = true,
                         isFollowLocationEnabled = true,
-                        isAnimationEnabled = true
                     )
                 }
             }
         }
     }
 
-    private fun enableMyLocationMonitoring(isAnimationEnabled: Boolean) {
+    private fun enableMyLocationMonitoring() {
         if (myLocationOverlay == null) {
             myLocationOverlay = MyLocationOverlay(lifecycleScope, myLocationProvider, homeMapView)
                 .apply {
@@ -486,10 +484,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
 
         myLocationOverlay?.let { overlay ->
-            overlay.isAnimationEnabled = isAnimationEnabled
-
             lifecycleScope.launch {
-                overlay.myLocationFlow()
+                overlay.startLocationFlow()
                     .distinctUntilChanged()
                     .onEach { location ->
                         homeViewModel.loadLandscapes(location)
@@ -555,7 +551,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .collect { myLocationUiModel ->
                     if (myLocationUiModel.isLocationPermissionEnabled) {
-                        enableMyLocationMonitoring(myLocationUiModel.isAnimationEnabled)
+                        enableMyLocationMonitoring()
                         enableFollowingLocation(myLocationUiModel.isFollowLocationEnabled)
                     }
                 }

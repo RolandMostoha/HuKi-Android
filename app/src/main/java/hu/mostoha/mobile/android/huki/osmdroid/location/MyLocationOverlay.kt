@@ -3,25 +3,29 @@ package hu.mostoha.mobile.android.huki.osmdroid.location
 import android.location.Location
 import androidx.lifecycle.LifecycleCoroutineScope
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
 import hu.mostoha.mobile.android.huki.extensions.centerAndZoom
 import hu.mostoha.mobile.android.huki.extensions.toBitmap
 import hu.mostoha.mobile.android.huki.util.calculateZoomLevel
+import hu.mostoha.mobile.android.huki.util.equalsDelta
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.compass.IOrientationConsumer
+import org.osmdroid.views.overlay.compass.IOrientationProvider
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import timber.log.Timber
 
 /**
  * [MyLocationNewOverlay] implementation that supports follow location callbacks and coroutine based location
- * monitoring via [AsyncMyLocationProvider].
+ * monitoring via [AsyncMyLocationProvider]. Also supports sensor based compass via [IOrientationProvider].
  */
 class MyLocationOverlay(
     private val lifecycleScope: LifecycleCoroutineScope,
     private val provider: AsyncMyLocationProvider,
     private val mapView: MapView
-) : MyLocationNewOverlay(provider, mapView) {
+) : MyLocationNewOverlay(provider, mapView), IOrientationConsumer {
 
     companion object {
         /**
@@ -29,11 +33,15 @@ class MyLocationOverlay(
          */
         val MY_LOCATION_ICON_ANCHOR = 0.5f to 0.5f
         val MY_LOCATION_COMPASS_ANCHOR = 0.5f to 0.75f
+
+        private const val COMPASS_CHANGE_THRESHOLD = 2f
     }
 
     private var isLocationEnabled = false
+    private var isCompassEnabled = false
 
-    var isAnimationEnabled: Boolean = false
+    private var orientationProvider = InternalCompassOrientationProvider(mapView.context)
+
     var onFollowLocationDisabled: (() -> Unit)? = null
     var onFollowLocationFirstFix: (() -> Unit)? = null
 
@@ -44,16 +52,18 @@ class MyLocationOverlay(
         setDirectionAnchor(MY_LOCATION_COMPASS_ANCHOR.first, MY_LOCATION_COMPASS_ANCHOR.second)
     }
 
-    fun myLocationFlow(): Flow<Location> {
-        val isStarted = provider.startLocationProvider(this)
+    fun startLocationFlow(): Flow<Location> {
+        val isLocationEnabled = provider.startLocationProvider(this)
 
-        isLocationEnabled = isStarted
+        this.isLocationEnabled = isLocationEnabled
 
-        val locationFlow = provider.getLocationFlow()
+        if (isLocationEnabled) {
+            isCompassEnabled = orientationProvider.startOrientationProvider(this)
+        }
 
         mapView.postInvalidate()
 
-        return locationFlow
+        return provider.getLocationFlow()
     }
 
     override fun enableFollowLocation() {
@@ -68,8 +78,6 @@ class MyLocationOverlay(
                 }
             }
         }
-
-        mapView.postInvalidate()
     }
 
     override fun setLocation(location: Location) {
@@ -78,11 +86,11 @@ class MyLocationOverlay(
         if (mIsFollowing && !mapView.isAnimating && mapView.zoomLevelDouble != zoomLevel) {
             val geoPoint = GeoPoint(location)
 
-            if (isAnimationEnabled) {
-                mapView.animateCenterAndZoom(geoPoint, zoomLevel)
-            } else {
-                mapView.centerAndZoom(geoPoint, zoomLevel)
-            }
+            mapView.centerAndZoom(geoPoint, zoomLevel)
+        }
+
+        if (isCompassEnabled) {
+            location.bearing = orientationProvider.lastKnownOrientation
         }
 
         super.setLocation(location)
@@ -91,7 +99,10 @@ class MyLocationOverlay(
     override fun disableMyLocation() {
         super.disableMyLocation()
 
+        orientationProvider.stopOrientationProvider()
+
         isLocationEnabled = false
+        isCompassEnabled = false
     }
 
     override fun disableFollowLocation() {
@@ -101,5 +112,17 @@ class MyLocationOverlay(
     }
 
     override fun isMyLocationEnabled(): Boolean = isLocationEnabled
+
+    override fun onOrientationChanged(orientation: Float, source: IOrientationProvider) {
+        val lastLocation = lastFix
+
+        if (lastLocation != null && !lastLocation.bearing.equalsDelta(orientation, COMPASS_CHANGE_THRESHOLD)) {
+            Timber.d("Compass orientation changed: $orientation")
+
+            lastLocation.bearing = orientation
+
+            setLocation(lastLocation)
+        }
+    }
 
 }
