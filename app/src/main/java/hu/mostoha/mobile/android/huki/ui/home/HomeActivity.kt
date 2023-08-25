@@ -80,7 +80,6 @@ import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
-import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
@@ -113,6 +112,8 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEventSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEvents
 import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
@@ -151,6 +152,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val insetSharedViewModel: InsetSharedViewModel by viewModels()
     private val permissionSharedViewModel: PermissionSharedViewModel by viewModels()
     private val mapTouchEventSharedViewModel: MapTouchEventSharedViewModel by viewModels()
+    private val pickLocationEventViewModel: PickLocationEventSharedViewModel by viewModels()
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
@@ -257,13 +259,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
             addOnFirstLayoutListener { _, _, _, _, _ ->
                 initFlows()
+                pickLocationEventViewModel.updateEvent(PickLocationEvents.LocationPickEnabled)
             }
             setOnTouchListener { view, _ ->
                 view.performClick()
                 clearSearchBarInput()
-                lifecycleScope.launch {
-                    mapTouchEventSharedViewModel.updateEvent(MapTouchEvents.MAP_TOUCHED)
-                }
+                mapTouchEventSharedViewModel.updateEvent(MapTouchEvents.MAP_TOUCHED)
                 false
             }
         }
@@ -345,23 +346,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     R.string.place_finder_pick_location_message.toMessage(),
                     R.drawable.ic_snackbar_place_finder_pick_location
                 )
-
-                homeMapView.addLongClickHandlerOverlay { geoPoint ->
-                    homeMapView.addLocationPickerMarker(
-                        geoPoint = geoPoint,
-                        onSaveClick = {
-                            val placeUiModel = PlaceUiModel(
-                                osmId = UUID.randomUUID().toString(),
-                                placeType = PlaceType.NODE,
-                                geoPoint = geoPoint,
-                                primaryText = LocationFormatter.format(geoPoint),
-                                secondaryText = R.string.place_details_pick_location_text.toMessage(),
-                                iconRes = R.drawable.ic_place_type_node,
-                            )
-                            homeViewModel.loadPlace(placeUiModel)
-                        },
-                    )
-                }
             }
         )
     }
@@ -644,27 +628,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initRoutePlannerFlows() {
         lifecycleScope.launch {
-            routePlannerViewModel.pickLocationState
-                .flowWithLifecycle(lifecycle)
-                .collect { pickLocationState ->
-                    pickLocationState?.let { state ->
-                        if (state == PickLocationState.Started) {
-                            homeMapView.addLongClickHandlerOverlay { geoPoint ->
-                                homeMapView.addLocationPickerMarker(
-                                    geoPoint = geoPoint,
-                                    onSaveClick = {
-                                        routePlannerViewModel.savePickedLocation(geoPoint)
-                                    },
-                                    onCloseClick = {
-                                        routePlannerViewModel.clearPickedLocation()
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-        }
-        lifecycleScope.launch {
             routePlannerViewModel.waypointItems
                 .flowWithLifecycle(lifecycle)
                 .collect { waypointItems ->
@@ -732,6 +695,59 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     }
                     permissionSharedViewModel.clearResult()
                 }
+        }
+        lifecycleScope.launch {
+            pickLocationEventViewModel.event
+                .flowWithLifecycle(lifecycle)
+                .collect { events ->
+                    initPickLocationEvents(events)
+                }
+        }
+    }
+
+    private fun initPickLocationEvents(events: PickLocationEvents) {
+        when (events) {
+            PickLocationEvents.LocationPickEnabled -> {
+                homeMapView.addLongClickHandlerOverlay { geoPoint ->
+                    homeMapView.addLocationPickerMarker(
+                        geoPoint = geoPoint,
+                        onSaveClick = {
+                            val placeUiModel = PlaceUiModel(
+                                osmId = UUID.randomUUID().toString(),
+                                placeType = PlaceType.NODE,
+                                geoPoint = geoPoint,
+                                primaryText = LocationFormatter.format(geoPoint),
+                                secondaryText = R.string.place_details_pick_location_text.toMessage(),
+                                iconRes = R.drawable.ic_place_type_node,
+                            )
+                            homeViewModel.loadPlace(placeUiModel)
+                        },
+                    )
+                }
+            }
+            PickLocationEvents.LocationPickDisabled -> {
+                homeMapView.removeOverlay(OverlayType.MAP_TOUCH_EVENTS)
+            }
+            PickLocationEvents.RoutePlannerPickStarted -> {
+                homeMapView.addLongClickHandlerOverlay { geoPoint ->
+                    homeMapView.addLocationPickerMarker(
+                        geoPoint = geoPoint,
+                        onSaveClick = {
+                            pickLocationEventViewModel.updateEvent(
+                                PickLocationEvents.RoutePlannerPickEnded(geoPoint)
+                            )
+                        },
+                        onCloseClick = {
+                            pickLocationEventViewModel.updateEvent(
+                                PickLocationEvents.LocationPickDisabled
+                            )
+                        }
+                    )
+                }
+            }
+            is PickLocationEvents.RoutePlannerPickEnded -> {
+                homeMapView.removeOverlay(OverlayType.MAP_TOUCH_EVENTS)
+            }
         }
     }
 

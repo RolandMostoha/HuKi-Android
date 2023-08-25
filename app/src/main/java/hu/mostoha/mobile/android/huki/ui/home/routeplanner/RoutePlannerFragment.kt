@@ -34,7 +34,6 @@ import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
-import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -46,6 +45,8 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEventSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEvents
 import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedViewModel
+import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -61,6 +62,7 @@ class RoutePlannerFragment : Fragment() {
     private val insetSharedViewModel: InsetSharedViewModel by activityViewModels()
     private val permissionSharedViewModel: PermissionSharedViewModel by activityViewModels()
     private val mapTouchEventSharedViewModel: MapTouchEventSharedViewModel by activityViewModels()
+    private val pickLocationEventViewModel: PickLocationEventSharedViewModel by activityViewModels()
 
     private var _binding: FragmentRoutePlannerBinding? = null
     private val binding get() = _binding!!
@@ -92,6 +94,12 @@ class RoutePlannerFragment : Fragment() {
 
         initViews()
         initFlows()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        pickLocationEventViewModel.updateEvent(PickLocationEvents.LocationPickDisabled)
     }
 
     override fun onDestroyView() {
@@ -230,7 +238,7 @@ class RoutePlannerFragment : Fragment() {
                     R.drawable.ic_snackbar_place_finder_pick_location
                 )
 
-                routePlannerViewModel.startPickLocation()
+                pickLocationEventViewModel.updateEvent(PickLocationEvents.RoutePlannerPickStarted)
             }
         )
     }
@@ -288,24 +296,22 @@ class RoutePlannerFragment : Fragment() {
                 }
         }
         lifecycleScope.launch {
-            routePlannerViewModel.pickLocationState
+            pickLocationEventViewModel.event
                 .flowWithLifecycle(lifecycle)
-                .collect { pickLocationState ->
-                    pickLocationState?.let { state ->
-                        initLocationPicker(state)
+                .collect { event ->
+                    if (event is PickLocationEvents.RoutePlannerPickEnded) {
+                        updateWaypoints(event)
                     }
                 }
         }
     }
 
-    private fun initLocationPicker(state: PickLocationState) {
-        if (state is PickLocationState.LocationPicked) {
-            val lastEditedWaypoint = lastEditedWaypointItem ?: return
-            val location = state.geoPoint.toLocation()
-            val locationText = LocationFormatter.format(location)
+    private fun updateWaypoints(event: PickLocationEvents.RoutePlannerPickEnded) {
+        val lastEditedWaypoint = lastEditedWaypointItem ?: return
+        val location = event.geoPoint.toLocation()
+        val locationText = LocationFormatter.format(location)
 
-            routePlannerViewModel.updateWaypoint(lastEditedWaypoint, locationText, location, locationText.text)
-        }
+        routePlannerViewModel.updateWaypoint(lastEditedWaypoint, locationText, location, locationText.text)
     }
 
     private fun initPlaceFinderFlows() {
@@ -365,6 +371,7 @@ class RoutePlannerFragment : Fragment() {
     }
 
     private fun clearRoutePlanner() {
+        pickLocationEventViewModel.updateEvent(PickLocationEvents.LocationPickEnabled)
         routePlannerViewModel.clearRoutePlanner()
         parentFragmentManager.removeFragments(R.id.homeRoutePlannerContainer)
     }

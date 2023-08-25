@@ -16,7 +16,6 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.Message
-import hu.mostoha.mobile.android.huki.model.ui.PickLocationState
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
@@ -43,7 +42,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.osmdroid.util.GeoPoint
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -66,14 +64,6 @@ class RoutePlannerViewModel @Inject constructor(
     private val _wayPointItems = MutableStateFlow(emptyList<WaypointItem>())
     val waypointItems: StateFlow<List<WaypointItem>> = _wayPointItems
         .stateIn(viewModelScope, WhileViewSubscribed, emptyList())
-
-    private val _pickLocationState = MutableStateFlow<PickLocationState?>(null)
-    val pickLocationState: StateFlow<PickLocationState?> = _pickLocationState
-        .stateIn(viewModelScope, WhileViewSubscribed, null)
-
-    private val _topInsetSize = MutableStateFlow(0)
-    val topInsetSize: StateFlow<Int> = _topInsetSize
-        .stateIn(viewModelScope, WhileViewSubscribed, 0)
 
     private val _routePlanGpxFileUri = MutableSharedFlow<Uri>()
     val routePlanGpxFileUri: SharedFlow<Uri> = _routePlanGpxFileUri.asSharedFlow()
@@ -208,18 +198,6 @@ class RoutePlannerViewModel @Inject constructor(
                 .swap(fromWaypoint, toWaypoint)
                 .reOrder()
         }
-    }
-
-    fun startPickLocation() {
-        _pickLocationState.value = PickLocationState.Started
-    }
-
-    fun savePickedLocation(geoPoint: GeoPoint) {
-        _pickLocationState.value = PickLocationState.LocationPicked(geoPoint)
-    }
-
-    fun clearPickedLocation() {
-        _pickLocationState.value = null
     }
 
     fun saveRoutePlan() {

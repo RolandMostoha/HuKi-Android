@@ -1,9 +1,11 @@
 package hu.mostoha.mobile.android.huki.util
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 
 open class EventSharedViewModel<T> : ViewModel() {
 
@@ -11,8 +13,10 @@ open class EventSharedViewModel<T> : ViewModel() {
     val event: SharedFlow<T>
         get() = _event.asSharedFlow()
 
-    suspend fun updateEvent(result: T) {
-        _event.emit(result)
+    fun updateEvent(result: T) {
+        viewModelScope.launch {
+            _event.emit(result)
+        }
     }
 
 }

@@ -37,6 +37,7 @@ import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.advancedpolyline.ColorMappingCycle
 import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList
 import org.osmdroid.views.overlay.advancedpolyline.PolychromaticPaintList
+import org.osmdroid.views.overlay.infowindow.InfoWindow
 import java.util.UUID
 
 private const val MAP_ANIMATION_DURATION = 1000L
@@ -115,8 +116,8 @@ fun MapView.addMarker(
             true
         }
     }
-    overlays.add(marker)
-    invalidate()
+
+    addOverlay(marker, OverlayComparator)
 
     return marker
 }
@@ -160,8 +161,8 @@ fun MapView.addPolyline(
             true
         }
     }
-    overlays.add(polyline)
-    invalidate()
+
+    addOverlay(polyline, OverlayComparator)
 
     return polyline
 }
@@ -188,8 +189,8 @@ fun MapView.addPolygon(
             true
         }
     }
-    overlays.add(polygon)
-    invalidate()
+
+    addOverlay(polygon, OverlayComparator)
 
     return polygon
 }
@@ -296,8 +297,8 @@ fun MapView.addGpxMarker(
             }
         }
     }
-    overlays.add(marker)
-    invalidate()
+
+    addOverlay(marker, OverlayComparator)
 
     return marker
 }
@@ -353,8 +354,7 @@ fun MapView.addGpxPolyline(
         }
     }
 
-    overlays.add(polyline)
-    invalidate()
+    addOverlay(polyline, OverlayComparator)
 
     return polyline
 }
@@ -379,8 +379,8 @@ fun MapView.addRoutePlannerMarker(
             true
         }
     }
-    overlays.add(marker)
-    invalidate()
+
+    addOverlay(marker, OverlayComparator)
 
     return marker
 }
@@ -423,8 +423,7 @@ fun MapView.addRoutePlannerPolyline(
         }
     }
 
-    overlays.add(polyline)
-    invalidate()
+    addOverlay(polyline, OverlayComparator)
 
     return polyline
 }
@@ -435,6 +434,7 @@ fun MapView.addLocationPickerMarker(
     onCloseClick: (() -> Unit)? = null,
 ): Marker {
     removeOverlay(OverlayType.LOCATION_PICKER)
+    InfoWindow.closeAllInfoWindowsOn(this)
 
     val mapView = this@addLocationPickerMarker
     var markerGeoPoint = geoPoint
@@ -447,13 +447,11 @@ fun MapView.addLocationPickerMarker(
             mapView = mapView,
             onSaveClick = {
                 closeInfoWindow()
-                mapView.removeOverlay(OverlayType.MAP_TOUCH_EVENTS)
                 mapView.removeOverlay(OverlayType.LOCATION_PICKER)
                 onSaveClick.invoke(markerGeoPoint)
             },
             onCloseClick = {
                 closeInfoWindow()
-                mapView.removeOverlay(OverlayType.MAP_TOUCH_EVENTS)
                 mapView.removeOverlay(OverlayType.LOCATION_PICKER)
                 onCloseClick?.invoke()
             }
@@ -475,8 +473,7 @@ fun MapView.addLocationPickerMarker(
         })
     }
 
-    overlays.add(marker)
-    invalidate()
+    addOverlay(marker, OverlayComparator)
 
     marker.showInfoWindow()
 
