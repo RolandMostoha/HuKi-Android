@@ -21,7 +21,7 @@
     <color name="colorDivider">#61DEDEDE</color>
     <color name="colorMarker">@color/colorPrimaryIcon</color>
     <color name="colorPolyline">#DE296b2c</color>
-    <color name="colorPolylineFill">#DE9cc78a</color>
+    <color name="colorPolylineFill">#9cc78a</color>
     <color name="colorPolylineHigh">#fd7c26</color>
     <color name="colorPolylineBorder">#000000</color>
     <color name="colorCopyright">#B3262626</color>
