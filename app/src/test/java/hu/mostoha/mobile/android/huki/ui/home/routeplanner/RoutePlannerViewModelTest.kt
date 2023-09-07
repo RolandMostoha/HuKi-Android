@@ -103,7 +103,7 @@ class RoutePlannerViewModelTest {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL_1
 
             viewModel.waypointItems.test {
-                viewModel.initWaypoints(placeUiModel)
+                viewModel.initWaypoint(placeUiModel)
 
                 assertThat(awaitItem()).isEmpty()
                 assertThat(awaitItem()).isEqualTo(

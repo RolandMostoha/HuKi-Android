@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
+import android.view.Gravity
 import androidx.annotation.DrawableRes
 import androidx.annotation.Px
 import androidx.core.content.ContextCompat
@@ -26,3 +27,23 @@ fun generateLayerDrawable(layers: List<Drawable>, @Px padding: Int? = null): Lay
 
     return layerDrawable
 }
+
+fun generateLayerDrawable(layers: List<LayerDrawableConfig>): LayerDrawable {
+    val layerDrawable = LayerDrawable(layers.map { it.layer }.toTypedArray())
+
+    layers
+        .map { it.size }
+        .forEachIndexed { index, size ->
+            if (size != null) {
+                layerDrawable.setLayerSize(index, size, size)
+                layerDrawable.setLayerGravity(index, Gravity.CENTER)
+            }
+        }
+
+    return layerDrawable
+}
+
+data class LayerDrawableConfig(
+    val layer: Drawable,
+    @Px val size: Int? = null,
+)

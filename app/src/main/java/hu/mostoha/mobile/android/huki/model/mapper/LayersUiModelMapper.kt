@@ -16,8 +16,7 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
-import hu.mostoha.mobile.android.huki.util.WAY_CLOSED_DISTANCE_THRESHOLD_METER
-import hu.mostoha.mobile.android.huki.util.distanceBetween
+import hu.mostoha.mobile.android.huki.util.isCloseWithThreshold
 import org.osmdroid.util.BoundingBox
 import javax.inject.Inject
 
@@ -64,8 +63,7 @@ class LayersUiModelMapper @Inject constructor() {
         val edgeWaypoints = if (geoPoints.size >= 2) {
             val startLocation = geoPoints.first().toLocation()
             val endLocation = geoPoints.last().toLocation()
-            val isRouteClosed = startLocation.distanceBetween(endLocation) <= WAY_CLOSED_DISTANCE_THRESHOLD_METER
-            if (isRouteClosed) {
+            if (startLocation.isCloseWithThreshold(endLocation)) {
                 listOf(
                     WaypointUiModel(
                         startLocation.toGeoPoint(),

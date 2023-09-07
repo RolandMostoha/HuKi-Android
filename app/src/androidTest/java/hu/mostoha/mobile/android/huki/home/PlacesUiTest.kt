@@ -284,7 +284,7 @@ class PlacesUiTest {
     }
 
     @Test
-    fun givenWayPlace_whenClickInSearchResults_thenBottomSheetButtonsDisplay() {
+    fun givenWayPlace_whenClickInSearchResults_thenNodeBottomSheetButtonsDisplay() {
         answerTestPlaces()
         answerTestGeometries()
 
@@ -299,12 +299,11 @@ class PlacesUiTest {
             R.id.placeDetailsGoogleNavButton.isDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextDisplayed()
             R.string.home_bottom_sheet_route_plan_button.isTextDisplayed()
-            R.string.home_bottom_sheet_hiking_trails_button.isTextNotDisplayed()
         }
     }
 
     @Test
-    fun givenWayPlace_whenClickOnShowPointsButton_thenHikingTrailsButtonDisplaysOnBottomSheet() {
+    fun givenWayPlace_whenClickOnShowAllPointsButton_thenPolyPlaceDetailsBottomSheetDisplays() {
         answerTestPlaces()
         answerTestGeometries()
 
@@ -317,9 +316,9 @@ class PlacesUiTest {
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
             R.string.home_bottom_sheet_show_points_button.clickWithText()
 
+            DEFAULT_PLACE_WAY.name.isTextDisplayed()
             R.id.placeDetailsGoogleNavButton.isNotDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
-            R.string.home_bottom_sheet_hiking_trails_button.isTextDisplayed()
         }
     }
 
@@ -359,7 +358,7 @@ class PlacesUiTest {
     }
 
     @Test
-    fun givenRelationPlace_whenClickOnShowPointsButton_thenHikingTrailsButtonDisplaysOnBottomSheet() {
+    fun givenRelationPlace_whenClickOnShowPointsButton_thenPolyPlaceDetailsBottomSheetDisplays() {
         answerTestPlaces()
         answerTestGeometries()
 
@@ -374,7 +373,7 @@ class PlacesUiTest {
 
             R.id.placeDetailsGoogleNavButton.isNotDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
-            R.string.home_bottom_sheet_hiking_trails_button.isTextDisplayed()
+            DEFAULT_PLACE_RELATION.name.isTextDisplayed()
         }
     }
 

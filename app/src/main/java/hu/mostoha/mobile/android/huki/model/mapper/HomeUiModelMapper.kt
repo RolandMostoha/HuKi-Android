@@ -8,6 +8,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
@@ -38,7 +39,11 @@ class HomeUiModelMapper @Inject constructor() {
     fun generatePlaceDetails(placeUiModel: PlaceUiModel, geometry: Geometry): PlaceDetailsUiModel {
         return PlaceDetailsUiModel(
             placeUiModel = placeUiModel,
-            geometryUiModel = generateGeometryUiModel(geometry)
+            geometryUiModel = if (placeUiModel.placeType == PlaceType.HIKING_ROUTE) {
+                HikingRouteRelationMapper.map(geometry as Geometry.Relation)
+            } else {
+                generateGeometryUiModel(geometry)
+            }
         )
     }
 
@@ -118,7 +123,7 @@ class HomeUiModelMapper @Inject constructor() {
                 osmId = hikingRoute.osmId,
                 primaryText = hikingRoute.name.toMessage(),
                 secondaryText = DistanceFormatter.format(totalDistance),
-                placeType = PlaceType.RELATION,
+                placeType = PlaceType.HIKING_ROUTE,
                 iconRes = hikingRoute.symbolIcon,
                 geoPoint = relation.ways.flatMap { it.locations }
                     .calculateCenter()
@@ -146,7 +151,7 @@ class HomeUiModelMapper @Inject constructor() {
 
         return GeometryUiModel.Way(
             osmId = osmId,
-            geoPoints = locations.map { it.toGeoPoint() },
+            geoPoints = locations.toGeoPoints(),
             isClosed = locations.first() == locations.last()
         )
     }

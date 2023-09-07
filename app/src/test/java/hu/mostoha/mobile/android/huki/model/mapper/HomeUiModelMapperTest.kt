@@ -296,7 +296,7 @@ class HomeUiModelMapperTest {
                     osmId = hikingRoute.osmId,
                     primaryText = hikingRoute.name.toMessage(),
                     secondaryText = DistanceFormatter.format(100 + 150),
-                    placeType = PlaceType.RELATION,
+                    placeType = PlaceType.HIKING_ROUTE,
                     iconRes = hikingRoute.symbolIcon,
                     geoPoint = geometry.ways.flatMap { it.locations }
                         .calculateCenter()

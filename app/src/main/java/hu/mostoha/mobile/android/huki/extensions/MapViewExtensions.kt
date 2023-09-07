@@ -2,6 +2,8 @@ package hu.mostoha.mobile.android.huki.extensions
 
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
@@ -130,7 +132,8 @@ fun MapView.removeMarker(marker: Marker) {
 fun MapView.addPolyline(
     overlayId: String = UUID.randomUUID().toString(),
     geoPoints: List<GeoPoint>,
-    onClick: (PolyOverlayWithIW) -> Unit,
+    @ColorInt colorInt: Int = ContextCompat.getColor(context, R.color.colorPolyline),
+    onClick: () -> Unit,
 ): Polyline {
     val context = this.context
     val polyline = Polyline(this).apply {
@@ -146,7 +149,7 @@ fun MapView.addPolyline(
         }
         outlinePaintLists.add(MonochromaticPaintList(borderPaint))
         val fillPaint = Paint().apply {
-            color = ContextCompat.getColor(context, R.color.colorPolyline)
+            color = colorInt
             isAntiAlias = true
             strokeWidth = context.resources.getDimension(R.dimen.default_polyline_fill_width)
             style = Paint.Style.FILL_AND_STROKE
@@ -156,8 +159,8 @@ fun MapView.addPolyline(
         }
         outlinePaintLists.add(MonochromaticPaintList(fillPaint))
         setPoints(geoPoints)
-        setOnClickListener { polygon, _, _ ->
-            onClick.invoke(polygon)
+        setOnClickListener { _, _, _ ->
+            onClick.invoke()
             true
         }
     }
@@ -170,7 +173,7 @@ fun MapView.addPolyline(
 fun MapView.addPolygon(
     overlayId: String = UUID.randomUUID().toString(),
     geoPoints: List<GeoPoint>,
-    onClick: (PolyOverlayWithIW) -> Unit,
+    onClick: () -> Unit,
 ): Polygon {
     val context = this.context
     val polygon = Polygon().apply {
@@ -184,8 +187,8 @@ fun MapView.addPolygon(
         }
         fillPaint.color = ContextCompat.getColor(context, R.color.colorPolylineFill)
         points = geoPoints
-        setOnClickListener { polygon, _, _ ->
-            onClick.invoke(polygon)
+        setOnClickListener { _, _, _ ->
+            onClick.invoke()
             true
         }
     }
@@ -478,6 +481,46 @@ fun MapView.addLocationPickerMarker(
     marker.showInfoWindow()
 
     return marker
+}
+
+fun MapView.addHikingRouteDetails(
+    overlayId: String,
+    relation: GeometryUiModel.HikingRoute,
+    @DrawableRes iconRes: Int,
+    onClick: () -> Unit,
+): List<PolyOverlayWithIW> {
+    val overlays = mutableListOf<PolyOverlayWithIW>()
+
+    relation.ways.forEach { way ->
+        val overlay = addPolyline(
+            overlayId = overlayId,
+            geoPoints = way.geoPoints,
+            onClick = { onClick.invoke() }
+        )
+        overlays.add(overlay)
+    }
+
+    relation.waypoints.forEach { geoPoint ->
+        addMarker(
+            overlayId = overlayId,
+            geoPoint = geoPoint,
+            iconDrawable = generateLayerDrawable(
+                layers = listOf(
+                    LayerDrawableConfig(
+                        R.drawable.ic_marker_hiking_route_background.toDrawable(context),
+                        resources.getDimensionPixelSize(R.dimen.hiking_routes_marker_background_size)
+                    ),
+                    LayerDrawableConfig(
+                        iconRes.toDrawable(context),
+                        resources.getDimensionPixelSize(R.dimen.hiking_routes_marker_icon_size)
+                    ),
+                ),
+            ),
+            onClick = { onClick.invoke() },
+        )
+    }
+
+    return overlays
 }
 
 fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {

@@ -50,7 +50,7 @@ class OsmPlacesRepository @Inject constructor(
 
                 placesDomainModelMapper.generateGeometryByWay(response, osmId)
             }
-            PlaceType.RELATION -> {
+            PlaceType.RELATION, PlaceType.HIKING_ROUTE -> {
                 val response = getNodesByRelation(osmId)
 
                 placesDomainModelMapper.generateGeometryByRelation(response, osmId)

@@ -14,6 +14,7 @@ import kotlin.math.sqrt
 import android.location.Location as AndroidLocation
 
 private const val EARTH_RADIUS = 6_372_800
+private const val WAY_CLOSED_DISTANCE_THRESHOLD_METER = 20
 
 /**
  *  Haversine formula: https://www.movable-type.co.uk/scripts/latlong.html
@@ -28,6 +29,10 @@ fun Location.distanceBetween(other: Location): Int {
     val c = 2 * asin(sqrt(a))
     val distance = EARTH_RADIUS * c
     return distance.roundToInt()
+}
+
+fun Location.isCloseWithThreshold(other: Location): Boolean {
+    return this.distanceBetween(other) <= WAY_CLOSED_DISTANCE_THRESHOLD_METER
 }
 
 fun List<Location>.calculateDistance(): Int {

@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.home.placedetails
 
 import android.view.View
+import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceDetailsBinding
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.postMain
@@ -28,7 +29,12 @@ class PlaceDetailsBottomSheetDialog(
             with(binding) {
                 val placeName = placeUiModel.primaryText.resolve(root.context)
 
+                placeDetailsButtonGroupScrollView.visible()
+
+                placeDetailsPrimaryText.setTextAppearance(R.style.DefaultTextAppearance_SemiBold_Large)
+                placeDetailsPrimaryText.maxLines = 2
                 placeDetailsPrimaryText.text = placeName
+
                 placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
                 placeDetailsGoogleNavButton.visible()
@@ -37,7 +43,6 @@ class PlaceDetailsBottomSheetDialog(
 
                     context.startGoogleMapsDirectionsIntent(placeUiModel.geoPoint)
                 }
-                placeDetailsHikingTrailsButton.gone()
                 placeDetailsRoutePlanButton.visible()
                 placeDetailsRoutePlanButton.setOnClickListener {
                     onRoutePlanButtonClick.invoke()
@@ -61,31 +66,22 @@ class PlaceDetailsBottomSheetDialog(
         }
     }
 
-    fun initWayBottomSheet(
-        placeUiModel: PlaceUiModel,
-        onHikingTrailsButtonClick: () -> Unit,
-        onCloseButtonClick: () -> Unit
-    ) {
+    fun initPolyDetailsBottomSheet(placeUiModel: PlaceUiModel, onCloseButtonClick: () -> Unit) {
         postMain {
             with(binding) {
                 val placeName = placeUiModel.primaryText.resolve(root.context)
 
+                placeDetailsButtonGroupScrollView.gone()
+
+                placeDetailsPrimaryText.setTextAppearance(R.style.DefaultTextAppearance_SemiBold_Medium)
+                placeDetailsPrimaryText.maxLines = Int.MAX_VALUE
                 placeDetailsPrimaryText.text = placeName
                 placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
-                placeDetailsGoogleNavButton.gone()
-                placeDetailsShowAllPointsButton.gone()
-                placeDetailsHikingTrailsButton.visible()
-                placeDetailsHikingTrailsButton.setOnClickListener {
-                    analyticsService.loadHikingRoutesClicked(placeName)
-                    onHikingTrailsButtonClick.invoke()
-                }
+
                 placeDetailsCloseButton.setOnClickListener {
                     onCloseButtonClick.invoke()
                 }
-                placeDetailsRoutePlanButton.gone()
-
-                placeDetailsButtonGroupScrollView.fullScroll(View.FOCUS_RIGHT)
             }
             show()
         }

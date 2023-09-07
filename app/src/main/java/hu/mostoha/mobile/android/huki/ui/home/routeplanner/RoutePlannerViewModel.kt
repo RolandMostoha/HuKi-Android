@@ -126,9 +126,12 @@ class RoutePlannerViewModel @Inject constructor(
         _wayPointItems.value = waypoints
     }
 
-    fun initWaypoints(placeUiModel: PlaceUiModel) {
+    fun initWaypoint(placeUiModel: PlaceUiModel) {
         val waypoints = listOf(
-            WaypointItem(order = 0, waypointType = WaypointType.START),
+            WaypointItem(
+                order = 0,
+                waypointType = WaypointType.START
+            ),
             WaypointItem(
                 order = 1,
                 waypointType = WaypointType.END,

@@ -3,11 +3,10 @@ package hu.mostoha.mobile.android.huki.views
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import com.skydoves.powermenu.MenuBaseAdapter
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ListItemPopupMenuBinding
+import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
 import hu.mostoha.mobile.android.huki.extensions.inflater
 
 class PopupMenuAdapter : MenuBaseAdapter<PopupMenuItem>() {
@@ -30,8 +29,3 @@ class PopupMenuAdapter : MenuBaseAdapter<PopupMenuItem>() {
     }
 
 }
-
-class PopupMenuItem(
-    @StringRes val titleId: Int,
-    @DrawableRes val iconId: Int
-)

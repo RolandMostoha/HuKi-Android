@@ -34,7 +34,6 @@
     <string name="landscape_details_kirandulastippek_info">You can import the downloaded GPX file to the application.</string>
 
     <string name="home_bottom_sheet_directions_button">Google Nav</string>
-    <string name="home_bottom_sheet_hiking_trails_button">Trails nearby</string>
     <string name="home_bottom_sheet_show_points_button">All points</string>
     <string name="home_bottom_sheet_route_plan_button">Route plan</string>
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>

@@ -50,7 +50,7 @@ class PlaceFinderUiModelMapper @Inject constructor() {
                 iconRes = when (place.placeType) {
                     PlaceType.NODE -> R.drawable.ic_place_type_node
                     PlaceType.WAY -> R.drawable.ic_place_type_way
-                    PlaceType.RELATION -> R.drawable.ic_place_type_relation
+                    PlaceType.RELATION, PlaceType.HIKING_ROUTE -> R.drawable.ic_place_type_relation
                 },
                 geoPoint = place.location.toGeoPoint(),
                 boundingBox = place.boundingBox,

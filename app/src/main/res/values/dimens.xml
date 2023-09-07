@@ -17,7 +17,7 @@
     <dimen name="text_size_medium">15sp</dimen>
     <dimen name="text_size_large">17sp</dimen>
 
-    <dimen name="icon_size_extra_tiny">18dp</dimen>
+    <dimen name="icon_size_extra_tiny">16dp</dimen>
     <dimen name="icon_size_tiny">18dp</dimen>
     <dimen name="icon_size_extra_small">20dp</dimen>
     <dimen name="icon_size_small">22dp</dimen>
@@ -89,5 +89,8 @@
     <dimen name="layers_layer_title_bottom_margin">7dp</dimen>
 
     <dimen name="gpx_details_altitude_range_view_height">10dp</dimen>
+
+    <dimen name="hiking_routes_marker_background_size">38dp</dimen>
+    <dimen name="hiking_routes_marker_icon_size">16dp</dimen>
 
 </resources>

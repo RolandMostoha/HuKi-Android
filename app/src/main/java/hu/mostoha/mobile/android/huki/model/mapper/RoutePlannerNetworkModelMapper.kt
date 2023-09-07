@@ -7,9 +7,8 @@ import hu.mostoha.mobile.android.huki.model.network.graphhopper.CustomModel
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.Priority
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.RouteRequest
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.RouteResponse
-import hu.mostoha.mobile.android.huki.util.WAY_CLOSED_DISTANCE_THRESHOLD_METER
 import hu.mostoha.mobile.android.huki.util.calculateTravelTime
-import hu.mostoha.mobile.android.huki.util.distanceBetween
+import hu.mostoha.mobile.android.huki.util.isCloseWithThreshold
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -55,8 +54,7 @@ class RoutePlannerNetworkModelMapper @Inject constructor() {
             altitudeRange = minAltitude.toInt() to maxAltitude.toInt(),
             incline = path.ascend.roundToInt(),
             decline = path.descend.roundToInt(),
-            isClosed = locations.first()
-                .distanceBetween(locations.last()) <= WAY_CLOSED_DISTANCE_THRESHOLD_METER,
+            isClosed = locations.first().isCloseWithThreshold(locations.last())
         )
     }
 
