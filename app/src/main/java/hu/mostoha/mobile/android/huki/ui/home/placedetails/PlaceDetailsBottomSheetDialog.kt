@@ -1,6 +1,5 @@
 package hu.mostoha.mobile.android.huki.ui.home.placedetails
 
-import android.view.View
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceDetailsBinding
 import hu.mostoha.mobile.android.huki.extensions.gone
@@ -59,8 +58,6 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsCloseButton.setOnClickListener {
                     onCloseButtonClick.invoke()
                 }
-
-                placeDetailsButtonGroupScrollView.fullScroll(View.FOCUS_RIGHT)
             }
             show()
         }
