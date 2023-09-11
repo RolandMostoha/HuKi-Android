@@ -8,7 +8,7 @@ import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toGpxWaypoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
@@ -260,7 +260,7 @@ class LayersUiModelMapperTest {
                 ),
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
-                    .toDomainBoundingBox(),
+                    .toDomain(),
                 travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
                 altitudeUiModel = AltitudeUiModel(
@@ -301,7 +301,7 @@ class LayersUiModelMapperTest {
                 ),
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
-                    .toDomainBoundingBox(),
+                    .toDomain(),
                 travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
                 altitudeUiModel = AltitudeUiModel(
@@ -338,7 +338,7 @@ class LayersUiModelMapperTest {
                 ),
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
-                    .toDomainBoundingBox(),
+                    .toDomain(),
                 travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
                 altitudeUiModel = null,
@@ -382,7 +382,7 @@ class LayersUiModelMapperTest {
             geoPoints = DEFAULT_GPX_WAY_CLOSED.map { GeoPoint(it.first, it.second) },
             boundingBox = BoundingBox
                 .fromGeoPoints(DEFAULT_GPX_WAY_CLOSED.map { GeoPoint(it.first, it.second) })
-                .toDomainBoundingBox(),
+                .toDomain(),
             travelTimeText = Message.Text("02:00"),
             distanceText = Message.Res(R.string.default_distance_template_m, listOf(5)),
             altitudeUiModel = null,

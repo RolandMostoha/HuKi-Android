@@ -80,6 +80,9 @@
     <dimen name="map_view_top_sheet_bottom_offset">20dp</dimen>
     <dimen name="map_view_top_sheet_start_offset">@dimen/map_view_default_start_offset</dimen>
     <dimen name="map_view_top_sheet_end_offset">@dimen/map_view_default_end_offset</dimen>
+    <dimen name="map_view_landscape_bottom_sheet_bottom_offset">280dp</dimen>
+    <dimen name="map_view_landscape_start_offset">100dp</dimen>
+    <dimen name="map_view_landscape_end_offset">100dp</dimen>
 
     <dimen name="place_details_bottom_sheet_image_size">45dp</dimen>
 
@@ -92,5 +95,8 @@
 
     <dimen name="hiking_routes_marker_background_size">38dp</dimen>
     <dimen name="hiking_routes_marker_icon_size">16dp</dimen>
+
+    <dimen name="landscape_details_center_marker_background_size">28dp</dimen>
+    <dimen name="landscape_details_center_marker_icon_size">18dp</dimen>
 
 </resources>

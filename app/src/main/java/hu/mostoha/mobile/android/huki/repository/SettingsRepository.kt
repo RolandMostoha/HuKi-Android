@@ -41,4 +41,17 @@ class SettingsRepository @Inject constructor(
         }
     }
 
+    fun isHikeRecommenderInfoEnabled(): Flow<Boolean> {
+        return dataStore.data
+            .map { preferences ->
+                preferences[DataStoreConstants.Settings.HIKE_RECOMMENDER_INFO_ENABLED] ?: true
+            }
+    }
+
+    suspend fun saveHikeRecommenderInfoEnabled(enabled: Boolean) {
+        dataStore.edit { settings ->
+            settings[DataStoreConstants.Settings.HIKE_RECOMMENDER_INFO_ENABLED] = enabled
+        }
+    }
+
 }

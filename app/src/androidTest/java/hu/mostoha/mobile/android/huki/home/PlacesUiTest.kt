@@ -15,6 +15,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
+import hu.mostoha.mobile.android.huki.constants.GOOGLE_MAPS_DIRECTIONS_URL
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
@@ -37,11 +38,10 @@ import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
-import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextWithScroll
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
@@ -49,6 +49,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextNotDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
@@ -145,8 +146,10 @@ class PlacesUiTest {
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
 
-            R.id.placeDetailsGoogleNavButton.isDisplayed()
             R.string.home_bottom_sheet_route_plan_button.isTextDisplayed()
+            R.id.placeDetailsHikingRecommenderButton.isDisplayed()
+            R.id.placeDetailsButtonGroupScrollView.swipeLeft()
+            R.id.placeDetailsGoogleNavButton.isDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
         }
     }
@@ -268,6 +271,25 @@ class PlacesUiTest {
     }
 
     @Test
+    fun givenNodePlace_whenClickHikeRecommender_thenHikeRecommenderBottomSheetDisplays() {
+        Intents.init()
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            R.id.placeDetailsHikingRecommenderButton.click()
+
+            R.id.hikeRecommenderContentContainer.isDisplayed()
+        }
+    }
+
+    @Test
     fun givenWayPlace_whenClickInSearchResults_thenPlaceDisplaysOnMap() {
         answerTestPlaces()
         answerTestGeometries()
@@ -296,9 +318,11 @@ class PlacesUiTest {
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
 
-            R.id.placeDetailsGoogleNavButton.isDisplayed()
-            R.string.home_bottom_sheet_show_points_button.isTextDisplayed()
             R.string.home_bottom_sheet_route_plan_button.isTextDisplayed()
+            R.string.home_bottom_sheet_hike_recommender_button.isTextDisplayed()
+            R.id.placeDetailsButtonGroupScrollView.swipeLeft()
+            R.string.home_bottom_sheet_show_points_button.isTextDisplayed()
+            R.id.placeDetailsGoogleNavButton.isDisplayed()
         }
     }
 
@@ -314,16 +338,15 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
-            R.string.home_bottom_sheet_show_points_button.clickWithText()
+            R.string.home_bottom_sheet_show_points_button.clickWithTextWithScroll()
 
             DEFAULT_PLACE_WAY.name.isTextDisplayed()
-            R.id.placeDetailsGoogleNavButton.isNotDisplayed()
-            R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
+            R.id.placeDetailsButtonGroupScrollView.isNotDisplayed()
         }
     }
 
     @Test
-    fun givenWayPlace_whenClickOnShowPointsButton_thenPlaceDetailsDisplayOnMap() {
+    fun givenWayPlace_whenClickOnShowAllPointsButton_thenPlaceDetailsDisplayOnMap() {
         answerTestPlaces()
         answerTestGeometries()
 
@@ -334,7 +357,7 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
-            R.string.home_bottom_sheet_show_points_button.clickWithText()
+            R.string.home_bottom_sheet_show_points_button.clickWithTextWithScroll()
 
             R.id.homeMapView.hasOverlay<Polyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
@@ -358,7 +381,7 @@ class PlacesUiTest {
     }
 
     @Test
-    fun givenRelationPlace_whenClickOnShowPointsButton_thenPolyPlaceDetailsBottomSheetDisplays() {
+    fun givenRelationPlace_whenClickOnAllShowPointsButton_thenPolyPlaceDetailsBottomSheetDisplays() {
         answerTestPlaces()
         answerTestGeometries()
 
@@ -369,16 +392,15 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
-            R.string.home_bottom_sheet_show_points_button.clickWithText()
+            R.string.home_bottom_sheet_show_points_button.clickWithTextWithScroll()
 
-            R.id.placeDetailsGoogleNavButton.isNotDisplayed()
-            R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
             DEFAULT_PLACE_RELATION.name.isTextDisplayed()
+            R.id.placeDetailsButtonGroupScrollView.isNotDisplayed()
         }
     }
 
     @Test
-    fun givenRelationPlace_whenClickOnShowPointsButton_thenPlaceDetailsDisplayOnMap() {
+    fun givenRelationPlace_whenClickOnAllShowPointsButton_thenPlaceDetailsDisplayOnMap() {
         answerTestPlaces()
         answerTestGeometries()
 
@@ -389,7 +411,7 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
-            R.string.home_bottom_sheet_show_points_button.clickWithText()
+            R.string.home_bottom_sheet_show_points_button.clickWithTextWithScroll()
 
             R.id.homeMapView.hasOverlay<Polyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)

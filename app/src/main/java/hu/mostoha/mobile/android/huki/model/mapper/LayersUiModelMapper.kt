@@ -6,7 +6,7 @@ import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
-import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.AltitudeUiModel
@@ -102,9 +102,9 @@ class LayersUiModelMapper @Inject constructor() {
             geoPoints = geoPoints,
             waypoints = gpxWaypoints + edgeWaypoints,
             boundingBox = if (geoPoints.size >= 2) {
-                BoundingBox.fromGeoPoints(geoPoints).toDomainBoundingBox()
+                BoundingBox.fromGeoPoints(geoPoints).toDomain()
             } else {
-                BoundingBox.fromGeoPoints(gpxWaypoints.map { it.geoPoint }).toDomainBoundingBox()
+                BoundingBox.fromGeoPoints(gpxWaypoints.map { it.geoPoint }).toDomain()
             },
             travelTimeText = if (gpxDetails.travelTime.inWholeSeconds > 0) {
                 gpxDetails.travelTime.formatHoursAndMinutes().toMessage()

@@ -45,9 +45,7 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_URL
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_AREA_URL
 import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.runTestDefault
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -503,8 +501,6 @@ class HomeViewModelTest {
             geoPoint = DEFAULT_LANDSCAPE.center.toGeoPoint(),
             iconRes = R.drawable.ic_landscapes_plain_land,
             markerRes = R.drawable.ic_marker_landscapes_plain_land,
-            kirandulastippekLink = KIRANDULASTIPPEK_URL,
-            termeszetjaroLink = TERMESZETJARO_AREA_URL,
         )
     }
 

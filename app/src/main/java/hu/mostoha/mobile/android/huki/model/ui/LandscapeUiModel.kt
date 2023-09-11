@@ -11,6 +11,4 @@ data class LandscapeUiModel(
     val geoPoint: GeoPoint,
     @DrawableRes val iconRes: Int,
     @DrawableRes val markerRes: Int,
-    val kirandulastippekLink: String,
-    val termeszetjaroLink: String,
 )

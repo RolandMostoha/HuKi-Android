@@ -11,9 +11,9 @@ import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderLoadingBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderPlaceBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderStaticActionsBinding
 import hu.mostoha.mobile.android.huki.extensions.inflater
-import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
+import hu.mostoha.mobile.android.huki.model.ui.resolve
 
 class PlaceFinderAdapter(
     context: Context,

@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeLandscapesChipBinding
+import hu.mostoha.mobile.android.huki.extensions.LayerDrawableConfig
 import hu.mostoha.mobile.android.huki.extensions.OffsetType
 import hu.mostoha.mobile.android.huki.extensions.addFragment
 import hu.mostoha.mobile.android.huki.extensions.addGpxMarker
@@ -53,7 +54,6 @@ import hu.mostoha.mobile.android.huki.extensions.locationPermissions
 import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
-import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
 import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
@@ -71,12 +71,14 @@ import hu.mostoha.mobile.android.huki.extensions.zoomToBoundingBoxPostMain
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
-import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
-import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.toOsm
+import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommenderMapper
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.HikeRecommendation
 import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
@@ -84,6 +86,7 @@ import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
+import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmLicencesOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
@@ -92,13 +95,14 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
+import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.gpx.GpxDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.gpx.history.GpxHistoryFragment
+import hu.mostoha.mobile.android.huki.ui.home.hikerecommender.HikeRecommenderBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.ui.home.landscapedetails.LandscapeDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placedetails.PlaceDetailsBottomSheetDialog
@@ -123,6 +127,7 @@ import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -142,6 +147,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     @Inject
     lateinit var analyticsService: AnalyticsService
+
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
 
     private val homeViewModel: HomeViewModel by viewModels()
     private val layersViewModel: LayersViewModel by viewModels()
@@ -173,7 +181,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private lateinit var placeFinderPopup: PlaceFinderPopup
     private lateinit var placeDetailsBottomSheet: PlaceDetailsBottomSheetDialog
-    private lateinit var landscapeDetailsBottomSheet: LandscapeDetailsBottomSheetDialog
+    private lateinit var hikeRecommenderBottomSheet: HikeRecommenderBottomSheetDialog
     private lateinit var hikingRoutesBottomSheet: HikingRoutesBottomSheetDialog
     private lateinit var gpxDetailsBottomSheet: GpxDetailsBottomSheetDialog
     private lateinit var bottomSheets: List<BottomSheetDialog>
@@ -204,7 +212,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     override fun onPause() {
         myLocationOverlay?.disableMyLocation()
-        homeViewModel.saveBoundingBox(homeMapView.boundingBox.toDomainBoundingBox())
+        homeViewModel.saveBoundingBox(homeMapView.boundingBox.toDomain())
 
         homeMapView.onPause()
 
@@ -419,8 +427,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             binding.homePlaceDetailsBottomSheetContainer,
             analyticsService
         )
-        landscapeDetailsBottomSheet = LandscapeDetailsBottomSheetDialog(
-            binding.homeLandscapeDetailsBottomSheetContainer,
+        hikeRecommenderBottomSheet = HikeRecommenderBottomSheetDialog(
+            binding.homeHikeRecommenderBottomSheetContainer,
             analyticsService
         )
 
@@ -428,11 +436,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             placeDetailsBottomSheet,
             hikingRoutesBottomSheet,
             gpxDetailsBottomSheet,
-            landscapeDetailsBottomSheet
+            hikeRecommenderBottomSheet
         )
 
         placeDetailsBottomSheet.hide()
-        landscapeDetailsBottomSheet.hide()
+        hikeRecommenderBottomSheet.hide()
         hikingRoutesBottomSheet.hide()
         gpxDetailsBottomSheet.hide()
     }
@@ -531,10 +539,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .collect { mapUiModel ->
                     val boundingBox = if (mapUiModel.withDefaultOffset) {
-                        mapUiModel.boundingBox.toOsmBoundingBox()
+                        mapUiModel.boundingBox.toOsm()
                     } else {
                         mapUiModel.boundingBox
-                            .toOsmBoundingBox()
+                            .toOsm()
                             .withOffset(homeMapView, OffsetType.DEFAULT)
                     }
                     homeMapView.zoomToBoundingBoxPostMain(boundingBox, false)
@@ -819,26 +827,35 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeMapView.hasNoOverlay(landscapeDetails.landscapeUiModel.osmId) -> {
                 homeMapView.removeOverlay(OverlayType.LANDSCAPE)
 
-                val osmId = landscapeDetails.landscapeUiModel.osmId
+                val landscapeUiModel = landscapeDetails.landscapeUiModel
+                val osmId = landscapeUiModel.osmId
                 val geometryUiModel = landscapeDetails.geometryUiModel
                 val boundingBox = BoundingBox.fromGeoPoints(geometryUiModel.ways.flatMap { it.geoPoints })
-                val offsetBoundingBox = boundingBox.withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
+                val offsetBoundingBox = boundingBox.withOffset(homeMapView, OffsetType.LANDSCAPE)
                 val overlays = mutableListOf<OverlayWithIW>()
+                val hikeRecommendation = HikeRecommenderMapper.map(landscapeUiModel, boundingBox)
 
                 geometryUiModel.ways.forEach { way ->
                     val landscapeOverlays = homeMapView.addLandscapePolyOverlay(
                         overlayId = osmId,
-                        center = landscapeDetails.landscapeUiModel.geoPoint,
+                        center = landscapeUiModel.geoPoint,
                         centerMarkerDrawable = generateLayerDrawable(
                             layers = listOf(
-                                R.drawable.ic_marker_polygon_background.toDrawable(this),
-                                landscapeDetails.landscapeUiModel.markerRes.toDrawable(this),
+                                LayerDrawableConfig(
+                                    R.drawable.ic_marker_polygon_background.toDrawable(this),
+                                    resources.getDimensionPixelSize(
+                                        R.dimen.landscape_details_center_marker_background_size
+                                    )
+                                ),
+                                LayerDrawableConfig(
+                                    landscapeUiModel.markerRes.toDrawable(this),
+                                    resources.getDimensionPixelSize(R.dimen.landscape_details_center_marker_icon_size)
+                                ),
                             ),
-                            padding = resources.getDimensionPixelSize(R.dimen.space_small)
                         ),
                         way = way,
                         onClick = {
-                            initLandscapeDetailsBottomSheet(landscapeDetails, boundingBox)
+                            initHikeRecommenderBottomSheet(hikeRecommendation)
 
                             homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
                         }
@@ -846,7 +863,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     overlays.addAll(landscapeOverlays)
                 }
 
-                initLandscapeDetailsBottomSheet(landscapeDetails, boundingBox)
+                initHikeRecommenderBottomSheet(hikeRecommendation)
 
                 homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
             }
@@ -882,7 +899,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
                 if (boundingBox != null) {
                     val offsetBoundingBox = boundingBox
-                        .toOsmBoundingBox()
+                        .toOsm()
                         .withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
                     homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
                 } else {
@@ -894,7 +911,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initNodeBottomSheet(placeUiModel, marker)
 
         if (boundingBox != null) {
-            homeMapView.zoomToBoundingBox(boundingBox.toOsmBoundingBox(), true)
+            homeMapView.zoomToBoundingBox(boundingBox.toOsm(), true)
         } else {
             homeMapView.animateCenterAndZoom(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
         }
@@ -1010,6 +1027,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeMapView.removeMarker(marker)
 
                 homeViewModel.clearPlaceDetails()
+            },
+            onHikeRecommenderClick = {
+                val hikeRecommendation = HikeRecommenderMapper.map(placeUiModel, homeMapView.boundingBox)
+
+                initHikeRecommenderBottomSheet(hikeRecommendation)
             }
         )
         bottomSheets.showOnly(placeDetailsBottomSheet)
@@ -1027,23 +1049,33 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         bottomSheets.showOnly(placeDetailsBottomSheet)
     }
 
-    private fun initLandscapeDetailsBottomSheet(landscapeDetails: LandscapeDetailsUiModel, boundingBox: BoundingBox) {
-        landscapeDetailsBottomSheet.initLandscapeDetailsBottomSheet(
-            landscapeDetailsUiModel = landscapeDetails,
-            onHikingTrailsButtonClick = {
-                val placeTitle = getString(
-                    R.string.map_place_name_node_routes_nearby,
-                    landscapeDetails.landscapeUiModel.name.resolve(this@HomeActivity)
-                )
-                homeViewModel.loadHikingRoutes(placeTitle, boundingBox.toDomainBoundingBox())
-                landscapeDetailsBottomSheet.hide()
-            },
-            onCloseButtonClick = {
-                homeViewModel.clearLandscapeDetails()
-                landscapeDetailsBottomSheet.hide()
-            }
-        )
-        bottomSheets.showOnly(landscapeDetailsBottomSheet)
+    private fun initHikeRecommenderBottomSheet(hikeRecommendation: HikeRecommendation) {
+        lifecycleScope.launch {
+            val isInfoButtonEnabled = settingsRepository.isHikeRecommenderInfoEnabled().first()
+
+            hikeRecommenderBottomSheet.init(
+                hikeRecommendation = hikeRecommendation,
+                isInfoButtonEnabled = isInfoButtonEnabled,
+                onHikingTrailsClick = {
+                    val title = hikeRecommendation.title.resolve(this@HomeActivity)
+                    val boundingBox = hikeRecommendation.hikingRoutesBoundingBox
+
+                    homeViewModel.loadHikingRoutes(title, boundingBox)
+                    hikeRecommenderBottomSheet.hide()
+                },
+                onCloseClick = {
+                    homeViewModel.clearLandscapeDetails()
+                    hikeRecommenderBottomSheet.hide()
+                },
+                onCloseInfoTextClick = {
+                    lifecycleScope.launch {
+                        settingsRepository.saveHikeRecommenderInfoEnabled(false)
+                    }
+                },
+            )
+
+            bottomSheets.showOnly(hikeRecommenderBottomSheet)
+        }
     }
 
     private fun initGpxDetails(gpxDetailsUiModel: GpxDetailsUiModel?) {

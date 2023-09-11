@@ -25,14 +25,16 @@
     <string name="place_details_my_location_text">Aktuális pozícióm</string>
     <string name="place_details_pick_location_text">Kiválasztott pozíció</string>
 
-    <string name="landscape_details_hiking_trails_button">Tájegység túraútjai</string>
-    <string name="landscape_details_termeszetjaro_button">Természetjáró túraajánló</string>
-    <string name="landscape_details_termeszetjaro_info">Regisztráció után a gyűjteményből letöltött GPX fájl importálható az alkalmazásba.</string>
-    <string name="landscape_details_kirandulastippek_button">Kirándulástippek túraajánló</string>
-    <string name="landscape_details_kirandulastippek_info">A gyűjteményből letöltött GPX fájl importálható az alkalmazásba.</string>
+    <string name="hike_recommender_landscape_title_template">%s közelében</string>
+    <string name="hike_recommender_place_title_template">%s környékén</string>
+    <string name="hike_recommender_hiking_trails_button">Nemzeti túraútvonalak</string>
+    <string name="hike_recommender_termeszetjaro_button">Természetjáró túraajánló</string>
+    <string name="hike_recommender_kirandulastippek_button">Kirándulástippek túraajánló</string>
+    <string name="hike_recommender_info">A túraajánlókból letöltött GPX fájlok megnyithatóak az alkalmazással.</string>
 
     <string name="home_bottom_sheet_directions_button">Google Nav</string>
     <string name="home_bottom_sheet_show_points_button">Összes pont</string>
+    <string name="home_bottom_sheet_hike_recommender_button">Túraajánló</string>
     <string name="home_bottom_sheet_route_plan_button">Útvonalterv</string>
     <string name="home_bottom_sheet_landscape_secondary">Tájegység</string>
 
@@ -40,9 +42,6 @@
     <string name="gpx_details_bottom_sheet_start_button">Indulás</string>
     <string name="gpx_details_bottom_sheet_visibility_button">Láthatóság</string>
     <string name="gpx_details_bottom_sheet_waypoints_only_counter_template">%d állomás</string>
-
-    <string name="map_place_name_routes_nearby">Túraútvonalak a térképen</string>
-    <string name="map_place_name_node_routes_nearby">%s közelében</string>
 
     <string name="my_location_rationale_title">Helyadatok engedélyezése</string>
     <string name="my_location_rationale_message">Az aktuális pozíció megjelenítéséhez szükséges az engedély!</string>

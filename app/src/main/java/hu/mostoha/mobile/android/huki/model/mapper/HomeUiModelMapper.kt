@@ -19,12 +19,7 @@ import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_QUERY_URL
-import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_URL
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_AREA_URL
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_URL
 import hu.mostoha.mobile.android.huki.util.calculateCenter
-import java.net.URLEncoder
 import javax.inject.Inject
 
 class HomeUiModelMapper @Inject constructor() {
@@ -55,20 +50,7 @@ class HomeUiModelMapper @Inject constructor() {
                 name = landscape.nameRes.toMessage(),
                 geoPoint = landscape.center.toGeoPoint(),
                 iconRes = getLandscapeIcon(landscape),
-                markerRes = getMarkerDIcon(landscape),
-                kirandulastippekLink = if (landscape.kirandulastippekTag != null) {
-                    KIRANDULASTIPPEK_QUERY_URL.format(landscape.kirandulastippekTag)
-                } else {
-                    KIRANDULASTIPPEK_URL
-                },
-                termeszetjaroLink = if (landscape.termeszetjaroTag != null) {
-                    TERMESZETJARO_AREA_URL.format(
-                        landscape.termeszetjaroTag.areaId,
-                        URLEncoder.encode(landscape.termeszetjaroTag.areaName, "UTF-8")
-                    )
-                } else {
-                    TERMESZETJARO_URL
-                },
+                markerRes = getMarkerIcon(landscape),
             )
         }
     }
@@ -173,7 +155,7 @@ class HomeUiModelMapper @Inject constructor() {
     }
 
     @DrawableRes
-    private fun getMarkerDIcon(landscape: Landscape): Int {
+    private fun getMarkerIcon(landscape: Landscape): Int {
         return when (landscape.landscapeType) {
             LandscapeType.MOUNTAIN_LOW -> R.drawable.ic_marker_landscapes_mountain_low
             LandscapeType.MOUNTAIN_MEDIUM -> R.drawable.ic_marker_landscapes_mountain_medium

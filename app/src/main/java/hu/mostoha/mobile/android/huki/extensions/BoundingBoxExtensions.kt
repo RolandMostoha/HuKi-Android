@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.huki.extensions
 
 import androidx.annotation.DimenRes
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.model.domain.toOsmBoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.toOsm
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.views.MapView
 import org.osmdroid.views.Projection
@@ -68,25 +68,29 @@ fun BoundingBox.withOffset(mapView: MapView, offsetType: OffsetType): BoundingBo
         bottom = when (offsetType) {
             OffsetType.BOTTOM_SHEET -> R.dimen.map_view_bottom_sheet_bottom_offset
             OffsetType.TOP_SHEET -> R.dimen.map_view_top_sheet_bottom_offset
+            OffsetType.LANDSCAPE -> R.dimen.map_view_landscape_bottom_sheet_bottom_offset
             else -> R.dimen.map_view_default_bottom_offset
         },
         left = when (offsetType) {
             OffsetType.TOP_SHEET -> R.dimen.map_view_top_sheet_start_offset
+            OffsetType.LANDSCAPE -> R.dimen.map_view_landscape_start_offset
             else -> R.dimen.map_view_default_start_offset
         },
         right = when (offsetType) {
             OffsetType.TOP_SHEET -> R.dimen.map_view_top_sheet_end_offset
+            OffsetType.LANDSCAPE -> R.dimen.map_view_landscape_end_offset
             else -> R.dimen.map_view_default_end_offset
         }
     )
 }
 
 fun DomainBoundingBox.withOffset(mapView: MapView, offsetType: OffsetType): BoundingBox {
-    return this.toOsmBoundingBox().withOffset(mapView, offsetType)
+    return this.toOsm().withOffset(mapView, offsetType)
 }
 
 enum class OffsetType {
     DEFAULT,
     BOTTOM_SHEET,
-    TOP_SHEET
+    TOP_SHEET,
+    LANDSCAPE,
 }

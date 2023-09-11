@@ -26,7 +26,8 @@ val DEFAULT_MY_LOCATION = Location(
 )
 
 object Landscapes {
-    val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.minBy { DEFAULT_MY_LOCATION.distanceBetween(it.center) }
+    val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.sortedBy { DEFAULT_MY_LOCATION.distanceBetween(it.center) }[0]
+    val DEFAULT_LANDSCAPE_2 = LOCAL_LANDSCAPES.sortedBy { DEFAULT_MY_LOCATION.distanceBetween(it.center) }[1]
 
     val DEFAULT_GEOMETRY_LANDSCAPE = Geometry.Way(
         osmId = DEFAULT_LANDSCAPE.osmId,

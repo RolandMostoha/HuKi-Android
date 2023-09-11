@@ -12,13 +12,13 @@ interface AnalyticsService {
 
     fun loadLandscapeClicked(placeName: String)
 
-    fun landscapeKirandulastippekClicked(placeName: String)
+    fun placeDetailsHikeRecommenderClicked()
 
-    fun landscapeKirandulastippekInfoClicked()
+    fun hikeRecommenderKirandulastippekClicked(placeName: String)
 
-    fun landscapeTermeszetjaroClicked(placeName: String)
+    fun hikeRecommenderTermeszetjaroClicked(placeName: String)
 
-    fun landscapeTermeszetjaroInfoClicked()
+    fun hikeRecommenderInfoCloseClicked()
 
     fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType)
 

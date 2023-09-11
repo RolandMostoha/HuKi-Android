@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.model.ui
 
+import android.content.Context
 import androidx.annotation.StringRes
 
 sealed class Message {
@@ -19,4 +20,20 @@ fun String.toMessage(): Message.Text {
 
 fun @receiver:StringRes Int.toMessage(): Message.Res {
     return Message.Res(this)
+}
+
+fun Message.resolve(context: Context): String {
+    return when (val message = this) {
+        is Message.Res -> {
+            val formatArgs = message.formatArgs
+                .map { formatArg ->
+                    when (formatArg) {
+                        is Message -> formatArg.resolve(context)
+                        else -> formatArg
+                    }
+                }
+            context.getString(message.res, *formatArgs.toTypedArray())
+        }
+        is Message.Text -> message.text
+    }
 }

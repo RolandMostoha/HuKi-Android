@@ -13,6 +13,6 @@ data class BoundingBox(
     }
 }
 
-fun BoundingBox.toOsmBoundingBox() = OsmBoundingBox(north, east, south, west)
+fun BoundingBox.toOsm() = OsmBoundingBox(north, east, south, west)
 
-fun OsmBoundingBox.toDomainBoundingBox() = BoundingBox(latNorth, lonEast, latSouth, lonWest)
+fun OsmBoundingBox.toDomain() = BoundingBox(latNorth, lonEast, latSouth, lonWest)

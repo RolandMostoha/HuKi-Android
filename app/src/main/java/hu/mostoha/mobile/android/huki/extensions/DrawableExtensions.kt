@@ -18,16 +18,6 @@ fun @receiver:DrawableRes Int.toDrawable(context: Context): Drawable {
     return ContextCompat.getDrawable(context, this)!!
 }
 
-fun generateLayerDrawable(layers: List<Drawable>, @Px padding: Int? = null): LayerDrawable {
-    val layerDrawable = LayerDrawable(layers.toTypedArray())
-
-    padding?.let {
-        layerDrawable.setLayerInset(1, padding, padding, padding, padding)
-    }
-
-    return layerDrawable
-}
-
 fun generateLayerDrawable(layers: List<LayerDrawableConfig>): LayerDrawable {
     val layerDrawable = LayerDrawable(layers.map { it.layer }.toTypedArray())
 

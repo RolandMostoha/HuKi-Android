@@ -96,6 +96,15 @@
                 app:icon="@drawable/ic_place_details_route_plan" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/placeDetailsHikingRecommenderButton"
+                style="@style/DefaultButton.Contained.Shadowless.Secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_large"
+                android:text="@string/home_bottom_sheet_hike_recommender_button"
+                app:icon="@drawable/ic_place_details_hike_recommender" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/placeDetailsShowAllPointsButton"
                 style="@style/DefaultButton.Contained.Shadowless.Secondary"
                 android:layout_width="wrap_content"

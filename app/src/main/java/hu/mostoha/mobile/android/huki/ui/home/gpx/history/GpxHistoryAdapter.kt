@@ -9,9 +9,9 @@ import hu.mostoha.mobile.android.huki.databinding.ItemGpxHistoryInfoBinding
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuActionItem
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
 import hu.mostoha.mobile.android.huki.extensions.inflater
-import hu.mostoha.mobile.android.huki.extensions.resolve
 import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
 import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
+import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
 
 class GpxHistoryAdapter(

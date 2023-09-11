@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.resolve
 
 fun TextView.setDrawableStart(@DrawableRes drawableRes: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableRes)

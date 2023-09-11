@@ -33,15 +33,10 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY_CLOSED
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
-import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_QUERY_URL
-import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_URL
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_AREA_URL
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_URL
 import hu.mostoha.mobile.android.huki.util.calculateCenter
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.osmdroid.util.GeoPoint
-import java.net.URLEncoder
 
 class HomeUiModelMapperTest {
 
@@ -151,11 +146,6 @@ class HomeUiModelMapperTest {
                     geoPoint = landscape.center.toGeoPoint(),
                     iconRes = R.drawable.ic_landscapes_mountain_medium,
                     markerRes = R.drawable.ic_marker_landscapes_mountain_medium,
-                    kirandulastippekLink = KIRANDULASTIPPEK_QUERY_URL.format(landscape.kirandulastippekTag),
-                    termeszetjaroLink = TERMESZETJARO_AREA_URL.format(
-                        landscape.termeszetjaroTag!!.areaId,
-                        URLEncoder.encode(landscape.termeszetjaroTag!!.areaName, "UTF-8")
-                    ),
                 )
             )
         )
@@ -179,8 +169,6 @@ class HomeUiModelMapperTest {
                     geoPoint = landscape.center.toGeoPoint(),
                     iconRes = R.drawable.ic_landscapes_mountain_medium,
                     markerRes = R.drawable.ic_marker_landscapes_mountain_medium,
-                    kirandulastippekLink = KIRANDULASTIPPEK_URL,
-                    termeszetjaroLink = TERMESZETJARO_URL,
                 )
             )
         )

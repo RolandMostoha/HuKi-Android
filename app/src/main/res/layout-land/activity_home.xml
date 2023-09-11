@@ -261,8 +261,8 @@
         tools:visibility="gone" />
 
     <include
-        android:id="@+id/homeLandscapeDetailsBottomSheetContainer"
-        layout="@layout/layout_bottom_sheet_landscape_details"
+        android:id="@+id/homeHikeRecommenderBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_hike_recommender"
         tools:visibility="gone" />
 
     <include

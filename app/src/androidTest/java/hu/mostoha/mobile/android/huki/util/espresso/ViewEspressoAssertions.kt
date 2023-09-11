@@ -11,6 +11,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.Tap
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
@@ -110,7 +111,14 @@ fun @receiver:StringRes Int.isSnackbarMessageDisplayed() {
 }
 
 fun @receiver:IdRes Int.click() {
-    onView(withId(this)).perform(ViewActions.click())
+    onView(withId(this))
+        .perform(ViewActions.click())
+}
+
+fun @receiver:IdRes Int.clickWithScroll() {
+    onView(withId(this))
+        .perform(scrollTo())
+        .perform(ViewActions.click())
 }
 
 fun @receiver:IdRes Int.longClick() {
@@ -137,7 +145,14 @@ fun @receiver:IdRes Int.clickInPopup() {
 }
 
 fun @receiver:StringRes Int.clickWithText() {
-    onView(withText(this)).perform(ViewActions.click())
+    onView(withText(this))
+        .perform(ViewActions.click())
+}
+
+fun @receiver:StringRes Int.clickWithTextWithScroll() {
+    onView(withText(this))
+        .perform(scrollTo())
+        .perform(ViewActions.click())
 }
 
 fun @receiver:StringRes Int.clickWithTextInPopup() {
@@ -178,6 +193,10 @@ fun @receiver:StringRes Int.clickWithContentDescription() {
 
 fun @receiver:IdRes Int.swipeDown() {
     onView(withId(this)).perform(ViewActions.swipeDown())
+}
+
+fun @receiver:IdRes Int.swipeLeft() {
+    onView(withId(this)).perform(ViewActions.swipeLeft())
 }
 
 fun @receiver:IdRes Int.selectTab(tabIndex: Int) {

@@ -32,7 +32,7 @@ import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_NODE
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithScroll
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
@@ -122,7 +122,7 @@ class OverlaysUiTest {
             R.id.homeMapView.hasNoOverlay<LandscapePolygon>()
             R.id.homeMapView.hasOverlay<Marker>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
-            R.id.homeLandscapeDetailsBottomSheetContainer.isNotDisplayed()
+            R.id.homeHikeRecommenderBottomSheetContainer.isNotDisplayed()
             R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
         }
     }
@@ -138,7 +138,7 @@ class OverlaysUiTest {
             val searchText = DEFAULT_SEARCH_TEXT
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
-            R.id.placeDetailsShowAllPointsButton.click()
+            R.id.placeDetailsShowAllPointsButton.clickWithScroll()
             R.id.homeMapView.hasOverlay<Polyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
@@ -164,7 +164,7 @@ class OverlaysUiTest {
             R.id.homeMapView.hasOverlay<Marker>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
-            R.id.placeDetailsShowAllPointsButton.click()
+            R.id.placeDetailsShowAllPointsButton.clickWithScroll()
 
             R.id.homeMapView.hasNoOverlay<Marker>()
             R.id.homeMapView.hasOverlay<Polyline>()

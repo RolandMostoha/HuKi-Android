@@ -5,7 +5,7 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
-import hu.mostoha.mobile.android.huki.model.domain.toDomainBoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.ui.AltitudeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
@@ -63,7 +63,7 @@ class RoutePlannerUiModelMapperTest {
                         DEFAULT_WAYPOINTS.first().toGeoPoint(),
                         DEFAULT_WAYPOINTS.last().toGeoPoint()
                     )
-                ).toDomainBoundingBox(),
+                ).toDomain(),
                 travelTimeText = routePlan.travelTime.formatHoursAndMinutes().toMessage(),
                 distanceText = DistanceFormatter.format(routePlan.distance),
                 altitudeUiModel = AltitudeUiModel(

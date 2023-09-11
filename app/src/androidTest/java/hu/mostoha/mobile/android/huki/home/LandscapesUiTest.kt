@@ -15,6 +15,8 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
+import hu.mostoha.mobile.android.huki.constants.KIRANDULASTIPPEK_QUERY_URL
+import hu.mostoha.mobile.android.huki.constants.TERMESZETJARO_AREA_URL
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
@@ -34,8 +36,6 @@ import hu.mostoha.mobile.android.huki.testdata.HikingRoutes.DEFAULT_HIKING_ROUTE
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_GEOMETRY_LANDSCAPE
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_LANDSCAPE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_QUERY_URL
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_AREA_URL
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
@@ -111,12 +111,12 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homeLandscapeDetailsBottomSheetContainer.isNotDisplayed()
+            R.id.homeHikeRecommenderBottomSheetContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
             landscape.nameRes.clickWithText()
 
-            R.id.homeLandscapeDetailsBottomSheetContainer.isDisplayed()
+            R.id.homeHikeRecommenderBottomSheetContainer.isDisplayed()
         }
     }
 
@@ -127,7 +127,7 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homeLandscapeDetailsBottomSheetContainer.isNotDisplayed()
+            R.id.homeHikeRecommenderBottomSheetContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
             landscape.nameRes.clickWithText()
@@ -146,7 +146,7 @@ class LandscapesUiTest {
 
         launchScenario<HomeActivity> {
             landscape.nameRes.clickWithText()
-            R.id.landscapeDetailsHikingTrailsButton.click()
+            R.id.hikeRecommenderHikingTrailsButton.click()
 
             R.id.homeHikingRoutesBottomSheetContainer.isDisplayed()
         }
@@ -160,7 +160,7 @@ class LandscapesUiTest {
 
         launchScenario<HomeActivity> {
             landscape.nameRes.clickWithText()
-            R.id.landscapeDetailsKirandulastippekButton.click()
+            R.id.hikeRecommenderKirandulastippekButton.click()
 
             intended(
                 allOf(
@@ -179,7 +179,7 @@ class LandscapesUiTest {
 
         launchScenario<HomeActivity> {
             landscape.nameRes.clickWithText()
-            R.id.landscapeDetailsTermeszetjaroButton.click()
+            R.id.hikeRecommenderTermeszetjaroButton.click()
 
             intended(
                 allOf(
@@ -202,7 +202,7 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> { scenario ->
-            R.id.homeLandscapeDetailsBottomSheetContainer.isNotDisplayed()
+            R.id.homeHikeRecommenderBottomSheetContainer.isNotDisplayed()
             R.id.homeLandscapeChipGroup.isDisplayed()
 
             landscape.nameRes.isTextDisplayed()
@@ -221,7 +221,7 @@ class LandscapesUiTest {
 
         launchScenario<HomeActivity> { scenario ->
             landscape.nameRes.clickWithText()
-            R.id.homeLandscapeDetailsBottomSheetContainer.isDisplayed()
+            R.id.homeHikeRecommenderBottomSheetContainer.isDisplayed()
             R.id.homeMapView.hasOverlay<LandscapeMarker>()
             R.id.homeMapView.hasOverlay<LandscapePolygon>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
