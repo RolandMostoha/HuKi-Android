@@ -378,7 +378,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 else -> permissionLauncher.launch(locationPermissions)
             }
         }
-
         homeRoutePlannerFab.setOnClickListener {
             analyticsService.routePlannerClicked()
 
@@ -389,18 +388,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
             supportFragmentManager.addFragment(R.id.homeRoutePlannerContainer, RoutePlannerFragment::class.java)
         }
-
         homeLayersFab.setOnClickListener {
             homeViewModel.clearFollowLocation()
 
             LayersBottomSheetDialogFragment().show(supportFragmentManager, LayersBottomSheetDialogFragment.TAG)
         }
-
         homeSettingsFab.setOnClickListener {
             analyticsService.settingsClicked()
             SettingsBottomSheetDialogFragment().show(supportFragmentManager, SettingsBottomSheetDialogFragment.TAG)
         }
-
         homeGpxHistoryFab.setOnClickListener {
             analyticsService.gpxHistoryClicked()
             supportFragmentManager.addFragment(R.id.homeFragmentContainer, GpxHistoryFragment::class.java)

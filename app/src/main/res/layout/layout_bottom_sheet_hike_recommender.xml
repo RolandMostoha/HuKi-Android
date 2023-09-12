@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/space_large"
+    android:paddingBottom="@dimen/space_small"
     app:behavior_hideable="true"
     app:layout_insetEdge="bottom">
 
