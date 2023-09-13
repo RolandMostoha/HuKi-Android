@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -127,7 +128,7 @@ class RoutePlannerViewModel @Inject constructor(
     }
 
     fun initWaypoint(placeUiModel: PlaceUiModel) {
-        val waypoints = listOf(
+        _wayPointItems.value = listOf(
             WaypointItem(
                 order = 0,
                 waypointType = WaypointType.START
@@ -139,8 +140,21 @@ class RoutePlannerViewModel @Inject constructor(
                 location = placeUiModel.geoPoint.toLocation(),
             )
         )
+    }
 
-        _wayPointItems.value = waypoints
+    fun initWaypoints(locations: List<Pair<Message, GeoPoint>>) {
+        _wayPointItems.value = locations.mapIndexed { index, (name, geoPoint) ->
+            WaypointItem(
+                order = index,
+                waypointType = when (index) {
+                    0 -> WaypointType.START
+                    locations.lastIndex -> WaypointType.END
+                    else -> WaypointType.INTERMEDIATE
+                },
+                primaryText = name,
+                location = geoPoint.toLocation(),
+            )
+        }
     }
 
     fun updateWaypoint(waypointItem: WaypointItem, name: Message, location: Location, searchText: String) {

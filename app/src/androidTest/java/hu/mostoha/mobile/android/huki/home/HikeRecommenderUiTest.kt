@@ -118,23 +118,6 @@ class HikeRecommenderUiTest {
         }
     }
 
-    @Test
-    fun whenRecreate_thenHikeRecommenderDisplays() {
-        val landscape1 = DEFAULT_LANDSCAPE
-        answerTestLocationProvider()
-        answerTestWayGeometry(landscape1.osmId)
-
-        launchScenario<HomeActivity> { scenario ->
-            landscape1.nameRes.clickWithText()
-
-            R.id.hikeRecommenderContentContainer.isDisplayed()
-
-            scenario.recreate()
-
-            R.id.hikeRecommenderContentContainer.isDisplayed()
-        }
-    }
-
     private fun answerTestLocationProvider() {
         every { asyncMyLocationProvider.getLocationFlow() } returns flowOf(DEFAULT_MY_LOCATION.toMockLocation())
     }

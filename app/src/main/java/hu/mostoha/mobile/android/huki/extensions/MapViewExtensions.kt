@@ -7,6 +7,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
+import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.LocationPickerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
@@ -18,6 +19,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.LocationPickerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OVERLAY_TYPE_ORDER_MAP
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
@@ -115,6 +117,28 @@ fun MapView.addMarker(
         icon = iconDrawable
         setOnMarkerClickListener { marker, _ ->
             onClick.invoke(marker)
+            true
+        }
+    }
+
+    addOverlay(marker, OverlayComparator)
+
+    return marker
+}
+
+fun MapView.addPlaceDetailsMarker(
+    overlayId: String = UUID.randomUUID().toString(),
+    name: Message,
+    geoPoint: GeoPoint,
+    iconDrawable: Drawable,
+    onClick: (PlaceDetailsMarker) -> Unit
+): Marker {
+    val marker = PlaceDetailsMarker(this, name).apply {
+        id = overlayId
+        position = geoPoint
+        icon = iconDrawable
+        setOnMarkerClickListener { marker, _ ->
+            onClick.invoke(marker as PlaceDetailsMarker)
             true
         }
     }

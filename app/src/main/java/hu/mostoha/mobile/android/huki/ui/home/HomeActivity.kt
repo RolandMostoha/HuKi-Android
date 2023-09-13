@@ -33,8 +33,8 @@ import hu.mostoha.mobile.android.huki.extensions.addLandscapePolyOverlay
 import hu.mostoha.mobile.android.huki.extensions.addLocationPickerMarker
 import hu.mostoha.mobile.android.huki.extensions.addLongClickHandlerOverlay
 import hu.mostoha.mobile.android.huki.extensions.addMapMovedListener
-import hu.mostoha.mobile.android.huki.extensions.addMarker
 import hu.mostoha.mobile.android.huki.extensions.addOverlay
+import hu.mostoha.mobile.android.huki.extensions.addPlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.extensions.addPolygon
 import hu.mostoha.mobile.android.huki.extensions.addPolyline
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerMarker
@@ -94,6 +94,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -121,6 +122,7 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedView
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
+import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
@@ -886,8 +888,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         val geoPoint = placeUiModel.geoPoint
         val boundingBox = placeUiModel.boundingBox
 
-        val marker = homeMapView.addMarker(
+        val marker = homeMapView.addPlaceDetailsMarker(
             overlayId = placeUiModel.osmId,
+            name = placeUiModel.primaryText,
             geoPoint = geoPoint,
             iconDrawable = R.drawable.ic_marker_poi.toDrawable(this),
             onClick = { marker ->
@@ -1011,10 +1014,20 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             },
             onRoutePlanButtonClick = {
                 placeDetailsBottomSheet.hide()
+
+                val markers = homeMapView.overlays
+                    .filterIsInstance<PlaceDetailsMarker>()
+                    .map { it.name to it.position }
+                    .takeLast(ROUTE_PLANNER_MAX_WAYPOINT_COUNT)
+
+                if (markers.size <= 1) {
+                    routePlannerViewModel.initWaypoint(placeUiModel)
+                } else {
+                    routePlannerViewModel.initWaypoints(markers)
+                }
+
                 homeMapView.removeMarker(marker)
                 homeViewModel.clearPlaceDetails()
-
-                routePlannerViewModel.initWaypoint(placeUiModel)
 
                 supportFragmentManager.addFragment(R.id.homeRoutePlannerContainer, RoutePlannerFragment::class.java)
             },

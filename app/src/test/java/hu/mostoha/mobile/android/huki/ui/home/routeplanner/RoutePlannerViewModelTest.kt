@@ -98,7 +98,7 @@ class RoutePlannerViewModelTest {
     }
 
     @Test
-    fun `Given place, when initWaypoints, then new waypoint is emitted with place details`() {
+    fun `Given place, when initWaypoint, then new waypoint is emitted with place details`() {
         runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL_1
 
@@ -119,6 +119,40 @@ class RoutePlannerViewModelTest {
                             waypointType = WaypointType.END,
                             primaryText = placeUiModel.primaryText,
                             location = placeUiModel.geoPoint.toLocation(),
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Given locations, when initWaypoints, then waypoint items are emitted`() {
+        runTestDefault {
+            val locations = listOf(
+                DEFAULT_PLACE_UI_MODEL_1.primaryText to DEFAULT_PLACE_UI_MODEL_1.geoPoint,
+                DEFAULT_PLACE_UI_MODEL_2.primaryText to DEFAULT_PLACE_UI_MODEL_2.geoPoint,
+            )
+
+            viewModel.waypointItems.test {
+                viewModel.initWaypoints(locations)
+
+                assertThat(awaitItem()).isEmpty()
+                assertThat(awaitItem()).isEqualTo(
+                    listOf(
+                        WaypointItem(
+                            id = viewModel.waypointItems.value[0].id,
+                            order = 0,
+                            primaryText = DEFAULT_PLACE_UI_MODEL_1.primaryText,
+                            location = DEFAULT_PLACE_UI_MODEL_1.geoPoint.toLocation(),
+                            waypointType = WaypointType.START,
+                        ),
+                        WaypointItem(
+                            id = viewModel.waypointItems.value[1].id,
+                            order = 1,
+                            primaryText = DEFAULT_PLACE_UI_MODEL_2.primaryText,
+                            location = DEFAULT_PLACE_UI_MODEL_2.geoPoint.toLocation(),
+                            waypointType = WaypointType.END,
                         )
                     )
                 )

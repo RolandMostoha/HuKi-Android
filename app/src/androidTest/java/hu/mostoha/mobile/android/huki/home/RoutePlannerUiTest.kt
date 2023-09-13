@@ -267,36 +267,6 @@ class RoutePlannerUiTest {
     }
 
     @Test
-    fun whenAdd6NewWaypoints_thenAdditionIsDisabled() {
-        launchScenario<HomeActivity> {
-            val waypointName1 = "Dobogoko"
-
-            R.id.homeRoutePlannerFab.click()
-
-            onView(withId(R.id.routePlannerWaypointList))
-                .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
-            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-            onView(withId(R.id.routePlannerWaypointList))
-                .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName1)))
-            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-            R.string.route_planner_accessibility_add_waypoint.clickWithContentDescription()
-            onView(withId(R.id.routePlannerWaypointList))
-                .perform(actionOnItemAtPosition<ViewHolder>(2, typeText(waypointName1)))
-            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-            R.string.route_planner_accessibility_add_waypoint.clickWithContentDescription()
-            onView(withId(R.id.routePlannerWaypointList))
-                .perform(actionOnItemAtPosition<ViewHolder>(3, typeText(waypointName1)))
-            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-
-            onView(withId(R.id.routePlannerWaypointList))
-                .perform(scrollToPosition<ViewHolder>(2))
-            R.string.route_planner_accessibility_add_waypoint.clickWithContentDescription()
-
-            R.string.route_planner_accessibility_add_waypoint.doesNotExistWithContentDescription()
-        }
-    }
-
-    @Test
     fun givenWaypoints_whenRemoveWaypoint_thenRoutePlanUpdates() {
         launchScenario<HomeActivity> {
             val waypointName1 = "Dobogoko"

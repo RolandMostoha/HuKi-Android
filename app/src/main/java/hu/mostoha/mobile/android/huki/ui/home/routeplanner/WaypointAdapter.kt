@@ -15,6 +15,7 @@ import hu.mostoha.mobile.android.huki.extensions.invisible
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup.Companion.PLACE_FINDER_MIN_TRIGGER_LENGTH
+import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
 
 class WaypointAdapter(
@@ -27,7 +28,6 @@ class WaypointAdapter(
 ) : ListAdapter<WaypointItem, RecyclerView.ViewHolder>(DefaultDiffUtilCallback()) {
 
     companion object {
-        private const val MAX_WAYPOINT_COUNT = 6
         private const val POSITION_RETURN_TO_HOME = 0
         private const val POSITION_ADDITION = 1
     }
@@ -49,7 +49,7 @@ class WaypointAdapter(
     }
 
     override fun submitList(list: List<WaypointItem>?) {
-        val hasToDisableAddition = list != null && list.size >= MAX_WAYPOINT_COUNT
+        val hasToDisableAddition = list != null && list.size >= ROUTE_PLANNER_MAX_WAYPOINT_COUNT
         val hasToNotifyAdditionChanged = isAdditionDisabled != hasToDisableAddition
 
         isAdditionDisabled = hasToDisableAddition
