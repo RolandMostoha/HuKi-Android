@@ -1,3 +1,4 @@
-- Gyorsabb és pontosabb iránytű szenzorok alapján
-- Offline működés leírása a beállításokban
-- GPX előzmények törlése és átnevezése
+- Új túraajánló design
+- Már POI-hoz is lehet használni a túraajánlót (nem csak tájegységekhez)
+- A térképen már hosszú klikkel is lehet új POI-t lerakni
+- A térképen lerakott POI-kat automatikusan összeköti az útvonaltervező

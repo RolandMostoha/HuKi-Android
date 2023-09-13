@@ -1,3 +1,4 @@
-- Faster and more accurate compass based on sensors
-- Offline mode description in settings
-- GPX history delete and rename options
+- New hike recommendation design
+- Hike recommendation can also be used for POIs (not only for landscapes)
+- POI can be added with long click on the map
+- The added POIs are connected automatically by the route planner
