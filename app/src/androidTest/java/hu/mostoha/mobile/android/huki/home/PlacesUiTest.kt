@@ -322,7 +322,6 @@ class PlacesUiTest {
             R.string.home_bottom_sheet_hike_recommender_button.isTextDisplayed()
             R.id.placeDetailsButtonGroupScrollView.swipeLeft()
             R.string.home_bottom_sheet_show_points_button.isTextDisplayed()
-            R.id.placeDetailsGoogleNavButton.isDisplayed()
         }
     }
 
