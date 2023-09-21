@@ -84,7 +84,7 @@ class RoutePlannerFragment : Fragment() {
     private val addWaypointButton by lazy { binding.routePlannerAddWaypointButton }
     private val returnToHomeButton by lazy { binding.routePlannerReturnToHomeButton }
     private val backButton by lazy { binding.routePlannerBackButton }
-    private val graphhopperContainer by lazy { binding.routePlannerGraphhopperContainer }
+    private val graphhopperLogo by lazy { binding.routePlannerGraphhopperLogo }
     private val errorText by lazy { binding.routePlannerErrorText }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -128,8 +128,12 @@ class RoutePlannerFragment : Fragment() {
         backButton.setOnClickListener {
             clearRoutePlanner()
         }
-        graphhopperContainer.setOnClickListener {
+        graphhopperLogo.setOnClickListener {
             requireContext().startUrlIntent(getString(R.string.route_planner_graphhopper_url))
+        }
+        routePlannerContainer.setOnClickListener {
+            lastEditedWaypointInput?.clearFocus()
+            placeFinderViewModel.cancelSearch()
         }
     }
 
