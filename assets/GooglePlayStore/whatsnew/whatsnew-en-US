@@ -1,4 +1,3 @@
-- New hike recommendation design
-- Hike recommendation can also be used for POIs (not only for landscapes)
-- POI can be added with long click on the map
-- The added POIs are connected automatically by the route planner
+- Route planner: can add up to 12 destinations
+- Route planner: return to start function
+- Bugfixes

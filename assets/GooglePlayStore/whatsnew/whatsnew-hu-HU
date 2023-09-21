@@ -1,4 +1,3 @@
-- Új túraajánló design
-- Már POI-hoz is lehet használni a túraajánlót (nem csak tájegységekhez)
-- A térképen már hosszú klikkel is lehet új POI-t lerakni
-- A térképen lerakott POI-kat automatikusan összeköti az útvonaltervező
+- Útvonaltervező: már 12 állomás is beállítható
+- Útvonaltervező: visszatérés a kezdőponthoz funkció
+- Hibajavítások
