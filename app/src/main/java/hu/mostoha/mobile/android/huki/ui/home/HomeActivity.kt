@@ -438,9 +438,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         )
 
         placeDetailsBottomSheet.hide()
-        hikeRecommenderBottomSheet.hide()
         hikingRoutesBottomSheet.hide()
         gpxDetailsBottomSheet.hide()
+        hikeRecommenderBottomSheet.hide()
     }
 
     private fun initPermissions() {

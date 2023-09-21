@@ -17,5 +17,8 @@
     <dimen name="map_view_top_sheet_bottom_offset">50dp</dimen>
     <dimen name="map_view_top_sheet_start_offset">370dp</dimen>
     <dimen name="map_view_top_sheet_end_offset">@dimen/map_view_default_end_offset</dimen>
+    <dimen name="map_view_landscape_bottom_sheet_bottom_offset">120dp</dimen>
+    <dimen name="map_view_landscape_start_offset">100dp</dimen>
+    <dimen name="map_view_landscape_end_offset">100dp</dimen>
 
 </resources>
