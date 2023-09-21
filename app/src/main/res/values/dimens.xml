@@ -70,6 +70,7 @@
     <dimen name="home_copyright_bottom_margin">13dp</dimen>
 
     <dimen name="route_planner_waypoint_list_max_height">145dp</dimen>
+    <dimen name="route_planner_min_width">@null</dimen>
 
     <dimen name="map_view_default_top_offset">180dp</dimen>
     <dimen name="map_view_default_bottom_offset">220dp</dimen>
