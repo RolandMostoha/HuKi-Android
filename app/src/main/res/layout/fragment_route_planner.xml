@@ -72,18 +72,51 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="routePlannerRouteAttributesContainer,routePlannerErrorText" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/routePlannerAddWaypointButton"
+        style="@style/DefaultButton.IconOnly.Stroked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginEnd="@dimen/space_medium"
+        android:contentDescription="@string/route_planner_accessibility_add_waypoint"
+        app:icon="@drawable/ic_route_planner_plus"
+        app:layout_constraintEnd_toStartOf="@id/routePlannerDoneButton"
+        app:layout_constraintTop_toBottomOf="@id/routePlannerButtonBarrier" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/routePlannerReturnToHomeButton"
+        style="@style/DefaultButton.IconOnly.Stroked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginEnd="@dimen/space_medium"
+        android:contentDescription="@string/route_planner_accessibility_return_waypoint"
+        app:icon="@drawable/ic_route_planner_return_to_home"
+        app:layout_constraintEnd_toStartOf="@id/routePlannerAddWaypointButton"
+        app:layout_constraintTop_toBottomOf="@id/routePlannerButtonBarrier" />
+
+    <hu.mostoha.mobile.android.huki.views.ProgressMaterialButton
+        android:id="@+id/routePlannerDoneButton"
+        style="@style/DefaultButton.Contained.Shadowless.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_medium"
+        android:text="@string/route_planner_done_button"
+        app:iconRes="@drawable/ic_route_planner_done"
+        app:iconColor="@color/colorOnPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/routePlannerButtonBarrier" />
+
     <LinearLayout
         android:id="@+id/routePlannerGraphhopperContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/space_medium"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingVertical="@dimen/space_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/routePlannerDoneButton"
-        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintTop_toBottomOf="@id/routePlannerDoneButton"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textview.MaterialTextView
@@ -104,18 +137,5 @@
             android:src="@drawable/img_graphhopper_logo" />
 
     </LinearLayout>
-
-    <hu.mostoha.mobile.android.huki.views.ProgressMaterialButton
-        android:id="@+id/routePlannerDoneButton"
-        style="@style/DefaultButton.Contained.Shadowless.Secondary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_medium"
-        android:text="@string/route_planner_done_button"
-        app:iconRes="@drawable/ic_route_planner_done"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/routePlannerButtonBarrier"
-        app:layout_constraintVertical_bias="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

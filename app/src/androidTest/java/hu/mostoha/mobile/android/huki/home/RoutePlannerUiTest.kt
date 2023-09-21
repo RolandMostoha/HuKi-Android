@@ -136,6 +136,15 @@ class RoutePlannerUiTest {
         coEvery {
             routPlannerRepository.getRoutePlan(
                 listOf(
+                    DEFAULT_PLACE_NODE.location,
+                    DEFAULT_PLACE_WAY.location,
+                    DEFAULT_PLACE_NODE.location
+                )
+            )
+        } returns DEFAULT_ROUTE_PLAN_2
+        coEvery {
+            routPlannerRepository.getRoutePlan(
+                listOf(
                     DEFAULT_MY_LOCATION.copy(altitude = null),
                     DEFAULT_PLACE_NODE.location,
                 )
@@ -228,7 +237,7 @@ class RoutePlannerUiTest {
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
             waitForPopup()
 
-            R.string.route_planner_accessibility_add_waypoint.clickWithContentDescription()
+            R.id.routePlannerAddWaypointButton.click()
 
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(2, typeText(waypointName3)))
@@ -240,6 +249,54 @@ class RoutePlannerUiTest {
             "600 m".isTextDisplayed()
             "300 m".isTextDisplayed()
             "02:00".isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenTwoWaypoints_whenReturnToHomeClicked_thenFirstPositionIsAdded() {
+        launchScenario<HomeActivity> {
+            val waypointName1 = "Dobogoko"
+            val waypointName2 = "Ram-hegy"
+
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            waitForPopup()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName2)))
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            waitForPopup()
+
+            R.id.routePlannerReturnToHomeButton.click()
+
+            R.id.routePlannerWaypointList.hasDisplayedItemAtPosition(2)
+        }
+    }
+
+    @Test
+    fun givenClosedWaypoints_thenReturnToHomeIsNotDisplayed() {
+        launchScenario<HomeActivity> {
+            val waypointName1 = "Dobogoko"
+            val waypointName2 = "Ram-hegy"
+
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            waitForPopup()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName2)))
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            waitForPopup()
+
+            R.id.routePlannerReturnToHomeButton.click()
+
+            R.id.routePlannerReturnToHomeButton.isNotDisplayed()
         }
     }
 
@@ -267,6 +324,19 @@ class RoutePlannerUiTest {
     }
 
     @Test
+    fun whenAddMaxNumberOfWaypoints_thenAdditionIsDisabled() {
+        launchScenario<HomeActivity> {
+            R.id.homeRoutePlannerFab.click()
+
+            repeat(10) {
+                R.id.routePlannerAddWaypointButton.click()
+            }
+
+            R.id.routePlannerAddWaypointButton.isNotDisplayed()
+        }
+    }
+
+    @Test
     fun givenWaypoints_whenRemoveWaypoint_thenRoutePlanUpdates() {
         launchScenario<HomeActivity> {
             val waypointName1 = "Dobogoko"
@@ -285,7 +355,7 @@ class RoutePlannerUiTest {
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
             waitForPopup()
 
-            R.string.route_planner_accessibility_add_waypoint.clickWithContentDescription()
+            R.id.routePlannerAddWaypointButton.click()
 
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(2, typeText(waypointName3)))

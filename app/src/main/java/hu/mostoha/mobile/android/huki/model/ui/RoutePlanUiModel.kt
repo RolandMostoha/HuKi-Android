@@ -15,5 +15,6 @@ data class RoutePlanUiModel(
     val travelTimeText: Message.Text,
     val distanceText: Message.Res,
     val altitudeUiModel: AltitudeUiModel,
-    val isClosed: Boolean
+    val isClosed: Boolean,
+    val isReturnToHomeAvailable: Boolean,
 )

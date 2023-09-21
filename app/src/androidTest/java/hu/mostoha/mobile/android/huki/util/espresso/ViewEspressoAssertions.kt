@@ -5,6 +5,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -14,6 +15,7 @@ import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
@@ -26,8 +28,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Description
 import org.hamcrest.Matcher
-
 
 fun @receiver:IdRes Int.isDisplayed() {
     onView(withId(this)).check(matches(ViewMatchers.isDisplayed()))
@@ -201,6 +203,26 @@ fun @receiver:IdRes Int.swipeLeft() {
 
 fun @receiver:IdRes Int.selectTab(tabIndex: Int) {
     onView(withId(this)).perform(selectTabAtPosition(tabIndex))
+}
+
+fun @receiver:IdRes Int.hasDisplayedItemAtPosition(position: Int) {
+    onView(withId(this)).check(matches(hasItemAtPosition(position, ViewMatchers.isDisplayed())))
+}
+
+fun hasItemAtPosition(position: Int, matcher: Matcher<View>): Matcher<View> {
+    return object : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
+
+        override fun describeTo(description: Description) {
+            description.appendText("has item at position $position : ")
+            matcher.describeTo(description)
+        }
+
+        override fun matchesSafely(recyclerView: RecyclerView): Boolean {
+            val viewHolder = recyclerView.findViewHolderForAdapterPosition(position) ?: return false
+
+            return matcher.matches(viewHolder.itemView)
+        }
+    }
 }
 
 fun isKeyboardShown(): Boolean {

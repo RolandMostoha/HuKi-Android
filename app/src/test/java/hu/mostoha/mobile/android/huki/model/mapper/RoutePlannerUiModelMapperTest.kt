@@ -13,9 +13,11 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_ALTITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_ALTITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_NAME
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
@@ -29,16 +31,35 @@ class RoutePlannerUiModelMapperTest {
 
     @Test
     fun `Given route plan domain model, when mapRoutePlan, then error item returns`() {
-        val routePlanName = "HuKi_Dobogo_Ram_456"
         val routePlan = DEFAULT_ROUTE_PLAN
         val triggerLocations = DEFAULT_WAYPOINTS
+        val waypoints = listOf(
+            WaypointItem(
+                order = 0,
+                waypointType = WaypointType.START,
+                primaryText = DEFAULT_ROUTE_PLAN_WAYPOINT_1_NAME.toMessage(),
+                location = Location(
+                    DEFAULT_ROUTE_PLAN_WAYPOINT_1_LATITUDE,
+                    DEFAULT_ROUTE_PLAN_WAYPOINT_1_LONGITUDE
+                )
+            ),
+            WaypointItem(
+                order = 1,
+                waypointType = WaypointType.END,
+                primaryText = DEFAULT_ROUTE_PLAN_WAYPOINT_2_NAME.toMessage(),
+                location = Location(
+                    DEFAULT_ROUTE_PLAN_WAYPOINT_2_LATITUDE,
+                    DEFAULT_ROUTE_PLAN_WAYPOINT_2_LONGITUDE,
+                )
+            ),
+        )
 
-        val model = mapper.mapToRoutePlanUiModel(routePlanName, triggerLocations, routePlan)
+        val model = mapper.mapToRoutePlanUiModel(waypoints, triggerLocations, routePlan)
 
         assertThat(model).isEqualTo(
             RoutePlanUiModel(
                 id = routePlan.id,
-                name = routePlanName,
+                name = model.name,
                 triggerLocations = triggerLocations,
                 wayPoints = listOf(
                     WaypointItem(
@@ -72,7 +93,8 @@ class RoutePlannerUiModelMapperTest {
                     uphillText = DistanceFormatter.format(routePlan.incline),
                     downhillText = DistanceFormatter.format(routePlan.decline),
                 ),
-                isClosed = routePlan.isClosed
+                isClosed = routePlan.isClosed,
+                isReturnToHomeAvailable = !routePlan.isClosed
             )
         )
     }

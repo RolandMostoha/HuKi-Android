@@ -1,9 +1,13 @@
 package hu.mostoha.mobile.android.huki.model.network.graphhopper
 
-enum class Algorithm(val value: String) {
+import com.squareup.moshi.Json
 
-    ROUND_TRIP("round_trip"),
+enum class Algorithm {
 
-    ALTERNATIVE_ROUTE("alternative_route")
+    @field:Json(name = "round_trip")
+    ROUND_TRIP,
+
+    @field:Json(name = "alternative_route")
+    ALTERNATIVE_ROUTE,
 
 }

@@ -43,7 +43,7 @@
     <style name="DefaultButton.Contained.Shadowless.Primary">
         <item name="android:paddingTop">@dimen/space_medium</item>
         <item name="android:paddingBottom">@dimen/space_medium</item>
-        <item name="strokeColor">@color/colorPrimary</item>
+        <item name="strokeColor">@color/selector_button_stroke_color</item>
         <item name="strokeWidth">1dp</item>
     </style>
 
@@ -79,11 +79,14 @@
     </style>
 
     <style name="DefaultButton.IconOnly" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="android:paddingTop">@dimen/space_medium</item>
+        <item name="android:paddingBottom">@dimen/space_medium</item>
         <item name="iconPadding">0dp</item>
         <item name="iconGravity">textStart</item>
         <item name="android:minWidth">@dimen/default_icon_only_button_size</item>
         <item name="android:minHeight">@dimen/default_icon_only_button_size</item>
         <item name="iconTint">@color/colorPrimaryIcon</item>
+        <item name="iconSize">@dimen/icon_size_medium</item>
     </style>
 
     <style name="DefaultButton.IconOnly.Stroked">

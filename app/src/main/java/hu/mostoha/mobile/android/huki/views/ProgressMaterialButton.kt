@@ -1,8 +1,10 @@
 package hu.mostoha.mobile.android.huki.views
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.getDrawableOrThrow
 import com.google.android.material.button.MaterialButton
@@ -17,6 +19,8 @@ class ProgressMaterialButton @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : MaterialButton(context, attrs, defStyleAttr) {
 
+    @ColorInt
+    private val iconColor: Int
     private val iconDrawable: Drawable
     private val progressIndicatorDrawable: Drawable
 
@@ -28,7 +32,7 @@ class ProgressMaterialButton @JvmOverloads constructor(
                 isEnabled = false
             } else {
                 icon = iconDrawable
-                iconTint = context.colorStateList(R.color.colorPrimary)
+                iconTint = ColorStateList.valueOf(iconColor)
                 isEnabled = true
             }
 
@@ -57,6 +61,11 @@ class ProgressMaterialButton @JvmOverloads constructor(
             iconDrawable = getDrawableOrThrow(R.styleable.ProgressMaterialButton_iconRes)
             progressIndicatorDrawable = createProgressDrawable(context)
             icon = iconDrawable
+            iconColor = getColor(
+                R.styleable.ProgressMaterialButton_iconColor,
+                ContextCompat.getColor(context, R.color.colorPrimary)
+            )
+            iconTint = ColorStateList.valueOf(iconColor)
 
             recycle()
         }

@@ -311,6 +311,35 @@ class RoutePlannerViewModelTest {
     }
 
     @Test
+    fun `Given two not empty waypoints, when createRoundTrip, then route plan is updated`() {
+        runTestDefault {
+            val searchText1 = "Dob"
+            val searchText2 = "Szánkó"
+            val placeName1 = DEFAULT_PLACE_UI_MODEL_1.primaryText
+            val placeName2 = DEFAULT_PLACE_UI_MODEL_2.primaryText
+            val location1 = DEFAULT_PLACE_UI_MODEL_1.geoPoint.toLocation()
+            val location2 = DEFAULT_PLACE_UI_MODEL_2.geoPoint.toLocation()
+            coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
+            coEvery { routePlannerRepository.saveRoutePlan(any()) } returns null
+
+            viewModel.routePlanUiModel.test {
+                viewModel.initWaypoints()
+                advanceUntilIdle()
+                viewModel.updateWaypoint(viewModel.waypointItems.value[0], placeName1, location1, searchText1)
+                viewModel.updateWaypoint(viewModel.waypointItems.value[1], placeName2, location2, searchText2)
+                advanceUntilIdle()
+                viewModel.createRoundTrip()
+                advanceUntilIdle()
+
+                skipItems(2)
+
+                val triggerLocations = awaitItem()!!.triggerLocations
+                assertThat(triggerLocations.first()).isEqualTo(triggerLocations.last())
+            }
+        }
+    }
+
+    @Test
     fun `Given GPX file URI, when saveRoutePlan, then file URI is emitted`() {
         runTestDefault {
             val searchText1 = "Dob"

@@ -93,11 +93,7 @@ class RoutePlannerViewModel @Inject constructor(
                         request = { routePlannerRepository.getRoutePlan(triggerLocations) },
                         exceptionLogger = exceptionLogger
                     )
-                        .map { routePlan ->
-                            val routePlanName = routePlannerUiModelMapper.mapToRoutePlanName(waypoints)
-
-                            routePlannerUiModelMapper.mapToRoutePlanUiModel(routePlanName, triggerLocations, routePlan)
-                        }
+                        .map { routePlannerUiModelMapper.mapToRoutePlanUiModel(waypoints, triggerLocations, it) }
                         .onEach { _routePlanUiModel.emit(it) }
                         .onStart {
                             _routePlanErrorMessage.emit(null)
@@ -214,6 +210,16 @@ class RoutePlannerViewModel @Inject constructor(
             wayPointItemList
                 .swap(fromWaypoint, toWaypoint)
                 .reOrder()
+        }
+    }
+
+    fun createRoundTrip() {
+        if (waypointItems.value.size >= 2) {
+            _wayPointItems.update { wayPointItemList ->
+                wayPointItemList
+                    .plus(wayPointItemList.first())
+                    .reOrder()
+            }
         }
     }
 

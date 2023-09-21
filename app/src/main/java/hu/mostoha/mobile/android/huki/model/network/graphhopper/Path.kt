@@ -37,6 +37,6 @@ data class Path(
     val weight: Double,
 
     @Json(name = "instructions")
-    val instructions: List<Instruction>? = null,
+    val instructions: List<Instruction>? = null
 
-    )
+)

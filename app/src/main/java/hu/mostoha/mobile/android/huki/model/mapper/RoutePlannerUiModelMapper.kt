@@ -13,6 +13,7 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
+import org.jetbrains.annotations.VisibleForTesting
 import org.osmdroid.util.BoundingBox
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -22,11 +23,16 @@ import kotlin.math.min
 
 class RoutePlannerUiModelMapper @Inject constructor() {
 
-    fun mapToRoutePlanUiModel(name: String, triggerLocations: List<Location>, routePlan: RoutePlan): RoutePlanUiModel {
+    fun mapToRoutePlanUiModel(
+        waypointItems: List<WaypointItem>,
+        triggerLocations: List<Location>,
+        routePlan: RoutePlan
+    ): RoutePlanUiModel {
+        val routePlanName = mapToRoutePlanName(waypointItems)
         val geoPoints = routePlan.locations.map { it.toGeoPoint() }
         val altitudeRange = routePlan.altitudeRange
-        val wayPoints = routePlan.wayPoints
-        val wayPointItems = wayPoints.mapIndexedNotNull { index, location ->
+        val locations = routePlan.wayPoints
+        val wayPointItems = locations.mapIndexedNotNull { index, location ->
             if (index == 0 && routePlan.isClosed) {
                 return@mapIndexedNotNull null
             }
@@ -35,7 +41,7 @@ class RoutePlannerUiModelMapper @Inject constructor() {
                 order = index,
                 waypointType = when (index) {
                     0 -> WaypointType.START
-                    wayPoints.lastIndex -> WaypointType.END
+                    locations.lastIndex -> WaypointType.END
                     else -> WaypointType.INTERMEDIATE
                 },
                 location = location,
@@ -44,7 +50,7 @@ class RoutePlannerUiModelMapper @Inject constructor() {
 
         return RoutePlanUiModel(
             id = routePlan.id,
-            name = name,
+            name = routePlanName,
             triggerLocations = triggerLocations,
             wayPoints = wayPointItems,
             geoPoints = geoPoints,
@@ -57,10 +63,12 @@ class RoutePlannerUiModelMapper @Inject constructor() {
                 uphillText = DistanceFormatter.format(routePlan.incline),
                 downhillText = DistanceFormatter.format(routePlan.decline),
             ),
-            isClosed = routePlan.isClosed
+            isClosed = routePlan.isClosed,
+            isReturnToHomeAvailable = !routePlan.isClosed,
         )
     }
 
+    @VisibleForTesting
     fun mapToRoutePlanName(waypointItems: List<WaypointItem>): String {
         val waypointsWithLocation = waypointItems.filter { it.location != null }
 

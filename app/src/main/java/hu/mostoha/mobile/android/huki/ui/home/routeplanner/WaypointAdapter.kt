@@ -15,24 +15,19 @@ import hu.mostoha.mobile.android.huki.extensions.invisible
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup.Companion.PLACE_FINDER_MIN_TRIGGER_LENGTH
-import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
 
 class WaypointAdapter(
     private val onSearchTextFocused: (TextInputLayout, WaypointItem) -> Unit,
     private val onSearchTextChanged: (TextInputLayout, WaypointItem, String) -> Unit,
     private val onSearchTextDoneAction: (TextInputEditText) -> Unit,
-    private val onAddWaypointClicked: () -> Unit,
-    private val onReturnClicked: (WaypointItem) -> Unit,
+    private val onWaypointsSizeChanged: (Int) -> Unit,
     private val onRemoveWaypointClicked: (WaypointItem) -> Unit,
 ) : ListAdapter<WaypointItem, RecyclerView.ViewHolder>(DefaultDiffUtilCallback()) {
 
     companion object {
-        private const val POSITION_RETURN_TO_HOME = 0
-        private const val POSITION_ADDITION = 1
+        private const val FIRST_REMOVAL_POSITION = 2
     }
-
-    private var isAdditionDisabled: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = parent.context.inflater
@@ -49,16 +44,9 @@ class WaypointAdapter(
     }
 
     override fun submitList(list: List<WaypointItem>?) {
-        val hasToDisableAddition = list != null && list.size >= ROUTE_PLANNER_MAX_WAYPOINT_COUNT
-        val hasToNotifyAdditionChanged = isAdditionDisabled != hasToDisableAddition
-
-        isAdditionDisabled = hasToDisableAddition
-
         super.submitList(list)
 
-        if (hasToNotifyAdditionChanged) {
-            notifyItemChanged(POSITION_ADDITION)
-        }
+        onWaypointsSizeChanged.invoke(list?.size ?: 0)
     }
 
     inner class ViewHolderItem(
@@ -119,42 +107,17 @@ class WaypointAdapter(
         }
 
         private fun ItemRoutePlannerWaypointBinding.initActionButton(wayPointItem: WaypointItem) {
-            when (wayPointItem.order) {
-                POSITION_RETURN_TO_HOME -> {
-                    // TODO Add return to home function
-                    routePlannerWaypointActionButton.invisible()
-                    routePlannerWaypointActionButton.setIconResource(R.drawable.ic_route_planner_return)
-                    routePlannerWaypointActionButton.contentDescription = context.getString(
-                        R.string.route_planner_accessibility_return_waypoint
-                    )
-                    routePlannerWaypointActionButton.setOnClickListener {
-                        onReturnClicked.invoke(wayPointItem)
-                    }
+            if (wayPointItem.order >= FIRST_REMOVAL_POSITION) {
+                routePlannerWaypointActionButton.visible()
+                routePlannerWaypointActionButton.setIconResource(R.drawable.ic_route_planner_remove)
+                routePlannerWaypointActionButton.contentDescription = context.getString(
+                    R.string.route_planner_accessibility_remove_waypoint
+                )
+                routePlannerWaypointActionButton.setOnClickListener {
+                    onRemoveWaypointClicked.invoke(wayPointItem)
                 }
-                POSITION_ADDITION -> {
-                    if (isAdditionDisabled) {
-                        routePlannerWaypointActionButton.invisible()
-                    } else {
-                        routePlannerWaypointActionButton.visible()
-                        routePlannerWaypointActionButton.setIconResource(R.drawable.ic_route_planner_plus)
-                        routePlannerWaypointActionButton.contentDescription = context.getString(
-                            R.string.route_planner_accessibility_add_waypoint
-                        )
-                        routePlannerWaypointActionButton.setOnClickListener {
-                            onAddWaypointClicked.invoke()
-                        }
-                    }
-                }
-                else -> {
-                    routePlannerWaypointActionButton.visible()
-                    routePlannerWaypointActionButton.setIconResource(R.drawable.ic_route_planner_remove)
-                    routePlannerWaypointActionButton.contentDescription = context.getString(
-                        R.string.route_planner_accessibility_remove_waypoint
-                    )
-                    routePlannerWaypointActionButton.setOnClickListener {
-                        onRemoveWaypointClicked.invoke(wayPointItem)
-                    }
-                }
+            } else {
+                routePlannerWaypointActionButton.invisible()
             }
         }
     }

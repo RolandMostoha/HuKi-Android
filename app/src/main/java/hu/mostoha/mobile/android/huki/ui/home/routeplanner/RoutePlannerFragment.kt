@@ -30,6 +30,7 @@ import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.extensions.visible
+import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
@@ -47,6 +48,7 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEvents
 import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
+import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -79,6 +81,8 @@ class RoutePlannerFragment : Fragment() {
     }
     private val routePlannerContainer by lazy { binding.routePlannerContainer }
     private val doneButton by lazy { binding.routePlannerDoneButton }
+    private val addWaypointButton by lazy { binding.routePlannerAddWaypointButton }
+    private val returnToHomeButton by lazy { binding.routePlannerReturnToHomeButton }
     private val backButton by lazy { binding.routePlannerBackButton }
     private val graphhopperContainer by lazy { binding.routePlannerGraphhopperContainer }
     private val errorText by lazy { binding.routePlannerErrorText }
@@ -115,6 +119,12 @@ class RoutePlannerFragment : Fragment() {
         doneButton.setOnClickListener {
             routePlannerViewModel.saveRoutePlan()
         }
+        addWaypointButton.setOnClickListener {
+            routePlannerViewModel.addEmptyWaypoint()
+        }
+        returnToHomeButton.setOnClickListener {
+            routePlannerViewModel.createRoundTrip()
+        }
         backButton.setOnClickListener {
             clearRoutePlanner()
         }
@@ -142,11 +152,12 @@ class RoutePlannerFragment : Fragment() {
                 textInputEditText.clearFocusAndHideKeyboard()
                 placeFinderViewModel.cancelSearch()
             },
-            onAddWaypointClicked = {
-                routePlannerViewModel.addEmptyWaypoint()
-            },
-            onReturnClicked = {
-                // TODO Add return to home function
+            onWaypointsSizeChanged = { size ->
+                if (size >= ROUTE_PLANNER_MAX_WAYPOINT_COUNT) {
+                    addWaypointButton.gone()
+                } else {
+                    addWaypointButton.visible()
+                }
             },
             onRemoveWaypointClicked = { waypointItem ->
                 routePlannerViewModel.removeWaypoint(waypointItem)
@@ -282,6 +293,7 @@ class RoutePlannerFragment : Fragment() {
                 .collect { errorMessage ->
                     if (errorMessage != null) {
                         routeAttributesContainer.gone()
+                        doneButton.disabled = true
                     }
                     errorText.setMessageOrGone(errorMessage)
                 }
@@ -364,9 +376,11 @@ class RoutePlannerFragment : Fragment() {
                 routeAttributesDownhillText.setMessage(routePlanUiModel.altitudeUiModel.downhillText)
             }
             doneButton.disabled = false
+            returnToHomeButton.visibleOrGone(routePlanUiModel.isReturnToHomeAvailable)
         } else {
             routeAttributesContainer.gone()
             doneButton.disabled = true
+            returnToHomeButton.gone()
         }
     }
 

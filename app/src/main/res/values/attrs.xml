@@ -8,6 +8,7 @@
 
     <declare-styleable name="ProgressMaterialButton">
         <attr name="iconRes" format="integer" />
+        <attr name="iconColor" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="DashedDividerView">
