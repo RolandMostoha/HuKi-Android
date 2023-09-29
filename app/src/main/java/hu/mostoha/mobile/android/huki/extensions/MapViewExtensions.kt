@@ -6,8 +6,10 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.LocationPickerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
@@ -17,6 +19,9 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolygon
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LocationPickerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OVERLAY_TYPE_ORDER_MAP
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.OktBasePolyline
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.OktMarker
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.OktPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
@@ -103,6 +108,14 @@ fun MapView.removeOverlay(overlayType: OverlayType) {
     val overlayClasses = OVERLAY_TYPE_ORDER_MAP.getValue(overlayType)
     overlays.removeIf { overlayClasses.contains(it::class) }
     invalidate()
+}
+
+fun MapView.removeOverlays(overlayTypes: List<OverlayType>) {
+    overlayTypes.forEach { overlayType ->
+        val overlayClasses = OVERLAY_TYPE_ORDER_MAP.getValue(overlayType)
+        overlays.removeIf { overlayClasses.contains(it::class) }
+        invalidate()
+    }
 }
 
 fun MapView.addMarker(
@@ -545,6 +558,113 @@ fun MapView.addHikingRouteDetails(
     }
 
     return overlays
+}
+
+fun MapView.addOktBasePolyline(
+    overlayId: String,
+    geoPoints: List<GeoPoint>,
+    onClick: (GeoPoint) -> Unit,
+) {
+    val context = this.context
+    val polyline = OktBasePolyline(this).apply {
+        id = overlayId
+        outlinePaint.apply {
+            color = ContextCompat.getColor(context, R.color.colorOktBlue)
+            isAntiAlias = true
+            strokeWidth = context.resources.getDimension(R.dimen.okt_routes_base_polyline_width)
+            style = Paint.Style.STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+        }
+        setPoints(geoPoints)
+        setOnClickListener { _, _, geoPoint ->
+            onClick.invoke(geoPoint)
+            true
+        }
+    }
+
+    addOverlay(polyline, OverlayComparator)
+}
+
+fun MapView.addOktRoute(
+    overlayId: String,
+    oktRouteUiModel: OktRouteUiModel,
+    onClick: () -> Unit,
+) {
+    if (oktRouteUiModel.id != OKT_ID_FULL_ROUTE) {
+        addOktPolyline(
+            overlayId = overlayId,
+            geoPoints = oktRouteUiModel.geoPoints,
+            onClick = { onClick.invoke() }
+        )
+    }
+
+    listOf(oktRouteUiModel.start, oktRouteUiModel.end).forEach {
+        addOktMarker(
+            overlayId = overlayId,
+            geoPoint = it,
+            iconDrawable = generateLayerDrawable(
+                layers = listOf(
+                    LayerDrawableConfig(
+                        R.drawable.ic_marker_okt_route_background.toDrawable(context),
+                        resources.getDimensionPixelSize(R.dimen.hiking_routes_marker_background_size)
+                    ),
+                    LayerDrawableConfig(
+                        R.drawable.ic_marker_okt_routes.toDrawable(context),
+                        resources.getDimensionPixelSize(R.dimen.hiking_routes_marker_icon_size)
+                    ),
+                ),
+            ),
+            onClick = { onClick.invoke() },
+        )
+    }
+}
+
+fun MapView.addOktMarker(
+    overlayId: String = UUID.randomUUID().toString(),
+    geoPoint: GeoPoint,
+    iconDrawable: Drawable,
+    onClick: (Marker) -> Unit
+) {
+    val marker = OktMarker(this).apply {
+        id = overlayId
+        position = geoPoint
+        icon = iconDrawable
+        setOnMarkerClickListener { marker, _ ->
+            onClick.invoke(marker)
+            true
+        }
+    }
+
+    addOverlay(marker, OverlayComparator)
+}
+
+fun MapView.addOktPolyline(
+    overlayId: String,
+    geoPoints: List<GeoPoint>,
+    onClick: () -> Unit,
+) {
+    val context = this.context
+    val polyline = OktPolyline(this).apply {
+        id = overlayId
+        outlinePaint.apply {
+            color = ContextCompat.getColor(context, R.color.colorOktBlue)
+            isAntiAlias = true
+            strokeWidth = context.resources.getDimension(R.dimen.okt_routes_polyline_width)
+            style = Paint.Style.STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+        }
+        setPoints(geoPoints)
+        setOnClickListener { _, _, _ ->
+            onClick.invoke()
+            true
+        }
+    }
+
+    addOverlay(polyline, OverlayComparator)
 }
 
 fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {

@@ -19,6 +19,10 @@ fun TextView.setDrawableTop(@DrawableRes drawableRes: Int) {
     setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
 }
 
+fun TextView.clearDrawables() {
+    setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+}
+
 fun TextView.setMessage(message: Message) {
     text = message.resolve(context)
 }

@@ -134,6 +134,7 @@
     <style name="DefaultBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/DefaultShapeAppearance.BottomSheet</item>
         <item name="android:backgroundTint">@color/colorBackground</item>
+        <item name="shouldRemoveExpandedCorners">false</item>
         <item name="layout_behavior">com.google.android.material.bottomsheet.BottomSheetBehavior
         </item>
     </style>

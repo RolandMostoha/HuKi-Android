@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
@@ -21,6 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeLandscapesChipBinding
 import hu.mostoha.mobile.android.huki.extensions.LayerDrawableConfig
@@ -33,6 +35,8 @@ import hu.mostoha.mobile.android.huki.extensions.addLandscapePolyOverlay
 import hu.mostoha.mobile.android.huki.extensions.addLocationPickerMarker
 import hu.mostoha.mobile.android.huki.extensions.addLongClickHandlerOverlay
 import hu.mostoha.mobile.android.huki.extensions.addMapMovedListener
+import hu.mostoha.mobile.android.huki.extensions.addOktBasePolyline
+import hu.mostoha.mobile.android.huki.extensions.addOktRoute
 import hu.mostoha.mobile.android.huki.extensions.addOverlay
 import hu.mostoha.mobile.android.huki.extensions.addPlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.extensions.addPolygon
@@ -54,6 +58,7 @@ import hu.mostoha.mobile.android.huki.extensions.locationPermissions
 import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
+import hu.mostoha.mobile.android.huki.extensions.removeOverlays
 import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
 import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
@@ -82,11 +87,14 @@ import hu.mostoha.mobile.android.huki.model.ui.HikeRecommendation
 import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
+import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
+import hu.mostoha.mobile.android.huki.model.ui.selectedRoute
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmLicencesOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
@@ -106,6 +114,7 @@ import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesBottomShe
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
+import hu.mostoha.mobile.android.huki.ui.home.oktroutes.OktRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.placedetails.PlaceDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup.Companion.PLACE_FINDER_MIN_TRIGGER_LENGTH
@@ -186,6 +195,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var hikeRecommenderBottomSheet: HikeRecommenderBottomSheetDialog
     private lateinit var hikingRoutesBottomSheet: HikingRoutesBottomSheetDialog
     private lateinit var gpxDetailsBottomSheet: GpxDetailsBottomSheetDialog
+    private lateinit var oktRoutesBottomSheet: OktRoutesBottomSheetDialog
     private lateinit var bottomSheets: List<BottomSheetDialog>
 
     private var myLocationOverlay: MyLocationOverlay? = null
@@ -429,18 +439,24 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             binding.homeHikeRecommenderBottomSheetContainer,
             analyticsService
         )
+        oktRoutesBottomSheet = OktRoutesBottomSheetDialog(
+            binding.homeOktRoutesBottomSheetContainer,
+            analyticsService
+        )
 
         bottomSheets = listOf(
             placeDetailsBottomSheet,
             hikingRoutesBottomSheet,
             gpxDetailsBottomSheet,
-            hikeRecommenderBottomSheet
+            hikeRecommenderBottomSheet,
+            oktRoutesBottomSheet,
         )
 
         placeDetailsBottomSheet.hide()
         hikingRoutesBottomSheet.hide()
         gpxDetailsBottomSheet.hide()
         hikeRecommenderBottomSheet.hide()
+        oktRoutesBottomSheet.hide()
     }
 
     private fun initPermissions() {
@@ -516,7 +532,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initAltitude(altitude: Double) {
         val altitudeText = if (altitude >= 1.0) {
-            getString(R.string.default_distance_template_m, altitude.toInt())
+            getString(R.string.default_distance_template_m, altitude.toInt().toString())
         } else {
             null
         }
@@ -579,6 +595,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .collect { hikingRoutes ->
                     hikingRoutes?.let { initHikingRoutesBottomSheet(it) }
                 }
+        }
+        lifecycleScope.launch {
+            homeViewModel.oktRoutes
+                .flowWithLifecycle(lifecycle)
+                .collect { initOktRoutes(it) }
         }
         lifecycleScope.launch {
             homeViewModel.errorMessage
@@ -797,24 +818,38 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initLandscapes(landscapes: List<LandscapeUiModel>) {
         binding.homeLandscapeChipGroup.removeAllViews()
-
+        addChip(
+            label = R.string.okt_routes_chip_label.toMessage(),
+            iconRes = R.drawable.ic_okt_routes_chip,
+            onClick = {
+                analyticsService.oktChipClicked()
+                homeViewModel.loadOktRoutes()
+            }
+        )
         landscapes.forEach { landscape ->
-            val chipBinding = ItemHomeLandscapesChipBinding.inflate(
-                layoutInflater,
-                binding.homeLandscapeChipGroup,
-                false
-            )
-
-            with(chipBinding.landscapesChip) {
-                text = landscape.name.resolve(chipBinding.root.context)
-                setChipIconResource(landscape.iconRes)
-                setOnClickListener {
-                    analyticsService.loadLandscapeClicked(landscape.name.resolve(chipBinding.root.context))
+            addChip(
+                label = landscape.name,
+                iconRes = landscape.iconRes,
+                onClick = {
+                    analyticsService.loadLandscapeClicked(landscape.name.resolve(this))
                     homeViewModel.loadLandscapeDetails(landscape)
                 }
-            }
-            binding.homeLandscapeChipGroup.addView(chipBinding.root)
+            )
         }
+    }
+
+    private fun addChip(label: Message, @DrawableRes iconRes: Int, onClick: () -> Unit) {
+        val chipBinding = ItemHomeLandscapesChipBinding.inflate(
+            layoutInflater,
+            binding.homeLandscapeChipGroup,
+            false
+        )
+        with(chipBinding.landscapesChip) {
+            text = label.resolve(this@HomeActivity)
+            setChipIconResource(iconRes)
+            setOnClickListener { onClick.invoke() }
+        }
+        binding.homeLandscapeChipGroup.addView(chipBinding.root)
     }
 
     private fun initLandscapeDetails(landscapeDetails: LandscapeDetailsUiModel?) {
@@ -990,6 +1025,59 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.zoomToBoundingBox(boundingBox, true)
     }
 
+    private fun initOktRoutes(oktRoutes: OktRoutesUiModel?) {
+        if (oktRoutes == null) {
+            homeMapView.removeOverlays(listOf(OverlayType.OKT_ROUTES, OverlayType.OKT_ROUTES_BASE))
+            oktRoutesBottomSheet.hide()
+            return
+        }
+
+        homeMapView.removeOverlay(OverlayType.OKT_ROUTES)
+
+        if (homeMapView.hasNoOverlay(OKT_ID_FULL_ROUTE)) {
+            homeMapView.addOktBasePolyline(
+                overlayId = OKT_ID_FULL_ROUTE,
+                geoPoints = oktRoutes.mapGeoPoints,
+                onClick = {
+                    homeViewModel.selectOktRoute(it)
+                }
+            )
+        }
+
+        val selectedRoute = oktRoutes.selectedRoute
+
+        val offsetBoundingBox = BoundingBox
+            .fromGeoPoints(selectedRoute.geoPoints)
+            .withOffset(homeMapView, OffsetType.OKT_ROUTES)
+
+        homeMapView.addOktRoute(
+            overlayId = selectedRoute.id,
+            oktRouteUiModel = selectedRoute,
+            onClick = {
+                initOktRoutesBottomSheet(oktRoutes, selectedRoute.id)
+                homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+            }
+        )
+
+        initOktRoutesBottomSheet(oktRoutes, selectedRoute.id)
+
+        homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+    }
+
+    private fun initOktRoutesBottomSheet(oktRoutes: OktRoutesUiModel, id: String) {
+        oktRoutesBottomSheet.init(
+            oktRoutes = oktRoutes.routes,
+            selectedOktId = id,
+            onRouteClick = { oktId ->
+                analyticsService.oktRouteClicked(oktId)
+                homeViewModel.selectOktRoute(oktId)
+            },
+            onCloseClick = {
+                homeViewModel.clearOktRoutes()
+            }
+        )
+    }
+
     private fun initHikingRoutesBottomSheet(hikingRoutes: List<HikingRoutesItem>) {
         hikingRoutesBottomSheet.initBottomSheet(
             hikingRoutes = hikingRoutes,
@@ -998,7 +1086,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeMapView.removeOverlay(OverlayType.PLACE_DETAILS)
                 analyticsService.loadHikingRouteDetailsClicked(hikingRoute.name)
             },
-            onCloseClick = { homeViewModel.clearHikingRoutes() }
+            onCloseClick = {
+                homeViewModel.clearHikingRoutes()
+            }
         )
         bottomSheets.showOnly(hikingRoutesBottomSheet)
     }

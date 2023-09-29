@@ -74,6 +74,14 @@ interface AnalyticsService {
 
     fun gpxHistoryItemRename()
 
+    fun oktChipClicked()
+
+    fun oktRouteClicked(oktId: String)
+
+    fun oktRouteLinkClicked(oktId: String)
+
+    fun oktGpxImported(fileName: String)
+
     fun copyrightClicked()
 
     fun destroyed()

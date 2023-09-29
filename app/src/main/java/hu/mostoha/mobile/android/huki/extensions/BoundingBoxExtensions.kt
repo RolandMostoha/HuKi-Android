@@ -58,17 +58,20 @@ private fun BoundingBox.withMapViewOffset(
     )
 }
 
+@Suppress("ComplexMethod")
 fun BoundingBox.withOffset(mapView: MapView, offsetType: OffsetType): BoundingBox {
     return withMapViewOffset(
         mapView = mapView,
         top = when (offsetType) {
             OffsetType.TOP_SHEET -> R.dimen.map_view_top_sheet_top_offset
+            OffsetType.OKT_ROUTES -> R.dimen.map_view_okt_routes_top_offset
             else -> R.dimen.map_view_default_top_offset
         },
         bottom = when (offsetType) {
             OffsetType.BOTTOM_SHEET -> R.dimen.map_view_bottom_sheet_bottom_offset
             OffsetType.TOP_SHEET -> R.dimen.map_view_top_sheet_bottom_offset
             OffsetType.LANDSCAPE -> R.dimen.map_view_landscape_bottom_sheet_bottom_offset
+            OffsetType.OKT_ROUTES -> R.dimen.map_view_okt_routes_bottom_offset
             else -> R.dimen.map_view_default_bottom_offset
         },
         left = when (offsetType) {
@@ -93,4 +96,5 @@ enum class OffsetType {
     BOTTOM_SHEET,
     TOP_SHEET,
     LANDSCAPE,
+    OKT_ROUTES,
 }

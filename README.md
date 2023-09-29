@@ -64,7 +64,6 @@ Huge thanks to the Graphhopper team for the opportunity!
 - Hike recommendations
     - [Kirándulástippek](https://kirandulastippek.hu/) link with area tags like `"budai-hegyseg"`
     - [Természetjáró](https://www.termeszetjaro.hu/) link with search query parameter
-      like `&q=Budai-hegység`
 
 ### Tile server optimization
 
@@ -164,6 +163,7 @@ The app is built upon many `OpenStreetMap` related services. There is an in-app 
 - Graphhopper - Routing API - https://www.graphhopper.com/
 - Kirándulástippek - Hike recommendation -  https://kirandulastippek.hu/
 - Természetjáró - Hike recommendation -  https://www.termeszetjaro.hu/
+- OKT - National Blue Trail -  https://www.kektura.hu/
 
 ## Project License
 

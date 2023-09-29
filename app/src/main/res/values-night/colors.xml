@@ -27,5 +27,12 @@
     <color name="colorStrokePolygonMarker">@color/colorPrimary</color>
     <color name="colorFillPolygonMarker">@color/colorPrimary</color>
     <color name="colorIconPolygonMarker">@color/colorStrokeGpxMarker</color>
+    <color name="colorBadgeBackground">@color/colorBackgroundLight</color>
+    <color name="colorBadgeStroke">@color/colorStroke</color>
+
+    <color name="colorOktBlue">#64b5f6</color>
+    <color name="colorOktSelected">#64b5f6</color>
+    <color name="colorOktStrokePolygonMarker">@color/colorOktSelected</color>
+    <color name="colorOktFillPolygonMarker">@color/colorBackgroundLight</color>
 
 </resources>

@@ -19,6 +19,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
     companion object {
         private const val EVENT_SELECT_PLACE = "select_place"
         private const val EVENT_SELECT_LANDSCAPE = "select_landscape"
+        private const val EVENT_SELECT_OKT_CHIP = "select_okt_chip"
+        private const val EVENT_SELECT_OKT_ROUTE = "select_okt_route"
+        private const val EVENT_SELECT_OKT_ROUTE_LINK = "select_okt_link"
+        private const val EVENT_OKT_GPX_IMPORTED = "okt_gpx_imported"
         private const val EVENT_SELECT_PLACE_DETAILS_HIKE_RECOMMENDER = "select_place_details_hike_recommender"
         private const val EVENT_SELECT_HIKE_RECOMMENDER_KIRANDULASTIPPEK = "select_kirandulastippek"
         private const val EVENT_SELECT_HIKE_RECOMMENDER_TERMESZETJARO = "select_termeszetjaro"
@@ -73,6 +77,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_IMPORTED_GPX_NAME = "imported_gpx_name"
         private const val PARAM_ROUTE_PLANNER_WAYPOINT_COUNT = "route_planner_waypoint_count"
         private const val PARAM_ROUTE_PLANNER_DISTANCE = "route_planner_distance"
+        private const val PARAM_OKT_ID = "okt_id"
     }
 
     private var firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
@@ -172,6 +177,12 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
     override fun gpxImported(fileName: String) {
         val nameWithoutExtension = fileName.removeFileExtension()
 
+        if (nameWithoutExtension.contains("okt_", ignoreCase = true) ||
+            nameWithoutExtension.contains("okt-", ignoreCase = true)
+        ) {
+            oktGpxImported(nameWithoutExtension)
+        }
+
         firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED) {
             param(PARAM_IMPORTED_GPX_NAME, nameWithoutExtension)
         }
@@ -258,6 +269,28 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun gpxHistoryItemRename() {
         firebaseAnalytics.logEvent(EVENT_RENAME_GPX_HISTORY_ITEM, null)
+    }
+
+    override fun oktChipClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_CHIP, null)
+    }
+
+    override fun oktRouteClicked(oktId: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_ROUTE) {
+            param(PARAM_OKT_ID, oktId)
+        }
+    }
+
+    override fun oktRouteLinkClicked(oktId: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_ROUTE_LINK) {
+            param(PARAM_OKT_ID, oktId)
+        }
+    }
+
+    override fun oktGpxImported(fileName: String) {
+        firebaseAnalytics.logEvent(EVENT_OKT_GPX_IMPORTED) {
+            param(PARAM_IMPORTED_GPX_NAME, fileName)
+        }
     }
 
     override fun copyrightClicked() {

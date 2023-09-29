@@ -4,25 +4,32 @@ import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
+import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
+import hu.mostoha.mobile.android.huki.model.mapper.OktRoutesMapper
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
+import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.repository.OktRepository
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
+import hu.mostoha.mobile.android.huki.util.distanceBetween
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +45,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -46,8 +54,10 @@ class HomeViewModel @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val exceptionLogger: ExceptionLogger,
     private val placesInteractor: PlacesInteractor,
+    private val oktRepository: OktRepository,
     private val landscapeInteractor: LandscapeInteractor,
-    private val homeUiModelMapper: HomeUiModelMapper
+    private val homeUiModelMapper: HomeUiModelMapper,
+    private val oktRoutesMapper: OktRoutesMapper,
 ) : ViewModel() {
 
     private val _mapUiModel = MutableStateFlow(MapUiModel())
@@ -72,6 +82,10 @@ class HomeViewModel @Inject constructor(
 
     private val _hikingRoutes = MutableStateFlow<List<HikingRoutesItem>?>(null)
     val hikingRoutes: StateFlow<List<HikingRoutesItem>?> = _hikingRoutes
+        .stateIn(viewModelScope, WhileViewSubscribed, null)
+
+    private val _oktRoutes = MutableStateFlow<OktRoutesUiModel?>(null)
+    val oktRoutes: StateFlow<OktRoutesUiModel?> = _oktRoutes
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     private val _isLoading = MutableSharedFlow<Boolean>()
@@ -106,6 +120,7 @@ class HomeViewModel @Inject constructor(
                 clearFollowLocation()
                 clearHikingRoutes()
                 clearPlaceDetails()
+                clearOktRoutes()
 
                 showLoading(true)
             }
@@ -118,6 +133,7 @@ class HomeViewModel @Inject constructor(
         clearFollowLocation()
         clearHikingRoutes()
         clearLandscapeDetails()
+        clearOktRoutes()
 
         _placeDetails.emit(homeUiModelMapper.generatePlaceDetails(placeUiModel))
     }
@@ -130,6 +146,7 @@ class HomeViewModel @Inject constructor(
                 clearFollowLocation()
                 clearHikingRoutes()
                 clearLandscapeDetails()
+                clearOktRoutes()
 
                 showLoading(true)
             }
@@ -160,6 +177,7 @@ class HomeViewModel @Inject constructor(
                 clearFollowLocation()
                 clearPlaceDetails()
                 clearLandscapeDetails()
+                clearOktRoutes()
 
                 showLoading(true)
             }
@@ -170,6 +188,55 @@ class HomeViewModel @Inject constructor(
             }
             .catch { showError(it) }
             .collect()
+    }
+
+    fun loadOktRoutes() = viewModelScope.launch(dispatcher) {
+        flowWithExceptions(
+            request = { oktRepository.getOktFullRoute() },
+            exceptionLogger = exceptionLogger
+        )
+            .map { oktRoutesMapper.map(it.toGeoPoints(), LOCAL_OKT_ROUTES) }
+            .onEach { _oktRoutes.emit(it) }
+            .onStart {
+                clearFollowLocation()
+                clearHikingRoutes()
+                clearPlaceDetails()
+                clearLandscapeDetails()
+
+                showLoading(true)
+            }
+            .onCompletion { showLoading(false) }
+            .catch { showError(it) }
+            .collect()
+    }
+
+    fun selectOktRoute(oktId: String) {
+        _oktRoutes.update { oktRoutesUiModel ->
+            if (oktRoutesUiModel == null) {
+                return@update null
+            }
+
+            oktRoutesUiModel.copy(
+                routes = oktRoutesUiModel.routes.map { route ->
+                    route.copy(isSelected = route.id == oktId)
+                }
+            )
+        }
+    }
+
+    fun selectOktRoute(geoPoint: GeoPoint) {
+        val oktRoutes = oktRoutes.value ?: return
+        val selectedOktId = oktRoutes.routes
+            .drop(1)
+            .map { oktRoute ->
+                val closestPoint = oktRoute.geoPoints.minBy { it.toLocation().distanceBetween(geoPoint.toLocation()) }
+
+                oktRoute.id to closestPoint
+            }
+            .minBy { it.second.toLocation().distanceBetween(geoPoint.toLocation()) }
+            .first
+
+        selectOktRoute(selectedOktId)
     }
 
     fun updateMyLocationConfig(
@@ -202,6 +269,10 @@ class HomeViewModel @Inject constructor(
         _hikingRoutes.value = null
     }
 
+    fun clearOktRoutes() {
+        _oktRoutes.value = null
+    }
+
     fun clearFollowLocation() {
         updateMyLocationConfig(isFollowLocationEnabled = false)
     }
@@ -210,6 +281,7 @@ class HomeViewModel @Inject constructor(
         clearPlaceDetails()
         clearLandscapeDetails()
         clearHikingRoutes()
+        clearOktRoutes()
         clearFollowLocation()
     }
 

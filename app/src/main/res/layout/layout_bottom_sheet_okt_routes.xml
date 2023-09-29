@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/DefaultBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/okt_routes_bottom_sheet_peek_max_height"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="@dimen/okt_routes_bottom_sheet_peek_height"
+    app:behavior_saveFlags="all">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            style="@style/DragViewStyle"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/space_medium" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Title -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="@dimen/space_extra_large"
+                android:paddingTop="@dimen/space_medium"
+                android:paddingEnd="@dimen/space_extra_large"
+                android:paddingBottom="@dimen/space_medium"
+                android:text="@string/okt_routes_bottom_sheet_title"
+                android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large" />
+
+            <!-- Close button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/oktRoutesCloseButton"
+                style="@style/DefaultButton.IconOnly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_medium"
+                app:icon="@drawable/ic_bottom_sheet_clear"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_extra_extra_small"
+        android:background="@color/colorDivider" />
+
+    <!-- OKT routes list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/oktRoutesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:nestedScrollingEnabled="true"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/space_large"
+        tools:listitem="@layout/item_okt_routes" />
+
+</LinearLayout>

@@ -74,6 +74,14 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun gpxHistoryItemRename() = Unit
 
+    override fun oktChipClicked() = Unit
+
+    override fun oktRouteClicked(oktId: String) = Unit
+
+    override fun oktRouteLinkClicked(oktId: String) = Unit
+
+    override fun oktGpxImported(oktId: String) = Unit
+
     override fun copyrightClicked() = Unit
 
     override fun destroyed() = Unit

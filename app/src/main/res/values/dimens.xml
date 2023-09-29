@@ -34,6 +34,7 @@
     <dimen name="default_elevation_fragments">11dp</dimen>
     <dimen name="default_text_size">@dimen/text_size_medium</dimen>
     <dimen name="default_corner_size_surface">10dp</dimen>
+    <dimen name="default_corner_size_selected">20dp</dimen>
     <dimen name="default_corner_size_input">25dp</dimen>
     <dimen name="default_corner_size_input_on_map">30dp</dimen>
     <dimen name="default_corner_size_drag_view">60dp</dimen>
@@ -62,7 +63,7 @@
     <dimen name="home_search_bar_progress_size">25dp</dimen>
     <dimen name="home_search_bar_popup_height">350dp</dimen>
 
-    <dimen name="home_landscapes_icon_size">19dp</dimen>
+    <dimen name="home_landscapes_icon_size">20dp</dimen>
     <dimen name="home_landscapes_chip_min_height">42dp</dimen>
 
     <dimen name="home_my_location_altitude_vertical_padding">7dp</dimen>
@@ -72,7 +73,7 @@
     <dimen name="route_planner_waypoint_list_max_height">145dp</dimen>
     <dimen name="route_planner_min_width">@null</dimen>
 
-    <dimen name="map_view_default_top_offset">180dp</dimen>
+    <dimen name="map_view_default_top_offset">190dp</dimen>
     <dimen name="map_view_default_bottom_offset">220dp</dimen>
     <dimen name="map_view_default_start_offset">80dp</dimen>
     <dimen name="map_view_default_end_offset">80dp</dimen>
@@ -84,6 +85,8 @@
     <dimen name="map_view_landscape_bottom_sheet_bottom_offset">280dp</dimen>
     <dimen name="map_view_landscape_start_offset">100dp</dimen>
     <dimen name="map_view_landscape_end_offset">100dp</dimen>
+    <dimen name="map_view_okt_routes_top_offset">200dp</dimen>
+    <dimen name="map_view_okt_routes_bottom_offset">360dp</dimen>
 
     <dimen name="place_details_bottom_sheet_image_size">45dp</dimen>
 
@@ -99,5 +102,11 @@
 
     <dimen name="landscape_details_center_marker_background_size">28dp</dimen>
     <dimen name="landscape_details_center_marker_icon_size">18dp</dimen>
+
+    <dimen name="okt_routes_bottom_sheet_peek_max_height">300dp</dimen>
+    <dimen name="okt_routes_bottom_sheet_peek_height">300dp</dimen>
+    <dimen name="okt_routes_base_polyline_width">3dp</dimen>
+    <dimen name="okt_routes_polyline_width">5dp</dimen>
+    <dimen name="okt_routes_route_number_badge_size">48dp</dimen>
 
 </resources>

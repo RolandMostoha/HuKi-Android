@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
+import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
@@ -16,7 +17,9 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
+import hu.mostoha.mobile.android.huki.model.mapper.OktRoutesMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
@@ -27,6 +30,7 @@ import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.repository.OktRepository
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH
@@ -56,6 +60,7 @@ import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -67,14 +72,12 @@ class HomeViewModelTest {
     private lateinit var viewModel: HomeViewModel
 
     private val exceptionLogger = mockk<ExceptionLogger>()
-
     private val placesInteractor = mockk<PlacesInteractor>()
-
     private val landscapeInteractor = mockk<LandscapeInteractor>()
-
+    private val oktRepository = mockk<OktRepository>()
     private val myLocationProvider = mockk<AsyncMyLocationProvider>()
-
     private val homeUiModelMapper = mockk<HomeUiModelMapper>()
+    private val oktRoutesMapper = OktRoutesMapper()
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -84,13 +87,16 @@ class HomeViewModelTest {
         every { exceptionLogger.recordException(any()) } returns Unit
         coEvery { myLocationProvider.getLastKnownLocationCoroutine() } returns null
         mockLandscapes()
+        mockOktRoutes()
 
         viewModel = HomeViewModel(
             mainCoroutineRule.testDispatcher,
             exceptionLogger,
             placesInteractor,
+            oktRepository,
             landscapeInteractor,
-            homeUiModelMapper
+            homeUiModelMapper,
+            oktRoutesMapper,
         )
     }
 
@@ -345,6 +351,51 @@ class HomeViewModelTest {
         }
 
     @Test
+    fun `Given OKT routes, when loadOktRoutes, then OKT routes are emitted`() =
+        runTest {
+            viewModel.oktRoutes.test {
+                viewModel.loadOktRoutes()
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(
+                    oktRoutesMapper.map(DEFAULT_OKT_FULL_GEO_POINTS.toGeoPoints(), LOCAL_OKT_ROUTES)
+                )
+            }
+        }
+
+    @Test
+    fun `Given OKT routes, when select OKT route by ID, then OKT routes are updated`() =
+        runTest {
+            viewModel.oktRoutes.test {
+                viewModel.loadOktRoutes()
+
+                advanceUntilIdle()
+
+                viewModel.selectOktRoute("OKT-01")
+
+                skipItems(2)
+
+                assertThat(awaitItem()!!.routes[1].isSelected).isTrue()
+            }
+        }
+
+    @Test
+    fun `Given OKT routes, when select OKT route by geo point, then OKT routes are updated`() =
+        runTest {
+            viewModel.oktRoutes.test {
+                viewModel.loadOktRoutes()
+
+                advanceUntilIdle()
+
+                viewModel.selectOktRoute(LOCAL_OKT_ROUTES[1].start.toGeoPoint())
+
+                skipItems(2)
+
+                assertThat(awaitItem()!!.routes[1].isSelected).isTrue()
+            }
+        }
+
+    @Test
     fun `When updateMyLocationConfig, then my location UI model should be updated`() =
         runTestDefault {
             viewModel.myLocationUiModel.test {
@@ -421,6 +472,10 @@ class HomeViewModelTest {
 
         every { landscapeInteractor.requestGetLandscapesFlow() } returns flowOf(landscapes)
         every { homeUiModelMapper.generateLandscapes(any()) } returns landscapeUiModels
+    }
+
+    private fun mockOktRoutes() {
+        coEvery { oktRepository.getOktFullRoute() } returns DEFAULT_OKT_FULL_GEO_POINTS
     }
 
     companion object {
@@ -501,6 +556,12 @@ class HomeViewModelTest {
             geoPoint = DEFAULT_LANDSCAPE.center.toGeoPoint(),
             iconRes = R.drawable.ic_landscapes_plain_land,
             markerRes = R.drawable.ic_marker_landscapes_plain_land,
+        )
+        private val DEFAULT_OKT_FULL_GEO_POINTS = listOf(
+            LOCAL_OKT_ROUTES.first().start,
+            LOCAL_OKT_ROUTES.first().end,
+            LOCAL_OKT_ROUTES[1].start,
+            LOCAL_OKT_ROUTES[1].end,
         )
     }
 

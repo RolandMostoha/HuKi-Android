@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/oktRoutesItemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/space_extra_extra_small"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="@dimen/space_small"
+    android:paddingStart="@dimen/space_medium"
+    android:paddingEnd="@dimen/space_small">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_medium"
+        android:background="@drawable/background_okt_route_number"
+        android:duplicateParentState="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- OKT number prefix -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/oktRoutesItemNumberPrefix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:gravity="center_horizontal"
+            android:text="@string/okt_routes_item_prefix"
+            android:textAppearance="@style/DefaultTextAppearance.Bold.Small" />
+
+        <!-- OKT number -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/oktRoutesItemNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/DefaultTextAppearance.Bold.Small"
+            tools:text="01" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- OKT Route name -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/oktRoutesItemTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/space_large"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+            android:textColor="@color/selector_okt_routes_item_color"
+            tools:text="Írott-kő - Budapest - Hollóháza" />
+
+        <!-- Route Attributes -->
+        <LinearLayout
+            android:id="@+id/routeAttributesContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_small"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/routeAttributesTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_small_medium"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+                android:textColor="@color/selector_okt_routes_item_color"
+                tools:text="00:51" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/routeAttributesDistanceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_small_medium"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+                android:textColor="@color/selector_okt_routes_item_color"
+                tools:text="14 km" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/routeAttributesUphillText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_small_medium"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+                android:textColor="@color/selector_okt_routes_item_color"
+                tools:text="500 m" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/routeAttributesDownhillText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_small_medium"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+                android:textColor="@color/selector_okt_routes_item_color"
+                tools:text="300 m" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Actions button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/oktRoutesItemActionsButton"
+        style="@style/DefaultButton.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_gpx_history_actions"
+        app:iconTint="@color/selector_okt_routes_item_color" />
+
+</LinearLayout>

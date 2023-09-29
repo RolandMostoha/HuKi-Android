@@ -273,4 +273,9 @@
         layout="@layout/layout_bottom_sheet_gpx_details"
         tools:visibility="gone" />
 
+    <include
+        android:id="@+id/homeOktRoutesBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_okt_routes"
+        tools:visibility="gone" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

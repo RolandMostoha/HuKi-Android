@@ -15,3 +15,7 @@ const val TERMESZETJARO_PLACE_URL = "$TERMESZETJARO_URL/hu/tours/?cat=22729870#a
 const val KIRANDULASTIPPEK_URL = "https://kirandulastippek.hu"
 
 const val KIRANDULASTIPPEK_QUERY_URL = "$KIRANDULASTIPPEK_URL/%s?tag=gyalogtura"
+
+const val KEKTURA_URL = "https://www.kektura.hu/okt-szakaszok"
+
+const val KEKTURA_ROUTE_URL_TEMPLATE = "https://www.kektura.hu/okt-szakasz/%s"

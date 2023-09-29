@@ -90,3 +90,9 @@ fun postMain(block: () -> Unit) {
         block.invoke()
     }
 }
+
+fun postMainDelayed(delay: Long, block: () -> Unit) {
+    Handler(Looper.getMainLooper()).postDelayed({
+        block.invoke()
+    }, delay)
+}

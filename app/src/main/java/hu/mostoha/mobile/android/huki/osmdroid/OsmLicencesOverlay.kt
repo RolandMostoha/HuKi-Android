@@ -119,6 +119,13 @@ class OsmLicencesOverlay(
                     license = License.CREATIVE_COMMONS
                 )
             )
+            .setLibrary(
+                Library(
+                    title = context.getString(R.string.licences_okt),
+                    url = "https://www.kektura.hu/",
+                    license = License.CREATIVE_COMMONS
+                )
+            )
             .setPositiveButton(R.string.licences_ok_button_title) { dialog, _ ->
                 dialog.dismiss()
             }

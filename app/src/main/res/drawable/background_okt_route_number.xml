@@ -1,0 +1,14 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="@color/colorBadgeBackground" />
+
+    <stroke
+        android:width="1dp"
+        android:color="@color/colorBadgeStroke" />
+
+    <size
+        android:width="@dimen/okt_routes_route_number_badge_size"
+        android:height="@dimen/okt_routes_route_number_badge_size" />
+
+</shape>
