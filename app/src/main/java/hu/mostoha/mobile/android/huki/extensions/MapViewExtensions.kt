@@ -182,7 +182,6 @@ fun MapView.addPolyline(
             style = Paint.Style.STROKE
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
-            isAntiAlias = true
         }
         outlinePaintLists.add(MonochromaticPaintList(borderPaint))
         val fillPaint = Paint().apply {
@@ -192,7 +191,6 @@ fun MapView.addPolyline(
             style = Paint.Style.FILL_AND_STROKE
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
-            isAntiAlias = true
         }
         outlinePaintLists.add(MonochromaticPaintList(fillPaint))
         setPoints(geoPoints)
@@ -274,7 +272,6 @@ fun MapView.addLandscapePolyOverlay(
                 style = Paint.Style.STROKE
                 strokeJoin = Paint.Join.ROUND
                 strokeCap = Paint.Cap.ROUND
-                isAntiAlias = true
             }
             outlinePaintLists.add(MonochromaticPaintList(borderPaint))
             val fillPaint = Paint().apply {
@@ -284,7 +281,6 @@ fun MapView.addLandscapePolyOverlay(
                 style = Paint.Style.FILL_AND_STROKE
                 strokeJoin = Paint.Join.ROUND
                 strokeCap = Paint.Cap.ROUND
-                isAntiAlias = true
             }
             outlinePaintLists.add(MonochromaticPaintList(fillPaint))
             setPoints(geoPoints)
@@ -570,12 +566,7 @@ fun MapView.addOktBasePolyline(
         id = overlayId
         outlinePaint.apply {
             color = ContextCompat.getColor(context, R.color.colorOktBlue)
-            isAntiAlias = true
             strokeWidth = context.resources.getDimension(R.dimen.okt_routes_base_polyline_width)
-            style = Paint.Style.STROKE
-            strokeJoin = Paint.Join.ROUND
-            strokeCap = Paint.Cap.ROUND
-            isAntiAlias = true
         }
         setPoints(geoPoints)
         setOnClickListener { _, _, geoPoint ->

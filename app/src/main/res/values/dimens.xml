@@ -105,7 +105,7 @@
 
     <dimen name="okt_routes_bottom_sheet_peek_max_height">300dp</dimen>
     <dimen name="okt_routes_bottom_sheet_peek_height">300dp</dimen>
-    <dimen name="okt_routes_base_polyline_width">3dp</dimen>
+    <dimen name="okt_routes_base_polyline_width">4dp</dimen>
     <dimen name="okt_routes_polyline_width">5dp</dimen>
     <dimen name="okt_routes_route_number_badge_size">48dp</dimen>
 
