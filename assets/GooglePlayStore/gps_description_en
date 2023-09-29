@@ -1,0 +1,44 @@
+# App Title
+HuKi - Hungarian Hiking Map
+
+# Short Description
+HuKi helps you explore the hiking trails of Hungary.
+
+# Long Description
+Hungarian hiking map for hikers and nature lovers.
+
+HuKi is based on OpenStreetMap and it integrates the Hungarian hiking trails without any additional setup.
+
+HuKi is my hobby project, I develop it in my free time and I'm happy to receive any feedback to make it more useful :)
+
+Features:
+
+- Hungarian hiking layer integration
+The app uses the Hungarian hiking layer, which is integrated with the base OpenStreetMap layers.
+
+- Live location support
+HuKi can show your actual position, elevation, orientation and location accuracy during your trip.
+
+- Search for places
+You can make text based searches for places or hiking routes.
+
+- Explore landscapes
+You can search in the main Hungarian landscapes like Bükk, Mátra, Balaton etc.
+
+- OKT - National Blue Trail
+HuKi can show the OKT - National Blue Trails with basic information. The imported GPX can show the stamp locations.
+
+- Hiking routes nearby and hike recommendations
+HuKi can show the nearest hiking routes in a list format and give you recommendations for hiking routes.
+
+- Route planner
+HuKi can can be used to plan hiking routes between the official hiking trails.
+
+- GPX File import
+HuKi can import and show GPX file tracks in the map.
+
+- Dark mode support
+
+- OpenSource project
+HuKi is an OpenSource app, which can be found in GitHub:
+<a href="https://github.com/RolandMostoha/HuKi-Android/">https://github.com/RolandMostoha/HuKi-Android/</a>

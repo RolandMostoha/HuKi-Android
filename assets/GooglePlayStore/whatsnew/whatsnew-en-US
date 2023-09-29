@@ -1,3 +1,5 @@
-- Route planner: can add up to 12 destinations
-- Route planner: return to start function
-- Bugfixes
+OKT - National Blue Trail feature
+- The Blue Trail routes are displayed with basic information
+- The route can be selected in the map interactively
+- The official webpage is available with a click, where the GPX can be imported
+- The app reads the stamp locations from the GPX
