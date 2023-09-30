@@ -7,9 +7,11 @@ HuKi egy túra térkép, ami segít felfedezni a magyar túraútvonalakat.
 # Long Description
 Magyar túratérkép túrázóknak és természetjáróknak.
 
-HuKi egy OpenStreetMap alapú térkép, amely felhasználja Magyar Túraréteget, nincs szükség külső rétegek letöltésére vagy rátét réteg használatára.
+HuKi egy OpenStreetMap alapú térkép, amely felhasználja Magyar Túraréteget. Legfőbb célja az egyszerűség és könnyű használhatóság.
+Nem tartalmaz beépített túragyűjteményt, de a GPX importálás funkcióval bármilyen letöltött GPX nyomvonal megjeleníthető.
 
 Az alkalmazást hobbiból fejlesztem szabadidőmben és különösen örülök a személyes visszajelzéseknek, a célom hogy másnak is hasznos legyen az app :)
+<a href="mailto:huki.app@gmail.com">huki.app@gmail.com</a>
 
 Funkciók:
 
@@ -25,8 +27,9 @@ Szöveges kereső segítségével kereshetsz helyek, túraútvonalak után.
 - Tájak felfedezése
 Külön kereshetsz Magyarország tájegységei közt, mint például Bükk, Mátra, Balaton stb.
 
-- OKT - Országos Kéktúra szakaszok
-Az Országos Kéktúra szakaszok megtekinthetőek alap információkkal. A letöltött GPX fájlból a bélyegzőhelyek is kiolvashatóak.
+- OKT - Országos Kéktúra szakaszok és kéktúrázás
+A kéktúrázók számára elérhető egy dedikált funkció, ahol a szakaszok megtekinthetőek az alap információkkal.
+Az importált GPX fájlból a bélyegzőhelyek is kiolvashatóak.
 
 - Közeli túraútvonalak és túraajánló
 Az alkalmazás tájegységhez és adott pozícióhoz is ajánl túraútvonalakat.
@@ -36,6 +39,7 @@ Az útvonaltervező segítségével megtervezheted a túráid a hivatalos túra�
 
 - GPX File import
 Az alkalmazással importálható és megjeleníthető a GPX fájl útvonalak a térképen.
+A GPX nyomvonalból az alkalmazás kiolvassa a magasságadatokat, az állomásokat és utazási idő becslést is készít.
 
 - Sötét mód támogatás
 
