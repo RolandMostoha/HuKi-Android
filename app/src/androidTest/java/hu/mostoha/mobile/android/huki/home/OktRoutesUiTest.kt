@@ -104,6 +104,8 @@ class OktRoutesUiTest {
         launchScenario<HomeActivity> {
             R.string.okt_routes_chip_label.clickWithText()
 
+            waitForMapClear()
+
             R.id.homeMapView.hasOverlay<OktBasePolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
@@ -116,6 +118,8 @@ class OktRoutesUiTest {
 
             "Írott-kő - Sárvár".clickWithText()
 
+            waitForMapClear()
+
             R.id.homeMapView.hasOverlay<OktBasePolyline>()
             R.id.homeMapView.hasOverlay<OktPolyline>()
             R.id.homeMapView.hasOverlay<OktMarker>()
@@ -127,6 +131,8 @@ class OktRoutesUiTest {
     fun whenCloseClick_thenBottomSheetHides() {
         launchScenario<HomeActivity> {
             R.string.okt_routes_chip_label.clickWithText()
+
+            waitForMapClear()
 
             R.id.oktRoutesCloseButton.click()
 

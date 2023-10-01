@@ -311,6 +311,7 @@ fun MapView.addGpxMarker(
     geoPoint: GeoPoint,
     waypointType: WaypointType,
     infoWindowTitle: String? = null,
+    infoWindowDescription: String? = null,
     onClick: (Marker) -> Unit
 ): Marker {
     val iconDrawable = when (waypointType) {
@@ -322,9 +323,12 @@ fun MapView.addGpxMarker(
         id = overlayId
         position = geoPoint
         icon = iconDrawable
-
         if (infoWindowTitle != null) {
-            infoWindow = GpxMarkerInfoWindow(this@addGpxMarker, infoWindowTitle)
+            infoWindow = GpxMarkerInfoWindow(
+                mapView = this@addGpxMarker,
+                title = infoWindowTitle,
+                description = infoWindowDescription,
+            )
             title = infoWindowTitle
         } else {
             setOnMarkerClickListener { marker, _ ->

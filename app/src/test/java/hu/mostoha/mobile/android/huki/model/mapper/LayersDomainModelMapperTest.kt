@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
+import hu.mostoha.mobile.android.huki.model.domain.GpxWaypoint
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.toLocationsTriple
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
@@ -127,7 +128,13 @@ class LayersDomainModelMapperTest {
                 id = gpxDetails.id,
                 fileName = fileName,
                 locations = emptyList(),
-                gpxWaypoints = mapper.mapGpxWaypoints(gpx.wayPoints),
+                gpxWaypoints = listOf(
+                    GpxWaypoint(
+                        location = DEFAULT_GPX_WAY_OPEN.toLocationsTriple().first(),
+                        name = DEFAULT_ROUTE_PLAN_WAYPOINT_1_NAME,
+                        description = "Description\nCmt",
+                    )
+                ),
                 travelTime = Duration.ZERO,
                 distance = 0,
                 altitudeRange = Pair(0, 0),

@@ -1212,6 +1212,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 geoPoint = waypointItem.geoPoint,
                 waypointType = waypointItem.waypointType,
                 infoWindowTitle = waypointItem.name?.resolve(this),
+                infoWindowDescription = waypointItem.description?.resolve(this),
                 onClick = {
                     gpxDetailsBottomSheet.show()
                     homeMapView.zoomToBoundingBox(offsetBoundingBox, true)

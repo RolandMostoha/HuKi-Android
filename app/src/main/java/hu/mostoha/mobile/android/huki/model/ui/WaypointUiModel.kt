@@ -7,4 +7,5 @@ data class WaypointUiModel(
     val geoPoint: GeoPoint,
     val waypointType: WaypointType,
     val name: Message? = null,
+    val description: Message? = null,
 )

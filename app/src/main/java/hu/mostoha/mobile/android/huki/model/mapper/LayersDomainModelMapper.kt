@@ -60,18 +60,18 @@ class LayersDomainModelMapper @Inject constructor() {
     }
 
     fun mapGpxWaypoints(waypoints: MutableList<WayPoint>): List<GpxWaypoint> {
-        return waypoints.map {
-            val name = listOfNotNull(
-                it.name,
-                it.desc
+        return waypoints.map { wayPoint ->
+            val description = listOfNotNull(
+                wayPoint.desc
                     ?.split(":")
                     ?.joinToString("\n"),
-                it.cmt,
+                wayPoint.cmt,
             ).joinToString("\n")
 
             GpxWaypoint(
-                name = name,
-                location = Location(it.latitude, it.longitude, it.elevation),
+                name = wayPoint.name,
+                description = description,
+                location = Location(wayPoint.latitude, wayPoint.longitude, wayPoint.elevation),
             )
         }
     }

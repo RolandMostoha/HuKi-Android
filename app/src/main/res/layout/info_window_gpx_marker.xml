@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/background_map_info_window"
-    android:paddingHorizontal="@dimen/space_medium"
-    android:paddingVertical="@dimen/space_small">
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/space_large"
+    android:paddingVertical="@dimen/space_small_medium">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/mapInfoWindowTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small" />
+        android:textAppearance="@style/DefaultTextAppearance.Bold.Small"
+        tools:text="Vállus" />
 
-</FrameLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/mapInfoWindowDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+        tools:text="A temető mellett, az információs táblán." />
+
+</LinearLayout>

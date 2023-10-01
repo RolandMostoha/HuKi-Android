@@ -91,6 +91,7 @@ class LayersUiModelMapper @Inject constructor() {
                 geoPoint = waypoint.location.toGeoPoint(),
                 waypointType = WaypointType.INTERMEDIATE,
                 name = waypoint.name?.toMessage(),
+                description = waypoint.description?.toMessage(),
             )
         }
 

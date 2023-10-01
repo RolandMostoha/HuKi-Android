@@ -8,7 +8,8 @@ import org.osmdroid.views.overlay.infowindow.InfoWindow
 
 class GpxMarkerInfoWindow(
     mapView: MapView,
-    private val title: String
+    private val title: String,
+    private val description: String? = null,
 ) : InfoWindow(R.layout.info_window_gpx_marker, mapView) {
 
     init {
@@ -23,7 +24,10 @@ class GpxMarkerInfoWindow(
 
     override fun onOpen(item: Any?) {
         val titleTextView = mView.findViewById<TextView>(R.id.mapInfoWindowTitle)
+        val descriptionTextView = mView.findViewById<TextView>(R.id.mapInfoWindowDescription)
+
         titleTextView.text = title
+        descriptionTextView.text = description
     }
 
     override fun onClose() {
