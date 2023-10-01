@@ -182,13 +182,19 @@ class RoutePlannerFragment : Fragment() {
                 val recyclerviewAdapter = recyclerView.adapter as WaypointAdapter
                 val fromPosition = viewHolder.adapterPosition
                 val toPosition = target.adapterPosition
-                recyclerviewAdapter.notifyItemMoved(fromPosition, toPosition)
 
-                val fromWaypoint = recyclerviewAdapter.currentList[fromPosition]
-                val toWaypoint = recyclerviewAdapter.currentList[toPosition]
-                routePlannerViewModel.swapWaypoints(fromWaypoint, toWaypoint)
+                return if (fromPosition >= 0 && toPosition >= 0) {
+                    recyclerviewAdapter.notifyItemMoved(fromPosition, toPosition)
 
-                return true
+                    val fromWaypoint = recyclerviewAdapter.currentList[fromPosition]
+                    val toWaypoint = recyclerviewAdapter.currentList[toPosition]
+
+                    routePlannerViewModel.swapWaypoints(fromWaypoint, toWaypoint)
+
+                    true
+                } else {
+                    false
+                }
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
