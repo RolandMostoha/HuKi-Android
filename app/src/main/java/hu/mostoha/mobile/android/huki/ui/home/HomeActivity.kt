@@ -418,6 +418,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         homeGpxHistoryFab.setOnClickListener {
             analyticsService.gpxHistoryClicked()
+            homeViewModel.clearFollowLocation()
             supportFragmentManager.addFragment(R.id.homeFragmentContainer, GpxHistoryFragment::class.java)
         }
     }
