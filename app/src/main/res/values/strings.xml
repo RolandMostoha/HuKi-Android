@@ -50,6 +50,10 @@
     <string name="my_location_rationale_positive_button">Allow</string>
     <string name="my_location_rationale_negative_button">Cancel</string>
 
+    <string name="gps_not_available_title">Google Play Services</string>
+    <string name="gps_not_available_message">Google Play Services is needed for GPS location monitoring</string>
+    <string name="gps_not_available_positive_button">Okay</string>
+
     <string name="hiking_routes_empty_text">No results found</string>
 
     <string name="layers_base_layers_header">Base Layers</string>

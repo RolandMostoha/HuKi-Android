@@ -48,6 +48,10 @@
     <string name="my_location_rationale_positive_button">Engedélyezés</string>
     <string name="my_location_rationale_negative_button">Mégsem</string>
 
+    <string name="gps_not_available_title">Google Play Szolgáltatások</string>
+    <string name="gps_not_available_message">A GPS helymeghatározáshoz szükség van a Google Play Szolgáltatásokra</string>
+    <string name="gps_not_available_positive_button">Rendben</string>
+
     <string name="hiking_routes_empty_text">Nincs találat</string>
 
     <string name="layers_base_layers_header">Alap rétegek</string>

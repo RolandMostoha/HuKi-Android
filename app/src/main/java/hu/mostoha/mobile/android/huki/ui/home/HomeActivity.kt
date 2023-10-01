@@ -52,6 +52,7 @@ import hu.mostoha.mobile.android.huki.extensions.hasOverlay
 import hu.mostoha.mobile.android.huki.extensions.hideAll
 import hu.mostoha.mobile.android.huki.extensions.hideOverlay
 import hu.mostoha.mobile.android.huki.extensions.isDarkMode
+import hu.mostoha.mobile.android.huki.extensions.isGooglePlayServicesAvailable
 import hu.mostoha.mobile.android.huki.extensions.isGpxFileIntent
 import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
 import hu.mostoha.mobile.android.huki.extensions.locationPermissions
@@ -338,6 +339,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 clearSearchBarInput()
 
                 when {
+                    !isGooglePlayServicesAvailable() -> {
+                        showGooglePlayServiceNotAvailableDialog()
+                    }
                     isLocationPermissionGranted() -> {
                         lifecycleScope.launch {
                             val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()
@@ -360,8 +364,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             homeViewModel.loadPlace(placeUiModel)
                         }
                     }
-                    shouldShowLocationRationale() -> showLocationRationaleDialog()
-                    else -> permissionLauncher.launch(locationPermissions)
+                    shouldShowLocationRationale() -> {
+                        showLocationRationaleDialog()
+                    }
+                    else -> {
+                        permissionLauncher.launch(locationPermissions)
+                    }
                 }
             },
             onPickLocationClick = {
@@ -387,14 +395,21 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             analyticsService.myLocationClicked()
 
             when {
+                !isGooglePlayServicesAvailable() -> {
+                    showGooglePlayServiceNotAvailableDialog()
+                }
                 isLocationPermissionGranted() -> {
                     homeViewModel.updateMyLocationConfig(
                         isLocationPermissionEnabled = true,
                         isFollowLocationEnabled = true,
                     )
                 }
-                shouldShowLocationRationale() -> showLocationRationaleDialog()
-                else -> permissionLauncher.launch(locationPermissions)
+                shouldShowLocationRationale() -> {
+                    showLocationRationaleDialog()
+                }
+                else -> {
+                    permissionLauncher.launch(locationPermissions)
+                }
             }
         }
         homeRoutePlannerFab.setOnClickListener {
@@ -433,6 +448,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             .setPositiveButton(R.string.my_location_rationale_positive_button) { _, _ ->
                 permissionLauncher.launch(locationPermissions)
             }
+            .show()
+    }
+
+    private fun showGooglePlayServiceNotAvailableDialog() {
+        MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
+            .setTitle(R.string.gps_not_available_title)
+            .setMessage(R.string.gps_not_available_message)
+            .setPositiveButton(R.string.gps_not_available_positive_button, null)
             .show()
     }
 
@@ -723,6 +746,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .collect { result ->
                     if (PermissionResult.LOCATION_PERMISSION_NEEDED == result) {
                         when {
+                            !isGooglePlayServicesAvailable() -> showGooglePlayServiceNotAvailableDialog()
                             shouldShowLocationRationale() -> showLocationRationaleDialog()
                             else -> permissionLauncher.launch(locationPermissions)
                         }

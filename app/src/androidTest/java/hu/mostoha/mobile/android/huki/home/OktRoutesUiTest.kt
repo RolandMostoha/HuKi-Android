@@ -116,6 +116,8 @@ class OktRoutesUiTest {
         launchScenario<HomeActivity> {
             R.string.okt_routes_chip_label.clickWithText()
 
+            waitForMapClear()
+
             "Írott-kő - Sárvár".clickWithText()
 
             waitForMapClear()
