@@ -35,6 +35,7 @@ class MyLocationOverlay(
         val MY_LOCATION_COMPASS_ANCHOR = 0.5f to 0.75f
 
         private const val COMPASS_CHANGE_THRESHOLD = 2f
+        private val COMPASS_ORIENTATION_RANGE = 0.0f..360.0f
     }
 
     private var isLocationEnabled = false
@@ -114,6 +115,10 @@ class MyLocationOverlay(
     override fun isMyLocationEnabled(): Boolean = isLocationEnabled
 
     override fun onOrientationChanged(orientation: Float, source: IOrientationProvider) {
+        if (orientation !in COMPASS_ORIENTATION_RANGE) {
+            return
+        }
+
         val lastLocation = lastFix
 
         if (lastLocation != null && !lastLocation.bearing.equalsDelta(orientation, COMPASS_CHANGE_THRESHOLD)) {
