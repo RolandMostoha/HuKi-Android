@@ -237,6 +237,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         super.onStop()
     }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        bottomSheets.hideAll()
+    }
+
     private fun initWindow() {
         setStatusBarColor(android.R.color.transparent)
 
@@ -282,6 +288,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
             setOnTouchListener { view, _ ->
                 view.performClick()
+
                 clearSearchBarInput()
                 mapTouchEventSharedViewModel.updateEvent(MapTouchEvents.MAP_TOUCHED)
                 false
