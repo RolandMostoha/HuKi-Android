@@ -14,13 +14,13 @@ import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentGpxHistoryBinding
-import hu.mostoha.mobile.android.huki.extensions.removeFragments
 import hu.mostoha.mobile.android.huki.extensions.shareFile
 import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
+import jp.wasabeef.recyclerview.animators.FadeInAnimator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -75,7 +75,7 @@ class GpxHistoryFragment : Fragment() {
                         GpxType.ROUTE_PLANNER -> layersViewModel.loadRoutePlannerGpx(gpxHistoryItem.fileUri)
                         GpxType.EXTERNAL -> layersViewModel.loadGpx(gpxHistoryItem.fileUri)
                     }
-                    closeFragment()
+                    parentFragmentManager.popBackStack()
                 }
             },
             onGpxShare = { gpxHistoryItem ->
@@ -100,9 +100,10 @@ class GpxHistoryFragment : Fragment() {
         )
 
         gpxHistoryList.adapter = gpxHistoryAdapter
+        gpxHistoryList.itemAnimator = FadeInAnimator()
 
         toolbar.setNavigationOnClickListener {
-            closeFragment()
+            parentFragmentManager.popBackStack()
         }
 
         gpxHistoryTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -169,10 +170,6 @@ class GpxHistoryFragment : Fragment() {
                     }
                 }
         }
-    }
-
-    private fun closeFragment() {
-        parentFragmentManager.removeFragments(R.id.homeFragmentContainer)
     }
 
 }

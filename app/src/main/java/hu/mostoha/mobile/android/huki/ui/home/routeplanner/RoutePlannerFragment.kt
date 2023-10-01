@@ -24,7 +24,6 @@ import hu.mostoha.mobile.android.huki.databinding.FragmentRoutePlannerBinding
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
-import hu.mostoha.mobile.android.huki.extensions.removeFragments
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
@@ -391,7 +390,7 @@ class RoutePlannerFragment : Fragment() {
     private fun clearRoutePlanner() {
         pickLocationEventViewModel.updateEvent(PickLocationEvents.LocationPickEnabled)
         routePlannerViewModel.clearRoutePlanner()
-        parentFragmentManager.removeFragments(R.id.homeRoutePlannerContainer)
+        parentFragmentManager.popBackStack()
     }
 
 }

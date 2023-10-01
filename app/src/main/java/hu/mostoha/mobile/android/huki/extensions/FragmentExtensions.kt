@@ -7,8 +7,13 @@ import androidx.fragment.app.commit
 
 fun <T : Fragment> FragmentManager.addFragment(@IdRes containerId: Int, clazz: Class<T>) {
     commit {
+        setCustomAnimations(
+            android.R.anim.fade_in, android.R.anim.fade_out,
+            android.R.anim.fade_in, android.R.anim.fade_out,
+        )
         setReorderingAllowed(true)
         add(containerId, clazz, null)
+        addToBackStack(null)
     }
 }
 

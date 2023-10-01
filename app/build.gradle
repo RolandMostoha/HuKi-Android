@@ -103,6 +103,9 @@ dependencies {
     implementation "com.github.douglasjunior:android-simple-tooltip:1.1.0"
     implementation "com.github.skydoves:powermenu:2.2.4"
 
+    // Animations
+    implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
+
     // Hilt
     def jetpackHiltVersion = "1.0.0"
     implementation "com.google.dagger:hilt-android:$hiltVersion"

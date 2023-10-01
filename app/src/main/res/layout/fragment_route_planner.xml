@@ -5,13 +5,13 @@
     android:id="@+id/routePlannerContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minWidth="@dimen/route_planner_min_width"
     android:layout_marginBottom="@dimen/default_elevation"
     android:animateLayoutChanges="true"
     android:background="@drawable/background_route_planner"
     android:clickable="true"
     android:elevation="@dimen/default_elevation"
     android:focusable="true"
+    android:minWidth="@dimen/route_planner_min_width"
     android:paddingHorizontal="@dimen/space_medium"
     android:paddingBottom="@dimen/space_medium">
 
@@ -81,9 +81,9 @@
         android:layout_marginEnd="@dimen/space_medium"
         android:contentDescription="@string/route_planner_accessibility_return_waypoint"
         app:icon="@drawable/ic_route_planner_return_to_home"
+        app:layout_constraintBottom_toBottomOf="@id/routePlannerDoneButton"
         app:layout_constraintEnd_toStartOf="@id/routePlannerAddWaypointButton"
-        app:layout_constraintTop_toTopOf="@id/routePlannerDoneButton"
-        app:layout_constraintBottom_toBottomOf="@id/routePlannerDoneButton"/>
+        app:layout_constraintTop_toTopOf="@id/routePlannerDoneButton" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/routePlannerAddWaypointButton"
@@ -93,9 +93,9 @@
         android:layout_marginEnd="@dimen/space_medium"
         android:contentDescription="@string/route_planner_accessibility_add_waypoint"
         app:icon="@drawable/ic_route_planner_plus"
+        app:layout_constraintBottom_toBottomOf="@id/routePlannerDoneButton"
         app:layout_constraintEnd_toStartOf="@id/routePlannerDoneButton"
-        app:layout_constraintTop_toTopOf="@id/routePlannerDoneButton"
-        app:layout_constraintBottom_toBottomOf="@id/routePlannerDoneButton"/>
+        app:layout_constraintTop_toTopOf="@id/routePlannerDoneButton" />
 
     <hu.mostoha.mobile.android.huki.views.ProgressMaterialButton
         android:id="@+id/routePlannerDoneButton"
@@ -104,23 +104,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_medium"
         android:text="@string/route_planner_done_button"
-        app:iconRes="@drawable/ic_route_planner_done"
         app:iconColor="@color/colorOnPrimary"
+        app:iconRes="@drawable/ic_route_planner_done"
+        app:layout_constraintBottom_toTopOf="@id/routePlannerGraphhopperContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/routePlannerButtonBarrier"
-        app:layout_constraintBottom_toTopOf="@id/routePlannerGraphhopperContainer"
-        app:layout_constraintVertical_bias="1"/>
+        app:layout_constraintVertical_bias="1" />
 
     <LinearLayout
         android:id="@+id/routePlannerGraphhopperContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingVertical="@dimen/space_small"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/routePlannerPoweredByText"
@@ -136,6 +135,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_small_medium"
+            android:background="?selectableItemBackground"
             android:contentDescription="@null"
             android:src="@drawable/img_graphhopper_logo" />
 
