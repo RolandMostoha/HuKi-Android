@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.osmdroid.infowindow
 import android.view.MotionEvent
 import android.widget.TextView
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.extensions.gone
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 
@@ -27,7 +28,12 @@ class GpxMarkerInfoWindow(
         val descriptionTextView = mView.findViewById<TextView>(R.id.mapInfoWindowDescription)
 
         titleTextView.text = title
-        descriptionTextView.text = description
+
+        if (description.isNullOrEmpty()) {
+            descriptionTextView.gone()
+        } else {
+            descriptionTextView.text = description
+        }
     }
 
     override fun onClose() {
