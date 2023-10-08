@@ -2,6 +2,7 @@
 <resources>
 
     <color name="colorLauncher">#2e7d32</color>
+    <color name="colorLauncherIcon">#ffffff</color>
     <color name="colorLauncherDebug">#e64a19</color>
 
     <color name="colorPrimary">#2e7d32</color>

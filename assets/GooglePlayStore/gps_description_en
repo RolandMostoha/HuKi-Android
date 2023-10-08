@@ -1,22 +1,23 @@
 # App Title
-HuKi - Hungarian Hiking Map
+HuKi - Hungarian Hiking App
 
 # Short Description
-HuKi helps you explore the hiking trails of Hungary.
+HuKi is a hiking app which helps you explore the hiking trails of Hungary.
 
 # Long Description
 Hungarian hiking map for hikers and nature explorers.
 
-HuKi is based on OpenStreetMap and it integrates the Hungarian hiking layer. Simplicity and ease of use are the main goals of the app.
-It does not include hike collections, but any GPX track can be shown with the GPX import function.
+HuKi is based on OpenStreetMap and it integrates with the Hungarian hiking layer and the official hiking trails.
+
+It does not include hike collections, but it has a hike recommendation function which navigates to the popular hike collection platforms and any GPX track can be imported and shown.
 
 HuKi is my hobby project, I develop it in my free time and I'm happy to receive any feedback to make it more useful :)
 <a href="mailto:huki.app@gmail.com">huki.app@gmail.com</a>
 
-Features:
+HuKi features:
 
 - Hungarian hiking layer integration
-The app uses the Hungarian hiking layer, which is integrated with the base OpenStreetMap layers.
+The app uses the Hungarian hiking layer with the official hiking trails, and it is integrated with the base OpenStreetMap layers.
 
 - Live location support
 HuKi can show your actual position, elevation, orientation and location accuracy during your trip.
@@ -28,18 +29,21 @@ You can make text based searches for places or hiking routes.
 You can search in the main Hungarian landscapes like Bükk, Mátra, Balaton etc.
 
 - OKT - National Blue Trail
-HuKi can show the OKT - National Blue Trails for blue trail hikers with basic information.
-The imported GPX can show the stamp locations as well.
+HuKi can show the OKT - National Blue Trails for blue trail hikers. The imported OKT GPX can show the stamp locations as well.
 
 - Hiking routes nearby and hike recommendations
-HuKi can show the nearest hiking routes in a list format and give you recommendations for hiking routes.
+HuKi can show the nearest hiking routes in a list format and give you recommendations for routes in popular hiking collections.
 
 - Route planner
-HuKi can be used to plan hiking routes between the official hiking trails.
+HuKi can be used to plan hiking routes. The planner always favors the official hiking trails.
 
 - GPX File import
 HuKi can import and show GPX file tracks in the map.
 Using the imported GPX track, the app shows the altitude profile, destinations and creates a travel time estimation.
+
+- Offline mode
+All of the visited parts of the map are saved in a database, which can be used offline.
+The only thing to do, is to visit the desired parts in the map, when the app saves the tiles for 14 days.
 
 - Dark mode support
 
