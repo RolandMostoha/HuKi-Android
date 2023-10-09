@@ -260,6 +260,7 @@ class LayersViewModelTest {
     companion object {
         private val DEFAULT_GPX_DETAILS = GpxDetails(
             fileName = "dera_szurdok.gpx",
+            fileUri = "file://dera_szurdok.gpx",
             locations = DEFAULT_GPX_WAY_CLOSED.map { Location(it.first, it.second, it.third) },
             gpxWaypoints = DEFAULT_GPX_WAY_CLOSED.toLocationsTriple().toGpxWaypointsByLocations(),
             travelTime = DEFAULT_GPX_WAY_CLOSED

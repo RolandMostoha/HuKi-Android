@@ -33,9 +33,10 @@ class LayersDomainModelMapperTest {
     @Test
     fun `Given GPX with closed track points, when mapGpxDetails, then GPX details returns`() {
         val fileName = "dera_szurdok.gpx"
+        val fileUri = "file://dera_szurdok.gpx"
         val gpx = DEFAULT_GPX_CLOSED
 
-        val gpxDetails = mapper.mapGpxDetails(fileName, gpx)
+        val gpxDetails = mapper.mapGpxDetails(fileUri, fileName, gpx)
 
         val expectedLocations = DEFAULT_GPX_WAY_CLOSED.toLocationsTriple()
 
@@ -43,6 +44,7 @@ class LayersDomainModelMapperTest {
             GpxDetails(
                 id = gpxDetails.id,
                 fileName = fileName,
+                fileUri = fileUri,
                 locations = expectedLocations,
                 gpxWaypoints = emptyList(),
                 travelTime = expectedLocations.calculateTravelTime(),
@@ -63,16 +65,18 @@ class LayersDomainModelMapperTest {
 
     @Test
     fun `Given GPX track points without altitude, when mapGpxDetails, then GPX Details returns`() {
+        val fileUri = "file://dera_szurdok.gpx"
         val fileName = "dera_szurdok_without_altitude.gpx"
         val gpx = DEFAULT_GPX_WITHOUT_ALTITUDE
 
-        val gpxDetails = mapper.mapGpxDetails(fileName, gpx)
+        val gpxDetails = mapper.mapGpxDetails(fileUri, fileName, gpx)
 
         val expectedLocations = DEFAULT_GPX_WAY_OPEN.map { Location(it.first, it.second) }
 
         assertThat(gpxDetails).isEqualTo(
             GpxDetails(
                 id = gpxDetails.id,
+                fileUri = fileUri,
                 fileName = fileName,
                 locations = expectedLocations,
                 gpxWaypoints = emptyList(),
@@ -87,10 +91,11 @@ class LayersDomainModelMapperTest {
 
     @Test
     fun `Given GPX with routes, when mapGpxDetails, then GPX Details returns`() {
+        val fileUri = "file://dera_szurdok.gpx"
         val fileName = "dera_szurdok_routes.gpx"
         val gpx = DEFAULT_GPX_ROUTES
 
-        val gpxDetails = mapper.mapGpxDetails(fileName, gpx)
+        val gpxDetails = mapper.mapGpxDetails(fileUri, fileName, gpx)
 
         val expectedLocations = DEFAULT_GPX_WAY_OPEN.toLocationsTriple()
 
@@ -98,6 +103,7 @@ class LayersDomainModelMapperTest {
             GpxDetails(
                 id = gpxDetails.id,
                 fileName = fileName,
+                fileUri = fileUri,
                 locations = expectedLocations,
                 gpxWaypoints = mapper.mapGpxWaypoints(gpx.wayPoints),
                 travelTime = expectedLocations.calculateTravelTime(),
@@ -118,15 +124,17 @@ class LayersDomainModelMapperTest {
 
     @Test
     fun `Given GPX with waypoints only, when mapGpxDetails, then GPX Details returns`() {
+        val fileUri = "file://dera_szurdok.gpx"
         val fileName = "dera_szurdok_routes.gpx"
         val gpx = DEFAULT_GPX_WAYPOINTS_ONLY
 
-        val gpxDetails = mapper.mapGpxDetails(fileName, gpx)
+        val gpxDetails = mapper.mapGpxDetails(fileUri, fileName, gpx)
 
         assertThat(gpxDetails).isEqualTo(
             GpxDetails(
                 id = gpxDetails.id,
                 fileName = fileName,
+                fileUri = fileUri,
                 locations = emptyList(),
                 gpxWaypoints = listOf(
                     GpxWaypoint(
@@ -146,6 +154,7 @@ class LayersDomainModelMapperTest {
 
     @Test
     fun `Given GPX with empty track points, when mapGpxDetails, then GPX parse failed exception throws`() {
+        val fileUri = "file://dera_szurdok.gpx"
         val fileName = "dera_szurdok_empty.gpx"
         val gpx = Gpx.Builder()
             .setWayPoints(emptyList())
@@ -154,7 +163,7 @@ class LayersDomainModelMapperTest {
             .build()
 
         val exception = assertThrows(GpxParseFailedException::class.java) {
-            mapper.mapGpxDetails(fileName, gpx)
+            mapper.mapGpxDetails(fileUri, fileName, gpx)
         }
 
         assertThat(exception.messageRes).isEqualTo(R.string.error_message_gpx_parse_failed.toMessage())

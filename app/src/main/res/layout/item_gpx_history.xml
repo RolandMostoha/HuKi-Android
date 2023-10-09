@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/default_elevation"
-    android:layout_marginEnd="@dimen/default_elevation"
-    android:layout_marginBottom="@dimen/default_elevation"
+    android:layout_marginStart="@dimen/space_small_medium"
+    android:layout_marginEnd="@dimen/space_small_medium"
+    android:layout_marginBottom="@dimen/space_small_medium"
     app:cardBackgroundColor="@color/colorBackground"
     app:cardCornerRadius="@dimen/default_corner_size_surface"
-    app:cardElevation="1dp">
+    app:cardElevation="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

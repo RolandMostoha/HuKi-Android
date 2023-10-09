@@ -246,6 +246,7 @@ class LayersUiModelMapperTest {
         assertThat(gpxDetailsUiModel).isEqualTo(
             GpxDetailsUiModel(
                 id = gpxDetails.id,
+                fileUri = gpxDetails.fileUri,
                 name = gpxDetails.fileName,
                 geoPoints = gpxDetails.locations.map { it.toGeoPoint() },
                 waypoints = listOf(
@@ -283,6 +284,7 @@ class LayersUiModelMapperTest {
         assertThat(gpxDetailsUiModel).isEqualTo(
             GpxDetailsUiModel(
                 id = gpxDetails.id,
+                fileUri = gpxDetails.fileUri,
                 name = gpxDetails.fileName,
                 geoPoints = gpxDetails.locations.map { it.toGeoPoint() },
                 waypoints = listOf(
@@ -324,6 +326,7 @@ class LayersUiModelMapperTest {
         assertThat(gpxDetailsUiModel).isEqualTo(
             GpxDetailsUiModel(
                 id = gpxDetails.id,
+                fileUri = gpxDetails.fileUri,
                 name = gpxDetails.fileName,
                 geoPoints = gpxDetails.locations.map { it.toGeoPoint() },
                 waypoints = listOf(
@@ -350,6 +353,7 @@ class LayersUiModelMapperTest {
     companion object {
         private val DEFAULT_GPX_DETAILS = GpxDetails(
             id = UUID.randomUUID().toString(),
+            fileUri = "file://dera_szurdok.gpx",
             fileName = "dera_szurdok.gpx",
             gpxWaypoints = listOf(DEFAULT_GPX_WAY_CLOSED.first().toLocation().toGpxWaypoint()),
             locations = DEFAULT_GPX_WAY_CLOSED.map { Location(it.first, it.second) },
@@ -361,6 +365,7 @@ class LayersUiModelMapperTest {
         )
         private val DEFAULT_GPX_DETAILS_OPEN = GpxDetails(
             id = UUID.randomUUID().toString(),
+            fileUri = "file://dera_szurdok.gpx",
             fileName = "dera_szurdok.gpx",
             gpxWaypoints = listOf(DEFAULT_GPX_WAY_OPEN.first().toLocation().toGpxWaypoint()),
             locations = DEFAULT_GPX_WAY_OPEN.map { Location(it.first, it.second) },
@@ -372,6 +377,7 @@ class LayersUiModelMapperTest {
         )
         private val DEFAULT_GPX_DETAILS_UI_MODEL = GpxDetailsUiModel(
             id = DEFAULT_GPX_DETAILS.id,
+            fileUri = "file://dera_szurdok.gpx",
             name = "dera_szurdok",
             waypoints = listOf(
                 WaypointUiModel(
