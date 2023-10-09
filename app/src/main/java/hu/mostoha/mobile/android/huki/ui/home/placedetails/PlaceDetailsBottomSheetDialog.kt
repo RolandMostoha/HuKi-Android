@@ -39,8 +39,7 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
                 placeDetailsGoogleNavButton.visible()
                 placeDetailsGoogleNavButton.setOnClickListener {
-                    analyticsService.googleMapsClicked(placeName)
-
+                    analyticsService.googleMapsClicked()
                     context.startGoogleMapsDirectionsIntent(placeUiModel.geoPoint)
                 }
                 placeDetailsRoutePlanButton.visible()

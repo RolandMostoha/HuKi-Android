@@ -63,7 +63,7 @@ class FileBasedLayersRepository @Inject constructor(
 
         val gpx = GPXParser().parse(inputStream)
 
-        return layersDomainModelMapper.mapGpxDetails(fileName, gpx)
+        return layersDomainModelMapper.mapGpxDetails(externalFilePath.toUri().toString(), fileName, gpx)
     }
 
     override suspend fun getRoutePlannerGpxDetails(fileUri: Uri): GpxDetails {
@@ -75,7 +75,7 @@ class FileBasedLayersRepository @Inject constructor(
 
         val gpx = GPXParser().parse(inputStream)
 
-        return layersDomainModelMapper.mapGpxDetails(fileName, gpx)
+        return layersDomainModelMapper.mapGpxDetails(fileUri.toString(), fileName, gpx)
     }
 
     override suspend fun getGpxHistory(): GpxHistory {

@@ -9,7 +9,6 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -20,7 +19,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
-import hu.mostoha.mobile.android.huki.constants.GOOGLE_MAPS_DIRECTIONS_URL
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
@@ -50,6 +48,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayCount
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
@@ -60,7 +59,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -155,7 +153,28 @@ class GpxDetailsUiTest {
 
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
             R.id.gpxDetailsRouteAttributesContainer.isDisplayed()
+            R.id.gpxDetailsGoogleMapsButton.isDisplayed()
+            R.id.gpxDetailsShareButton.isDisplayed()
             TEST_GPX_NAME.isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenGpxFileWithOpenRoute_whenImportGpxClicked_thenGpxDetailsBottomSheetIsDisplayed() {
+        launchScenario<HomeActivity> {
+            R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
+
+            val activityResult = getTestGpxFileResult(TEST_GPX_NAME_OPEN_ROUTE)
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(activityResult)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
+            R.id.gpxDetailsRouteAttributesContainer.isDisplayed()
+            R.id.gpxDetailsGoogleMapsButton.isDisplayed()
+            R.id.gpxDetailsShareButton.isDisplayed()
+            TEST_GPX_NAME_OPEN_ROUTE.isTextDisplayed()
         }
     }
 
@@ -176,9 +195,8 @@ class GpxDetailsUiTest {
         }
     }
 
-    @Ignore("Flaky test of Google Maps intent check")
     @Test
-    fun givenGpxFile_whenNavigateToStartClicked_thenGoogleMapsDirectionsIntentIsFired() {
+    fun givenGpxFile_whenGoogleMapsNavigationClicked_thenGoogleMapsDirectionIsRequested() {
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
 
@@ -188,18 +206,21 @@ class GpxDetailsUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
             R.id.gpxDetailsGoogleMapsButton.click()
+        }
+    }
 
-            intended(
-                allOf(
-                    hasAction(Intent.ACTION_VIEW),
-                    hasData(
-                        GOOGLE_MAPS_DIRECTIONS_URL.format(
-                            TEST_GPX_START_LOCATION.latitude,
-                            TEST_GPX_START_LOCATION.longitude
-                        )
-                    )
-                )
-            )
+    @Test
+    fun givenGpxFileWithOpenRoute_whenGoogleMapsNavigationClicked_thenPopupActionMenuDisplays() {
+        launchScenario<HomeActivity> {
+            val activityResult = getTestGpxFileResult(TEST_GPX_NAME_OPEN_ROUTE)
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(activityResult)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            R.id.gpxDetailsGoogleMapsButton.click()
+
+            R.string.gpx_details_bottom_sheet_google_maps_header.isPopupTextDisplayed()
         }
     }
 
@@ -215,6 +236,35 @@ class GpxDetailsUiTest {
 
             R.id.homeMapView.hasOverlay<GpxMarker>()
             R.id.homeMapView.hasInvisibleOverlay<GpxPolyline>()
+        }
+    }
+
+    @Test
+    fun givenGpxFile_whenShareClicked_thenFileShareIsRequested() {
+        launchScenario<HomeActivity> {
+            R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
+
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            R.id.gpxDetailsShareButton.click()
+        }
+    }
+
+    @Test
+    fun givenGpxFileWithOpenRoute_whenShareClicked_thenFileShareIsRequested() {
+        launchScenario<HomeActivity> {
+            R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
+
+            val activityResult = getTestGpxFileResult(TEST_GPX_NAME_OPEN_ROUTE)
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(activityResult)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            R.id.gpxDetailsShareButton.click()
         }
     }
 
@@ -319,10 +369,10 @@ class GpxDetailsUiTest {
 
     companion object {
         private const val TEST_GPX_NAME = "dera_szurdok.gpx"
+        private const val TEST_GPX_NAME_OPEN_ROUTE = "aggtelek_jozsvafo.gpx"
         private const val TEST_GPX_NAME_WITHOUT_ALTITUDE = "dera_szurdok_without_altitude.gpx"
         private const val TEST_GPX_NAME_WITH_WAYPOINTS = "sorrento_with_waypoints.gpx"
         private const val TEST_GPX_NAME_WAYPOINTS_ONLY = "budapest_geocache.gpx"
-        private val TEST_GPX_START_LOCATION = Location(47.68498711287975, 18.91935557126999)
         private val DEFAULT_MY_LOCATION = Location(
             DEFAULT_MY_LOCATION_LATITUDE,
             DEFAULT_MY_LOCATION_LONGITUDE,

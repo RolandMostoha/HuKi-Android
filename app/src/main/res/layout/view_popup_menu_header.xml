@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Header text -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/popupMenuHeaderTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:paddingHorizontal="@dimen/space_extra_large"
+        android:paddingVertical="@dimen/space_large"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+        android:textColor="@color/colorOnPrimary"
+        tools:text="Google Maps Navigation" />
+
+</LinearLayout>

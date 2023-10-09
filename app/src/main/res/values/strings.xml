@@ -40,9 +40,10 @@
     <string name="home_bottom_sheet_route_plan_button">Route plan</string>
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>
 
-    <string name="gpx_details_bottom_sheet_google_maps_button">To start</string>
     <string name="gpx_details_bottom_sheet_start_button">Start</string>
-    <string name="gpx_details_bottom_sheet_visibility_button">Visibility</string>
+    <string name="gpx_details_bottom_sheet_google_maps_header">Google Maps Navigation</string>
+    <string name="gpx_details_bottom_sheet_google_maps_start">To start point</string>
+    <string name="gpx_details_bottom_sheet_google_maps_end">To end point</string>
     <string name="gpx_details_bottom_sheet_waypoints_only_counter_template">%d waypoints</string>
 
     <string name="my_location_rationale_title">Location permission</string>

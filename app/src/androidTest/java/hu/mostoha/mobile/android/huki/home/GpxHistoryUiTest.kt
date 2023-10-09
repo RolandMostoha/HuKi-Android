@@ -236,6 +236,23 @@ class GpxHistoryUiTest {
     }
 
     @Test
+    fun givenRoutePlannerGpxFileInHistory_whenShareClicked_thenFileShareIsRequested() {
+        gpxConfiguration.clearAllGpxFiles()
+
+        launchScenario<HomeActivity> {
+            intending(IntentMatchers.hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+            R.id.gpxDetailsCloseButton.click()
+
+            R.id.homeGpxHistoryFab.click()
+            R.id.gpxHistoryTabLayout.selectTab(1)
+            R.id.gpxHistoryItemShareButton.click()
+        }
+    }
+
+    @Test
     fun whenBackButtonIsClicked_thenHomeDisplays() {
         gpxConfiguration.clearAllGpxFiles()
 

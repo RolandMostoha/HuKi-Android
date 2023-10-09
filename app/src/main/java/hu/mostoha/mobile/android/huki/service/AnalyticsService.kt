@@ -36,7 +36,7 @@ interface AnalyticsService {
 
     fun routePlanSaved(routePlan: RoutePlanUiModel)
 
-    fun googleMapsClicked(destinationPlaceName: String)
+    fun googleMapsClicked()
 
     fun gpxImportClicked()
 
@@ -45,6 +45,14 @@ interface AnalyticsService {
     fun gpxImportedByIntent()
 
     fun gpxImportedByFileExplorer()
+
+    fun gpxDetailsStartClicked()
+
+    fun gpxDetailsVisibilityClicked()
+
+    fun gpxDetailsShareClicked()
+
+    fun gpxDetailsWaypointsOnlyImported()
 
     fun onLayerSelected(layerType: LayerType)
 

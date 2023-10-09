@@ -63,7 +63,7 @@
             android:layout_marginTop="@dimen/space_extra_small"
             android:layout_marginEnd="@dimen/space_medium"
             android:text="@string/gpx_history_item_share_button_title"
-            app:icon="@drawable/ic_gpx_history_item_share"
+            app:icon="@drawable/ic_gpx_share"
             app:layout_constraintEnd_toStartOf="@id/gpxHistoryItemOpenButton"
             app:layout_constraintTop_toBottomOf="@id/gpxHistoryDateText" />
 

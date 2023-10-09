@@ -461,7 +461,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initBottomSheets() {
         hikingRoutesBottomSheet = HikingRoutesBottomSheetDialog(binding.homeHikingRoutesBottomSheetContainer)
-        gpxDetailsBottomSheet = GpxDetailsBottomSheetDialog(binding.homeGpxDetailsBottomSheetContainer)
+        gpxDetailsBottomSheet = GpxDetailsBottomSheetDialog(
+            binding.homeGpxDetailsBottomSheetContainer,
+            analyticsService
+        )
         placeDetailsBottomSheet = PlaceDetailsBottomSheetDialog(
             binding.homePlaceDetailsBottomSheetContainer,
             analyticsService

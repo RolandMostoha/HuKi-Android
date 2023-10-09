@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/popupMenuText"
-    android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:drawablePadding="@dimen/space_large"
-    android:padding="@dimen/space_large"
     android:clickable="true"
+    android:drawablePadding="@dimen/space_large"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
-    android:gravity="center_vertical" />
+    android:gravity="center_vertical"
+    android:padding="@dimen/space_large"
+    android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small" />

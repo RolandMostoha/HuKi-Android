@@ -36,7 +36,7 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun routePlanSaved(routePlan: RoutePlanUiModel) = Unit
 
-    override fun googleMapsClicked(destinationPlaceName: String) = Unit
+    override fun googleMapsClicked() = Unit
 
     override fun gpxImportClicked() = Unit
 
@@ -45,6 +45,14 @@ class FakeAnalyticsService : AnalyticsService {
     override fun gpxImportedByIntent() = Unit
 
     override fun gpxImportedByFileExplorer() = Unit
+
+    override fun gpxDetailsStartClicked() = Unit
+
+    override fun gpxDetailsVisibilityClicked() = Unit
+
+    override fun gpxDetailsShareClicked() = Unit
+
+    override fun gpxDetailsWaypointsOnlyImported() = Unit
 
     override fun onLayerSelected(layerType: LayerType) = Unit
 

@@ -38,9 +38,10 @@
     <string name="home_bottom_sheet_route_plan_button">Útvonalterv</string>
     <string name="home_bottom_sheet_landscape_secondary">Tájegység</string>
 
-    <string name="gpx_details_bottom_sheet_google_maps_button">Kezdőponthoz</string>
     <string name="gpx_details_bottom_sheet_start_button">Indulás</string>
-    <string name="gpx_details_bottom_sheet_visibility_button">Láthatóság</string>
+    <string name="gpx_details_bottom_sheet_google_maps_header">Google Maps Navigáció</string>
+    <string name="gpx_details_bottom_sheet_google_maps_start">Kezdőponthoz</string>
+    <string name="gpx_details_bottom_sheet_google_maps_end">Végponthoz</string>
     <string name="gpx_details_bottom_sheet_waypoints_only_counter_template">%d állomás</string>
 
     <string name="my_location_rationale_title">Helyadatok engedélyezése</string>

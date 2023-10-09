@@ -47,6 +47,7 @@
     <dimen name="default_divider_height">1dp</dimen>
     <dimen name="default_tab_indicator_height">4dp</dimen>
     <dimen name="default_popup_menu_width">195dp</dimen>
+    <dimen name="default_popup_menu_width_with_header">240dp</dimen>
 
     <dimen name="progress_fab_progress_bar_size_mini">46dp</dimen>
     <dimen name="progress_fab_progress_bar_size_normal">64dp</dimen>
@@ -77,7 +78,7 @@
     <dimen name="map_view_default_bottom_offset">220dp</dimen>
     <dimen name="map_view_default_start_offset">80dp</dimen>
     <dimen name="map_view_default_end_offset">80dp</dimen>
-    <dimen name="map_view_bottom_sheet_bottom_offset">220dp</dimen>
+    <dimen name="map_view_bottom_sheet_bottom_offset">230dp</dimen>
     <dimen name="map_view_top_sheet_top_offset">360dp</dimen>
     <dimen name="map_view_top_sheet_bottom_offset">20dp</dimen>
     <dimen name="map_view_top_sheet_start_offset">@dimen/map_view_default_start_offset</dimen>

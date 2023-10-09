@@ -40,6 +40,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_GPX_IMPORTED = "gpx_imported"
         private const val EVENT_GPX_IMPORTED_BY_INTENT = "gpx_imported_by_intent"
         private const val EVENT_GPX_IMPORTED_BY_FILE_EXPLORER = "gpx_imported_by_file_explorer"
+        private const val EVENT_SELECT_GPX_START = "select_gpx_start"
+        private const val EVENT_SELECT_GPX_VISIBILITY = "select_gpx_visibility"
+        private const val EVENT_SELECT_GPX_SHARE = "select_gpx_share"
+        private const val EVENT_GPX_WAYPOINTS_ONLY_IMPORTED = "gpx_imported_waypoints_only"
         private const val EVENT_LAYER_MAPNIK_SELECTED = "layer_mapnik_selected"
         private const val EVENT_LAYER_OPEN_TOPO_SELECTED = "layer_open_topo_selected"
         private const val EVENT_LAYER_HIKING_SELECTED = "layer_hiking_selected"
@@ -68,7 +72,6 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_SELECTED_PLACE_DETAILS = "selected_place_details"
         private const val PARAM_LOAD_HIKING_ROUTE_FOR = "load_hiking_route_for"
         private const val PARAM_SELECTED_HIKING_ROUTE_DETAILS = "selected_hiking_route_details"
-        private const val PARAM_NAVIGATION_PLACE_NAME = "navigation_place_name"
         private const val PARAM_MAP_SCALE_PERCENTAGE = "map_scale_percentage"
         private const val PARAM_TILE_DOWNLOAD_REQUEST_COUNTER = "tile_download_request_counter"
         private const val PARAM_TILE_DOWNLOAD_OUT_OF_MEMORY = "tile_download_out_of_memory"
@@ -164,10 +167,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         }
     }
 
-    override fun googleMapsClicked(destinationPlaceName: String) {
-        firebaseAnalytics.logEvent(EVENT_SELECT_MAPS_DIRECTIONS) {
-            param(PARAM_NAVIGATION_PLACE_NAME, destinationPlaceName)
-        }
+    override fun googleMapsClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_MAPS_DIRECTIONS, null)
     }
 
     override fun gpxImportClicked() {
@@ -194,6 +195,22 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun gpxImportedByFileExplorer() {
         firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED_BY_FILE_EXPLORER, null)
+    }
+
+    override fun gpxDetailsStartClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_GPX_START, null)
+    }
+
+    override fun gpxDetailsVisibilityClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_GPX_VISIBILITY, null)
+    }
+
+    override fun gpxDetailsShareClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_GPX_SHARE, null)
+    }
+
+    override fun gpxDetailsWaypointsOnlyImported() {
+        firebaseAnalytics.logEvent(EVENT_GPX_WAYPOINTS_ONLY_IMPORTED, null)
     }
 
     override fun onLayerSelected(layerType: LayerType) {

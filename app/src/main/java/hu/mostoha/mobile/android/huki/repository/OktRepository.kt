@@ -4,13 +4,11 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import io.ticofab.androidgpxparser.parser.GPXParser
 import javax.inject.Inject
 
 class OktRepository @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val layersDomainModelMapper: LayersDomainModelMapper,
+    @ApplicationContext private val context: Context
 ) {
 
     suspend fun getOktFullRoute(): List<Location> {
@@ -18,9 +16,12 @@ class OktRepository @Inject constructor(
 
         val gpx = GPXParser().parse(inputStream)
 
-        val gpxDetails = layersDomainModelMapper.mapGpxDetails("okt_complete", gpx)
-
-        return gpxDetails.locations
+        return gpx.tracks
+            .flatMap { it.trackSegments }
+            .flatMap { it.trackPoints }
+            .map { trackPoint ->
+                Location(trackPoint.latitude, trackPoint.longitude, trackPoint.elevation)
+            }
     }
 
 }

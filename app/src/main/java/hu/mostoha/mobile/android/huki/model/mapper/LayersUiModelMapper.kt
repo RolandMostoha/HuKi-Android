@@ -95,10 +95,9 @@ class LayersUiModelMapper @Inject constructor() {
             )
         }
 
-        val altitudeRange = gpxDetails.altitudeRange
-
         return GpxDetailsUiModel(
             id = gpxDetails.id,
+            fileUri = gpxDetails.fileUri,
             name = gpxDetails.fileName,
             geoPoints = geoPoints,
             waypoints = gpxWaypoints + edgeWaypoints,
@@ -117,10 +116,10 @@ class LayersUiModelMapper @Inject constructor() {
             } else {
                 null
             },
-            altitudeUiModel = if (altitudeRange.first != 0 && altitudeRange.second != 0) {
+            altitudeUiModel = if (gpxDetails.altitudeRange.first != 0 && gpxDetails.altitudeRange.second != 0) {
                 AltitudeUiModel(
-                    minAltitudeText = DistanceFormatter.format(altitudeRange.first),
-                    maxAltitudeText = DistanceFormatter.format(altitudeRange.second),
+                    minAltitudeText = DistanceFormatter.format(gpxDetails.altitudeRange.first),
+                    maxAltitudeText = DistanceFormatter.format(gpxDetails.altitudeRange.second),
                     uphillText = DistanceFormatter.format(gpxDetails.incline),
                     downhillText = DistanceFormatter.format(gpxDetails.decline),
                 )

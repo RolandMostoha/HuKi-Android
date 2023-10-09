@@ -5,6 +5,7 @@ import org.osmdroid.util.GeoPoint
 
 data class GpxDetailsUiModel(
     val id: String,
+    val fileUri: String,
     val name: String,
     val geoPoints: List<GeoPoint>,
     val waypoints: List<WaypointUiModel>,

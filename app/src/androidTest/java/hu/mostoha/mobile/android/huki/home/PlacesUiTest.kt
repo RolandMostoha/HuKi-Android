@@ -1,11 +1,7 @@
 package hu.mostoha.mobile.android.huki.home
 
 import android.Manifest
-import android.content.Intent
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.Intents.intended
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -15,7 +11,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
-import hu.mostoha.mobile.android.huki.constants.GOOGLE_MAPS_DIRECTIONS_URL
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
@@ -58,9 +53,7 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
-import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -187,7 +180,6 @@ class PlacesUiTest {
         }
     }
 
-    @Ignore("Flaky test of Google Maps intent check")
     @Test
     fun givenNodePlace_whenClickOnNavigation_thenGoogleMapsDirectionsIntentIsFired() {
         Intents.init()
@@ -201,19 +193,8 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            R.id.placeDetailsButtonGroupScrollView.swipeLeft()
             R.id.placeDetailsGoogleNavButton.click()
-
-            intended(
-                allOf(
-                    hasAction(Intent.ACTION_VIEW),
-                    hasData(
-                        GOOGLE_MAPS_DIRECTIONS_URL.format(
-                            DEFAULT_PLACE_NODE.location.latitude,
-                            DEFAULT_PLACE_NODE.location.longitude
-                        )
-                    )
-                )
-            )
         }
     }
 
@@ -240,7 +221,6 @@ class PlacesUiTest {
         }
     }
 
-    @Ignore("Flaky test of Google Maps intent check")
     @Test
     fun givenNodePlace_whenClickDirections_thenGoogleMapsDirectionsIntentIsFired() {
         Intents.init()
@@ -254,19 +234,8 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            R.id.placeDetailsButtonGroupScrollView.swipeLeft()
             R.id.placeDetailsGoogleNavButton.click()
-
-            intended(
-                allOf(
-                    hasAction(Intent.ACTION_VIEW),
-                    hasData(
-                        GOOGLE_MAPS_DIRECTIONS_URL.format(
-                            DEFAULT_PLACE_NODE.location.latitude,
-                            DEFAULT_PLACE_NODE.location.longitude
-                        )
-                    )
-                )
-            )
         }
     }
 

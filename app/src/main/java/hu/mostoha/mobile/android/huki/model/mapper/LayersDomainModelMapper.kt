@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class LayersDomainModelMapper @Inject constructor() {
 
-    fun mapGpxDetails(fileName: String, gpx: Gpx): GpxDetails {
+    fun mapGpxDetails(fileUri: String, fileName: String, gpx: Gpx): GpxDetails {
         if (gpx.tracks.isEmpty() && gpx.routes.isEmpty() && gpx.wayPoints.isEmpty()) {
             throw GpxParseFailedException(IllegalArgumentException("GPX must contain one track, route or waypoint"))
         }
@@ -49,6 +49,7 @@ class LayersDomainModelMapper @Inject constructor() {
 
         return GpxDetails(
             fileName = fileName,
+            fileUri = fileUri,
             locations = locations,
             gpxWaypoints = gpxWaypoints,
             distance = locations.calculateDistance(),
