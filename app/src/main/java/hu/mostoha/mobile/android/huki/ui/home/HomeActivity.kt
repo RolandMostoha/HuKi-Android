@@ -856,6 +856,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             onClick = {
                 analyticsService.oktChipClicked()
                 homeViewModel.loadOktRoutes()
+                layersViewModel.clearGpxDetails()
             }
         )
         landscapes.forEach { landscape ->
@@ -1108,6 +1109,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeViewModel.clearOktRoutes()
             }
         )
+        bottomSheets.showOnly(oktRoutesBottomSheet)
     }
 
     private fun initHikingRoutesBottomSheet(hikingRoutes: List<HikingRoutesItem>) {
