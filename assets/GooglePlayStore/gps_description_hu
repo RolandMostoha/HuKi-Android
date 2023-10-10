@@ -5,11 +5,9 @@ HuKi - A Magyar Túra app
 HuKi egy túra app, ami segítséget nyújthat a magyarországi túrázásaid során.
 
 # Long Description
-Magyar túra térkép túrázóknak és természetjáróknak.
+HuKi egy OpenStreetMap alapú túra térkép túrázóknak és természetjáróknak, ami felhasználja Magyar Túra réteget.
 
-HuKi egy OpenStreetMap alapú térkép, ami felhasználja Magyar Túra réteget és a hivatalos túraútvonalakat.
-
-Nem tartalmaz beépített túragyűjteményt, de a túra ajánló funkcióval a népszerű magyar gyűjteménykre navigál. A GPX importálás funkcióval pedig bármilyen letöltött GPX nyomvonal megjeleníthető.
+Segítségedre lehet, ha látni szeretnéd a közeledben lévő túraútvonalakat, éppen túrát tervezel vagy egy túragyűjteményből letöltött GPX nyomvonalon szeretnél elindulni.
 
 Az alkalmazást hobbiból fejlesztem szabadidőmben és különösen örülök a személyes visszajelzéseknek, a célom hogy másnak is hasznos legyen az app :)
 <a href="mailto:huki.app@gmail.com">huki.app@gmail.com</a>
@@ -32,7 +30,8 @@ HuKi-val külön kereshetsz Magyarország tájegységei közt, mint például B�
 A kéktúrázók számára elérhető egy dedikált funkció a HuKi-ban, ahol az OKT szakaszok megtekinthetőek. Az importált OKT GPX fájlból pedig a bélyegzőhelyeket is kiolvassa az app.
 
 - Közeli túraútvonalak és túraajánló
-HuKi túra app a tájegységhez és adott pozícióhoz is ajánl túraútvonalakat a népszerű túragyűjteményekből.
+HuKi a tájegységhez és adott pozícióhoz is ajánl túraútvonalakat a népszerű túragyűjteményekből.
+Nem tartalmaz beépített túragyűjteményt, de a GPX importálás funkcióval bármilyen cikkből, gyűjteményből letöltött GPX nyomvonal megjeleníthető.
 
 - Útvonaltervező
 Az útvonaltervező segítségével megtervezheted a túráid. A tervező mindig a hivatalos túraútvonalakat részesíti előnyben.
@@ -43,7 +42,7 @@ A GPX nyomvonalból az alkalmazás kiolvassa a magasságadatokat, az állomások
 
 - Offline mód
 Az app minden megtekintett térkép részletet eltárol egy adatbázisban, ami offline is használható.
-Csupán annyi a teendő, hogy ezeket előre be kell járni a térképen, ekkor az alkalmzás elmenti ezeket 14 napra.
+Csupán annyi a teendő, hogy ezeket előre be kell járni a térképen, ekkor az alkalmazás elmenti ezeket 14 napra.
 
 - Sötét mód támogatás
 
