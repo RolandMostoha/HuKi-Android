@@ -142,6 +142,6 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_PUBLISHER_SERVICE_ACCOUNT }}
           packageName: hu.mostoha.mobile.android.huki
           releaseFiles: ${{ env.ARTIFACT_PATHNAME_AAB }}
-          track: beta
+          track: production
           whatsNewDirectory: assets/GooglePlayStore/whatsnew
           mappingFile: app/build/outputs/mapping/release/mapping.txt
