@@ -140,6 +140,15 @@ fun @receiver:IdRes Int.clickWithSibling(@StringRes stringRes: Int) {
     ).perform(ViewActions.click())
 }
 
+fun @receiver:IdRes Int.clickWithSibling(text: String) {
+    onView(
+        allOf(
+            withId(this),
+            hasSibling(withText(text))
+        )
+    ).perform(ViewActions.click())
+}
+
 fun @receiver:IdRes Int.clickInPopup() {
     onView(withId(this))
         .inRoot(RootMatchers.isPlatformPopup())
@@ -190,6 +199,10 @@ fun @receiver:StringRes Int.doesNotExistWithContentDescription() {
 }
 
 fun @receiver:StringRes Int.clickWithContentDescription() {
+    onView(withContentDescription(this)).perform(ViewActions.click())
+}
+
+fun String.clickWithContentDescription() {
     onView(withContentDescription(this)).perform(ViewActions.click())
 }
 

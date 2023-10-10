@@ -37,7 +37,7 @@ class OktRoutesMapper @Inject constructor() {
                 }
 
                 OktRouteUiModel(
-                    id = oktRoute.id,
+                    oktId = oktRoute.id,
                     routeNumber = oktRoute.id.split("-").getOrElse(1) { "" },
                     routeName = oktRoute.name,
                     geoPoints = routeGeoPoints,

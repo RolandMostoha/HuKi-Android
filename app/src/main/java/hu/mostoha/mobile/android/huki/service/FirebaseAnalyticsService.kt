@@ -22,6 +22,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_OKT_CHIP = "select_okt_chip"
         private const val EVENT_SELECT_OKT_ROUTE = "select_okt_route"
         private const val EVENT_SELECT_OKT_ROUTE_LINK = "select_okt_link"
+        private const val EVENT_SELECT_OKT_ROUTE_EDGE_POINT = "select_okt_edge_point"
         private const val EVENT_OKT_GPX_IMPORTED = "okt_gpx_imported"
         private const val EVENT_SELECT_PLACE_DETAILS_HIKE_RECOMMENDER = "select_place_details_hike_recommender"
         private const val EVENT_SELECT_HIKE_RECOMMENDER_KIRANDULASTIPPEK = "select_kirandulastippek"
@@ -300,6 +301,12 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun oktRouteLinkClicked(oktId: String) {
         firebaseAnalytics.logEvent(EVENT_SELECT_OKT_ROUTE_LINK) {
+            param(PARAM_OKT_ID, oktId)
+        }
+    }
+
+    override fun oktRouteEdgePointClicked(oktId: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_ROUTE_EDGE_POINT) {
             param(PARAM_OKT_ID, oktId)
         }
     }

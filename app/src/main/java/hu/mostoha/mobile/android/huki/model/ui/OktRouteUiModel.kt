@@ -3,7 +3,7 @@ package hu.mostoha.mobile.android.huki.model.ui
 import org.osmdroid.util.GeoPoint
 
 data class OktRouteUiModel(
-    val id: String,
+    val oktId: String,
     val routeNumber: String,
     val routeName: String,
     val geoPoints: List<GeoPoint>,

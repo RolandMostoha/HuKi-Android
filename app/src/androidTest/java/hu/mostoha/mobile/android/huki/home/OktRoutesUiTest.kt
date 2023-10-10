@@ -29,10 +29,13 @@ import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithContentDescription
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.launchScenario
@@ -126,6 +129,67 @@ class OktRoutesUiTest {
             R.id.homeMapView.hasOverlay<OktPolyline>()
             R.id.homeMapView.hasOverlay<OktMarker>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
+        }
+    }
+
+    @Test
+    fun givenOktRoute_whenClickOnLink_thenOktWebPageRequested() {
+        launchScenario<HomeActivity> {
+            R.string.okt_routes_chip_label.clickWithText()
+
+            waitForMapClear()
+
+            "Írott-kő - Sárvár".clickWithText()
+
+            waitForMapClear()
+
+            testAppContext.getString(R.string.accessibility_okt_routes_action_button)
+                .format("OKT-01")
+                .clickWithContentDescription()
+
+            R.string.okt_routes_menu_action_details.clickWithTextInPopup()
+        }
+    }
+
+    @Test
+    fun givenOktRoute_whenClickOnStartPoint_thenPlaceDetailsDisplays() {
+        launchScenario<HomeActivity> {
+            R.string.okt_routes_chip_label.clickWithText()
+
+            waitForMapClear()
+
+            "Írott-kő - Sárvár".clickWithText()
+
+            waitForMapClear()
+
+            testAppContext.getString(R.string.accessibility_okt_routes_action_button)
+                .format("OKT-01")
+                .clickWithContentDescription()
+
+            R.string.okt_routes_menu_action_start_point.clickWithTextInPopup()
+
+            R.id.placeDetailsContentContainer.isDisplayed()
+        }
+    }
+
+    @Test
+    fun givenOktRoute_whenClickOnEndPoint_thenPlaceDetailsDisplays() {
+        launchScenario<HomeActivity> {
+            R.string.okt_routes_chip_label.clickWithText()
+
+            waitForMapClear()
+
+            "Írott-kő - Sárvár".clickWithText()
+
+            waitForMapClear()
+
+            testAppContext.getString(R.string.accessibility_okt_routes_action_button)
+                .format("OKT-01")
+                .clickWithContentDescription()
+
+            R.string.okt_routes_menu_action_start_point.clickWithTextInPopup()
+
+            R.id.placeDetailsContentContainer.isDisplayed()
         }
     }
 

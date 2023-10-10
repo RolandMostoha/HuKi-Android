@@ -1087,26 +1087,36 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             .withOffset(homeMapView, OffsetType.OKT_ROUTES)
 
         homeMapView.addOktRoute(
-            overlayId = selectedRoute.id,
+            overlayId = selectedRoute.oktId,
             oktRouteUiModel = selectedRoute,
             onClick = {
-                initOktRoutesBottomSheet(oktRoutes, selectedRoute.id)
+                initOktRoutesBottomSheet(oktRoutes, selectedRoute.oktId)
                 homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
             }
         )
 
-        initOktRoutesBottomSheet(oktRoutes, selectedRoute.id)
+        initOktRoutesBottomSheet(oktRoutes, selectedRoute.oktId)
 
         homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
     }
 
-    private fun initOktRoutesBottomSheet(oktRoutes: OktRoutesUiModel, id: String) {
+    private fun initOktRoutesBottomSheet(oktRoutes: OktRoutesUiModel, selectedOktId: String) {
         oktRoutesBottomSheet.init(
             oktRoutes = oktRoutes.routes,
-            selectedOktId = id,
+            selectedOktId = selectedOktId,
             onRouteClick = { oktId ->
-                analyticsService.oktRouteClicked(oktId)
                 homeViewModel.selectOktRoute(oktId)
+            },
+            onEdgePointClick = { message, geoPoint ->
+                val placeUiModel = PlaceUiModel(
+                    osmId = UUID.randomUUID().toString(),
+                    placeType = PlaceType.NODE,
+                    geoPoint = geoPoint,
+                    primaryText = message,
+                    secondaryText = LocationFormatter.format(geoPoint),
+                    iconRes = R.drawable.ic_hike_recommender_national_trails,
+                )
+                homeViewModel.loadPlace(placeUiModel)
             },
             onCloseClick = {
                 homeViewModel.clearOktRoutes()

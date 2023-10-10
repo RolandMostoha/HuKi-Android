@@ -49,7 +49,7 @@ class OktRoutesMapperTest {
                 mapGeoPoints = oktFullGeoPoints,
                 routes = listOf(
                     OktRouteUiModel(
-                        id = "OKT",
+                        oktId = "OKT",
                         routeNumber = "",
                         routeName = "Írott-kő - Hollóháza",
                         geoPoints = DEFAULT_GEO_POINTS,
@@ -79,7 +79,7 @@ class OktRoutesMapperTest {
                 mapGeoPoints = oktFullGeoPoints,
                 routes = listOf(
                     OktRouteUiModel(
-                        id = "OKT-01",
+                        oktId = "OKT-01",
                         routeNumber = "01",
                         routeName = "Írott-kő - Sárvár",
                         geoPoints = DEFAULT_GEO_POINTS_2,

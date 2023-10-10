@@ -47,7 +47,7 @@
     <dimen name="default_divider_height">1dp</dimen>
     <dimen name="default_tab_indicator_height">4dp</dimen>
     <dimen name="default_popup_menu_width">195dp</dimen>
-    <dimen name="default_popup_menu_width_with_header">240dp</dimen>
+    <dimen name="default_popup_menu_width_with_header">250dp</dimen>
 
     <dimen name="progress_fab_progress_bar_size_mini">46dp</dimen>
     <dimen name="progress_fab_progress_bar_size_normal">64dp</dimen>

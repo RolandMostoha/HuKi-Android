@@ -26,6 +26,8 @@
 
     <string name="place_details_my_location_text">Actual location</string>
     <string name="place_details_pick_location_text">Chosen location</string>
+    <string name="place_details_okt_start_template">%s - Starting point</string>
+    <string name="place_details_okt_end_template">%s - Ending point</string>
 
     <string name="hike_recommender_landscape_title_template">Hiking trails near %s</string>
     <string name="hike_recommender_place_title_template">Hiking trails around %s</string>
@@ -74,12 +76,6 @@
     <string name="route_planner_accessibility_add_waypoint">Add new waypoint</string>
     <string name="route_planner_accessibility_remove_waypoint">Remove waypoint</string>
     <string name="route_planner_accessibility_return_waypoint">Return to start position</string>
-
-    <string name="accessibility_home_fab_layers">Layers</string>
-    <string name="accessibility_home_fab_route_planner">Route planner</string>
-    <string name="accessibility_home_fab_my_location">My location</string>
-    <string name="accessibility_home_fab_settings">Settings</string>
-    <string name="accessibility_home_fab_gpx_history">GPX History</string>
 
     <string name="licences_osm_copyright_notice">© OpenStreetMap contributors</string>
     <string name="licences_title">Licenses</string>
@@ -135,6 +131,15 @@
     <string name="okt_routes_chip_label">OKT</string>
     <string name="okt_routes_bottom_sheet_title">OKT - National Blue Trail</string>
     <string name="okt_routes_menu_action_details">Details and GPX</string>
+    <string name="okt_routes_menu_action_start_point">Load starting point</string>
+    <string name="okt_routes_menu_action_end_point">Load ending point</string>
     <string name="okt_routes_item_prefix">OKT</string>
+
+    <string name="accessibility_home_fab_layers">Layers</string>
+    <string name="accessibility_home_fab_route_planner">Route planner</string>
+    <string name="accessibility_home_fab_my_location">My location</string>
+    <string name="accessibility_home_fab_settings">Settings</string>
+    <string name="accessibility_home_fab_gpx_history">GPX History</string>
+    <string name="accessibility_okt_routes_action_button">%s action button</string>
 
 </resources>

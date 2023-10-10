@@ -10,6 +10,8 @@ import com.skydoves.powermenu.MenuAnimation
 import com.skydoves.powermenu.OnMenuItemClickListener
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuHeaderBinding
+import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.views.PopupMenuAdapter
 
 fun Context.showPopupMenu(
@@ -18,7 +20,7 @@ fun Context.showPopupMenu(
     @DimenRes width: Int = R.dimen.default_popup_menu_width,
     showBackground: Boolean = false,
     showAtCenter: Boolean = false,
-    @StringRes headerTitle: Int? = null,
+    headerTitle: Message? = null,
 ) {
     val powerMenu = CustomPowerMenu.Builder(this, PopupMenuAdapter())
         .addItemList(actionItems.map { PopupMenuItem(it.popupMenuItem.titleId, it.popupMenuItem.iconId) })
@@ -38,7 +40,7 @@ fun Context.showPopupMenu(
 
     if (headerTitle != null) {
         val headerView = ViewPopupMenuHeaderBinding.inflate(inflater, null, false)
-        headerView.popupMenuHeaderTitle.text = getText(headerTitle)
+        headerView.popupMenuHeaderTitle.text = headerTitle.resolve(this)
         powerMenu.headerView = headerView.root
     }
 

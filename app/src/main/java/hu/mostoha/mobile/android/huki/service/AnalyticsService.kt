@@ -88,6 +88,8 @@ interface AnalyticsService {
 
     fun oktRouteLinkClicked(oktId: String)
 
+    fun oktRouteEdgePointClicked(oktId: String)
+
     fun oktGpxImported(fileName: String)
 
     fun copyrightClicked()

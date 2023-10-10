@@ -4,10 +4,12 @@ import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetOktRoutesBind
 import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.postMainDelayed
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
+import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.RECYCLERVIEW_SCROLL_DELAY
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
+import org.osmdroid.util.GeoPoint
 
 class OktRoutesBottomSheetDialog(
     private val binding: LayoutBottomSheetOktRoutesBinding,
@@ -20,18 +22,24 @@ class OktRoutesBottomSheetDialog(
         oktRoutes: List<OktRouteUiModel>,
         selectedOktId: String,
         onRouteClick: (String) -> Unit,
+        onEdgePointClick: (Message, GeoPoint) -> Unit,
         onCloseClick: () -> Unit,
     ) {
         postMain {
             with(binding) {
                 if (oktRoutesAdapter == null) {
                     oktRoutesAdapter = OktRoutesAdapter(
-                        onItemClick = { id ->
-                            onRouteClick.invoke(id)
+                        onItemClick = { oktId ->
+                            analyticsService.oktRouteClicked(oktId)
+                            onRouteClick.invoke(oktId)
                         },
                         onLinkClick = { oktId, link ->
                             analyticsService.oktRouteLinkClicked(oktId)
                             context.startUrlIntent(link)
+                        },
+                        onEdgePointClick = { oktId, message, geoPoint ->
+                            analyticsService.oktRouteEdgePointClicked(oktId)
+                            onEdgePointClick.invoke(message, geoPoint)
                         }
                     )
                     oktRoutesList.setHasFixedSize(true)

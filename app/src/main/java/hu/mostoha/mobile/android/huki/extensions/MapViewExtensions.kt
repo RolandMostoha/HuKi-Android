@@ -587,7 +587,7 @@ fun MapView.addOktRoute(
     oktRouteUiModel: OktRouteUiModel,
     onClick: () -> Unit,
 ) {
-    if (oktRouteUiModel.id != OKT_ID_FULL_ROUTE) {
+    if (oktRouteUiModel.oktId != OKT_ID_FULL_ROUTE) {
         addOktPolyline(
             overlayId = overlayId,
             geoPoints = oktRouteUiModel.geoPoints,

@@ -88,6 +88,8 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun oktRouteLinkClicked(oktId: String) = Unit
 
+    override fun oktRouteEdgePointClicked(oktId: String) = Unit
+
     override fun oktGpxImported(oktId: String) = Unit
 
     override fun copyrightClicked() = Unit

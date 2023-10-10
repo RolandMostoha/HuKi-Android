@@ -15,6 +15,7 @@ import hu.mostoha.mobile.android.huki.extensions.startGoogleMapsDirectionsIntent
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
@@ -125,7 +126,7 @@ class GpxDetailsBottomSheetDialog(
             width = R.dimen.default_popup_menu_width_with_header,
             showBackground = true,
             showAtCenter = true,
-            headerTitle = R.string.gpx_details_bottom_sheet_google_maps_header,
+            headerTitle = R.string.gpx_details_bottom_sheet_google_maps_header.toMessage(),
         )
     }
 

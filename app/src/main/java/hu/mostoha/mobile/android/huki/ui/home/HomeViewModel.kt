@@ -218,7 +218,7 @@ class HomeViewModel @Inject constructor(
 
             oktRoutesUiModel.copy(
                 routes = oktRoutesUiModel.routes.map { route ->
-                    route.copy(isSelected = route.id == oktId)
+                    route.copy(isSelected = route.oktId == oktId)
                 }
             )
         }
@@ -231,7 +231,7 @@ class HomeViewModel @Inject constructor(
             .map { oktRoute ->
                 val closestPoint = oktRoute.geoPoints.minBy { it.toLocation().distanceBetween(geoPoint.toLocation()) }
 
-                oktRoute.id to closestPoint
+                oktRoute.oktId to closestPoint
             }
             .minBy { it.second.toLocation().distanceBetween(geoPoint.toLocation()) }
             .first
