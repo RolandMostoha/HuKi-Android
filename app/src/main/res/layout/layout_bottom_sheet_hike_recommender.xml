@@ -20,6 +20,7 @@
         android:id="@+id/hikeRecommenderContentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
@@ -33,12 +34,12 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/hikeRecommenderNameText"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="@dimen/space_medium"
             android:layout_weight="1"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
             tools:text="Pilis-hegység" />
 
