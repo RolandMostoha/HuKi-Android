@@ -91,7 +91,11 @@ class MyLocationOverlay(
         }
 
         if (isCompassEnabled) {
-            location.bearing = orientationProvider.lastKnownOrientation
+            val lastKnownOrientation = orientationProvider.lastKnownOrientation
+
+            if (lastKnownOrientation in COMPASS_ORIENTATION_RANGE) {
+                location.bearing = lastKnownOrientation
+            }
         }
 
         super.setLocation(location)
