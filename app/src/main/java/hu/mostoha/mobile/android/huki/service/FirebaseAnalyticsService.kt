@@ -10,8 +10,6 @@ import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
-import hu.mostoha.mobile.android.huki.osmdroid.CounterProvider
-import org.osmdroid.tileprovider.util.Counters
 import javax.inject.Inject
 
 class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
@@ -65,7 +63,6 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_DELETE_GPX_HISTORY_ITEM = "delete_gpx_history_item"
         private const val EVENT_RENAME_GPX_HISTORY_ITEM = "rename_gpx_history_item"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
-        private const val EVENT_DESTROYED = "destroyed"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
@@ -74,10 +71,6 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_LOAD_HIKING_ROUTE_FOR = "load_hiking_route_for"
         private const val PARAM_SELECTED_HIKING_ROUTE_DETAILS = "selected_hiking_route_details"
         private const val PARAM_MAP_SCALE_PERCENTAGE = "map_scale_percentage"
-        private const val PARAM_TILE_DOWNLOAD_REQUEST_COUNTER = "tile_download_request_counter"
-        private const val PARAM_TILE_DOWNLOAD_OUT_OF_MEMORY = "tile_download_out_of_memory"
-        private const val PARAM_TILE_DOWNLOAD_ERRORS = "tile_download_errors"
-        private const val PARAM_TILE_CACHE_OUT_OF_MEMORY = "tile_cache_out_of_memory"
         private const val PARAM_IMPORTED_GPX_NAME = "imported_gpx_name"
         private const val PARAM_ROUTE_PLANNER_WAYPOINT_COUNT = "route_planner_waypoint_count"
         private const val PARAM_ROUTE_PLANNER_DISTANCE = "route_planner_distance"
@@ -319,15 +312,6 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun copyrightClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_COPYRIGHT, null)
-    }
-
-    override fun destroyed() {
-        firebaseAnalytics.logEvent(EVENT_DESTROYED) {
-            param(PARAM_TILE_DOWNLOAD_REQUEST_COUNTER, CounterProvider.tileDownloadRequestCounter.toLong())
-            param(PARAM_TILE_DOWNLOAD_OUT_OF_MEMORY, Counters.countOOM.toLong())
-            param(PARAM_TILE_DOWNLOAD_ERRORS, Counters.tileDownloadErrors.toLong())
-            param(PARAM_TILE_CACHE_OUT_OF_MEMORY, Counters.fileCacheOOM.toLong())
-        }
     }
 
 }

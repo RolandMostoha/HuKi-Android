@@ -94,6 +94,4 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun copyrightClicked() = Unit
 
-    override fun destroyed() = Unit
-
 }

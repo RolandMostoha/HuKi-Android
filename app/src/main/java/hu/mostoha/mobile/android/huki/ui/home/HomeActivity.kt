@@ -232,12 +232,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         super.onPause()
     }
 
-    override fun onStop() {
-        analyticsService.destroyed()
-
-        super.onStop()
-    }
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 

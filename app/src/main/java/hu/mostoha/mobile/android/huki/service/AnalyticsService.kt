@@ -94,6 +94,4 @@ interface AnalyticsService {
 
     fun copyrightClicked()
 
-    fun destroyed()
-
 }
