@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="home_fab_bottom_margin">@dimen/space_extra_extra_large</dimen>
+    <dimen name="home_fab_container_bottom_margin">@dimen/space_extra_extra_large</dimen>
 
     <dimen name="home_copyright_bottom_margin">@dimen/space_medium</dimen>
 

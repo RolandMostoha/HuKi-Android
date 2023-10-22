@@ -43,6 +43,7 @@ import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.PolyOverlayWithIW
 import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
+import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.advancedpolyline.ColorMappingCycle
 import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList
 import org.osmdroid.views.overlay.advancedpolyline.PolychromaticPaintList
@@ -660,6 +661,29 @@ fun MapView.addOktPolyline(
     }
 
     addOverlay(polyline, OverlayComparator)
+}
+
+fun MapView.addScaleBarOverlay() {
+    val context = this.context
+
+    val scaleBarOverlay = ScaleBarOverlay(this).apply {
+        setAlignBottom(true)
+        setScaleBarOffset(
+            context.resources.getDimensionPixelSize(R.dimen.space_large),
+            context.resources.getDimensionPixelSize(R.dimen.space_extra_huge)
+        )
+        setTextSize(context.resources.getDimensionPixelSize(R.dimen.text_size_extra_small).toFloat())
+        barPaint.apply {
+            color = context.getColor(R.color.colorMapOverlayText)
+        }
+        textPaint.apply {
+            isAntiAlias = true
+            color = context.getColor(R.color.colorMapOverlayText)
+            typeface = context.resources.getFont(R.font.opensans_semibold)
+        }
+    }
+
+    addOverlay(scaleBarOverlay, OverlayComparator)
 }
 
 fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {

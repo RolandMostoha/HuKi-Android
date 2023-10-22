@@ -22,9 +22,9 @@ import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
-import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayedContainsText
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayedWithText
 import hu.mostoha.mobile.android.huki.util.espresso.isFollowLocationEnabled
-import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.swipeDown
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -105,7 +105,7 @@ class MyLocationUiTest {
         answerTestLocationProvider()
 
         launchScenario<HomeActivity> {
-            R.id.homeAltitudeText.isDisplayed()
+            R.id.homeAltitudeText.isDisplayedContainsText("162 m")
         }
     }
 
@@ -117,7 +117,7 @@ class MyLocationUiTest {
         coEvery { asyncMyLocationProvider.getLocationFlow() } returns flowOf(location)
 
         launchScenario<HomeActivity> {
-            R.id.homeAltitudeText.isNotDisplayed()
+            R.id.homeAltitudeText.isDisplayedWithText("")
         }
     }
 

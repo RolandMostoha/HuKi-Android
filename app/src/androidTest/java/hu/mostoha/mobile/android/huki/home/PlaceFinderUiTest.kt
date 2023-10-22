@@ -44,11 +44,11 @@ import hu.mostoha.mobile.android.huki.util.espresso.clickImeActionButton
 import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasFocus
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoFocus
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayedWithText
 import hu.mostoha.mobile.android.huki.util.espresso.isKeyboardShown
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isSnackbarMessageDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
-import hu.mostoha.mobile.android.huki.util.espresso.withTextDisplayed
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -158,7 +158,7 @@ class PlaceFinderUiTest {
 
             R.id.homeSearchBarInput.clickImeActionButton()
 
-            R.id.homeSearchBarInput.withTextDisplayed("")
+            R.id.homeSearchBarInput.isDisplayedWithText("")
         }
     }
 

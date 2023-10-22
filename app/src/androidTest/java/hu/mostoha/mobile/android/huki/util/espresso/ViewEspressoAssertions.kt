@@ -27,6 +27,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -43,8 +44,12 @@ fun @receiver:IdRes Int.isNotCompletelyDisplayed() {
     onView(withId(this)).check(matches(not(isCompletelyDisplayed())))
 }
 
-fun @receiver:IdRes Int.withTextDisplayed(text: String) {
+fun @receiver:IdRes Int.isDisplayedWithText(text: String) {
     onView(withId(this)).check(matches(withText(text)))
+}
+
+fun @receiver:IdRes Int.isDisplayedContainsText(text: String) {
+    onView(withId(this)).check(matches(withText(containsString(text))))
 }
 
 fun @receiver:IdRes Int.typeText(text: String) {

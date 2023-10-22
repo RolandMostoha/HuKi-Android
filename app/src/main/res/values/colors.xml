@@ -14,6 +14,7 @@
     <color name="colorPrimaryTextStrong">#000000</color>
     <color name="colorPrimaryTextDisabled">#61262626</color>
     <color name="colorSecondaryText">#B3262626</color>
+    <color name="colorMapOverlayText">@color/colorSecondaryText</color>
     <color name="colorBackground">#ffffff</color>
     <color name="colorBackgroundLight">#F8F9FA</color>
     <color name="colorError">#c62828</color>

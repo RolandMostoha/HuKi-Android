@@ -45,6 +45,15 @@ fun TextView.setTextOrGone(text: String?) {
     }
 }
 
+fun TextView.setTextOrInvisible(text: String?) {
+    if (text == null) {
+        invisible()
+    } else {
+        visible()
+        this.text = text
+    }
+}
+
 fun TextView.hyperlinkStyle() {
     setText(
         SpannableString(text).apply {

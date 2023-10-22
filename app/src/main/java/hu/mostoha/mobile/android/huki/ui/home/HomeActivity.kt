@@ -43,6 +43,7 @@ import hu.mostoha.mobile.android.huki.extensions.addPolygon
 import hu.mostoha.mobile.android.huki.extensions.addPolyline
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerMarker
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerPolyline
+import hu.mostoha.mobile.android.huki.extensions.addScaleBarOverlay
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.generateLayerDrawable
@@ -61,7 +62,7 @@ import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
 import hu.mostoha.mobile.android.huki.extensions.removeOverlays
 import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
-import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
+import hu.mostoha.mobile.android.huki.extensions.setTextOrInvisible
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
 import hu.mostoha.mobile.android.huki.extensions.showErrorSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showOnly
@@ -279,6 +280,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
             addOnFirstLayoutListener { _, _, _, _, _ ->
                 initFlows()
+                homeMapView.addScaleBarOverlay()
                 pickLocationEventViewModel.updateEvent(PickLocationEvents.LocationPickEnabled)
             }
             setOnTouchListener { view, _ ->
@@ -564,7 +566,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         } else {
             null
         }
-        homeAltitudeText.setTextOrGone(altitudeText)
+        homeAltitudeText.setTextOrInvisible(altitudeText)
     }
 
     private fun initFlows() {
