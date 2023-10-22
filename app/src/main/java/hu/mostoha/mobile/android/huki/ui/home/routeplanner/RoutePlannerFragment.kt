@@ -253,7 +253,7 @@ class RoutePlannerFragment : Fragment() {
                 placeFinderViewModel.cancelSearch()
 
                 requireContext().showSnackbar(
-                    requireView(),
+                    binding.routePlannerContainer,
                     R.string.place_finder_pick_location_message.toMessage(),
                     R.drawable.ic_snackbar_place_finder_pick_location
                 )
