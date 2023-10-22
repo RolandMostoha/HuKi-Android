@@ -36,3 +36,9 @@
   <init>(...);
   <fields>;
 }
+
+-keepclassmembers class com.amazonaws.mobile.** {
+  <init>(...);
+  <fields>;
+}
+
