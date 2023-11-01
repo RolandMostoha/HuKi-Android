@@ -14,16 +14,16 @@ import org.osmdroid.views.overlay.TilesOverlay
  * Its ordinal represents the render order of the map.
  */
 enum class OverlayType {
-    LICENCES,
-    SCALE_BAR_OVERLAY,
     HIKING_LAYER,
-    MY_LOCATION,
     LANDSCAPE,
     OKT_ROUTES_BASE,
     OKT_ROUTES,
     PLACE_DETAILS,
     GPX,
     ROUTE_PLANNER,
+    MY_LOCATION,
+    LICENCES,
+    SCALE_BAR_OVERLAY,
     MAP_TOUCH_EVENTS,
     LOCATION_PICKER,
 }
