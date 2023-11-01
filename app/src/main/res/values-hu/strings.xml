@@ -99,7 +99,8 @@
     <string name="settings_github_title">GitHub repository:</string>
     <string name="settings_google_play_review_button">Google Play értékelés</string>
 
-    <string name="gpx_history_title">GPX Előzmények</string>
+    <string name="gpx_history_title">Előzmények</string>
+    <string name="gpx_history_tab_places">Helységek</string>
     <string name="gpx_history_tab_route_planner">Útvonaltervező</string>
     <string name="gpx_history_tab_external_gpx">Importált GPX</string>
     <string name="gpx_history_item_route_planner_empty">A létrehozott útvonalterveid itt fognak megjelenni a jövőben.</string>

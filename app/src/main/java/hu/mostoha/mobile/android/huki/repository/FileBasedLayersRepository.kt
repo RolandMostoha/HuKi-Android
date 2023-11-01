@@ -36,7 +36,6 @@ class FileBasedLayersRepository @Inject constructor(
         return context.resources.readRawJson(R.raw.hiking_layer_tile_zoom_ranges)
     }
 
-    @Suppress("TooGenericExceptionCaught")
     override suspend fun getGpxDetails(fileUri: Uri?): GpxDetails {
         Timber.d("Importing GPX by URI: $fileUri")
 

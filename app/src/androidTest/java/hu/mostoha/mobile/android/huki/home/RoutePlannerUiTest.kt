@@ -94,6 +94,10 @@ class RoutePlannerUiTest {
 
     @BindValue
     @JvmField
+    val geocodingRepository: GeocodingRepository = mockk()
+
+    @BindValue
+    @JvmField
     val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @BindValue
@@ -111,7 +115,7 @@ class RoutePlannerUiTest {
         Intents.init()
 
         answerTestLocationProvider()
-        coEvery { placesRepository.getPlacesBy(any(), any()) } returns listOf(
+        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns listOf(
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_WAY,
             DEFAULT_PLACE_RELATION
@@ -303,6 +307,33 @@ class RoutePlannerUiTest {
     @Test
     fun givenMyLocation_whenAddMyLocationWaypoint_thenRoutePlanUpdates() {
         launchScenario<HomeActivity> {
+            coEvery { geocodingRepository.getPlace(any()) } returns null
+
+            val waypointName1 = "Dobogoko"
+
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, click()))
+            R.string.place_finder_my_location_button.clickWithTextInPopup()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.routePlannerRouteAttributesContainer.isDisplayed()
+            "13 km".isTextDisplayed()
+            "500 m".isTextDisplayed()
+            "200 m".isTextDisplayed()
+            "01:40".isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenMyLocationWithGeocoding_whenAddMyLocationWaypoint_thenRoutePlanUpdates() {
+        launchScenario<HomeActivity> {
+            coEvery { geocodingRepository.getPlace(any()) } returns DEFAULT_PLACE_NODE
+
             val waypointName1 = "Dobogoko"
 
             R.id.homeRoutePlannerFab.click()

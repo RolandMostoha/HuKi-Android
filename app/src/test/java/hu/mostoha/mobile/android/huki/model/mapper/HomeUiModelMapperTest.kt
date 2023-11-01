@@ -43,10 +43,10 @@ class HomeUiModelMapperTest {
     private val mapper = HomeUiModelMapper()
 
     @Test
-    fun `Given node place UI model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
+    fun `Given node place UI model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
         val placeUiModel = DEFAULT_PLACE_UI_MODEL
 
-        val placeDetails = mapper.generatePlaceDetails(placeUiModel)
+        val placeDetails = mapper.mapPlaceDetails(placeUiModel)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -57,13 +57,13 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given node geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
+    fun `Given node geometry domain model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
         val geometry = Geometry.Node(
             osmId = DEFAULT_PLACE_UI_MODEL.osmId,
             location = DEFAULT_PLACE_UI_MODEL.geoPoint.toLocation()
         )
 
-        val placeDetails = mapper.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
+        val placeDetails = mapper.mapPlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -74,10 +74,10 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given way geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
+    fun `Given way geometry domain model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
         val geometry = DEFAULT_OPEN_WAY_GEOMETRY
 
-        val placeDetails = mapper.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
+        val placeDetails = mapper.mapPlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -92,10 +92,10 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given closed way geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
+    fun `Given closed way geometry domain model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
         val geometry = DEFAULT_CLOSED_WAY_GEOMETRY
 
-        val placeDetails = mapper.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
+        val placeDetails = mapper.mapPlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -110,10 +110,10 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given relation geometry domain model, when generatePlaceDetails, then correct PlaceDetailsUiModel returns`() {
+    fun `Given relation geometry domain model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
         val geometry = DEFAULT_CLOSED_RELATION_GEOMETRY
 
-        val placeDetails = mapper.generatePlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
+        val placeDetails = mapper.mapPlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
 
         assertThat(placeDetails).isEqualTo(
             PlaceDetailsUiModel(
@@ -132,10 +132,10 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given landscape domain model, when generateLandscapes, then correct LandscapeUiModel returns`() {
+    fun `Given landscape domain model, when mapLandscapes, then correct LandscapeUiModel returns`() {
         val landscape = DEFAULT_LANDSCAPE
 
-        val places = mapper.generateLandscapes(listOf(landscape))
+        val places = mapper.mapLandscapes(listOf(landscape))
 
         assertThat(places).isEqualTo(
             listOf(
@@ -152,13 +152,13 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given landscape domain model with null kirandulastippek and termeszetjaro tag, when generateLandscapes, then correct LandscapeUiModel returns with default URL`() {
+    fun `Given landscape domain model with null kirandulastippek and termeszetjaro tag, when mapLandscapes, then correct LandscapeUiModel returns with default URL`() {
         val landscape = DEFAULT_LANDSCAPE.copy(
             kirandulastippekTag = null,
             termeszetjaroTag = null,
         )
 
-        val places = mapper.generateLandscapes(listOf(landscape))
+        val places = mapper.mapLandscapes(listOf(landscape))
 
         assertThat(places).isEqualTo(
             listOf(
@@ -175,11 +175,11 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given landscape ui model and geometry, when generateLandscapeDetails, then correct LandscapeDetailSUiModel returns`() {
+    fun `Given landscape ui model and geometry, when mapLandscapeDetails, then correct LandscapeDetailSUiModel returns`() {
         val landscape = DEFAULT_LANDSCAPE
-        val landscapeUiModel = mapper.generateLandscapes(listOf(landscape)).first()
+        val landscapeUiModel = mapper.mapLandscapes(listOf(landscape)).first()
 
-        val places = mapper.generateLandscapeDetails(landscapeUiModel, DEFAULT_CLOSED_WAY_GEOMETRY)
+        val places = mapper.mapLandscapeDetails(landscapeUiModel, DEFAULT_CLOSED_WAY_GEOMETRY)
 
         assertThat(places).isEqualTo(
             LandscapeDetailsUiModel(
@@ -198,7 +198,7 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given hiking route domain models, when generateHikingRoutes, then correct HikingRoutesItem returns`() {
+    fun `Given hiking route domain models, when mapHikingRoutes, then correct HikingRoutesItem returns`() {
         val placeName = DEFAULT_HIKING_ROUTE_NAME
         val hikingRoute = HikingRoute(
             osmId = DEFAULT_HIKING_ROUTE_OSM_ID,
@@ -206,7 +206,7 @@ class HomeUiModelMapperTest {
             symbolType = SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL)
         )
 
-        val hikingRouteItems = mapper.generateHikingRoutes(placeName, listOf(hikingRoute))
+        val hikingRouteItems = mapper.mapHikingRoutes(placeName, listOf(hikingRoute))
 
         assertThat(hikingRouteItems).isEqualTo(
             listOf(
@@ -223,10 +223,10 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given empty hiking route domain models, when generateHikingRoutes, then empty HikingRoutesItem with header returns`() {
+    fun `Given empty hiking route domain models, when mapHikingRoutes, then empty HikingRoutesItem with header returns`() {
         val placeName = DEFAULT_HIKING_ROUTE_NAME
 
-        val hikingRouteItems = mapper.generateHikingRoutes(placeName, emptyList())
+        val hikingRouteItems = mapper.mapHikingRoutes(placeName, emptyList())
 
         assertThat(hikingRouteItems).isEqualTo(
             listOf(
@@ -237,7 +237,7 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given hiking route details domain model with not relation geometry, when generateHikingRouteDetails, then error throws`() {
+    fun `Given hiking route details domain model with not relation geometry, when mapHikingRouteDetails, then error throws`() {
         val hikingRoute = HikingRouteUiModel(
             osmId = DEFAULT_HIKING_ROUTE_OSM_ID,
             name = DEFAULT_HIKING_ROUTE_NAME,
@@ -249,12 +249,12 @@ class HomeUiModelMapperTest {
         )
 
         assertThrows(IllegalStateException::class.java) {
-            mapper.generateHikingRouteDetails(hikingRoute, geometry)
+            mapper.mapHikingRouteDetails(hikingRoute, geometry)
         }
     }
 
     @Test
-    fun `Given hiking route details domain model, when generateHikingRouteDetails, then correct PlaceDetailsUiModel returns`() {
+    fun `Given hiking route details domain model, when mapHikingRouteDetails, then correct PlaceDetailsUiModel returns`() {
         val hikingRoute = HikingRouteUiModel(
             osmId = DEFAULT_HIKING_ROUTE_OSM_ID,
             name = DEFAULT_HIKING_ROUTE_NAME,
@@ -276,10 +276,10 @@ class HomeUiModelMapperTest {
             )
         )
 
-        val placeDetailsUiModel = mapper.generateHikingRouteDetails(hikingRoute, geometry)
+        val placeDetailsUiModel = mapper.mapHikingRouteDetails(hikingRoute, geometry)
 
         assertThat(placeDetailsUiModel).isEqualTo(
-            mapper.generatePlaceDetails(
+            mapper.mapPlaceDetails(
                 PlaceUiModel(
                     osmId = hikingRoute.osmId,
                     primaryText = hikingRoute.name.toMessage(),

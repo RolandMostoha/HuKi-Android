@@ -15,11 +15,11 @@ import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
 import hu.mostoha.mobile.android.huki.network.PhotonService
 import hu.mostoha.mobile.android.huki.network.adapter.SymbolTypeAdapter
+import hu.mostoha.mobile.android.huki.network.interceptor.TimeoutInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -46,8 +46,7 @@ class NetworkModule {
                     level = HttpLoggingInterceptor.Level.BODY
                 }
             )
-            .readTimeout(NetworkConfig.TIMEOUT_SEC.toLong(), TimeUnit.SECONDS)
-            .connectTimeout(NetworkConfig.TIMEOUT_SEC.toLong(), TimeUnit.SECONDS)
+            .addInterceptor(TimeoutInterceptor())
             .build()
     }
 

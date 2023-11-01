@@ -26,6 +26,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.MapnikTileSource
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
@@ -82,6 +83,10 @@ class LayersUiTest {
     @BindValue
     @JvmField
     val placesRepository: PlacesRepository = mockk()
+
+    @BindValue
+    @JvmField
+    val geocodingRepository: GeocodingRepository = mockk()
 
     @BindValue
     @JvmField

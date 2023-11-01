@@ -6,7 +6,6 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
-import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
@@ -30,7 +29,10 @@ import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.OktRepository
+import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH
@@ -72,7 +74,9 @@ class HomeViewModelTest {
     private lateinit var viewModel: HomeViewModel
 
     private val exceptionLogger = mockk<ExceptionLogger>()
-    private val placesInteractor = mockk<PlacesInteractor>()
+    private val analyticsService = mockk<AnalyticsService>()
+    private val placesRepository = mockk<PlacesRepository>()
+    private val geocodingRepository = mockk<GeocodingRepository>()
     private val landscapeInteractor = mockk<LandscapeInteractor>()
     private val oktRepository = mockk<OktRepository>()
     private val myLocationProvider = mockk<AsyncMyLocationProvider>()
@@ -92,7 +96,9 @@ class HomeViewModelTest {
         viewModel = HomeViewModel(
             mainCoroutineRule.testDispatcher,
             exceptionLogger,
-            placesInteractor,
+            analyticsService,
+            placesRepository,
+            geocodingRepository,
             oktRepository,
             landscapeInteractor,
             homeUiModelMapper,
@@ -107,7 +113,7 @@ class HomeViewModelTest {
             val landscapesUiModels = listOf(DEFAULT_LANDSCAPE_UI_MODEL)
 
             every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
-            every { homeUiModelMapper.generateLandscapes(any()) } returns landscapesUiModels
+            every { homeUiModelMapper.mapLandscapes(any()) } returns landscapesUiModels
 
             viewModel.landscapes.test {
                 viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
@@ -146,7 +152,7 @@ class HomeViewModelTest {
         runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
-            every { homeUiModelMapper.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+            every { homeUiModelMapper.mapPlaceDetails(placeUiModel) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadPlace(placeUiModel)
@@ -161,7 +167,7 @@ class HomeViewModelTest {
         runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
-            every { homeUiModelMapper.generatePlaceDetails(placeUiModel) } returns placeDetailsUiModel
+            every { homeUiModelMapper.mapPlaceDetails(placeUiModel) } returns placeDetailsUiModel
 
             viewModel.myLocationUiModel.test {
                 viewModel.loadPlace(placeUiModel)
@@ -178,8 +184,8 @@ class HomeViewModelTest {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
-            every { placesInteractor.requestGeometryFlow(osmId, PlaceType.NODE) } returns flowOf(geometry)
-            every { homeUiModelMapper.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
+            coEvery { placesRepository.getGeometry(osmId, PlaceType.NODE) } returns geometry
+            every { homeUiModelMapper.mapPlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadPlaceDetails(placeUiModel)
@@ -196,8 +202,8 @@ class HomeViewModelTest {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
-            every { placesInteractor.requestGeometryFlow(osmId, PlaceType.NODE) } returns flowOf(geometry)
-            every { homeUiModelMapper.generatePlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
+            coEvery { placesRepository.getGeometry(osmId, PlaceType.NODE) } returns geometry
+            every { homeUiModelMapper.mapPlaceDetails(placeUiModel, geometry) } returns placeDetailsUiModel
 
             viewModel.myLocationUiModel.test {
                 viewModel.loadPlaceDetails(placeUiModel)
@@ -212,9 +218,9 @@ class HomeViewModelTest {
         runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val errorRes = R.string.error_message_too_many_requests.toMessage()
-            every {
-                placesInteractor.requestGeometryFlow(placeUiModel.osmId, placeUiModel.placeType)
-            } returns flowOfError(DomainException(errorRes))
+            coEvery {
+                placesRepository.getGeometry(placeUiModel.osmId, placeUiModel.placeType)
+            } throws DomainException(errorRes)
 
             viewModel.errorMessage.test {
                 viewModel.loadPlaceDetails(placeUiModel)
@@ -230,8 +236,8 @@ class HomeViewModelTest {
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             val hikingRouteUiModels = listOf(HikingRoutesItem.Item(DEFAULT_HIKING_ROUTE_UI_MODEL))
-            every { placesInteractor.requestGetHikingRoutesFlow(boundingBox) } returns flowOf(hikingRoutes)
-            every { homeUiModelMapper.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
+            coEvery { placesRepository.getHikingRoutes(boundingBox) } returns hikingRoutes
+            every { homeUiModelMapper.mapHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
 
             viewModel.hikingRoutes.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
@@ -247,9 +253,7 @@ class HomeViewModelTest {
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
             val errorRes = R.string.error_message_too_many_requests.toMessage()
-            every {
-                placesInteractor.requestGetHikingRoutesFlow(boundingBox)
-            } returns flowOfError(DomainException(errorRes))
+            coEvery { placesRepository.getHikingRoutes(boundingBox) } throws DomainException(errorRes)
 
             viewModel.errorMessage.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
@@ -265,9 +269,9 @@ class HomeViewModelTest {
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
-            every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
+            coEvery { placesRepository.getGeometry(osmId, any()) } returns geometry
             every {
-                homeUiModelMapper.generateHikingRouteDetails(
+                homeUiModelMapper.mapHikingRouteDetails(
                     hikingRouteUiModel,
                     geometry
                 )
@@ -288,9 +292,9 @@ class HomeViewModelTest {
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
-            every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
+            coEvery { placesRepository.getGeometry(osmId, any()) } returns geometry
             every {
-                homeUiModelMapper.generateHikingRouteDetails(
+                homeUiModelMapper.mapHikingRouteDetails(
                     hikingRouteUiModel,
                     geometry
                 )
@@ -315,15 +319,15 @@ class HomeViewModelTest {
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             val placeDetailsUiModel = DEFAULT_HIKING_ROUTE_DETAILS_UI_MODEL
-            every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOf(geometry)
+            coEvery { placesRepository.getGeometry(osmId, any()) } returns geometry
             every {
-                homeUiModelMapper.generateHikingRouteDetails(
+                homeUiModelMapper.mapHikingRouteDetails(
                     hikingRouteUiModel,
                     geometry
                 )
             } returns placeDetailsUiModel
-            every { placesInteractor.requestGetHikingRoutesFlow(any()) } returns flowOf(hikingRoutes)
-            every { homeUiModelMapper.generateHikingRoutes(any(), any()) } returns hikingRouteUiModels
+            coEvery { placesRepository.getHikingRoutes(any()) } returns hikingRoutes
+            every { homeUiModelMapper.mapHikingRoutes(any(), any()) } returns hikingRouteUiModels
 
             viewModel.hikingRoutes.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
@@ -341,7 +345,7 @@ class HomeViewModelTest {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val errorRes = R.string.error_message_too_many_requests.toMessage()
-            every { placesInteractor.requestGeometryFlow(osmId, any()) } returns flowOfError(DomainException(errorRes))
+            coEvery { placesRepository.getGeometry(osmId, any()) } throws DomainException(errorRes)
 
             viewModel.errorMessage.test {
                 viewModel.loadHikingRouteDetails(hikingRouteUiModel)
@@ -433,8 +437,8 @@ class HomeViewModelTest {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
             val placeDetailsUiModel = DEFAULT_PLACE_DETAILS_UI_MODEL
             val geometry = Geometry.Node(placeUiModel.osmId, Location(47.7193842, 18.8962014))
-            every { placesInteractor.requestGeometryFlow(any(), any()) } returns flowOf(geometry)
-            every { homeUiModelMapper.generatePlaceDetails(any(), any()) } returns placeDetailsUiModel
+            coEvery { placesRepository.getGeometry(any(), any()) } returns geometry
+            every { homeUiModelMapper.mapPlaceDetails(any(), any()) } returns placeDetailsUiModel
 
             viewModel.placeDetails.test {
                 viewModel.loadPlaceDetails(placeUiModel)
@@ -453,8 +457,8 @@ class HomeViewModelTest {
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             val hikingRouteUiModels = listOf(HikingRoutesItem.Item(DEFAULT_HIKING_ROUTE_UI_MODEL))
-            every { placesInteractor.requestGetHikingRoutesFlow(boundingBox) } returns flowOf(hikingRoutes)
-            every { homeUiModelMapper.generateHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
+            coEvery { placesRepository.getHikingRoutes(boundingBox) } returns hikingRoutes
+            every { homeUiModelMapper.mapHikingRoutes(placeName, hikingRoutes) } returns hikingRouteUiModels
 
             viewModel.hikingRoutes.test {
                 viewModel.loadHikingRoutes(placeName, boundingBox)
@@ -471,7 +475,7 @@ class HomeViewModelTest {
         val landscapeUiModels = listOf(DEFAULT_LANDSCAPE_UI_MODEL)
 
         every { landscapeInteractor.requestGetLandscapesFlow() } returns flowOf(landscapes)
-        every { homeUiModelMapper.generateLandscapes(any()) } returns landscapeUiModels
+        every { homeUiModelMapper.mapLandscapes(any()) } returns landscapeUiModels
     }
 
     private fun mockOktRoutes() {

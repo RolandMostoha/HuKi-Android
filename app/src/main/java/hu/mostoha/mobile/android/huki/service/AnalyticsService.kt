@@ -92,6 +92,10 @@ interface AnalyticsService {
 
     fun oktGpxImported(fileName: String)
 
+    fun myLocationPlaceRequested()
+
+    fun pickLocationPlaceRequested()
+
     fun copyrightClicked()
 
 }

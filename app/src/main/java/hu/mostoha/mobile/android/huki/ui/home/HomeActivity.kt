@@ -76,6 +76,7 @@ import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
 import hu.mostoha.mobile.android.huki.extensions.zoomToBoundingBoxPostMain
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
+import hu.mostoha.mobile.android.huki.model.domain.PlaceRequestType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.domain.toDomain
@@ -110,7 +111,7 @@ import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.gpx.GpxDetailsBottomSheetDialog
-import hu.mostoha.mobile.android.huki.ui.home.gpx.history.GpxHistoryFragment
+import hu.mostoha.mobile.android.huki.ui.home.gpx.history.HistoryFragment
 import hu.mostoha.mobile.android.huki.ui.home.hikerecommender.HikeRecommenderBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
@@ -341,23 +342,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     isLocationPermissionGranted() -> {
                         lifecycleScope.launch {
                             val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()
+                                ?.toLocation()
+                                ?.toGeoPoint()
                             if (lastKnownLocation == null) {
                                 showErrorSnackbar(
                                     homeContainer,
                                     R.string.place_finder_my_location_error_null_location.toMessage(),
                                 )
-                                return@launch
+                            } else {
+                                homeViewModel.loadPlace(lastKnownLocation, PlaceRequestType.MY_LOCATION)
                             }
-                            val lastKnownGeoPoint = lastKnownLocation.toLocation().toGeoPoint()
-                            val placeUiModel = PlaceUiModel(
-                                osmId = UUID.randomUUID().toString(),
-                                placeType = PlaceType.NODE,
-                                geoPoint = lastKnownGeoPoint,
-                                primaryText = LocationFormatter.format(lastKnownGeoPoint),
-                                secondaryText = R.string.place_details_my_location_text.toMessage(),
-                                iconRes = R.drawable.ic_place_type_node,
-                            )
-                            homeViewModel.loadPlace(placeUiModel)
                         }
                     }
                     shouldShowLocationRationale() -> {
@@ -420,7 +414,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         homeLayersFab.setOnClickListener {
             homeViewModel.clearFollowLocation()
-
             LayersBottomSheetDialogFragment().show(supportFragmentManager, LayersBottomSheetDialogFragment.TAG)
         }
         homeSettingsFab.setOnClickListener {
@@ -430,7 +423,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeGpxHistoryFab.setOnClickListener {
             analyticsService.gpxHistoryClicked()
             homeViewModel.clearFollowLocation()
-            supportFragmentManager.addFragment(R.id.homeFragmentContainer, GpxHistoryFragment::class.java)
+            supportFragmentManager.addFragment(R.id.homeFragmentContainer, HistoryFragment::class.java)
         }
     }
 
@@ -769,15 +762,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeMapView.addLocationPickerMarker(
                         geoPoint = geoPoint,
                         onSaveClick = {
-                            val placeUiModel = PlaceUiModel(
-                                osmId = UUID.randomUUID().toString(),
-                                placeType = PlaceType.NODE,
-                                geoPoint = geoPoint,
-                                primaryText = LocationFormatter.format(geoPoint),
-                                secondaryText = R.string.place_details_pick_location_text.toMessage(),
-                                iconRes = R.drawable.ic_place_type_node,
-                            )
-                            homeViewModel.loadPlace(placeUiModel)
+                            homeViewModel.loadPlace(geoPoint, PlaceRequestType.PICKED_LOCATION)
                         },
                     )
                 }
@@ -1109,7 +1094,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     placeType = PlaceType.NODE,
                     geoPoint = geoPoint,
                     primaryText = message,
-                    secondaryText = LocationFormatter.format(geoPoint),
+                    secondaryText = LocationFormatter.formatText(geoPoint),
                     iconRes = R.drawable.ic_hike_recommender_national_trails,
                 )
                 homeViewModel.loadPlace(placeUiModel)

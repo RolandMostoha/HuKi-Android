@@ -24,9 +24,9 @@ import org.junit.Test
 import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
-class GpxHistoryViewModelTest {
+class HistoryViewModelTest {
 
-    private lateinit var viewModel: GpxHistoryViewModel
+    private lateinit var viewModel: HistoryViewModel
 
     private val exceptionLogger = mockk<ExceptionLogger>()
     private val layersRepository = mockk<LayersRepository>()
@@ -48,7 +48,7 @@ class GpxHistoryViewModelTest {
             externalGpxList = emptyList()
         )
 
-        viewModel = GpxHistoryViewModel(
+        viewModel = HistoryViewModel(
             exceptionLogger,
             layersRepository,
             GpxHistoryUiModelMapper(),
@@ -91,7 +91,7 @@ class GpxHistoryViewModelTest {
 
         runTestDefault {
             viewModel.gpxHistoryAdapterItems.test {
-                viewModel.tabSelected(GpxHistoryTab.EXTERNAL)
+                viewModel.tabSelected(HistoryTab.EXTERNAL)
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(
@@ -111,7 +111,7 @@ class GpxHistoryViewModelTest {
     fun `When select external tab, then empty external items are emitted`() {
         runTestDefault {
             viewModel.gpxHistoryAdapterItems.test {
-                viewModel.tabSelected(GpxHistoryTab.EXTERNAL)
+                viewModel.tabSelected(HistoryTab.EXTERNAL)
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(listOf(DEFAULT_ROUTE_PLANNER_GPX_HISTORY_ITEM))

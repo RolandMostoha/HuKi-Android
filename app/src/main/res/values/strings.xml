@@ -107,7 +107,8 @@
     <string name="settings_google_play_review_button">Google Play review</string>
     <string name="settings_google_play_review_url" translatable="false">https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki</string>
 
-    <string name="gpx_history_title">GPX History</string>
+    <string name="gpx_history_title">History</string>
+    <string name="gpx_history_tab_places">Places</string>
     <string name="gpx_history_tab_route_planner">Route Planner</string>
     <string name="gpx_history_tab_external_gpx">External GPX</string>
     <string name="gpx_history_item_route_planner_empty">Your created route plans will be listed here in the future.</string>

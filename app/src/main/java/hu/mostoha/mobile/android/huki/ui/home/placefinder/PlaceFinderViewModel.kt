@@ -4,12 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.configuration.AppConfiguration
-import hu.mostoha.mobile.android.huki.interactor.PlacesInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationException
+import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
+import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceFinderUiModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -27,9 +29,10 @@ import javax.inject.Inject
 @HiltViewModel
 class PlaceFinderViewModel @Inject constructor(
     private val appConfiguration: AppConfiguration,
-    private val placesInteractor: PlacesInteractor,
+    private val exceptionLogger: ExceptionLogger,
     private val myLocationProvider: AsyncMyLocationProvider,
-    private val placeFinderUiModelMapper: PlaceFinderUiModelMapper
+    private val geocodingRepository: GeocodingRepository,
+    private val placeFinderUiModelMapper: PlaceFinderUiModelMapper,
 ) : ViewModel() {
 
     private var loadPlacesJob: Job? = null
@@ -51,7 +54,10 @@ class PlaceFinderViewModel @Inject constructor(
         loadPlacesJob = viewModelScope.launch {
             val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation()
 
-            placesInteractor.requestGetPlacesByFlow(searchText, lastKnownLocation)
+            flowWithExceptions(
+                request = { geocodingRepository.getPlacesBy(searchText, lastKnownLocation) },
+                exceptionLogger = exceptionLogger
+            )
                 .map { placeFinderUiModelMapper.mapPlaceFinderItems(it, lastKnownLocation) }
                 .onEach { _placeFinderItems.emit(it) }
                 .catch { throwable ->

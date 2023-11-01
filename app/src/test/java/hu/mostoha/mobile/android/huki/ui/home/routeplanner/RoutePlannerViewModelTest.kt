@@ -14,6 +14,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
@@ -51,6 +52,7 @@ class RoutePlannerViewModelTest {
 
     private val exceptionLogger = mockk<ExceptionLogger>()
     private val routePlannerRepository = mockk<RoutePlannerRepository>()
+    private val geocodingRepository = mockk<GeocodingRepository>()
     private val routePlannerUiModelMapper = RoutePlannerUiModelMapper()
     private val myLocationProvider = mockk<AsyncMyLocationProvider>()
     private val analyticsService = mockk<AnalyticsService>(relaxed = true)
@@ -65,10 +67,11 @@ class RoutePlannerViewModelTest {
             mainCoroutineRule.testDispatcher,
             mainCoroutineRule.testDispatcher,
             exceptionLogger,
-            routePlannerRepository,
-            routePlannerUiModelMapper,
-            myLocationProvider,
             analyticsService,
+            myLocationProvider,
+            routePlannerRepository,
+            geocodingRepository,
+            routePlannerUiModelMapper,
         )
     }
 
@@ -235,11 +238,13 @@ class RoutePlannerViewModelTest {
 
                 viewModel.removeWaypoint(viewModel.waypointItems.value[0])
 
-                listOf(
-                    WaypointItem(
-                        id = viewModel.waypointItems.value[0].id,
-                        order = 0,
-                        waypointType = WaypointType.START
+                assertThat(awaitItem()).isEqualTo(
+                    listOf(
+                        WaypointItem(
+                            id = viewModel.waypointItems.value[0].id,
+                            order = 0,
+                            waypointType = WaypointType.START
+                        )
                     )
                 )
             }
@@ -261,7 +266,7 @@ class RoutePlannerViewModelTest {
 
                 viewModel.swapWaypoints(viewModel.waypointItems.value[0], viewModel.waypointItems.value[1])
 
-                listOf(
+                assertThat(awaitItem()).isEqualTo(
                     listOf(
                         WaypointItem(
                             id = viewModel.waypointItems.value[0].id,

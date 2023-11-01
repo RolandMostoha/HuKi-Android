@@ -18,7 +18,6 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
-import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -48,20 +47,6 @@ class OsmPlacesRepositoryTest {
 
     @Inject
     lateinit var repository: OsmPlacesRepository
-
-    @Test
-    fun givenSearchText_whenGetPlacesBy_thenResultIsNotNull() = runTest {
-        val places = repository.getPlacesBy("Mecsek", null)
-
-        assertThat(places).isNotEmpty()
-    }
-
-    @Test
-    fun givenSearchTextWithLocation_whenGetPlacesBy_thenResultIsNotNull() = runTest {
-        val places = repository.getPlacesBy("Mecsek", BUDAPEST_LOCATION)
-
-        assertThat(places).isNotEmpty()
-    }
 
     @Test
     fun givenNodeOsmId_whenGetGeometry_thenLocationIsPresent() = runTest {

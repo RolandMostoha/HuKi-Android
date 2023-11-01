@@ -22,6 +22,7 @@ import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
@@ -99,6 +100,10 @@ class PlaceFinderUiTest {
     @BindValue
     @JvmField
     val placesRepository: PlacesRepository = mockk()
+
+    @BindValue
+    @JvmField
+    val geocodingRepository: GeocodingRepository = mockk()
 
     @BindValue
     @JvmField
@@ -205,7 +210,7 @@ class PlaceFinderUiTest {
     }
 
     @Test
-    fun givenValidMyLocation_whenClickInPlaceFinder_thenStaticActionsDisplays() {
+    fun whenInputSearchText_thenStaticActionsDisplays() {
         answerTestPlaces()
 
         launchScenario<HomeActivity> {
@@ -220,7 +225,7 @@ class PlaceFinderUiTest {
 
     @Test
     fun givenEmptyResult_whenTyping_thenEmptyViewDisplays() {
-        coEvery { placesRepository.getPlacesBy(any(), any()) } returns emptyList()
+        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns emptyList()
 
         launchScenario<HomeActivity> {
             val searchText = "QWER"
@@ -233,7 +238,7 @@ class PlaceFinderUiTest {
 
     @Test
     fun givenIllegalStateException_whenTyping_thenErrorViewDisplaysWithMessageAndDetailsButton() {
-        coEvery { placesRepository.getPlacesBy(any(), any()) } throws IllegalStateException("Error")
+        coEvery { geocodingRepository.getPlacesBy(any(), any()) } throws IllegalStateException("Error")
 
         launchScenario<HomeActivity> {
             val searchText = "QWER"
@@ -247,7 +252,7 @@ class PlaceFinderUiTest {
     @Test
     fun givenTooManyRequestsException_whenTyping_thenErrorViewDisplaysWithMessageOnly() {
         coEvery {
-            placesRepository.getPlacesBy(any(), any())
+            geocodingRepository.getPlacesBy(any(), any())
         } throws HttpException(Response.error<Unit>(429, "".toResponseBody()))
 
         launchScenario<HomeActivity> {
@@ -282,7 +287,7 @@ class PlaceFinderUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { placesRepository.getPlacesBy(any(), any()) } returns listOf(
+        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns listOf(
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_WAY
         )

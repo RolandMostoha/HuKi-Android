@@ -19,6 +19,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
@@ -92,6 +93,10 @@ class PlacesUiTest {
     @BindValue
     @JvmField
     val placesRepository: PlacesRepository = mockk()
+
+    @BindValue
+    @JvmField
+    val geocodingRepository: GeocodingRepository = mockk()
 
     @BindValue
     @JvmField
@@ -371,10 +376,12 @@ class PlacesUiTest {
     }
 
     @Test
-    fun givenMyLocation_whenClickInPlaceFinder_thenPlaceDetailsDisplay() {
+    fun givenMyLocation_whenClickInPlaceFinder_thenPlaceDetailsDisplaysWithCoordinates() {
         answerTestPlaces()
         answerTestGeometries()
         answerTestLocationProvider()
+
+        coEvery { geocodingRepository.getPlace(any()) } returns null
 
         launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
@@ -386,7 +393,30 @@ class PlacesUiTest {
             R.id.placeFinderMyLocationButton.clickInPopup()
 
             R.string.place_details_my_location_text.isTextDisplayed()
-            LocationFormatter.format(DEFAULT_MY_LOCATION).text.isTextDisplayed()
+            LocationFormatter.formatText(DEFAULT_MY_LOCATION).text.isTextDisplayed()
+            R.id.homeMapView.hasOverlay<Marker>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
+        }
+    }
+
+    @Test
+    fun givenMyLocationWithGeocoding_whenClickInPlaceFinder_thenPlaceDetailsDisplaysWithPlace() {
+        answerTestPlaces()
+        answerTestGeometries()
+        answerTestLocationProvider()
+
+        coEvery { geocodingRepository.getPlace(any()) } returns DEFAULT_PLACE_NODE
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            R.id.placeFinderMyLocationButton.clickInPopup()
+
+            DEFAULT_PLACE_NODE.name.isTextDisplayed()
             R.id.homeMapView.hasOverlay<Marker>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
@@ -414,7 +444,7 @@ class PlacesUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { placesRepository.getPlacesBy(any(), any()) } returns listOf(
+        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns listOf(
             DEFAULT_PLACE_WAY,
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_RELATION

@@ -20,8 +20,10 @@ import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
+import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,10 +54,11 @@ class RoutePlannerViewModel @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     private val exceptionLogger: ExceptionLogger,
-    private val routePlannerRepository: RoutePlannerRepository,
-    private val routePlannerUiModelMapper: RoutePlannerUiModelMapper,
-    private val myLocationProvider: AsyncMyLocationProvider,
     private val analyticsService: AnalyticsService,
+    private val myLocationProvider: AsyncMyLocationProvider,
+    private val routePlannerRepository: RoutePlannerRepository,
+    private val geocodingRepository: GeocodingRepository,
+    private val routePlannerUiModelMapper: RoutePlannerUiModelMapper,
 ) : ViewModel() {
 
     private val _routePlanUiModel = MutableStateFlow<RoutePlanUiModel?>(null)
@@ -165,20 +168,41 @@ class RoutePlannerViewModel @Inject constructor(
         }
     }
 
-    fun updateWaypointWithMyLocation(waypointItem: WaypointItem, name: Message, searchText: String) {
-        viewModelScope.launch(defaultDispatcher) {
+    fun updateByMyLocation(waypointItem: WaypointItem) {
+        viewModelScope.launch {
             val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()
             if (lastKnownLocation == null) {
                 _routePlanErrorMessage.emit(Message.Res(R.string.place_finder_my_location_error_null_location))
                 return@launch
             }
 
+            val defaultPrimaryText = R.string.place_finder_my_location_button.toMessage()
+            val place = geocodingRepository.getPlace(lastKnownLocation.toLocation())
+
             _wayPointItems.update { wayPointItemList ->
                 wayPointItemList.update(waypointItem) { wayPointItem ->
                     wayPointItem.copy(
-                        primaryText = name,
+                        primaryText = place?.name?.toMessage() ?: defaultPrimaryText,
                         location = lastKnownLocation.toLocation(),
-                        searchText = searchText
+                        searchText = null
+                    )
+                }
+            }
+        }
+    }
+
+    fun updateByPickedLocation(waypointItem: WaypointItem, location: Location) {
+        viewModelScope.launch {
+            val defaultPrimaryText = LocationFormatter.formatText(location)
+
+            val place = geocodingRepository.getPlace(location)
+
+            _wayPointItems.update { wayPointItemList ->
+                wayPointItemList.update(waypointItem) { wayPointItem ->
+                    wayPointItem.copy(
+                        primaryText = place?.name?.toMessage() ?: defaultPrimaryText,
+                        location = location,
+                        searchText = null
                     )
                 }
             }

@@ -13,11 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.databinding.FragmentGpxHistoryBinding
+import hu.mostoha.mobile.android.huki.databinding.FragmentHistoryBinding
 import hu.mostoha.mobile.android.huki.extensions.shareFile
 import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
+import hu.mostoha.mobile.android.huki.ui.home.gpx.rename.GpxRenameBottomSheetDialogFragment
+import hu.mostoha.mobile.android.huki.ui.home.gpx.rename.GpxRenameSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
 import jp.wasabeef.recyclerview.animators.FadeInAnimator
@@ -26,28 +28,28 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class GpxHistoryFragment : Fragment() {
+class HistoryFragment : Fragment() {
 
     @Inject
     lateinit var analyticsService: AnalyticsService
 
-    private val viewModel: GpxHistoryViewModel by viewModels()
+    private val viewModel: HistoryViewModel by viewModels()
     private val layersViewModel: LayersViewModel by activityViewModels()
     private val insetSharedViewModel: InsetSharedViewModel by activityViewModels()
     private val gpxRenameSharedViewModel: GpxRenameSharedViewModel by activityViewModels()
 
-    private var _binding: FragmentGpxHistoryBinding? = null
+    private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var gpxHistoryAdapter: GpxHistoryAdapter
 
-    private val gpxHistoryContainer by lazy { binding.gpxHistoryContainer }
-    private val gpxHistoryList by lazy { binding.gpxHistoryList }
-    private val gpxHistoryTabLayout by lazy { binding.gpxHistoryTabLayout }
-    private val toolbar by lazy { binding.gpxHistoryToolbar }
+    private val historyContainer by lazy { binding.historyContainer }
+    private val historyList by lazy { binding.historyList }
+    private val historyTabLayout by lazy { binding.historyTabLayout }
+    private val toolbar by lazy { binding.historyToolbar }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentGpxHistoryBinding.inflate(inflater, container, false)
+        _binding = FragmentHistoryBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -99,20 +101,20 @@ class GpxHistoryFragment : Fragment() {
             },
         )
 
-        gpxHistoryList.adapter = gpxHistoryAdapter
-        gpxHistoryList.itemAnimator = FadeInAnimator()
+        historyList.adapter = gpxHistoryAdapter
+        historyList.itemAnimator = FadeInAnimator()
 
         toolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
-        gpxHistoryTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        historyTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 viewModel.tabSelected(
                     when (tab.position) {
-                        GpxHistoryTab.ROUTE_PLANNER.ordinal -> GpxHistoryTab.ROUTE_PLANNER
-                        GpxHistoryTab.EXTERNAL.ordinal -> GpxHistoryTab.EXTERNAL
-                        else -> GpxHistoryTab.ROUTE_PLANNER
+                        HistoryTab.ROUTE_PLANNER.ordinal -> HistoryTab.ROUTE_PLANNER
+                        HistoryTab.EXTERNAL.ordinal -> HistoryTab.EXTERNAL
+                        else -> throw IllegalArgumentException("Not supported history tab")
                     }
                 )
             }
@@ -139,7 +141,7 @@ class GpxHistoryFragment : Fragment() {
             viewModel.currentTab
                 .flowWithLifecycle(lifecycle)
                 .collect {
-                    gpxHistoryTabLayout.selectTab(gpxHistoryTabLayout.getTabAt(it.ordinal))
+                    historyTabLayout.selectTab(historyTabLayout.getTabAt(it.ordinal))
                 }
         }
         lifecycleScope.launch {
@@ -154,7 +156,7 @@ class GpxHistoryFragment : Fragment() {
                 .flowWithLifecycle(lifecycle)
                 .collect { result ->
                     if (result != null) {
-                        gpxHistoryContainer.updatePadding(
+                        historyContainer.updatePadding(
                             top = resources.getDimensionPixelSize(R.dimen.space_small) + result.topInset,
                         )
                     }

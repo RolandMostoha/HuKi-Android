@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/gpxHistoryContainer"
+    android:id="@+id/historyContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
@@ -13,7 +13,7 @@
 
     <!-- Header -->
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/gpxHistoryToolbar"
+        android:id="@+id/historyToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorBackground"
@@ -26,7 +26,7 @@
 
     <!-- Tabs -->
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/gpxHistoryTabLayout"
+        android:id="@+id/historyTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorBackground"
@@ -37,8 +37,15 @@
         app:tabIndicatorHeight="@dimen/default_tab_indicator_height"
         app:tabPaddingBottom="@dimen/space_small"
         app:tabSelectedTextAppearance="@style/DefaultTextAppearance.Bold.Medium"
-        app:tabTextAppearance="@style/DefaultTabTextAppearance"
+        app:tabTextAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
         app:tabTextColor="@color/selector_tab_text_color">
+
+        <!-- TODO in Place History -->
+        <!--<com.google.android.material.tabs.TabItem-->
+        <!--    android:layout_width="wrap_content"-->
+        <!--    android:layout_height="wrap_content"-->
+        <!--    android:icon="@drawable/ic_marker_poi"-->
+        <!--    android:text="@string/gpx_history_tab_places" />-->
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -56,13 +63,13 @@
 
     <!-- List -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/gpxHistoryList"
+        android:id="@+id/historyList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/colorBackgroundLight"
         android:clipToPadding="false"
         android:paddingTop="@dimen/space_medium"
-        android:background="@color/colorBackgroundLight"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="3"
         tools:listitem="@layout/item_gpx_history" />

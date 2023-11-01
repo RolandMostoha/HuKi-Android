@@ -18,15 +18,21 @@ object LocationFormatter {
         roundingMode = RoundingMode.DOWN
     }
 
-    fun format(location: Location): Message.Text {
+    fun formatString(location: Location): String {
+        return LOCATION_DECIMAL_FORMAT.format(location.latitude)
+            .plus(",")
+            .plus(LOCATION_DECIMAL_FORMAT.format(location.longitude))
+    }
+
+    fun formatText(location: Location): Message.Text {
         return LOCATION_DECIMAL_FORMAT.format(location.latitude)
             .plus(",")
             .plus(LOCATION_DECIMAL_FORMAT.format(location.longitude))
             .toMessage()
     }
 
-    fun format(geoPoint: GeoPoint): Message.Text {
-        return format(geoPoint.toLocation())
+    fun formatText(geoPoint: GeoPoint): Message.Text {
+        return formatText(geoPoint.toLocation())
     }
 
 }

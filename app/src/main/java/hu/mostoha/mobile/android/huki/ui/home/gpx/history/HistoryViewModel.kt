@@ -34,7 +34,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class GpxHistoryViewModel @Inject constructor(
+class HistoryViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
     private val layersRepository: LayersRepository,
     private val gpxHistoryUiModelMapper: GpxHistoryUiModelMapper,
@@ -44,16 +44,16 @@ class GpxHistoryViewModel @Inject constructor(
     private val _errorMessage = MutableSharedFlow<Message.Res>()
     val errorMessage: SharedFlow<Message.Res> = _errorMessage.asSharedFlow()
 
-    private val _currentTab = MutableStateFlow(GpxHistoryTab.ROUTE_PLANNER)
-    val currentTab: StateFlow<GpxHistoryTab> = _currentTab
-        .stateIn(viewModelScope, WhileViewSubscribed, GpxHistoryTab.ROUTE_PLANNER)
+    private val _currentTab = MutableStateFlow(HistoryTab.ROUTE_PLANNER)
+    val currentTab: StateFlow<HistoryTab> = _currentTab
+        .stateIn(viewModelScope, WhileViewSubscribed, HistoryTab.ROUTE_PLANNER)
 
     private val gpxHistory = MutableStateFlow<GpxHistoryUiModel?>(null)
 
     val gpxHistoryAdapterItems = currentTab.combine(gpxHistory.filterNotNull()) { currentTab, gpxHistory ->
         when (currentTab) {
-            GpxHistoryTab.ROUTE_PLANNER -> gpxHistory.routePlannerGpxList
-            GpxHistoryTab.EXTERNAL -> gpxHistory.externalGpxList
+            HistoryTab.ROUTE_PLANNER -> gpxHistory.routePlannerGpxList
+            HistoryTab.EXTERNAL -> gpxHistory.externalGpxList
         }
     }.stateIn(viewModelScope, WhileViewSubscribed, null)
 
@@ -72,8 +72,8 @@ class GpxHistoryViewModel @Inject constructor(
         refreshGpxHistory()
     }
 
-    fun tabSelected(gpxHistoryTab: GpxHistoryTab) {
-        _currentTab.value = gpxHistoryTab
+    fun tabSelected(historyTab: HistoryTab) {
+        _currentTab.value = historyTab
     }
 
     fun deleteGpx(fileUri: Uri) {

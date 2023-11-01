@@ -31,13 +31,11 @@ import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
-import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
-import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
@@ -235,11 +233,7 @@ class RoutePlannerFragment : Fragment() {
                     waypointInput.clearFocusAndHideKeyboard()
                     placeFinderViewModel.cancelSearch()
 
-                    routePlannerViewModel.updateWaypointWithMyLocation(
-                        lastEditedWaypoint,
-                        Message.Res(R.string.place_finder_my_location_button),
-                        requireContext().getString(R.string.place_finder_my_location_button)
-                    )
+                    routePlannerViewModel.updateByMyLocation(lastEditedWaypoint)
                 } else {
                     permissionSharedViewModel.updateResult(PermissionResult.LOCATION_PERMISSION_NEEDED)
                 }
@@ -321,18 +315,13 @@ class RoutePlannerFragment : Fragment() {
                 .flowWithLifecycle(lifecycle)
                 .collect { event ->
                     if (event is PickLocationEvents.RoutePlannerPickEnded) {
-                        updateWaypoints(event)
+                        val lastEditedWaypoint = lastEditedWaypointItem ?: return@collect
+                        val location = event.geoPoint.toLocation()
+
+                        routePlannerViewModel.updateByPickedLocation(lastEditedWaypoint, location)
                     }
                 }
         }
-    }
-
-    private fun updateWaypoints(event: PickLocationEvents.RoutePlannerPickEnded) {
-        val lastEditedWaypoint = lastEditedWaypointItem ?: return
-        val location = event.geoPoint.toLocation()
-        val locationText = LocationFormatter.format(location)
-
-        routePlannerViewModel.updateWaypoint(lastEditedWaypoint, locationText, location, locationText.text)
     }
 
     private fun initPlaceFinderFlows() {

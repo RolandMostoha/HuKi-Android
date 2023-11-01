@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.ui.home.gpx.history
+package hu.mostoha.mobile.android.huki.ui.home.gpx.rename
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxRenameResult

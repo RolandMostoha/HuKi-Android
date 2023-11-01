@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.ui.home.gpx.history
+package hu.mostoha.mobile.android.huki.ui.home.gpx.rename
 
 import android.net.Uri
 import android.os.Bundle
@@ -18,8 +18,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.databinding.FragmentGpxRenameBottomSheetDialogBinding
 import hu.mostoha.mobile.android.huki.extensions.clearBackground
-import hu.mostoha.mobile.android.huki.ui.home.gpx.rename.GpxRenameEvents
-import hu.mostoha.mobile.android.huki.ui.home.gpx.rename.GpxRenameViewModel
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

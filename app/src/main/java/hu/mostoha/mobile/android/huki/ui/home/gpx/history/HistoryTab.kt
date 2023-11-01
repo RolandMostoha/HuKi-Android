@@ -1,6 +1,6 @@
 package hu.mostoha.mobile.android.huki.ui.home.gpx.history
 
-enum class GpxHistoryTab {
+enum class HistoryTab {
     ROUTE_PLANNER,
     EXTERNAL
 }

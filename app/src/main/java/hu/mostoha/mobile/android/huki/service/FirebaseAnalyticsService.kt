@@ -62,6 +62,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SHARE_GPX_HISTORY_ITEM = "share_gpx_history_item"
         private const val EVENT_DELETE_GPX_HISTORY_ITEM = "delete_gpx_history_item"
         private const val EVENT_RENAME_GPX_HISTORY_ITEM = "rename_gpx_history_item"
+        private const val EVENT_PLACE_REQUESTED_MY_LOCATION = "place_requested_my_location"
+        private const val EVENT_PLACE_REQUESTED_PICK_LOCATION = "place_requested_pick_location"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
@@ -308,6 +310,14 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_OKT_GPX_IMPORTED) {
             param(PARAM_IMPORTED_GPX_NAME, fileName)
         }
+    }
+
+    override fun myLocationPlaceRequested() {
+        firebaseAnalytics.logEvent(EVENT_PLACE_REQUESTED_MY_LOCATION, null)
+    }
+
+    override fun pickLocationPlaceRequested() {
+        firebaseAnalytics.logEvent(EVENT_PLACE_REQUESTED_PICK_LOCATION, null)
     }
 
     override fun copyrightClicked() {

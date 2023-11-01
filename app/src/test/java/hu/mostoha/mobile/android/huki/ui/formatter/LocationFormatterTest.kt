@@ -12,7 +12,7 @@ class LocationFormatterTest {
     fun `Given location, when format, then separated coordinates are returned`() {
         val location = Location(47.819483, 19.134789)
 
-        val result = LocationFormatter.format(location)
+        val result = LocationFormatter.formatText(location)
 
         assertThat(result).isEqualTo(Message.Text("47.8194,19.1347"))
     }
@@ -21,7 +21,7 @@ class LocationFormatterTest {
     fun `Given geoPoint, when format, then separated coordinates are returned`() {
         val location = GeoPoint(47.819483, 19.134789)
 
-        val result = LocationFormatter.format(location)
+        val result = LocationFormatter.formatText(location)
 
         assertThat(result).isEqualTo(Message.Text("47.8194,19.1347"))
     }

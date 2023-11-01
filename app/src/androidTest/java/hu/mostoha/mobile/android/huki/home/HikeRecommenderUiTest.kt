@@ -18,6 +18,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
@@ -79,6 +80,10 @@ class HikeRecommenderUiTest {
     @BindValue
     @JvmField
     val placesRepository: PlacesRepository = mockk()
+
+    @BindValue
+    @JvmField
+    val geocodingRepository: GeocodingRepository = mockk()
 
     @BindValue
     @JvmField

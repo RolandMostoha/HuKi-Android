@@ -34,7 +34,7 @@ import java.net.UnknownHostException
  */
 class AwsTileDownloader : TileDownloader() {
 
-    @Suppress("LongMethod", "ReturnCount", "TooGenericExceptionCaught")
+    @Suppress("LongMethod", "ReturnCount")
     override fun downloadTile(
         pMapTileIndex: Long,
         redirectCount: Int,

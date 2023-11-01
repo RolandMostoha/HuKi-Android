@@ -71,7 +71,6 @@ class AwsMapTileSqlCacheProvider(
 
     inner class AwsTileLoader : TileLoader() {
 
-        @Suppress("TooGenericExceptionCaught")
         @Throws(CantContinueException::class)
         override fun loadTile(pMapTileIndex: Long): Drawable? {
             return try {

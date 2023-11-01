@@ -78,6 +78,10 @@ class GpxHistoryUiTest {
 
     @BindValue
     @JvmField
+    val geocodingRepository: GeocodingRepository = mockk()
+
+    @BindValue
+    @JvmField
     val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @BindValue
@@ -90,7 +94,7 @@ class GpxHistoryUiTest {
         osmConfiguration.init()
         Intents.init()
 
-        coEvery { placesRepository.getPlacesBy(any(), any()) } returns listOf(
+        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns listOf(
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_WAY,
             DEFAULT_PLACE_RELATION
@@ -106,7 +110,7 @@ class GpxHistoryUiTest {
         launchScenario<HomeActivity> {
             R.id.homeGpxHistoryFab.click()
 
-            R.id.gpxHistoryContainer.isDisplayed()
+            R.id.historyContainer.isDisplayed()
         }
     }
 
@@ -133,7 +137,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeGpxHistoryFab.click()
-            R.id.gpxHistoryTabLayout.selectTab(1)
+            R.id.historyTabLayout.selectTab(1)
 
             R.id.gpxHistoryItemOpenButton.isDisplayed()
         }
@@ -151,7 +155,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeGpxHistoryFab.click()
-            R.id.gpxHistoryTabLayout.selectTab(1)
+            R.id.historyTabLayout.selectTab(1)
             R.id.gpxHistoryItemOpenButton.click()
 
             R.id.gpxDetailsStartButton.isDisplayed()
@@ -225,7 +229,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeGpxHistoryFab.click()
-            R.id.gpxHistoryTabLayout.selectTab(1)
+            R.id.historyTabLayout.selectTab(1)
             R.id.gpxHistoryActionsButton.click()
             R.string.gpx_history_menu_action_rename.clickWithTextInPopup()
             R.id.gpxRenameInput.typeText("New file name")
@@ -247,7 +251,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeGpxHistoryFab.click()
-            R.id.gpxHistoryTabLayout.selectTab(1)
+            R.id.historyTabLayout.selectTab(1)
             R.id.gpxHistoryItemShareButton.click()
         }
     }
@@ -261,7 +265,7 @@ class GpxHistoryUiTest {
 
             onView(
                 allOf(
-                    instanceOf(AppCompatImageButton::class.java), withParent(withId(R.id.gpxHistoryToolbar))
+                    instanceOf(AppCompatImageButton::class.java), withParent(withId(R.id.historyToolbar))
                 )
             ).perform(click())
 
