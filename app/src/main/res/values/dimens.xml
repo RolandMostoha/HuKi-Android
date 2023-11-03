@@ -39,6 +39,7 @@
     <dimen name="default_corner_size_input_on_map">30dp</dimen>
     <dimen name="default_corner_size_drag_view">60dp</dimen>
     <dimen name="default_icon_only_button_size">50dp</dimen>
+    <dimen name="default_icon_only_button_size_small">40dp</dimen>
     <dimen name="default_polygon_width">2dp</dimen>
     <dimen name="default_polyline_width">6dp</dimen>
     <dimen name="default_polyline_fill_width">4dp</dimen>
@@ -108,5 +109,8 @@
     <dimen name="okt_routes_base_polyline_width">4dp</dimen>
     <dimen name="okt_routes_polyline_width">5dp</dimen>
     <dimen name="okt_routes_route_number_badge_size">48dp</dimen>
+    <dimen name="okt_routes_marker_background_size">38dp</dimen>
+    <dimen name="okt_routes_marker_icon_size">16dp</dimen>
+    <dimen name="okt_routes_stamp_marker_background_size">30dp</dimen>
 
 </resources>

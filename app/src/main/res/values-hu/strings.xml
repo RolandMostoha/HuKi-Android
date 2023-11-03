@@ -24,6 +24,8 @@
 
     <string name="place_details_my_location_text">Aktuális pozícióm</string>
     <string name="place_details_pick_location_text">Kiválasztott pozíció</string>
+    <string name="place_details_okt_waypoint_text">GPX állomás</string>
+    <string name="place_details_gpx_waypoint_text">OKT állomás</string>
     <string name="place_details_okt_start_template">%s - Kezdőpont</string>
     <string name="place_details_okt_end_template">%s - Végpont</string>
 

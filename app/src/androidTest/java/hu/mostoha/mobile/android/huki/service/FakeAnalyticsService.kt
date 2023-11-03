@@ -46,6 +46,8 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun gpxImportedByFileExplorer() = Unit
 
+    override fun gpxWaypointClicked() = Unit
+
     override fun gpxDetailsStartClicked() = Unit
 
     override fun gpxDetailsVisibilityClicked() = Unit
@@ -92,9 +94,15 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun oktGpxImported(fileName: String) = Unit
 
+    override fun oktWaypointClicked() = Unit
+
     override fun myLocationPlaceRequested() = Unit
 
     override fun pickLocationPlaceRequested() = Unit
+
+    override fun oktWaypointPlaceRequested() = Unit
+
+    override fun gpxWaypointPlaceRequested() = Unit
 
     override fun copyrightClicked() = Unit
 

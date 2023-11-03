@@ -150,6 +150,7 @@ import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.TilesOverlay
+import org.osmdroid.views.overlay.infowindow.InfoWindow
 import java.util.UUID
 import javax.inject.Inject
 
@@ -1044,6 +1045,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initOktRoutes(oktRoutes: OktRoutesUiModel?) {
         if (oktRoutes == null) {
+            InfoWindow.closeAllInfoWindowsOn(homeMapView)
             homeMapView.removeOverlays(listOf(OverlayType.OKT_ROUTES, OverlayType.OKT_ROUTES_BASE))
             oktRoutesBottomSheet.hide()
             return
@@ -1070,9 +1072,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.addOktRoute(
             overlayId = selectedRoute.oktId,
             oktRouteUiModel = selectedRoute,
-            onClick = {
+            onRouteClick = {
+                InfoWindow.closeAllInfoWindowsOn(homeMapView)
                 initOktRoutesBottomSheet(oktRoutes, selectedRoute.oktId)
                 homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+            },
+            onWaypointClick = {
+                analyticsService.oktWaypointClicked()
+            },
+            onWaypointNavigationClick = { geoPoint ->
+                homeViewModel.loadPlace(geoPoint, PlaceRequestType.OKT_WAYPOINT)
             }
         )
 
@@ -1086,6 +1095,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             oktRoutes = oktRoutes.routes,
             selectedOktId = selectedOktId,
             onRouteClick = { oktId ->
+                InfoWindow.closeAllInfoWindowsOn(homeMapView)
                 homeViewModel.selectOktRoute(oktId)
             },
             onEdgePointClick = { message, geoPoint ->
@@ -1207,6 +1217,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initGpxDetails(gpxDetailsUiModel: GpxDetailsUiModel?) {
         if (gpxDetailsUiModel == null) {
+            InfoWindow.closeAllInfoWindowsOn(homeMapView)
             homeMapView.removeOverlay(OverlayType.GPX)
             return
         }
@@ -1241,9 +1252,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 waypointType = waypointItem.waypointType,
                 infoWindowTitle = waypointItem.name?.resolve(this),
                 infoWindowDescription = waypointItem.description?.resolve(this),
-                onClick = {
+                onMarkerClick = {
                     gpxDetailsBottomSheet.show()
                     homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+                },
+                onWaypointClick = {
+                    analyticsService.gpxImportClicked()
+                },
+                onWaypointNavigationClick = { geoPoint ->
+                    homeViewModel.loadPlace(geoPoint, PlaceRequestType.GPX_WAYPOINT)
                 }
             )
         }

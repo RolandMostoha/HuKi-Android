@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
-import hu.mostoha.mobile.android.huki.model.domain.toLocations
+import hu.mostoha.mobile.android.huki.model.domain.toLocationsFromDoubles
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.CustomModel
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.Priority
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.RouteRequest
@@ -37,8 +37,8 @@ class RoutePlannerNetworkModelMapper @Inject constructor() {
 
     fun mapRouteResponse(routeResponse: RouteResponse): RoutePlan {
         val path = routeResponse.paths.first()
-        val waypoints = path.snappedWaypoints.coordinates.toLocations()
-        val locations = path.points.coordinates.toLocations()
+        val waypoints = path.snappedWaypoints.coordinates.toLocationsFromDoubles()
+        val locations = path.points.coordinates.toLocationsFromDoubles()
         val minAltitude = locations
             .mapNotNull { it.altitude }
             .minOrNull() ?: 0.0

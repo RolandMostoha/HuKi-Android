@@ -96,6 +96,12 @@
         <item name="iconTint">@color/colorPrimary</item>
     </style>
 
+    <style name="DefaultButton.IconOnly.Stroked.Small">
+        <item name="android:minWidth">@dimen/default_icon_only_button_size_small</item>
+        <item name="android:minHeight">@dimen/default_icon_only_button_size_small</item>
+        <item name="iconSize">@dimen/icon_size_tiny</item>
+    </style>
+
     <style name="DefaultMaterialDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

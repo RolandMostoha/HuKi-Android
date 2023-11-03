@@ -13,10 +13,10 @@ import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.OktRoutes
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
-import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.OktRoutesMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
@@ -362,7 +362,7 @@ class HomeViewModelTest {
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(
-                    oktRoutesMapper.map(DEFAULT_OKT_FULL_GEO_POINTS.toGeoPoints(), LOCAL_OKT_ROUTES)
+                    oktRoutesMapper.map(DEFAULT_OKT_ROUTES, LOCAL_OKT_ROUTES)
                 )
             }
         }
@@ -479,7 +479,7 @@ class HomeViewModelTest {
     }
 
     private fun mockOktRoutes() {
-        coEvery { oktRepository.getOktFullRoute() } returns DEFAULT_OKT_FULL_GEO_POINTS
+        coEvery { oktRepository.getOktRoutes() } returns DEFAULT_OKT_ROUTES
     }
 
     companion object {
@@ -566,6 +566,10 @@ class HomeViewModelTest {
             LOCAL_OKT_ROUTES.first().end,
             LOCAL_OKT_ROUTES[1].start,
             LOCAL_OKT_ROUTES[1].end,
+        )
+        private val DEFAULT_OKT_ROUTES = OktRoutes(
+            locations = DEFAULT_OKT_FULL_GEO_POINTS,
+            stampWaypoints = emptyList(),
         )
     }
 

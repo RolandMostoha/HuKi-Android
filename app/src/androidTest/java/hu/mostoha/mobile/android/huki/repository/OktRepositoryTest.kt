@@ -33,11 +33,11 @@ class OktRepositoryTest {
 
     @Test
     fun givenLocalOktRoutes_whenGetOktFullRoute_thenStartAndEndPositionsArePresent() = runTest {
-        val locations = repository.getOktFullRoute()
+        val oktRoutes = repository.getOktRoutes()
 
         LOCAL_OKT_ROUTES.map { it.start to it.end }.forEach { (start, end) ->
-            assertThat(locations).contains(start)
-            assertThat(locations).contains(end)
+            assertThat(oktRoutes.locations).contains(start)
+            assertThat(oktRoutes.locations).contains(end)
         }
     }
 

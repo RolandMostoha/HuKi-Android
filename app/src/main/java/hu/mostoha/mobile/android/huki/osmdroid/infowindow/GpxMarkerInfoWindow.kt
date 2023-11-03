@@ -11,6 +11,7 @@ class GpxMarkerInfoWindow(
     mapView: MapView,
     private val title: String,
     private val description: String? = null,
+    private val onNavigationClick: () -> Unit,
 ) : InfoWindow(R.layout.info_window_gpx_marker, mapView) {
 
     init {
@@ -26,6 +27,7 @@ class GpxMarkerInfoWindow(
     override fun onOpen(item: Any?) {
         val titleTextView = mView.findViewById<TextView>(R.id.mapInfoWindowTitle)
         val descriptionTextView = mView.findViewById<TextView>(R.id.mapInfoWindowDescription)
+        val navigationButton = mView.findViewById<TextView>(R.id.mapInfoWindowNavigationButton)
 
         titleTextView.text = title
 
@@ -33,6 +35,11 @@ class GpxMarkerInfoWindow(
             descriptionTextView.gone()
         } else {
             descriptionTextView.text = description
+        }
+
+        navigationButton.setOnClickListener {
+            onNavigationClick()
+            close()
         }
     }
 

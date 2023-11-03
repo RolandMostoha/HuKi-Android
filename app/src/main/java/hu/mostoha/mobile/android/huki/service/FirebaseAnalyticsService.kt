@@ -21,6 +21,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_OKT_ROUTE = "select_okt_route"
         private const val EVENT_SELECT_OKT_ROUTE_LINK = "select_okt_link"
         private const val EVENT_SELECT_OKT_ROUTE_EDGE_POINT = "select_okt_edge_point"
+        private const val EVENT_SELECT_OKT_WAYPOINT = "select_okt_waypoint"
         private const val EVENT_OKT_GPX_IMPORTED = "okt_gpx_imported"
         private const val EVENT_SELECT_PLACE_DETAILS_HIKE_RECOMMENDER = "select_place_details_hike_recommender"
         private const val EVENT_SELECT_HIKE_RECOMMENDER_KIRANDULASTIPPEK = "select_kirandulastippek"
@@ -42,6 +43,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_GPX_START = "select_gpx_start"
         private const val EVENT_SELECT_GPX_VISIBILITY = "select_gpx_visibility"
         private const val EVENT_SELECT_GPX_SHARE = "select_gpx_share"
+        private const val EVENT_SELECT_GPX_WAYPOINT = "select_gpx_waypoint"
         private const val EVENT_GPX_WAYPOINTS_ONLY_IMPORTED = "gpx_imported_waypoints_only"
         private const val EVENT_LAYER_MAPNIK_SELECTED = "layer_mapnik_selected"
         private const val EVENT_LAYER_OPEN_TOPO_SELECTED = "layer_open_topo_selected"
@@ -64,6 +66,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_RENAME_GPX_HISTORY_ITEM = "rename_gpx_history_item"
         private const val EVENT_PLACE_REQUESTED_MY_LOCATION = "place_requested_my_location"
         private const val EVENT_PLACE_REQUESTED_PICK_LOCATION = "place_requested_pick_location"
+        private const val EVENT_PLACE_REQUESTED_OKT_WAYPOINT = "place_requested_okt_waypoint"
+        private const val EVENT_PLACE_REQUESTED_GPX_WAYPOINT = "place_requested_gpx_waypoint"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
@@ -193,6 +197,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_GPX_IMPORTED_BY_FILE_EXPLORER, null)
     }
 
+    override fun gpxWaypointClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_GPX_WAYPOINT, null)
+    }
+
     override fun gpxDetailsStartClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_GPX_START, null)
     }
@@ -312,12 +320,24 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         }
     }
 
+    override fun oktWaypointClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_WAYPOINT, null)
+    }
+
     override fun myLocationPlaceRequested() {
         firebaseAnalytics.logEvent(EVENT_PLACE_REQUESTED_MY_LOCATION, null)
     }
 
     override fun pickLocationPlaceRequested() {
         firebaseAnalytics.logEvent(EVENT_PLACE_REQUESTED_PICK_LOCATION, null)
+    }
+
+    override fun oktWaypointPlaceRequested() {
+        firebaseAnalytics.logEvent(EVENT_PLACE_REQUESTED_OKT_WAYPOINT, null)
+    }
+
+    override fun gpxWaypointPlaceRequested() {
+        firebaseAnalytics.logEvent(EVENT_PLACE_REQUESTED_GPX_WAYPOINT, null)
     }
 
     override fun copyrightClicked() {

@@ -46,6 +46,8 @@ interface AnalyticsService {
 
     fun gpxImportedByFileExplorer()
 
+    fun gpxWaypointClicked()
+
     fun gpxDetailsStartClicked()
 
     fun gpxDetailsVisibilityClicked()
@@ -92,9 +94,15 @@ interface AnalyticsService {
 
     fun oktGpxImported(fileName: String)
 
+    fun oktWaypointClicked()
+
     fun myLocationPlaceRequested()
 
     fun pickLocationPlaceRequested()
+
+    fun oktWaypointPlaceRequested()
+
+    fun gpxWaypointPlaceRequested()
 
     fun copyrightClicked()
 

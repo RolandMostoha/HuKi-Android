@@ -13,7 +13,6 @@ import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceRequestType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
-import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.OktRoutesMapper
@@ -150,6 +149,8 @@ class HomeViewModel @Inject constructor(
         when (placeRequestType) {
             PlaceRequestType.MY_LOCATION -> analyticsService.myLocationPlaceRequested()
             PlaceRequestType.PICKED_LOCATION -> analyticsService.pickLocationPlaceRequested()
+            PlaceRequestType.OKT_WAYPOINT -> analyticsService.oktWaypointPlaceRequested()
+            PlaceRequestType.GPX_WAYPOINT -> analyticsService.gpxWaypointPlaceRequested()
         }
 
         flowWithExceptions(
@@ -233,10 +234,10 @@ class HomeViewModel @Inject constructor(
 
     fun loadOktRoutes() = viewModelScope.launch(dispatcher) {
         flowWithExceptions(
-            request = { oktRepository.getOktFullRoute() },
+            request = { oktRepository.getOktRoutes() },
             exceptionLogger = exceptionLogger
         )
-            .map { oktRoutesMapper.map(it.toGeoPoints(), LOCAL_OKT_ROUTES) }
+            .map { oktRoutesMapper.map(it, LOCAL_OKT_ROUTES) }
             .onEach { _oktRoutes.emit(it) }
             .onStart {
                 clearFollowLocation()

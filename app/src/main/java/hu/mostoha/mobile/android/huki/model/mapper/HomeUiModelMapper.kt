@@ -74,6 +74,8 @@ class HomeUiModelMapper @Inject constructor() {
                     secondaryText = when (placeRequestType) {
                         PlaceRequestType.MY_LOCATION -> R.string.place_details_my_location_text.toMessage()
                         PlaceRequestType.PICKED_LOCATION -> R.string.place_details_pick_location_text.toMessage()
+                        PlaceRequestType.OKT_WAYPOINT -> R.string.place_details_okt_waypoint_text.toMessage()
+                        PlaceRequestType.GPX_WAYPOINT -> R.string.place_details_gpx_waypoint_text.toMessage()
                     },
                     iconRes = R.drawable.ic_place_type_node,
                 ),

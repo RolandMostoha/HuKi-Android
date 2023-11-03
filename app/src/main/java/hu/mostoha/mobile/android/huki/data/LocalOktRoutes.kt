@@ -7,6 +7,7 @@ import kotlin.time.Duration.Companion.minutes
 
 const val OKT_ID_FULL_ROUTE = "OKT"
 
+@Suppress("MagicNumber")
 val LOCAL_OKT_ROUTES = listOf(
     OktRoute(
         id = OKT_ID_FULL_ROUTE,
@@ -16,7 +17,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 32035,
         travelTime = 344.hours.plus(40.minutes),
         start = Location(latitude = 47.35275964, longitude = 16.433750795, altitude = 880.1462),
-        end = Location(latitude = 48.541987393, longitude = 21.413286913, altitude = 316.9324)
+        end = Location(latitude = 48.541987393, longitude = 21.413286913, altitude = 316.9324),
+        stampTagsRange = 1.0..149.9,
     ),
     OktRoute(
         id = "OKT-01",
@@ -26,7 +28,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1290,
         travelTime = 18.hours.plus(50.minutes),
         start = Location(latitude = 47.35275964, longitude = 16.433750795, altitude = 880.1462),
-        end = Location(latitude = 47.245569866, longitude = 16.940811899, altitude = 154.3261)
+        end = Location(latitude = 47.245569866, longitude = 16.940811899, altitude = 154.3261),
+        stampTagsRange = 1.0..9.0,
     ),
     OktRoute(
         id = "OKT-02",
@@ -36,7 +39,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 455,
         travelTime = 18.hours.plus(40.minutes),
         start = Location(latitude = 47.245569866, longitude = 16.940811899, altitude = 154.3261),
-        end = Location(latitude = 46.981292481, longitude = 17.271265176, altitude = 167.3507)
+        end = Location(latitude = 46.981292481, longitude = 17.271265176, altitude = 167.3507),
+        stampTagsRange = 9.0..18.0,
     ),
     OktRoute(
         id = "OKT-03",
@@ -46,7 +50,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 890,
         travelTime = 12.hours.plus(40.minutes),
         start = Location(latitude = 46.981292481, longitude = 17.271265176, altitude = 167.3507),
-        end = Location(latitude = 46.759963612, longitude = 17.249656386, altitude = 105.3006)
+        end = Location(latitude = 46.759963612, longitude = 17.249656386, altitude = 105.3006),
+        stampTagsRange = 18.0..24.0,
     ),
     OktRoute(
         id = "OKT-04",
@@ -56,7 +61,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 545,
         travelTime = 8.hours.plus(20.minutes),
         start = Location(latitude = 46.759963612, longitude = 17.249656386, altitude = 105.3006),
-        end = Location(latitude = 46.877354824, longitude = 17.4290248, altitude = 120.3302)
+        end = Location(latitude = 46.877354824, longitude = 17.4290248, altitude = 120.3302),
+        stampTagsRange = 24.0..27.0,
     ),
     OktRoute(
         id = "OKT-05",
@@ -66,7 +72,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 385,
         travelTime = 5.hours.plus(0.minutes),
         start = Location(latitude = 46.877354824, longitude = 17.4290248, altitude = 120.3302),
-        end = Location(latitude = 46.808472494, longitude = 17.469138285, altitude = 110.4971)
+        end = Location(latitude = 46.808472494, longitude = 17.469138285, altitude = 110.4971),
+        stampTagsRange = 27.0..30.0,
     ),
     OktRoute(
         id = "OKT-06",
@@ -76,7 +83,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1400,
         travelTime = 14.hours.plus(30.minutes),
         start = Location(latitude = 46.808472494, longitude = 17.469138285, altitude = 110.4971),
-        end = Location(latitude = 46.984919493, longitude = 17.694656054, altitude = 255.6064)
+        end = Location(latitude = 46.984919493, longitude = 17.694656054, altitude = 255.6064),
+        stampTagsRange = 30.0..35.9,
     ),
     OktRoute(
         id = "OKT-07",
@@ -86,7 +94,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 440,
         travelTime = 6.hours.plus(30.minutes),
         start = Location(latitude = 46.984919493, longitude = 17.694656054, altitude = 255.6064),
-        end = Location(latitude = 47.134760357, longitude = 17.631173723, altitude = 285.688)
+        end = Location(latitude = 47.134760357, longitude = 17.631173723, altitude = 285.688),
+        stampTagsRange = 35.0..38.9,
     ),
     OktRoute(
         id = "OKT-08",
@@ -96,7 +105,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 990,
         travelTime = 12.hours.plus(10.minutes),
         start = Location(latitude = 47.134760357, longitude = 17.631173723, altitude = 285.688),
-        end = Location(latitude = 47.264708926, longitude = 17.87862525, altitude = 382.1969)
+        end = Location(latitude = 47.264708926, longitude = 17.87862525, altitude = 382.1969),
+        stampTagsRange = 38.0..43.9,
     ),
     OktRoute(
         id = "OKT-09",
@@ -106,7 +116,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1465,
         travelTime = 16.hours.plus(50.minutes),
         start = Location(latitude = 47.264708926, longitude = 17.87862525, altitude = 382.1969),
-        end = Location(latitude = 47.32453117, longitude = 18.231927305, altitude = 151.2713)
+        end = Location(latitude = 47.32453117, longitude = 18.231927305, altitude = 151.2713),
+        stampTagsRange = 43.0..50.9,
     ),
     OktRoute(
         id = "OKT-10",
@@ -116,7 +127,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1290,
         travelTime = 16.hours.plus(20.minutes),
         start = Location(latitude = 47.32453117, longitude = 18.231927305, altitude = 151.2713),
-        end = Location(latitude = 47.518552321, longitude = 18.49622075, altitude = 228.9385)
+        end = Location(latitude = 47.518552321, longitude = 18.49622075, altitude = 228.9385),
+        stampTagsRange = 50.0..55.0,
     ),
     OktRoute(
         id = "OKT-11",
@@ -126,7 +138,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 2235,
         travelTime = 20.hours.plus(20.minutes),
         start = Location(latitude = 47.518552321, longitude = 18.49622075, altitude = 228.9385),
-        end = Location(latitude = 47.722834587, longitude = 18.732393169, altitude = 128.5994)
+        end = Location(latitude = 47.722834587, longitude = 18.732393169, altitude = 128.5994),
+        stampTagsRange = 55.0..64.0,
     ),
     OktRoute(
         id = "OKT-12",
@@ -136,7 +149,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 420,
         travelTime = 5.hours.plus(30.minutes),
         start = Location(latitude = 47.723625871, longitude = 18.733692271, altitude = 127.5915),
-        end = Location(latitude = 47.639424362, longitude = 18.828363335, altitude = 233.5294)
+        end = Location(latitude = 47.639424362, longitude = 18.828363335, altitude = 233.5294),
+        stampTagsRange = 64.0..66.0,
     ),
     OktRoute(
         id = "OKT-13",
@@ -146,7 +160,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 585,
         travelTime = 6.hours.plus(30.minutes),
         start = Location(latitude = 47.639424362, longitude = 18.828363335, altitude = 233.5294),
-        end = Location(latitude = 47.541987665, longitude = 18.963891521, altitude = 225.411)
+        end = Location(latitude = 47.541987665, longitude = 18.963891521, altitude = 225.411),
+        stampTagsRange = 66.0..68.9,
     ),
     OktRoute(
         id = "OKT-14",
@@ -156,7 +171,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 625,
         travelTime = 4.hours.plus(20.minutes),
         start = Location(latitude = 47.541987665, longitude = 18.963891521, altitude = 225.411),
-        end = Location(latitude = 47.585046834, longitude = 18.989913034, altitude = 126.8612)
+        end = Location(latitude = 47.585046834, longitude = 18.989913034, altitude = 126.8612),
+        stampTagsRange = 68.0..71.0,
     ),
     OktRoute(
         id = "OKT-15",
@@ -166,7 +182,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 490,
         travelTime = 7.hours.plus(30.minutes),
         start = Location(latitude = 47.585046834, longitude = 18.989913034, altitude = 126.8612),
-        end = Location(latitude = 47.719535433, longitude = 18.898673855, altitude = 698.1156)
+        end = Location(latitude = 47.719535433, longitude = 18.898673855, altitude = 698.1156),
+        stampTagsRange = 71.0..74.0,
     ),
     OktRoute(
         id = "OKT-16",
@@ -176,7 +193,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1205,
         travelTime = 7.hours.plus(10.minutes),
         start = Location(latitude = 47.719535433, longitude = 18.898673855, altitude = 698.1156),
-        end = Location(latitude = 47.786831991, longitude = 18.967199298, altitude = 104.5608)
+        end = Location(latitude = 47.786831991, longitude = 18.967199298, altitude = 104.5608),
+        stampTagsRange = 74.0..79.0,
     ),
     OktRoute(
         id = "OKT-17",
@@ -186,7 +204,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1635,
         travelTime = 13.hours.plus(0.minutes),
         start = Location(latitude = 47.789152523, longitude = 18.961532517, altitude = 104.3989),
-        end = Location(latitude = 47.902609745, longitude = 19.045920016, altitude = 216.8286)
+        end = Location(latitude = 47.902609745, longitude = 19.045920016, altitude = 216.8286),
+        stampTagsRange = 80.0..84.0,
     ),
     OktRoute(
         id = "OKT-18",
@@ -196,7 +215,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1880,
         travelTime = 17.hours.plus(55.minutes),
         start = Location(latitude = 47.902609745, longitude = 19.045920016, altitude = 216.8286),
-        end = Location(latitude = 47.910188534, longitude = 19.376131611, altitude = 226.1763)
+        end = Location(latitude = 47.910188534, longitude = 19.376131611, altitude = 226.1763),
+        stampTagsRange = 84.0..92.9,
     ),
     OktRoute(
         id = "OKT-19",
@@ -206,7 +226,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 2395,
         travelTime = 22.hours.plus(20.minutes),
         start = Location(latitude = 47.910188534, longitude = 19.376131611, altitude = 226.1763),
-        end = Location(latitude = 47.968481549, longitude = 19.779375313, altitude = 191.7785)
+        end = Location(latitude = 47.968481549, longitude = 19.779375313, altitude = 191.7785),
+        stampTagsRange = 92.0..99.9,
     ),
     OktRoute(
         id = "OKT-20",
@@ -216,7 +237,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 785,
         travelTime = 8.hours.plus(25.minutes),
         start = Location(latitude = 47.968343258, longitude = 19.779531902, altitude = 192.4598),
-        end = Location(latitude = 47.868359372, longitude = 19.9781289, altitude = 707.2808)
+        end = Location(latitude = 47.868359372, longitude = 19.9781289, altitude = 707.2808),
+        stampTagsRange = 99.0..105.9,
     ),
     OktRoute(
         id = "OKT-21",
@@ -226,7 +248,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1565,
         travelTime = 8.hours.plus(10.minutes),
         start = Location(latitude = 47.868359372, longitude = 19.9781289, altitude = 707.2808),
-        end = Location(latitude = 47.931651821, longitude = 20.194516272, altitude = 158.5833)
+        end = Location(latitude = 47.931651821, longitude = 20.194516272, altitude = 158.5833),
+        stampTagsRange = 105.0..108.9,
     ),
     OktRoute(
         id = "OKT-22",
@@ -236,7 +259,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 520,
         travelTime = 5.hours.plus(30.minutes),
         start = Location(latitude = 47.931651821, longitude = 20.194516272, altitude = 158.5833),
-        end = Location(latitude = 47.988100759, longitude = 20.331000562, altitude = 222.508)
+        end = Location(latitude = 47.988100759, longitude = 20.331000562, altitude = 222.508),
+        stampTagsRange = 108.0..110.9,
     ),
     OktRoute(
         id = "OKT-23",
@@ -246,7 +270,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 2315,
         travelTime = 19.hours.plus(30.minutes),
         start = Location(latitude = 47.988100759, longitude = 20.331000562, altitude = 222.508),
-        end = Location(latitude = 48.287092978, longitude = 20.437302787, altitude = 150.2519)
+        end = Location(latitude = 48.287092978, longitude = 20.437302787, altitude = 150.2519),
+        stampTagsRange = 110.0..117.0,
     ),
     OktRoute(
         id = "OKT-24",
@@ -256,7 +281,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1740,
         travelTime = 18.hours.plus(50.minutes),
         start = Location(latitude = 48.287092978, longitude = 20.437302787, altitude = 150.2519),
-        end = Location(latitude = 48.537089852, longitude = 20.733679305, altitude = 165.4704)
+        end = Location(latitude = 48.537089852, longitude = 20.733679305, altitude = 165.4704),
+        stampTagsRange = 117.0..125.0,
     ),
     OktRoute(
         id = "OKT-25",
@@ -266,7 +292,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1490,
         travelTime = 19.hours.plus(40.minutes),
         start = Location(latitude = 48.537089852, longitude = 20.733679305, altitude = 165.4704),
-        end = Location(latitude = 48.345205607, longitude = 21.208960245, altitude = 163.3493)
+        end = Location(latitude = 48.345205607, longitude = 21.208960245, altitude = 163.3493),
+        stampTagsRange = 125.0..135.9,
     ),
     OktRoute(
         id = "OKT-26",
@@ -276,7 +303,8 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1475,
         travelTime = 16.hours.plus(20.minutes),
         start = Location(latitude = 48.345205607, longitude = 21.208960245, altitude = 163.3493),
-        end = Location(latitude = 48.392190874, longitude = 21.623977589, altitude = 362.3364)
+        end = Location(latitude = 48.392190874, longitude = 21.623977589, altitude = 362.3364),
+        stampTagsRange = 135.0..142.0,
     ),
     OktRoute(
         id = "OKT-27",
@@ -286,6 +314,7 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 1525,
         travelTime = 13.hours.plus(50.minutes),
         start = Location(latitude = 48.392190874, longitude = 21.623977589, altitude = 362.3364),
-        end = Location(latitude = 48.541987393, longitude = 21.413286913, altitude = 316.9324)
+        end = Location(latitude = 48.541987393, longitude = 21.413286913, altitude = 316.9324),
+        stampTagsRange = 142.0..149.9,
     ),
 )

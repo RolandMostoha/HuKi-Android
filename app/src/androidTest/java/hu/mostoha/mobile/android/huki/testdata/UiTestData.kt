@@ -9,6 +9,7 @@ import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.OktStampWaypoint
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
@@ -152,6 +153,18 @@ object RoutePlanner {
         incline = 500,
         decline = 200,
         isClosed = false
+    )
+
+}
+
+object Okt {
+
+    val DEFAULT_STAMP_WAYPOINT = OktStampWaypoint(
+        title = "Írott-kő",
+        description = "Írott-kői kilátó - (OKTPH_01_DDKPH_01_2)",
+        location = Location(47.352921667, 16.434327593),
+        stampTag = "OKTPH_01",
+        stampNumber = 1.0,
     )
 
 }

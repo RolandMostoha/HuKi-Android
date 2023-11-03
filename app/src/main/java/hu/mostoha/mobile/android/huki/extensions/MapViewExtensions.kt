@@ -7,6 +7,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
@@ -313,7 +314,9 @@ fun MapView.addGpxMarker(
     waypointType: WaypointType,
     infoWindowTitle: String? = null,
     infoWindowDescription: String? = null,
-    onClick: (Marker) -> Unit
+    onMarkerClick: (Marker) -> Unit,
+    onWaypointClick: () -> Unit,
+    onWaypointNavigationClick: (GeoPoint) -> Unit,
 ): Marker {
     val iconDrawable = when (waypointType) {
         WaypointType.START -> R.drawable.ic_marker_gpx_start.toDrawable(this.context)
@@ -329,11 +332,19 @@ fun MapView.addGpxMarker(
                 mapView = this@addGpxMarker,
                 title = infoWindowTitle,
                 description = infoWindowDescription,
+                onNavigationClick = { onWaypointNavigationClick.invoke(geoPoint) },
             )
-            title = infoWindowTitle
+            setOnMarkerClickListener { marker, mapView ->
+                onWaypointClick.invoke()
+
+                marker.showInfoWindow()
+                mapView.controller.animateTo(marker.position)
+
+                true
+            }
         } else {
             setOnMarkerClickListener { marker, _ ->
-                onClick.invoke(marker)
+                onMarkerClick.invoke(marker)
                 true
             }
         }
@@ -586,33 +597,60 @@ fun MapView.addOktBasePolyline(
 fun MapView.addOktRoute(
     overlayId: String,
     oktRouteUiModel: OktRouteUiModel,
-    onClick: () -> Unit,
+    onRouteClick: () -> Unit,
+    onWaypointClick: () -> Unit,
+    onWaypointNavigationClick: (GeoPoint) -> Unit,
 ) {
     if (oktRouteUiModel.oktId != OKT_ID_FULL_ROUTE) {
         addOktPolyline(
             overlayId = overlayId,
             geoPoints = oktRouteUiModel.geoPoints,
-            onClick = { onClick.invoke() }
+            onClick = { onRouteClick.invoke() }
         )
     }
 
-    listOf(oktRouteUiModel.start, oktRouteUiModel.end).forEach {
+    oktRouteUiModel.stampWaypoints.forEach { stampWaypoint ->
         addOktMarker(
             overlayId = overlayId,
-            geoPoint = it,
+            geoPoint = stampWaypoint.location.toGeoPoint(),
             iconDrawable = generateLayerDrawable(
                 layers = listOf(
                     LayerDrawableConfig(
                         R.drawable.ic_marker_okt_route_background.toDrawable(context),
-                        resources.getDimensionPixelSize(R.dimen.hiking_routes_marker_background_size)
+                        resources.getDimensionPixelSize(R.dimen.okt_routes_stamp_marker_background_size)
                     ),
                     LayerDrawableConfig(
-                        R.drawable.ic_marker_okt_routes.toDrawable(context),
-                        resources.getDimensionPixelSize(R.dimen.hiking_routes_marker_icon_size)
+                        R.drawable.ic_okt_stamp.toDrawable(context),
+                        resources.getDimensionPixelSize(R.dimen.okt_routes_marker_icon_size)
                     ),
                 ),
             ),
-            onClick = { onClick.invoke() },
+            infoWindowTitle = stampWaypoint.title,
+            infoWindowDescription = stampWaypoint.description,
+            onMarkerClick = onWaypointClick,
+            onInfoWindowNavigationClick = { onWaypointNavigationClick.invoke(stampWaypoint.location.toGeoPoint()) },
+        )
+    }
+
+    listOf(oktRouteUiModel.start, oktRouteUiModel.end).forEach { geoPoint ->
+        addOktMarker(
+            overlayId = overlayId,
+            geoPoint = geoPoint,
+            iconDrawable = generateLayerDrawable(
+                layers = listOf(
+                    LayerDrawableConfig(
+                        R.drawable.ic_marker_okt_route_background.toDrawable(context),
+                        resources.getDimensionPixelSize(R.dimen.okt_routes_marker_background_size)
+                    ),
+                    LayerDrawableConfig(
+                        R.drawable.ic_marker_okt_routes.toDrawable(context),
+                        resources.getDimensionPixelSize(R.dimen.okt_routes_marker_icon_size)
+                    ),
+                ),
+            ),
+            infoWindowTitle = oktRouteUiModel.routeName,
+            onMarkerClick = onWaypointClick,
+            onInfoWindowNavigationClick = { onWaypointNavigationClick.invoke(geoPoint) },
         )
     }
 }
@@ -621,14 +659,27 @@ fun MapView.addOktMarker(
     overlayId: String = UUID.randomUUID().toString(),
     geoPoint: GeoPoint,
     iconDrawable: Drawable,
-    onClick: (Marker) -> Unit
+    infoWindowTitle: String,
+    infoWindowDescription: String? = null,
+    onMarkerClick: () -> Unit,
+    onInfoWindowNavigationClick: (GeoPoint) -> Unit,
 ) {
     val marker = OktMarker(this).apply {
         id = overlayId
         position = geoPoint
         icon = iconDrawable
-        setOnMarkerClickListener { marker, _ ->
-            onClick.invoke(marker)
+        infoWindow = GpxMarkerInfoWindow(
+            mapView = this@addOktMarker,
+            title = infoWindowTitle,
+            description = infoWindowDescription,
+            onNavigationClick = { onInfoWindowNavigationClick.invoke(geoPoint) },
+        )
+        setOnMarkerClickListener { marker, mapView ->
+            onMarkerClick.invoke()
+
+            marker.showInfoWindow()
+            mapView.controller.animateTo(marker.position)
+
             true
         }
     }

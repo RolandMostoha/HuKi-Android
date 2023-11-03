@@ -60,7 +60,7 @@ class LayersDomainModelMapper @Inject constructor() {
         )
     }
 
-    fun mapGpxWaypoints(waypoints: MutableList<WayPoint>): List<GpxWaypoint> {
+    fun mapGpxWaypoints(waypoints: List<WayPoint>): List<GpxWaypoint> {
         return waypoints.map { wayPoint ->
             val description = listOfNotNull(
                 wayPoint.desc

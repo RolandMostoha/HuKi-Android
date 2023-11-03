@@ -22,11 +22,13 @@ fun Location.toAndroidLocation() = AndroidLocation(LocationManager.GPS_PROVIDER)
 
 fun GeoPoint.toLocation() = Location(latitude, longitude)
 
+fun List<GeoPoint>.toLocations() = this.map { it.toLocation() }
+
 fun AndroidLocation.toLocation() = Location(latitude, longitude)
 
 fun List<Double>.toLocation() = Location(this[1], this[0], this[2])
 
-fun List<List<Double>>.toLocations(): List<Location> {
+fun List<List<Double>>.toLocationsFromDoubles(): List<Location> {
     return map { it.toLocation() }
 }
 

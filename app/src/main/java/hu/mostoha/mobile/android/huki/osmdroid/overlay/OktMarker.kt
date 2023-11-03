@@ -6,4 +6,4 @@ import org.osmdroid.views.overlay.Marker
 /**
  * Marker class to differentiate OKT routes related [Marker] classes.
  */
-class OktMarker(mapView: MapView) : Marker(mapView)
+class OktMarker(mapView: MapView) : InfoWindowMarker(mapView)

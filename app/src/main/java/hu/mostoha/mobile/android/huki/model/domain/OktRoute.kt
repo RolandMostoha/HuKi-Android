@@ -11,4 +11,5 @@ data class OktRoute(
     val travelTime: Duration,
     val start: Location,
     val end: Location,
+    val stampTagsRange: ClosedFloatingPointRange<Double>,
 )
