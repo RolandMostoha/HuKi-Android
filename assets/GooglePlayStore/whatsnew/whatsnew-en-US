@@ -1,2 +1,4 @@
-- Map ruler for measuring distance
-- Bugfixes
+- OKT stamp locations are now shown for OKT routes
+- Direct navigation is available for GPX/OKT waypoints
+- Address is requested for all placed points (long-click and my location)
+- Address is requested for route planner waypoints

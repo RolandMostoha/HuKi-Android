@@ -1,2 +1,4 @@
-- Térkép vonalzó távolságméréshez
-- Hibajavítások
+- A pecsételőhelyek is megjelennek mostmár az OKT útvonalakhoz
+- A GPX/OKT állomásokhoz mostmár lehet direktben is navigálni
+- Lekérjük a postacímet minden lerakott ponthoz (hosszú klikk és saját pozíció)
+- Lekérjük a postacímet az útvonaltervező állomásaihoz is
