@@ -10,7 +10,7 @@
     <color name="colorPrimaryTextDisabled">#80ffffff</color>
     <color name="colorSecondaryText">#B3ffffff</color>
     <color name="colorBackground">#2D2D2D</color>
-    <color name="colorBackgroundLight">#373737</color>
+    <color name="colorBackgroundLight">#212121</color>
     <color name="colorError">#c62828</color>
     <color name="colorStroke">#919191</color>
     <color name="colorStrokeOnMap">#DE000000</color>
