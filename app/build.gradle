@@ -9,12 +9,12 @@ apply from: "$project.rootDir/buildscripts/versions.gradle"
 android {
     namespace 'hu.mostoha.mobile.android.huki'
 
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "hu.mostoha.mobile.android.huki"
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode gitVersionCode
         versionName gitVersionName
         buildConfigField("String", "GRAPHHOPPER_API_KEY", getGraphhopperApiKey())
@@ -94,11 +94,11 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1"
 
     // Design
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "com.google.android.material:material:1.8.0"
+    implementation "com.google.android.material:material:1.10.0"
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "com.github.douglasjunior:android-simple-tooltip:1.1.0"
     implementation "com.github.skydoves:powermenu:2.2.4"
@@ -113,12 +113,12 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:$jetpackHiltVersion"
 
     // KTX
-    implementation "androidx.core:core-ktx:1.9.0"
-    def activityKtxVersion = "1.7.0"
+    implementation "androidx.core:core-ktx:1.12.0"
+    def activityKtxVersion = "1.8.0"
     implementation "androidx.activity:activity-ktx:$activityKtxVersion"
-    def fragmentKtxVersion = "1.5.6"
+    def fragmentKtxVersion = "1.6.2"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
-    def lifecycleVersion = "2.6.1"
+    def lifecycleVersion = "2.6.2"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
@@ -153,8 +153,8 @@ dependencies {
     implementation "com.jakewharton.timber:timber:5.0.1"
 
     // Analytics + Crashlytics
-    implementation "com.google.firebase:firebase-analytics-ktx:21.2.1"
-    implementation "com.google.firebase:firebase-crashlytics-ktx:18.3.6"
+    implementation "com.google.firebase:firebase-analytics-ktx:21.5.0"
+    implementation "com.google.firebase:firebase-crashlytics-ktx:18.5.1"
 
     // Licenses
     implementation 'com.github.marcoscgdev:Licenser:2.0.0'
