@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/space_medium"
+    android:paddingVertical="@dimen/space_extra_small">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/placeFinderShowMoreHistoryButton"
+        style="@style/DefaultButton.TextOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/place_finder_show_more_history" />
+
+</LinearLayout>

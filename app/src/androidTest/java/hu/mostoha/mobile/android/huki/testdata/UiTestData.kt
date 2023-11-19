@@ -11,6 +11,7 @@ import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.OktStampWaypoint
 import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
@@ -18,6 +19,7 @@ import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
 import java.io.File
+import java.time.LocalDate
 import kotlin.time.Duration.Companion.minutes
 
 val DEFAULT_MY_LOCATION = Location(
@@ -25,6 +27,8 @@ val DEFAULT_MY_LOCATION = Location(
     DEFAULT_MY_LOCATION_LONGITUDE,
     DEFAULT_MY_LOCATION_ALTITUDE
 )
+
+val DEFAULT_ACTUAL_DATE: LocalDate = LocalDate.of(2023, 1, 1)
 
 object Landscapes {
     val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.minBy { DEFAULT_MY_LOCATION.distanceBetween(it.center) }
@@ -50,8 +54,10 @@ object Places {
 
     val DEFAULT_PLACE_NODE = Place(
         osmId = DEFAULT_NODE_OSM_ID,
-        name = DEFAULT_NODE_NAME,
         placeType = PlaceType.NODE,
+        name = DEFAULT_NODE_NAME,
+        address = DEFAULT_NODE_CITY,
+        placeFeature = PlaceFeature.MAP_SEARCH,
         location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE)
     )
 
@@ -62,8 +68,10 @@ object Places {
 
     val DEFAULT_PLACE_WAY = Place(
         osmId = DEFAULT_WAY_OSM_ID,
-        name = DEFAULT_WAY_NAME,
         placeType = PlaceType.WAY,
+        name = DEFAULT_WAY_NAME,
+        address = DEFAULT_WAY_CITY,
+        placeFeature = PlaceFeature.MAP_SEARCH,
         location = Location(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE)
     )
 
@@ -75,8 +83,10 @@ object Places {
 
     val DEFAULT_PLACE_RELATION = Place(
         osmId = DEFAULT_RELATION_OSM_ID,
-        name = DEFAULT_RELATION_NAME,
         placeType = PlaceType.RELATION,
+        name = DEFAULT_RELATION_NAME,
+        address = DEFAULT_RELATION_ADDRESS,
+        placeFeature = PlaceFeature.MAP_SEARCH,
         location = Location(DEFAULT_RELATION_CENTER_LATITUDE, DEFAULT_RELATION_CENTER_LONGITUDE)
     )
 

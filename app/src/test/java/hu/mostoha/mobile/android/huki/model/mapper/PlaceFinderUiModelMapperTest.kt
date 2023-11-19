@@ -6,13 +6,11 @@ import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
-import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
-import hu.mostoha.mobile.android.huki.model.ui.Message
-import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceFinderFeature
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_CITY
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_COUNTRY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_EXTENT_EAST
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_EXTENT_NORTH
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_EXTENT_SOUTH
@@ -22,102 +20,61 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_POST_CODE
-import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderItem
-import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
-import hu.mostoha.mobile.android.huki.util.distanceBetween
+import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MAX_HISTORY_ITEM
 import org.junit.Test
 
 class PlaceFinderUiModelMapperTest {
 
-    private val mapper = PlaceFinderUiModelMapper()
+    private val hikingRouteRelationMapper = HikingRouteRelationMapper()
+    private val placeMapper = PlaceDomainUiMapper(hikingRouteRelationMapper)
+    private val mapper = PlaceFinderUiModelMapper(placeMapper)
 
     @Test
-    fun `Given empty place domain models, when mapPlaceFinderItems, then error item returns`() {
+    fun `Given empty places, when map history items, then empty place finder items return`() {
         val places = emptyList<Place>()
+        val placeFinderFeature = PlaceFinderFeature.MAP
 
-        val placeFinderItems = mapper.mapPlaceFinderItems(places)
+        val placeFinderItems = mapper.mapHistoryItems(placeFinderFeature, places, null)
+
+        assertThat(placeFinderItems).isEqualTo(emptyList<PlaceFinderItem>())
+    }
+
+    @Test
+    fun `Given MAP feature with places, when map history items, then empty place finder items return`() {
+        val places = listOf(DEFAULT_PLACE_WAY)
+        val placeFinderFeature = PlaceFinderFeature.MAP
+
+        val placeFinderItems = mapper.mapHistoryItems(placeFinderFeature, places, null)
 
         assertThat(placeFinderItems).isEqualTo(
             listOf(
-                PlaceFinderItem.Error(
-                    messageRes = R.string.place_finder_empty_message.toMessage(),
-                    drawableRes = R.drawable.ic_search_bar_empty_result
-                )
+                PlaceFinderItem.Place(placeMapper.mapHistoryPlace(DEFAULT_PLACE_WAY, null))
             )
         )
     }
 
     @Test
-    fun `Given place domain models, when mapPlaceFinderItems, then correct list of search bar items return`() {
-        val places = listOf(DEFAULT_PLACE_WAY)
+    fun `Given MAP feature with more places than max, when map history items, then only max items and sohw more return`() {
+        val places = (1..PLACE_FINDER_MAX_HISTORY_ITEM + 10)
+            .map { DEFAULT_PLACE_WAY.copy(it.toString()) }
+        val placeFinderFeature = PlaceFinderFeature.MAP
 
-        val placeFinderItems = mapper.mapPlaceFinderItems(places)
+        val placeFinderItems = mapper.mapHistoryItems(placeFinderFeature, places, null)
 
-        assertThat(placeFinderItems).isEqualTo(
-            listOf(PlaceFinderItem.StaticActions).plus(
-                PlaceFinderItem.Place(
-                    PlaceUiModel(
-                        osmId = DEFAULT_PLACE_WAY.osmId,
-                        placeType = PlaceType.WAY,
-                        primaryText = DEFAULT_PLACE_WAY.name.toMessage(),
-                        secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.city}"),
-                        iconRes = R.drawable.ic_place_type_way,
-                        geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
-                        boundingBox = DEFAULT_PLACE_WAY.boundingBox,
-                    )
-                )
-            )
-        )
+        assertThat(placeFinderItems.size).isEqualTo(PLACE_FINDER_MAX_HISTORY_ITEM + 1)
+        assertThat(placeFinderItems.last()).isEqualTo(PlaceFinderItem.ShowMoreHistory)
     }
 
     @Test
-    fun `Given place domain models without city, when mapPlaceFinderItems, then secondaryText contains the country`() {
-        val places = listOf(DEFAULT_PLACE_WAY.copy(city = null))
+    fun `Given ROUTE_PLANNER feature with more places than max, when map history items, then only max items return`() {
+        val places = (1..PLACE_FINDER_MAX_HISTORY_ITEM + 10)
+            .map { DEFAULT_PLACE_WAY.copy(it.toString()) }
+        val placeFinderFeature = PlaceFinderFeature.ROUTE_PLANNER
 
-        val placeFinderItems = mapper.mapPlaceFinderItems(places)
+        val placeFinderItems = mapper.mapHistoryItems(placeFinderFeature, places, null)
 
-        assertThat(placeFinderItems).isEqualTo(
-            listOf(PlaceFinderItem.StaticActions).plus(
-                PlaceFinderItem.Place(
-                    PlaceUiModel(
-                        osmId = DEFAULT_PLACE_WAY.osmId,
-                        placeType = PlaceType.WAY,
-                        primaryText = DEFAULT_PLACE_WAY.name.toMessage(),
-                        secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.country}"),
-                        iconRes = R.drawable.ic_place_type_way,
-                        geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
-                        boundingBox = DEFAULT_PLACE_WAY.boundingBox,
-                    )
-                )
-            )
-        )
-    }
-
-    @Test
-    fun `Given place domain models with location, when mapPlaceFinderItems, then correct list of search bar items return`() {
-        val places = listOf(DEFAULT_PLACE_WAY)
-        val location = BUDAPEST_LOCATION
-
-        val placeFinderItems = mapper.mapPlaceFinderItems(places, location)
-
-        assertThat(placeFinderItems).isEqualTo(
-            listOf(
-                PlaceFinderItem.StaticActions,
-                PlaceFinderItem.Place(
-                    PlaceUiModel(
-                        osmId = DEFAULT_PLACE_WAY.osmId,
-                        placeType = PlaceType.WAY,
-                        primaryText = DEFAULT_PLACE_WAY.name.toMessage(),
-                        secondaryText = Message.Text("${DEFAULT_PLACE_WAY.postCode} ${DEFAULT_PLACE_WAY.city}"),
-                        iconRes = R.drawable.ic_place_type_way,
-                        geoPoint = DEFAULT_PLACE_WAY.location.toGeoPoint(),
-                        boundingBox = DEFAULT_PLACE_WAY.boundingBox,
-                        distanceText = DistanceFormatter.format(DEFAULT_PLACE_WAY.location.distanceBetween(location))
-                    )
-                )
-            )
-        )
+        assertThat(placeFinderItems.size).isEqualTo(PLACE_FINDER_MAX_HISTORY_ITEM)
     }
 
     @Test
@@ -128,7 +85,7 @@ class PlaceFinderUiModelMapperTest {
 
         assertThat(errorItem).isEqualTo(
             listOf(
-                PlaceFinderItem.Error(
+                PlaceFinderItem.Info(
                     messageRes = domainException.messageRes,
                     drawableRes = R.drawable.ic_search_bar_error
                 )
@@ -148,10 +105,8 @@ class PlaceFinderUiModelMapperTest {
                 south = DEFAULT_WAY_EXTENT_SOUTH,
                 west = DEFAULT_WAY_EXTENT_WEST
             ),
-            country = DEFAULT_WAY_COUNTRY,
-            postCode = DEFAULT_WAY_POST_CODE,
-            city = DEFAULT_WAY_CITY,
-            street = null
+            address = "$DEFAULT_WAY_POST_CODE $DEFAULT_WAY_CITY",
+            placeFeature = PlaceFeature.MAP_SEARCH,
         )
     }
 

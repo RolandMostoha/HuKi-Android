@@ -30,8 +30,10 @@ import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
+import hu.mostoha.mobile.android.huki.model.ui.PlaceFinderFeature
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
@@ -45,6 +47,7 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEvents
 import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
+import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -140,13 +143,19 @@ class RoutePlannerFragment : Fragment() {
                 lastEditedWaypointInput = waypointInput
                 lastEditedWaypointItem = waypointItem
 
-                placeFinderViewModel.initStaticActions()
+                placeFinderViewModel.initPlaceFinder(PlaceFinderFeature.ROUTE_PLANNER)
             },
             onSearchTextChanged = { waypointInput, waypointItem, text ->
                 lastEditedWaypointInput = waypointInput
                 lastEditedWaypointItem = waypointItem
 
-                placeFinderViewModel.loadPlaces(text)
+                if (waypointInput.hasFocus() && text.isNotEmpty()) {
+                    if (text.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
+                        placeFinderViewModel.loadPlaces(text, PlaceFeature.ROUTE_PLANNER_SEARCH)
+                    } else {
+                        placeFinderViewModel.initPlaceFinder(PlaceFinderFeature.ROUTE_PLANNER)
+                    }
+                }
             },
             onSearchTextDoneAction = { textInputEditText ->
                 textInputEditText.text?.clear()
@@ -211,17 +220,16 @@ class RoutePlannerFragment : Fragment() {
                 val lastEditedWaypoint = lastEditedWaypointItem ?: return@PlaceFinderPopup
                 val searchText = waypointInput.text?.toString() ?: ""
 
-                analyticsService.placeFinderPlaceClicked(searchText, placeUiModel.primaryText.resolve(requireContext()))
+                analyticsService.placeFinderPlaceClicked(
+                    searchText = searchText,
+                    placeName = placeUiModel.primaryText.resolve(requireContext()),
+                    isFromHistory = placeUiModel.historyInfo != null
+                )
 
                 waypointInput.clearFocusAndHideKeyboard()
                 placeFinderViewModel.cancelSearch()
 
-                routePlannerViewModel.updateWaypoint(
-                    lastEditedWaypoint,
-                    placeUiModel.primaryText,
-                    placeUiModel.geoPoint.toLocation(),
-                    searchText
-                )
+                routePlannerViewModel.updateWaypoint(lastEditedWaypoint, placeUiModel, searchText)
             },
             onMyLocationClick = {
                 analyticsService.routePlannerMyLocationClicked()

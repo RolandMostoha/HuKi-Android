@@ -4,4 +4,6 @@ interface AppConfiguration {
 
     fun getSearchQueryDelay(): Long
 
+    fun getPlaceHistoryMaxRowCount(): Int
+
 }

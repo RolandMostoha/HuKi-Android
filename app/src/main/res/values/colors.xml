@@ -38,6 +38,7 @@
     <color name="colorInfoPopupBackground">@color/colorPrimary</color>
     <color name="colorBadgeBackground">#F7F8F9</color>
     <color name="colorBadgeStroke">#80919191</color>
+    <color name="colorPlaceHistoryIcon">@color/colorPrimaryIcon</color>
 
     <color name="colorSymbolStroke">#000000</color>
     <color name="colorSymbolBlue">#0000cc</color>

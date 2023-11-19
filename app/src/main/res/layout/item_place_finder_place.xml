@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:background="@drawable/background_place_finder_place"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingHorizontal="@dimen/space_medium"
-    android:paddingVertical="@dimen/space_small"
-    android:orientation="horizontal">
+    android:paddingVertical="@dimen/space_small">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,11 +17,12 @@
 
         <ImageView
             android:id="@+id/placeFinderIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/place_finder_badge_size"
+            android:layout_height="@dimen/place_finder_badge_size"
             android:layout_gravity="center_vertical"
+            android:background="@drawable/background_badge"
             android:importantForAccessibility="no"
-            android:paddingHorizontal="@dimen/space_medium"
+            android:paddingHorizontal="@dimen/space_small"
             tools:src="@drawable/ic_place_type_relation" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -29,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_extra_small"
+            android:minWidth="@dimen/space_medium"
             android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall"
             tools:text="4 km" />
 
@@ -38,8 +40,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/space_small"
-        android:paddingVertical="@dimen/space_medium">
+        android:paddingVertical="@dimen/space_medium"
+        android:paddingStart="@dimen/space_medium"
+        android:paddingEnd="@dimen/space_small">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/placeFinderPrimaryText"

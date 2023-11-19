@@ -6,4 +6,6 @@ class HukiAppConfiguration @Inject constructor() : AppConfiguration {
 
     override fun getSearchQueryDelay() = 1200L
 
+    override fun getPlaceHistoryMaxRowCount(): Int = 1000
+
 }

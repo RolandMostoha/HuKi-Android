@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.di.module.DefaultDispatcher
-import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
 import hu.mostoha.mobile.android.huki.extensions.swap
 import hu.mostoha.mobile.android.huki.extensions.update
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.Message
@@ -20,12 +20,13 @@ import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.PlaceHistoryRepository
 import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +37,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
@@ -51,14 +51,14 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class RoutePlannerViewModel @Inject constructor(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     private val exceptionLogger: ExceptionLogger,
     private val analyticsService: AnalyticsService,
     private val myLocationProvider: AsyncMyLocationProvider,
     private val routePlannerRepository: RoutePlannerRepository,
+    private val placeHistoryRepository: PlaceHistoryRepository,
     private val geocodingRepository: GeocodingRepository,
-    private val routePlannerUiModelMapper: RoutePlannerUiModelMapper,
+    private val mapper: RoutePlannerUiModelMapper,
+    private val dateTimeProvider: DateTimeProvider,
 ) : ViewModel() {
 
     private val _routePlanUiModel = MutableStateFlow<RoutePlanUiModel?>(null)
@@ -79,7 +79,7 @@ class RoutePlannerViewModel @Inject constructor(
     val routePlanErrorMessage: SharedFlow<Message.Res?> = _routePlanErrorMessage.asSharedFlow()
 
     init {
-        viewModelScope.launch(defaultDispatcher) {
+        viewModelScope.launch {
             waypointItems
                 .flatMapLatest { waypoints ->
                     val triggerLocations = waypoints.mapNotNull { it.location }
@@ -96,7 +96,7 @@ class RoutePlannerViewModel @Inject constructor(
                         request = { routePlannerRepository.getRoutePlan(triggerLocations) },
                         exceptionLogger = exceptionLogger
                     )
-                        .map { routePlannerUiModelMapper.mapToRoutePlanUiModel(waypoints, triggerLocations, it) }
+                        .map { mapper.mapToRoutePlanUiModel(waypoints, triggerLocations, it) }
                         .onEach { _routePlanUiModel.emit(it) }
                         .onStart {
                             _routePlanErrorMessage.emit(null)
@@ -110,7 +110,6 @@ class RoutePlannerViewModel @Inject constructor(
                             )
                             showError(domainException)
                         }
-                        .flowOn(ioDispatcher)
                 }
                 .catch { showError(it) }
                 .collect()
@@ -156,38 +155,49 @@ class RoutePlannerViewModel @Inject constructor(
         }
     }
 
-    fun updateWaypoint(waypointItem: WaypointItem, name: Message, location: Location, searchText: String) {
+    fun updateWaypoint(waypointItem: WaypointItem, placeUiModel: PlaceUiModel, searchText: String) {
         _wayPointItems.update { wayPointItemList ->
             wayPointItemList.update(waypointItem) { wayPointItem ->
                 wayPointItem.copy(
-                    primaryText = name,
-                    location = location,
+                    primaryText = placeUiModel.primaryText,
+                    location = placeUiModel.geoPoint.toLocation(),
                     searchText = searchText
                 )
             }
+        }
+
+        viewModelScope.launch {
+            placeHistoryRepository.savePlace(placeUiModel, dateTimeProvider.nowInMillis())
         }
     }
 
     fun updateByMyLocation(waypointItem: WaypointItem) {
         viewModelScope.launch {
-            val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()
+            val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation()
             if (lastKnownLocation == null) {
                 _routePlanErrorMessage.emit(Message.Res(R.string.place_finder_my_location_error_null_location))
                 return@launch
             }
 
             val defaultPrimaryText = R.string.place_finder_my_location_button.toMessage()
-            val place = geocodingRepository.getPlace(lastKnownLocation.toLocation())
+            val place = geocodingRepository.getPlace(lastKnownLocation, PlaceFeature.ROUTE_PLANNER_MY_LOCATION)
 
             _wayPointItems.update { wayPointItemList ->
                 wayPointItemList.update(waypointItem) { wayPointItem ->
                     wayPointItem.copy(
                         primaryText = place?.name?.toMessage() ?: defaultPrimaryText,
-                        location = lastKnownLocation.toLocation(),
+                        location = lastKnownLocation,
                         searchText = null
                     )
                 }
             }
+
+            val placeUiModel = mapper.mapToHistory(
+                lastKnownLocation.toGeoPoint(),
+                PlaceFeature.ROUTE_PLANNER_MY_LOCATION,
+                place
+            )
+            placeHistoryRepository.savePlace(placeUiModel, dateTimeProvider.nowInMillis())
         }
     }
 
@@ -195,7 +205,7 @@ class RoutePlannerViewModel @Inject constructor(
         viewModelScope.launch {
             val defaultPrimaryText = LocationFormatter.formatText(location)
 
-            val place = geocodingRepository.getPlace(location)
+            val place = geocodingRepository.getPlace(location, PlaceFeature.ROUTE_PLANNER_PICKED_LOCATION)
 
             _wayPointItems.update { wayPointItemList ->
                 wayPointItemList.update(waypointItem) { wayPointItem ->
@@ -206,6 +216,13 @@ class RoutePlannerViewModel @Inject constructor(
                     )
                 }
             }
+
+            val placeUiModel = mapper.mapToHistory(
+                location.toGeoPoint(),
+                PlaceFeature.ROUTE_PLANNER_PICKED_LOCATION,
+                place
+            )
+            placeHistoryRepository.savePlace(placeUiModel, dateTimeProvider.nowInMillis())
         }
     }
 
@@ -248,7 +265,7 @@ class RoutePlannerViewModel @Inject constructor(
     }
 
     fun saveRoutePlan() {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             val routePlan = _routePlanUiModel.value ?: return@launch
 
             analyticsService.routePlanSaved(routePlan)

@@ -1,10 +1,14 @@
 package hu.mostoha.mobile.android.huki.home
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import androidx.annotation.IdRes
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
@@ -42,6 +46,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.instanceOf
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -88,13 +93,15 @@ class GpxHistoryUiTest {
     @JvmField
     val routPlannerRepository: RoutePlannerRepository = mockk()
 
+    private lateinit var viewPagerIdlingResource: ViewPagerIdlingResource
+
     @Before
     fun init() {
         hiltRule.inject()
         osmConfiguration.init()
         Intents.init()
 
-        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns listOf(
+        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_WAY,
             DEFAULT_PLACE_RELATION
@@ -103,12 +110,19 @@ class GpxHistoryUiTest {
         coEvery { routPlannerRepository.saveRoutePlan(any()) } returns getTestRoutePlannerGpxUri()
     }
 
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(viewPagerIdlingResource)
+    }
+
     @Test
     fun whenGpxHistoryFabIsClicked_thenGpxHistoryDisplays() {
         gpxConfiguration.clearAllGpxFiles()
 
         launchScenario<HomeActivity> {
-            R.id.homeGpxHistoryFab.click()
+            R.id.homeHistoryFab.click()
+            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyTabLayout.selectTab(1)
 
             R.id.historyContainer.isDisplayed()
         }
@@ -119,7 +133,10 @@ class GpxHistoryUiTest {
         gpxConfiguration.clearAllGpxFiles()
 
         launchScenario<HomeActivity> {
-            R.id.homeGpxHistoryFab.click()
+            R.id.homeHistoryFab.click()
+            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+
+            R.id.historyTabLayout.selectTab(1)
 
             R.string.gpx_history_item_route_planner_empty.isTextDisplayed()
         }
@@ -136,8 +153,9 @@ class GpxHistoryUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
             R.id.gpxDetailsCloseButton.click()
 
-            R.id.homeGpxHistoryFab.click()
-            R.id.historyTabLayout.selectTab(1)
+            R.id.homeHistoryFab.click()
+            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyTabLayout.selectTab(2)
 
             R.id.gpxHistoryItemOpenButton.isDisplayed()
         }
@@ -154,8 +172,9 @@ class GpxHistoryUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
             R.id.gpxDetailsCloseButton.click()
 
-            R.id.homeGpxHistoryFab.click()
-            R.id.historyTabLayout.selectTab(1)
+            R.id.homeHistoryFab.click()
+            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyTabLayout.selectTab(2)
             R.id.gpxHistoryItemOpenButton.click()
 
             R.id.gpxDetailsStartButton.isDisplayed()
@@ -182,7 +201,9 @@ class GpxHistoryUiTest {
 
             R.id.gpxDetailsCloseButton.click()
 
-            R.id.homeGpxHistoryFab.click()
+            R.id.homeHistoryFab.click()
+            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyTabLayout.selectTab(1)
             R.id.gpxHistoryItemOpenButton.click()
 
             R.id.gpxDetailsStartButton.isDisplayed()
@@ -209,7 +230,9 @@ class GpxHistoryUiTest {
 
             R.id.gpxDetailsCloseButton.click()
 
-            R.id.homeGpxHistoryFab.click()
+            R.id.homeHistoryFab.click()
+            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyTabLayout.selectTab(1)
             R.id.gpxHistoryActionsButton.click()
             R.string.gpx_history_menu_action_delete.clickWithTextInPopup()
 
@@ -228,8 +251,9 @@ class GpxHistoryUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
             R.id.gpxDetailsCloseButton.click()
 
-            R.id.homeGpxHistoryFab.click()
-            R.id.historyTabLayout.selectTab(1)
+            R.id.homeHistoryFab.click()
+            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyTabLayout.selectTab(2)
             R.id.gpxHistoryActionsButton.click()
             R.string.gpx_history_menu_action_rename.clickWithTextInPopup()
             R.id.gpxRenameInput.typeText("New file name")
@@ -250,8 +274,9 @@ class GpxHistoryUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
             R.id.gpxDetailsCloseButton.click()
 
-            R.id.homeGpxHistoryFab.click()
-            R.id.historyTabLayout.selectTab(1)
+            R.id.homeHistoryFab.click()
+            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyTabLayout.selectTab(2)
             R.id.gpxHistoryItemShareButton.click()
         }
     }
@@ -261,7 +286,9 @@ class GpxHistoryUiTest {
         gpxConfiguration.clearAllGpxFiles()
 
         launchScenario<HomeActivity> {
-            R.id.homeGpxHistoryFab.click()
+            R.id.homeHistoryFab.click()
+            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyTabLayout.selectTab(1)
 
             onView(
                 allOf(
@@ -280,6 +307,13 @@ class GpxHistoryUiTest {
         }
 
         return Uri.fromFile(file)
+    }
+
+    private fun <T : Activity> @receiver:IdRes Int.registerViewPagerIdlingResource(scenario: ActivityScenario<T>) {
+        scenario.onActivity {
+            viewPagerIdlingResource = ViewPagerIdlingResource(it.findViewById(this))
+            IdlingRegistry.getInstance().register(viewPagerIdlingResource)
+        }
     }
 
 }

@@ -12,17 +12,15 @@ class PlaceFinderPopup(
     onPlaceClick: (PlaceUiModel) -> Unit,
     onMyLocationClick: () -> Unit,
     onPickLocationClick: () -> Unit,
+    onShowMoreHistoryClick: (() -> Unit)? = null,
 ) : ListPopupWindow(context) {
-
-    companion object {
-        const val PLACE_FINDER_MIN_TRIGGER_LENGTH = 3
-    }
 
     private var placeFinderAdapter: PlaceFinderAdapter
 
     init {
+        height = context.resources.getDimensionPixelSize(R.dimen.home_search_bar_popup_height)
+        inputMethodMode = INPUT_METHOD_NEEDED
         verticalOffset = context.resources.getDimensionPixelSize(R.dimen.space_extra_extra_small)
-        height = context.resources.getDimensionPixelSize(R.dimen.home_search_bar_vertical_offset)
         setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_dialog))
 
         placeFinderAdapter = PlaceFinderAdapter(
@@ -35,6 +33,10 @@ class PlaceFinderPopup(
                 onPickLocationClick.invoke()
                 dismiss()
             },
+            onShowMoreHistoryClick = {
+                onShowMoreHistoryClick?.invoke()
+                dismiss()
+            }
         )
         setAdapter(placeFinderAdapter)
 
@@ -49,6 +51,7 @@ class PlaceFinderPopup(
 
     fun initPlaceFinderItems(anchor: View, placeItems: List<PlaceFinderItem>) {
         anchorView = anchor
+        inputMethodMode = INPUT_METHOD_NEEDED
 
         val hasPlaceItems = placeItems
             .filterIsInstance<PlaceFinderItem.Place>()

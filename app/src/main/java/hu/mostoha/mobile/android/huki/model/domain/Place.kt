@@ -5,11 +5,8 @@ data class Place(
     val name: String,
     val placeType: PlaceType,
     val location: Location,
+    val address: String,
+    val placeFeature: PlaceFeature,
+    val historyInfo: HistoryInfo? = null,
     val boundingBox: BoundingBox? = null,
-    val country: String? = null,
-    val county: String? = null,
-    val district: String? = null,
-    val postCode: String? = null,
-    val city: String? = null,
-    val street: String? = null
 )

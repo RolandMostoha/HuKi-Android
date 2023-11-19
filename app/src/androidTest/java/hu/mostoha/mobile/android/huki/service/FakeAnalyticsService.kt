@@ -8,7 +8,7 @@ import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 
 class FakeAnalyticsService : AnalyticsService {
 
-    override fun placeFinderPlaceClicked(searchText: String, placeName: String) = Unit
+    override fun placeFinderPlaceClicked(searchText: String, placeName: String, isFromHistory: Boolean) = Unit
 
     override fun loadLandscapeClicked(placeName: String) = Unit
 
@@ -83,6 +83,10 @@ class FakeAnalyticsService : AnalyticsService {
     override fun gpxHistoryItemDelete() = Unit
 
     override fun gpxHistoryItemRename() = Unit
+
+    override fun placeHistoryItemOpen() = Unit
+
+    override fun placeHistoryItemDelete() = Unit
 
     override fun oktChipClicked() = Unit
 

@@ -21,6 +21,19 @@ object DistanceFormatter {
         }
     }
 
+    fun formatWithoutScale(meters: Int): Message.Res {
+        val km = (meters.toDouble() / 1000)
+            .toBigDecimal()
+            .setScale(0, RoundingMode.HALF_UP)
+            .stripTrailingZeros()
+
+        return if (km >= BigDecimal.ONE) {
+            Message.Res(R.string.default_distance_template_km, listOf(km.toPlainString()))
+        } else {
+            Message.Res(R.string.default_distance_template_m, listOf(meters))
+        }
+    }
+
     fun formatKm(km: Int): Message.Res = format(km * 1000)
 
     fun formatSigned(meters: Int): Message.Res {

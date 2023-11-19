@@ -6,6 +6,7 @@ import hu.mostoha.mobile.android.huki.constants.KIRANDULASTIPPEK_QUERY_URL
 import hu.mostoha.mobile.android.huki.constants.TERMESZETJARO_AREA_URL
 import hu.mostoha.mobile.android.huki.constants.TERMESZETJARO_PLACE_URL
 import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.ui.HikeRecommendation
@@ -92,6 +93,7 @@ class HikeRecommenderMapperTest {
             secondaryText = DEFAULT_NODE_CITY.toMessage(),
             iconRes = 0,
             geoPoint = GeoPoint(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
+            placeFeature = PlaceFeature.MAP_SEARCH,
             boundingBox = null,
         )
     }

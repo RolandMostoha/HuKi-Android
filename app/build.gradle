@@ -149,6 +149,13 @@ dependencies {
     implementation "com.amplifyframework:aws-storage-s3:$awsVersion"
     implementation "com.amplifyframework:aws-auth-cognito:$awsVersion"
 
+    // Room
+    def room_version = "2.6.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
     // Logging
     implementation "com.jakewharton.timber:timber:5.0.1"
 
@@ -190,6 +197,7 @@ dependencies {
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinCoroutineTestVersion"
 
     androidTestImplementation "io.mockk:mockk-android:$mockKVersion"
+    androidTestImplementation 'app.cash.turbine:turbine:0.12.0'
 
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltVersion"

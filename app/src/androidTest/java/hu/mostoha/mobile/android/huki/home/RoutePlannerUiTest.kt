@@ -31,6 +31,7 @@ import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
@@ -115,7 +116,7 @@ class RoutePlannerUiTest {
         Intents.init()
 
         answerTestLocationProvider()
-        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns listOf(
+        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_WAY,
             DEFAULT_PLACE_RELATION
@@ -307,7 +308,7 @@ class RoutePlannerUiTest {
     @Test
     fun givenMyLocation_whenAddMyLocationWaypoint_thenRoutePlanUpdates() {
         launchScenario<HomeActivity> {
-            coEvery { geocodingRepository.getPlace(any()) } returns null
+            coEvery { geocodingRepository.getPlace(any(), any()) } returns null
 
             val waypointName1 = "Dobogoko"
 
@@ -332,7 +333,8 @@ class RoutePlannerUiTest {
     @Test
     fun givenMyLocationWithGeocoding_whenAddMyLocationWaypoint_thenRoutePlanUpdates() {
         launchScenario<HomeActivity> {
-            coEvery { geocodingRepository.getPlace(any()) } returns DEFAULT_PLACE_NODE
+            coEvery { geocodingRepository.getPlace(any(), any()) } returns DEFAULT_PLACE_NODE
+            coEvery { routPlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
 
             val waypointName1 = "Dobogoko"
 
@@ -344,7 +346,7 @@ class RoutePlannerUiTest {
 
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName1)))
-            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
 
             R.id.routePlannerRouteAttributesContainer.isDisplayed()
             "13 km".isTextDisplayed()
@@ -525,20 +527,26 @@ class RoutePlannerUiTest {
     companion object {
         private val DEFAULT_PLACE_NODE = Place(
             osmId = DEFAULT_NODE_OSM_ID,
-            name = DEFAULT_NODE_NAME,
             placeType = PlaceType.NODE,
+            name = DEFAULT_NODE_NAME,
+            address = DEFAULT_NODE_CITY,
+            placeFeature = PlaceFeature.MAP_SEARCH,
             location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE)
         )
         private val DEFAULT_PLACE_WAY = Place(
             osmId = DEFAULT_WAY_OSM_ID,
-            name = DEFAULT_WAY_NAME,
             placeType = PlaceType.WAY,
+            name = DEFAULT_WAY_NAME,
+            address = DEFAULT_WAY_CITY,
+            placeFeature = PlaceFeature.MAP_SEARCH,
             location = Location(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE)
         )
         private val DEFAULT_PLACE_RELATION = Place(
             osmId = DEFAULT_RELATION_OSM_ID,
-            name = DEFAULT_RELATION_NAME,
             placeType = PlaceType.RELATION,
+            name = DEFAULT_RELATION_NAME,
+            address = DEFAULT_RELATION_ADDRESS,
+            placeFeature = PlaceFeature.MAP_SEARCH,
             location = Location(DEFAULT_RELATION_CENTER_LATITUDE, DEFAULT_RELATION_CENTER_LONGITUDE)
         )
         private val DEFAULT_WAYPOINTS = listOf(

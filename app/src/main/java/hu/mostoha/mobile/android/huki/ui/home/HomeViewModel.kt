@@ -5,17 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
-import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
-import hu.mostoha.mobile.android.huki.model.domain.PlaceRequestType
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.OktRoutesMapper
+import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
+import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
@@ -25,14 +26,15 @@ import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.OktRepository
+import hu.mostoha.mobile.android.huki.repository.PlaceHistoryRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import hu.mostoha.mobile.android.huki.util.distanceBetween
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -53,15 +55,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val exceptionLogger: ExceptionLogger,
     private val analyticsService: AnalyticsService,
     private val placesRepository: PlacesRepository,
+    private val placeHistoryRepository: PlaceHistoryRepository,
     private val geocodingRepository: GeocodingRepository,
     private val oktRepository: OktRepository,
     private val landscapeInteractor: LandscapeInteractor,
     private val homeUiModelMapper: HomeUiModelMapper,
+    private val placeDomainUiMapper: PlaceDomainUiMapper,
     private val oktRoutesMapper: OktRoutesMapper,
+    private val dateTimeProvider: DateTimeProvider,
 ) : ViewModel() {
 
     private val _mapUiModel = MutableStateFlow(MapUiModel())
@@ -99,16 +103,18 @@ class HomeViewModel @Inject constructor(
     val errorMessage: SharedFlow<Message.Res> = _errorMessage.asSharedFlow()
 
     init {
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch {
             landscapeInteractor.requestGetLandscapesFlow()
                 .map { homeUiModelMapper.mapLandscapes(it) }
                 .onEach { _landscapes.emit(it) }
                 .catch { showError(it) }
                 .collect()
+
+            placeHistoryRepository.clearOldPlaces()
         }
     }
 
-    fun loadLandscapes(location: Location) = viewModelScope.launch(dispatcher) {
+    fun loadLandscapes(location: Location) = viewModelScope.launch {
         landscapeInteractor.requestGetLandscapesFlow(location.toLocation())
             .map { homeUiModelMapper.mapLandscapes(it) }
             .onEach { _landscapes.emit(it) }
@@ -116,7 +122,7 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadLandscapeDetails(landscapeUiModel: LandscapeUiModel) = viewModelScope.launch(dispatcher) {
+    fun loadLandscapeDetails(landscapeUiModel: LandscapeUiModel) = viewModelScope.launch {
         flowWithExceptions(
             request = { placesRepository.getGeometry(landscapeUiModel.osmId, landscapeUiModel.osmType) },
             exceptionLogger = exceptionLogger
@@ -136,47 +142,60 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadPlace(placeUiModel: PlaceUiModel) = viewModelScope.launch(dispatcher) {
+    fun loadPlaceDetails(placeUiModel: PlaceUiModel) = viewModelScope.launch {
         clearFollowLocation()
         clearHikingRoutes()
         clearLandscapeDetails()
         clearOktRoutes()
 
-        _placeDetails.emit(homeUiModelMapper.mapPlaceDetails(placeUiModel))
+        _placeDetails.value = placeDomainUiMapper.mapToPlaceDetailsPreview(placeUiModel)
+
+        placeHistoryRepository.savePlace(placeUiModel, dateTimeProvider.nowInMillis())
     }
 
-    fun loadPlace(geoPoint: GeoPoint, placeRequestType: PlaceRequestType) = viewModelScope.launch(dispatcher) {
-        when (placeRequestType) {
-            PlaceRequestType.MY_LOCATION -> analyticsService.myLocationPlaceRequested()
-            PlaceRequestType.PICKED_LOCATION -> analyticsService.pickLocationPlaceRequested()
-            PlaceRequestType.OKT_WAYPOINT -> analyticsService.oktWaypointPlaceRequested()
-            PlaceRequestType.GPX_WAYPOINT -> analyticsService.gpxWaypointPlaceRequested()
+    fun loadPlaceDetailsWithGeocoding(geoPoint: GeoPoint, placeFeature: PlaceFeature) =
+        viewModelScope.launch {
+            when (placeFeature) {
+                PlaceFeature.MAP_MY_LOCATION -> analyticsService.myLocationPlaceRequested()
+                PlaceFeature.MAP_PICKED_LOCATION -> analyticsService.pickLocationPlaceRequested()
+                PlaceFeature.OKT_WAYPOINT -> analyticsService.oktWaypointPlaceRequested()
+                PlaceFeature.GPX_WAYPOINT -> analyticsService.gpxWaypointPlaceRequested()
+                else -> Unit
+            }
+
+            flowWithExceptions(
+                request = { geocodingRepository.getPlace(geoPoint.toLocation(), placeFeature) },
+                exceptionLogger = exceptionLogger
+            )
+                .map { place ->
+                    PlaceDetailsUiModel(
+                        placeUiModel = placeDomainUiMapper.mapToPlaceUiModel(geoPoint, placeFeature, place),
+                        geometryUiModel = GeometryUiModel.Node(geoPoint),
+                    )
+                }
+                .onEach { placeDetailsUiModel ->
+                    _placeDetails.emit(placeDetailsUiModel)
+
+                    placeHistoryRepository.savePlace(placeDetailsUiModel.placeUiModel, dateTimeProvider.nowInMillis())
+                }
+                .onStart {
+                    clearFollowLocation()
+                    clearHikingRoutes()
+                    clearLandscapeDetails()
+
+                    showLoading(true)
+                }
+                .onCompletion { showLoading(false) }
+                .catch { showError(it) }
+                .collect()
         }
 
-        flowWithExceptions(
-            request = { geocodingRepository.getPlace(geoPoint.toLocation()) },
-            exceptionLogger = exceptionLogger
-        )
-            .map { homeUiModelMapper.mapPlaceDetails(geoPoint, placeRequestType, it) }
-            .onEach { _placeDetails.emit(it) }
-            .onStart {
-                clearFollowLocation()
-                clearHikingRoutes()
-                clearLandscapeDetails()
-
-                showLoading(true)
-            }
-            .onCompletion { showLoading(false) }
-            .catch { showError(it) }
-            .collect()
-    }
-
-    fun loadPlaceDetails(placeUiModel: PlaceUiModel) = viewModelScope.launch(dispatcher) {
+    fun loadPlaceDetailsWithGeometry(placeUiModel: PlaceUiModel) = viewModelScope.launch {
         flowWithExceptions(
             request = { placesRepository.getGeometry(placeUiModel.osmId, placeUiModel.placeType) },
             exceptionLogger = exceptionLogger
         )
-            .map { homeUiModelMapper.mapPlaceDetails(placeUiModel, it) }
+            .map { placeDomainUiMapper.mapToPlaceDetailsUiModel(placeUiModel, it) }
             .onEach { _placeDetails.emit(it) }
             .onStart {
                 clearFollowLocation()
@@ -191,7 +210,7 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = viewModelScope.launch(dispatcher) {
+    fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = viewModelScope.launch {
         flowWithExceptions(
             request = { placesRepository.getHikingRoutes(boundingBox) },
             exceptionLogger = exceptionLogger
@@ -208,12 +227,12 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = viewModelScope.launch(dispatcher) {
+    fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = viewModelScope.launch {
         flowWithExceptions(
             request = { placesRepository.getGeometry(hikingRoute.osmId, PlaceType.RELATION) },
             exceptionLogger = exceptionLogger
         )
-            .map { homeUiModelMapper.mapHikingRouteDetails(hikingRoute, it) }
+            .map { placeDomainUiMapper.mapToHikingRouteDetails(hikingRoute, it) }
             .onEach { _placeDetails.emit(it) }
             .onStart {
                 clearFollowLocation()
@@ -232,7 +251,7 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadOktRoutes() = viewModelScope.launch(dispatcher) {
+    fun loadOktRoutes() = viewModelScope.launch {
         flowWithExceptions(
             request = { oktRepository.getOktRoutes() },
             exceptionLogger = exceptionLogger

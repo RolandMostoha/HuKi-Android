@@ -1,16 +1,19 @@
 package hu.mostoha.mobile.android.huki.util.espresso
 
 import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.GeneralClickAction
 import androidx.test.espresso.action.Press
 import androidx.test.espresso.action.Tap
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.google.android.material.tabs.TabLayout
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matcher
 
 
 fun clickXY(x: Int, y: Int, tapType: Tap): ViewAction {
@@ -65,4 +68,28 @@ fun selectTabAtPosition(tabIndex: Int): ViewAction {
             tabAtIndex.select()
         }
     }
+}
+
+fun waitFor(millis: Long) {
+    Espresso.onView(ViewMatchers.isRoot()).perform(waitForAction(millis))
+}
+
+private fun waitForAction(millis: Long): ViewAction {
+    return object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return ViewMatchers.isRoot()
+        }
+
+        override fun getDescription(): String {
+            return "Wait for $millis milliseconds."
+        }
+
+        override fun perform(uiController: UiController, view: View) {
+            uiController.loopMainThreadForAtLeast(millis)
+        }
+    }
+}
+
+fun waitForInputFocusGain() {
+    waitFor(200)
 }

@@ -7,8 +7,6 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.Tap
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
@@ -21,7 +19,6 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -31,6 +28,7 @@ import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 
 fun @receiver:IdRes Int.isDisplayed() {
     onView(withId(this)).check(matches(ViewMatchers.isDisplayed()))
@@ -243,6 +241,27 @@ fun hasItemAtPosition(position: Int, matcher: Matcher<View>): Matcher<View> {
     }
 }
 
+fun withItemAtPosition(matcher: Matcher<View>, index: Int): Matcher<View> {
+    return object : TypeSafeMatcher<View>() {
+        private var currentIndex = 0
+
+        override fun describeTo(description: Description?) {
+            description?.appendText("with index: ");
+            description?.appendValue(index);
+            matcher.describeTo(description);
+        }
+
+        override fun matchesSafely(view: View?): Boolean {
+            return matcher.matches(view) && currentIndex++ == index;
+        }
+    }
+}
+
+fun @receiver:IdRes Int.hasDescendantWithText(position: Int, text: String) {
+    onView(withItemAtPosition(withId(this), position))
+        .check(matches(ViewMatchers.hasDescendant(withText(text))))
+}
+
 fun isKeyboardShown(): Boolean {
     val inputMethodManager = InstrumentationRegistry
         .getInstrumentation()
@@ -250,24 +269,4 @@ fun isKeyboardShown(): Boolean {
         .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
     return inputMethodManager.isAcceptingText
-}
-
-fun waitFor(millis: Long) {
-    onView(isRoot()).perform(waitForAction(millis))
-}
-
-private fun waitForAction(millis: Long): ViewAction {
-    return object : ViewAction {
-        override fun getConstraints(): Matcher<View> {
-            return isRoot()
-        }
-
-        override fun getDescription(): String {
-            return "Wait for $millis milliseconds."
-        }
-
-        override fun perform(uiController: UiController, view: View) {
-            uiController.loopMainThreadForAtLeast(millis)
-        }
-    }
 }

@@ -7,7 +7,6 @@
     android:padding="@dimen/space_medium">
 
     <!--  GPX rename input   -->
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/gpxRenameInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -36,7 +35,6 @@
 
 
     <!-- GPX postfix -->
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/gpxRenamePostfixText"
         android:layout_width="wrap_content"
@@ -49,7 +47,6 @@
         app:layout_constraintTop_toTopOf="@id/gpxRenameInputLayout" />
 
     <!-- Cancel button  -->
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/gpxRenameCancelButton"
         style="@style/DefaultButton.Contained.Shadowless.Secondary"
@@ -73,7 +70,6 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <!-- Save button  -->
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/gpxRenameSaveButton"
         style="@style/DefaultButton.Contained.Shadowless.Secondary"

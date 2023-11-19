@@ -139,16 +139,16 @@
             app:layout_constraintTop_toBottomOf="@id/homeLandscapeContainer" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/homeGpxHistoryFab"
+            android:id="@+id/homeHistoryFab"
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_large"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
-            android:contentDescription="@string/accessibility_home_fab_gpx_history"
+            android:contentDescription="@string/accessibility_home_fab_history"
             android:elevation="@dimen/default_elevation_map_interactive_views"
-            android:src="@drawable/ic_home_fab_gpx_history"
+            android:src="@drawable/ic_home_fab_history"
             app:fabSize="mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeSettingsFab" />

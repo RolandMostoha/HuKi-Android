@@ -34,7 +34,7 @@ jobs:
           graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
 
       - name: Unit tests
-        run: ./gradlew test
+        run: ./gradlew testDebugUnitTest
 
   android_tests:
     runs-on: [ ubuntu-latest ]

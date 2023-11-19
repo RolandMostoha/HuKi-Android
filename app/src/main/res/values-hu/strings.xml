@@ -13,6 +13,15 @@
 
     <string name="default_distance_template_m">%s m</string>
     <string name="default_distance_template_km">%s km</string>
+    <string name="default_date_today">Ma</string>
+    <string name="default_date_yesterday">Tegnap</string>
+    <string name="default_date_monday">Hétfő</string>
+    <string name="default_date_tuesday">Kedd</string>
+    <string name="default_date_wednesday">Szerda</string>
+    <string name="default_date_thursday">Csütörtök</string>
+    <string name="default_date_friday">Péntek</string>
+    <string name="default_date_saturday">Szombat</string>
+    <string name="default_date_sunday">Vasárnap</string>
 
     <string name="search_bar_hint">Keresés helységek között</string>
 
@@ -21,13 +30,13 @@
     <string name="place_finder_my_location_error_null_location">Nem találtunk aktuális pozíciót. Kérlek javíts a GPS jelerősségen.</string>
     <string name="place_finder_pick_location_button">Térképen</string>
     <string name="place_finder_pick_location_message">Hosszú klikkel jelöld ki a térképen a pozíciót!</string>
+    <string name="place_finder_show_more_history">Korábbi előzmények</string>
 
+    <string name="place_details_coordinates_text">Helység koordináták</string>
     <string name="place_details_my_location_text">Aktuális pozícióm</string>
     <string name="place_details_pick_location_text">Kiválasztott pozíció</string>
     <string name="place_details_okt_waypoint_text">GPX állomás</string>
     <string name="place_details_gpx_waypoint_text">OKT állomás</string>
-    <string name="place_details_okt_start_template">%s - Kezdőpont</string>
-    <string name="place_details_okt_end_template">%s - Végpont</string>
 
     <string name="hike_recommender_landscape_title_template">%s közelében</string>
     <string name="hike_recommender_place_title_template">%s környékén</string>
@@ -101,10 +110,10 @@
     <string name="settings_github_title">GitHub repository:</string>
     <string name="settings_google_play_review_button">Google Play értékelés</string>
 
-    <string name="gpx_history_title">Előzmények</string>
-    <string name="gpx_history_tab_places">Helységek</string>
-    <string name="gpx_history_tab_route_planner">Útvonaltervező</string>
-    <string name="gpx_history_tab_external_gpx">Importált GPX</string>
+    <string name="history_title">Előzmények</string>
+    <string name="history_tab_places">Helységek</string>
+    <string name="history_tab_route_planner">Tervező</string>
+    <string name="history_tab_external_gpx">GPX</string>
     <string name="gpx_history_item_route_planner_empty">A létrehozott útvonalterveid itt fognak megjelenni a jövőben.</string>
     <string name="gpx_history_item_external_empty">Az importált GPX fájlok itt is megtekinthetőek majd a jövőben.</string>
     <string name="gpx_history_item_route_planner_date_template">Létrehozva: %s</string>
@@ -122,6 +131,12 @@
     <string name="gpx_history_rename_error_invalid_chars">A fájl neve nem tartalmazhat speciális karaktereket!</string>
     <string name="gpx_history_rename_operation_error">Hiba történt a művelet során! Kérlek próbáld újra.</string>
 
+    <string name="place_history_item_empty">A megtekintett helységek itt is megtekinthetőek majd a jövőben.</string>
+    <string name="place_history_icon_text_okt">OKT</string>
+    <string name="place_history_icon_text_gpx">GPX</string>
+    <string name="place_history_menu_action_favourite">Kedvenc</string>
+    <string name="place_history_menu_action_delete">Törlés</string>
+
     <string name="okt_routes_chip_label">OKT</string>
     <string name="okt_routes_bottom_sheet_title">OKT - Országos Kéktúra</string>
     <string name="okt_routes_menu_action_details">Részletek és GPX</string>
@@ -133,7 +148,7 @@
     <string name="accessibility_home_fab_route_planner">Útvonaltervező</string>
     <string name="accessibility_home_fab_my_location">Saját pozícióm</string>
     <string name="accessibility_home_fab_settings">Beállítások</string>
-    <string name="accessibility_home_fab_gpx_history">GPX történet</string>
+    <string name="accessibility_home_fab_history">Előzmények</string>
     <string name="accessibility_okt_routes_action_button">%s menü gomb</string>
 
 </resources>

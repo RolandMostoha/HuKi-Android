@@ -10,11 +10,13 @@ import org.osmdroid.util.GeoPoint
 
 class HikingRouteRelationMapperTest {
 
+    private val mapper = HikingRouteRelationMapper()
+
     @Test
     fun `Given open relation, when map, then relation UI model returns with waypoints`() {
         val relation = RELATION_OPEN
 
-        val result = HikingRouteRelationMapper.map(relation)
+        val result = mapper.map(relation)
 
         assertThat(result).isEqualTo(
             GeometryUiModel.HikingRoute(
@@ -38,7 +40,7 @@ class HikingRouteRelationMapperTest {
     fun `Given closed relation, when map, then relation UI model returns with waypoints`() {
         val relation = RELATION_CLOSED
 
-        val result = HikingRouteRelationMapper.map(relation)
+        val result = mapper.map(relation)
 
         assertThat(result).isEqualTo(
             GeometryUiModel.HikingRoute(

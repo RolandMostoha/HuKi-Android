@@ -6,9 +6,10 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 
+@Suppress("TooManyFunctions")
 interface AnalyticsService {
 
-    fun placeFinderPlaceClicked(searchText: String, placeName: String)
+    fun placeFinderPlaceClicked(searchText: String, placeName: String, isFromHistory: Boolean)
 
     fun loadLandscapeClicked(placeName: String)
 
@@ -83,6 +84,10 @@ interface AnalyticsService {
     fun gpxHistoryItemDelete()
 
     fun gpxHistoryItemRename()
+
+    fun placeHistoryItemOpen()
+
+    fun placeHistoryItemDelete()
 
     fun oktChipClicked()
 

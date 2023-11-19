@@ -14,7 +14,6 @@ import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.invisible
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.ui.resolve
-import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup.Companion.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
 
 class WaypointAdapter(
@@ -69,11 +68,7 @@ class WaypointAdapter(
                 }
             }
             routePlannerWaypointInput.addTextChangedListener { editable ->
-                val text = editable.toString()
-
-                if (routePlannerWaypointInput.hasFocus() && text.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
-                    onSearchTextChanged.invoke(routePlannerWaypointInputLayout, wayPointItem, text)
-                }
+                onSearchTextChanged.invoke(routePlannerWaypointInputLayout, wayPointItem, editable.toString())
             }
             routePlannerWaypointInput.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {

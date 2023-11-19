@@ -15,6 +15,15 @@
 
     <string name="default_distance_template_m">%s m</string>
     <string name="default_distance_template_km">%s km</string>
+    <string name="default_date_today">Today</string>
+    <string name="default_date_yesterday">Yesterday</string>
+    <string name="default_date_monday">Monday</string>
+    <string name="default_date_tuesday">Tuesday</string>
+    <string name="default_date_wednesday">Wednesday</string>
+    <string name="default_date_thursday">Thursday</string>
+    <string name="default_date_friday">Friday</string>
+    <string name="default_date_saturday">Saturday</string>
+    <string name="default_date_sunday">Sunday</string>
 
     <string name="search_bar_hint">Search for places</string>
 
@@ -23,13 +32,13 @@
     <string name="place_finder_my_location_error_null_location">No last known location found. Please fix your GPS signal.</string>
     <string name="place_finder_pick_location_button">Pick location</string>
     <string name="place_finder_pick_location_message">Pick the location with long click!</string>
+    <string name="place_finder_show_more_history">Earlier history</string>
 
+    <string name="place_details_coordinates_text">Place coordinates</string>
     <string name="place_details_my_location_text">Actual location</string>
     <string name="place_details_pick_location_text">Chosen location</string>
     <string name="place_details_okt_waypoint_text">GPX waypoint</string>
     <string name="place_details_gpx_waypoint_text">OKT waypoint</string>
-    <string name="place_details_okt_start_template">%s - Starting point</string>
-    <string name="place_details_okt_end_template">%s - Ending point</string>
 
     <string name="hike_recommender_landscape_title_template">Hiking trails near %s</string>
     <string name="hike_recommender_place_title_template">Hiking trails around %s</string>
@@ -109,10 +118,11 @@
     <string name="settings_google_play_review_button">Google Play review</string>
     <string name="settings_google_play_review_url" translatable="false">https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki</string>
 
-    <string name="gpx_history_title">History</string>
-    <string name="gpx_history_tab_places">Places</string>
-    <string name="gpx_history_tab_route_planner">Route Planner</string>
-    <string name="gpx_history_tab_external_gpx">External GPX</string>
+    <string name="history_title">History</string>
+    <string name="history_tab_places">Places</string>
+    <string name="history_tab_route_planner">Planner</string>
+    <string name="history_tab_external_gpx">GPX</string>
+
     <string name="gpx_history_item_route_planner_empty">Your created route plans will be listed here in the future.</string>
     <string name="gpx_history_item_external_empty">Your imported GPX files will be listed here in the future.</string>
     <string name="gpx_history_item_route_planner_date_template">Created: %s</string>
@@ -131,6 +141,12 @@
     <string name="gpx_history_rename_operation_error">Error occurred during the operation! Please try it again.</string>
     <string name="gpx_history_rename_postfix" translatable="false">.gpx</string>
 
+    <string name="place_history_item_empty">Your watched places be listed here in the future.</string>
+    <string name="place_history_icon_text_okt">OKT</string>
+    <string name="place_history_icon_text_gpx">GPX</string>
+    <string name="place_history_menu_action_favourite">Favourite</string>
+    <string name="place_history_menu_action_delete">Delete</string>
+
     <string name="okt_routes_chip_label">OKT</string>
     <string name="okt_routes_bottom_sheet_title">OKT - National Blue Trail</string>
     <string name="okt_routes_menu_action_details">Details and GPX</string>
@@ -142,7 +158,7 @@
     <string name="accessibility_home_fab_route_planner">Route planner</string>
     <string name="accessibility_home_fab_my_location">My location</string>
     <string name="accessibility_home_fab_settings">Settings</string>
-    <string name="accessibility_home_fab_gpx_history">GPX History</string>
+    <string name="accessibility_home_fab_history">History</string>
     <string name="accessibility_okt_routes_action_button">%s action button</string>
 
 </resources>

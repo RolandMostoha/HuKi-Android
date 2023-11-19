@@ -47,6 +47,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
+import hu.mostoha.mobile.android.huki.util.espresso.waitForInputFocusGain
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -351,6 +352,7 @@ class PlacesUiTest {
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
             R.string.home_bottom_sheet_show_points_button.clickWithTextWithScroll()
 
+
             DEFAULT_PLACE_RELATION.name.isTextDisplayed()
             R.id.placeDetailsButtonGroupScrollView.isNotDisplayed()
         }
@@ -381,14 +383,13 @@ class PlacesUiTest {
         answerTestGeometries()
         answerTestLocationProvider()
 
-        coEvery { geocodingRepository.getPlace(any()) } returns null
+        coEvery { geocodingRepository.getPlace(any(), any()) } returns null
 
         launchScenario<HomeActivity> {
-            val searchText = DEFAULT_SEARCH_TEXT
-
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
 
-            R.id.homeSearchBarInput.typeText(searchText)
+            R.id.homeSearchBarInput.click()
+            waitForInputFocusGain()
 
             R.id.placeFinderMyLocationButton.clickInPopup()
 
@@ -405,15 +406,13 @@ class PlacesUiTest {
         answerTestGeometries()
         answerTestLocationProvider()
 
-        coEvery { geocodingRepository.getPlace(any()) } returns DEFAULT_PLACE_NODE
+        coEvery { geocodingRepository.getPlace(any(), any()) } returns DEFAULT_PLACE_NODE
 
         launchScenario<HomeActivity> {
-            val searchText = DEFAULT_SEARCH_TEXT
-
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
 
-            R.id.homeSearchBarInput.typeText(searchText)
-
+            R.id.homeSearchBarInput.click()
+            waitForInputFocusGain()
             R.id.placeFinderMyLocationButton.clickInPopup()
 
             DEFAULT_PLACE_NODE.name.isTextDisplayed()
@@ -444,7 +443,7 @@ class PlacesUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns listOf(
+        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
             DEFAULT_PLACE_WAY,
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_RELATION

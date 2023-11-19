@@ -113,4 +113,10 @@
     <dimen name="okt_routes_marker_icon_size">16dp</dimen>
     <dimen name="okt_routes_stamp_marker_background_size">30dp</dimen>
 
+    <dimen name="place_history_badge_size">40dp</dimen>
+
+    <dimen name="place_finder_badge_size">34dp</dimen>
+
+    <dimen name="history_card_elevation">2dp</dimen>
+
 </resources>

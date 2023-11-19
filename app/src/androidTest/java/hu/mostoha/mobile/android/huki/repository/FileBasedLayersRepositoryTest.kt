@@ -10,7 +10,6 @@ import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxUriNullException
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertThrows
 import org.junit.Before
@@ -20,7 +19,6 @@ import org.junit.runner.RunWith
 import java.io.File
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 @HiltAndroidTest

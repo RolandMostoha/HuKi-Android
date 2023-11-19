@@ -76,8 +76,11 @@ import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
 import hu.mostoha.mobile.android.huki.extensions.zoomToBoundingBoxPostMain
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
-import hu.mostoha.mobile.android.huki.model.domain.PlaceRequestType
-import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.GPX_WAYPOINT
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.MAP_MY_LOCATION
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.MAP_PICKED_LOCATION
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.MAP_SEARCH
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.OKT_WAYPOINT
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
@@ -94,6 +97,7 @@ import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceFinderFeature
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
@@ -109,18 +113,16 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
-import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.gpx.GpxDetailsBottomSheetDialog
-import hu.mostoha.mobile.android.huki.ui.home.gpx.history.HistoryFragment
 import hu.mostoha.mobile.android.huki.ui.home.hikerecommender.HikeRecommenderBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
+import hu.mostoha.mobile.android.huki.ui.home.history.HistoryFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.oktroutes.OktRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.placedetails.PlaceDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
-import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup.Companion.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerFragment
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerViewModel
@@ -134,6 +136,7 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedView
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
+import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
@@ -151,7 +154,6 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.infowindow.InfoWindow
-import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -191,7 +193,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeRoutePlannerFab by lazy { binding.homeRoutePlannerFab }
     private val homeLayersFab by lazy { binding.homeLayersFab }
     private val homeSettingsFab by lazy { binding.homeSettingsFab }
-    private val homeGpxHistoryFab by lazy { binding.homeGpxHistoryFab }
+    private val homeHistoryFab by lazy { binding.homeHistoryFab }
     private val homeAltitudeText by lazy { binding.homeAltitudeText }
 
     private lateinit var placeFinderPopup: PlaceFinderPopup
@@ -301,13 +303,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         homeSearchBarInput.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                placeFinderViewModel.initStaticActions()
+                placeFinderViewModel.initPlaceFinder(PlaceFinderFeature.MAP)
             }
         }
         homeSearchBarInput.addTextChangedListener { editable ->
             val text = editable.toString()
-            if (homeSearchBarInput.hasFocus() && text.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
-                placeFinderViewModel.loadPlaces(text)
+            if (homeSearchBarInput.hasFocus() && text.isNotEmpty()) {
+                if (text.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
+                    placeFinderViewModel.loadPlaces(text, MAP_SEARCH)
+                } else {
+                    placeFinderViewModel.initPlaceFinder(PlaceFinderFeature.MAP)
+                }
             }
         }
         homeSearchBarInput.setOnEditorActionListener { _, actionId, _ ->
@@ -325,13 +331,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             context = this,
             onPlaceClick = { placeUiModel ->
                 analyticsService.placeFinderPlaceClicked(
-                    homeSearchBarInput.text.toString(),
-                    placeUiModel.primaryText.resolve(this@HomeActivity)
+                    searchText = homeSearchBarInput.text.toString(),
+                    placeName = placeUiModel.primaryText.resolve(this@HomeActivity),
+                    isFromHistory = placeUiModel.historyInfo != null
                 )
 
                 clearSearchBarInput()
 
-                homeViewModel.loadPlace(placeUiModel)
+                homeViewModel.loadPlaceDetails(placeUiModel)
             },
             onMyLocationClick = {
                 clearSearchBarInput()
@@ -345,13 +352,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             val lastKnownLocation = myLocationProvider.getLastKnownLocationCoroutine()
                                 ?.toLocation()
                                 ?.toGeoPoint()
+
                             if (lastKnownLocation == null) {
                                 showErrorSnackbar(
                                     homeContainer,
                                     R.string.place_finder_my_location_error_null_location.toMessage(),
                                 )
                             } else {
-                                homeViewModel.loadPlace(lastKnownLocation, PlaceRequestType.MY_LOCATION)
+                                homeViewModel.loadPlaceDetailsWithGeocoding(lastKnownLocation, MAP_MY_LOCATION)
                             }
                         }
                     }
@@ -371,6 +379,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     R.string.place_finder_pick_location_message.toMessage(),
                     R.drawable.ic_snackbar_place_finder_pick_location
                 )
+            },
+            onShowMoreHistoryClick = {
+                clearSearchBarInput()
+
+                supportFragmentManager.addFragment(R.id.homeFragmentContainer, HistoryFragment::class.java)
             }
         )
     }
@@ -421,7 +434,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             analyticsService.settingsClicked()
             SettingsBottomSheetDialogFragment().show(supportFragmentManager, SettingsBottomSheetDialogFragment.TAG)
         }
-        homeGpxHistoryFab.setOnClickListener {
+        homeHistoryFab.setOnClickListener {
             analyticsService.gpxHistoryClicked()
             homeViewModel.clearFollowLocation()
             supportFragmentManager.addFragment(R.id.homeFragmentContainer, HistoryFragment::class.java)
@@ -763,7 +776,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeMapView.addLocationPickerMarker(
                         geoPoint = geoPoint,
                         onSaveClick = {
-                            homeViewModel.loadPlace(geoPoint, PlaceRequestType.PICKED_LOCATION)
+                            homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, MAP_PICKED_LOCATION)
                         },
                     )
                 }
@@ -1081,7 +1094,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 analyticsService.oktWaypointClicked()
             },
             onWaypointNavigationClick = { geoPoint ->
-                homeViewModel.loadPlace(geoPoint, PlaceRequestType.OKT_WAYPOINT)
+                homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, OKT_WAYPOINT)
             }
         )
 
@@ -1098,16 +1111,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 InfoWindow.closeAllInfoWindowsOn(homeMapView)
                 homeViewModel.selectOktRoute(oktId)
             },
-            onEdgePointClick = { message, geoPoint ->
-                val placeUiModel = PlaceUiModel(
-                    osmId = UUID.randomUUID().toString(),
-                    placeType = PlaceType.NODE,
-                    geoPoint = geoPoint,
-                    primaryText = message,
-                    secondaryText = LocationFormatter.formatText(geoPoint),
-                    iconRes = R.drawable.ic_hike_recommender_national_trails,
-                )
-                homeViewModel.loadPlace(placeUiModel)
+            onEdgePointClick = { geoPoint ->
+                homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, OKT_WAYPOINT)
             },
             onCloseClick = {
                 homeViewModel.clearOktRoutes()
@@ -1138,7 +1143,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 placeDetailsBottomSheet.hide()
                 homeMapView.removeOverlay(OverlayType.PLACE_DETAILS)
 
-                homeViewModel.loadPlaceDetails(placeUiModel)
+                homeViewModel.loadPlaceDetailsWithGeometry(placeUiModel)
             },
             onRoutePlanButtonClick = {
                 placeDetailsBottomSheet.hide()
@@ -1260,7 +1265,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     analyticsService.gpxImportClicked()
                 },
                 onWaypointNavigationClick = { geoPoint ->
-                    homeViewModel.loadPlace(geoPoint, PlaceRequestType.GPX_WAYPOINT)
+                    homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, GPX_WAYPOINT)
                 }
             )
         }

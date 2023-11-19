@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/historyContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,7 +19,7 @@
         android:elevation="@dimen/default_elevation"
         app:navigationIcon="@drawable/ic_route_planner_back"
         app:navigationIconTint="@color/colorPrimaryIconStrong"
-        app:title="@string/gpx_history_title"
+        app:title="@string/history_title"
         app:titleCentered="true"
         app:titleTextAppearance="@style/DefaultTextAppearance.Bold.Large" />
 
@@ -38,40 +37,13 @@
         app:tabPaddingBottom="@dimen/space_small"
         app:tabSelectedTextAppearance="@style/DefaultTextAppearance.Bold.Medium"
         app:tabTextAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
-        app:tabTextColor="@color/selector_tab_text_color">
+        app:tabTextColor="@color/selector_tab_text_color" />
 
-        <!-- TODO in Place History -->
-        <!--<com.google.android.material.tabs.TabItem-->
-        <!--    android:layout_width="wrap_content"-->
-        <!--    android:layout_height="wrap_content"-->
-        <!--    android:icon="@drawable/ic_marker_poi"-->
-        <!--    android:text="@string/gpx_history_tab_places" />-->
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_gpx_history_route_planner"
-            android:text="@string/gpx_history_tab_route_planner" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_gpx_history_external"
-            android:text="@string/gpx_history_tab_external_gpx" />
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <!-- List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/historyList"
+    <!-- View Pager -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/historyViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/colorBackgroundLight"
-        android:clipToPadding="false"
-        android:paddingTop="@dimen/space_medium"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="3"
-        tools:listitem="@layout/item_gpx_history" />
+        android:layout_weight="1" />
 
 </LinearLayout>

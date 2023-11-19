@@ -3,8 +3,9 @@ package hu.mostoha.mobile.android.huki.model.mapper
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
+import javax.inject.Inject
 
-object HikingRouteRelationMapper {
+class HikingRouteRelationMapper @Inject constructor() {
 
     fun map(relation: Geometry.Relation): GeometryUiModel.HikingRoute {
         val firstLocations = relation.ways.map { it.locations.first() }

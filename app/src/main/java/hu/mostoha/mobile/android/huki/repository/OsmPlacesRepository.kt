@@ -4,7 +4,7 @@ import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
-import hu.mostoha.mobile.android.huki.model.mapper.PlacesDomainModelMapper
+import hu.mostoha.mobile.android.huki.model.mapper.PlaceDetailsNetworkDomainMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class OsmPlacesRepository @Inject constructor(
     private val overpassService: OverpassService,
-    private val placesDomainModelMapper: PlacesDomainModelMapper
+    private val placeDetailsNetworkDomainMapper: PlaceDetailsNetworkDomainMapper
 ) : PlacesRepository {
 
     companion object {
@@ -28,17 +28,17 @@ class OsmPlacesRepository @Inject constructor(
             PlaceType.NODE -> {
                 val response = getNode(osmId)
 
-                placesDomainModelMapper.mapGeometryByNode(response, osmId)
+                placeDetailsNetworkDomainMapper.mapGeometryByNode(response, osmId)
             }
             PlaceType.WAY -> {
                 val response = getNodesByWay(osmId)
 
-                placesDomainModelMapper.mapGeometryByWay(response, osmId)
+                placeDetailsNetworkDomainMapper.mapGeometryByWay(response, osmId)
             }
             PlaceType.RELATION, PlaceType.HIKING_ROUTE -> {
                 val response = getNodesByRelation(osmId)
 
-                placesDomainModelMapper.mapGeometryByRelation(response, osmId)
+                placeDetailsNetworkDomainMapper.mapGeometryByRelation(response, osmId)
             }
         }
     }
@@ -59,7 +59,7 @@ class OsmPlacesRepository @Inject constructor(
 
         val response = overpassService.interpreter(query)
 
-        return placesDomainModelMapper.mapHikingRoutes(response)
+        return placeDetailsNetworkDomainMapper.mapHikingRoutes(response)
     }
 
     private suspend fun getNode(id: String): OverpassQueryResponse {

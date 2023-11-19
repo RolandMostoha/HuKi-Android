@@ -37,6 +37,11 @@ class PlaceDetailsBottomSheetDialog(
 
                 placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
+                if (placeUiModel.placeType == PlaceType.HIKING_ROUTE) {
+                    placeDetailsImage.setBackgroundResource(R.color.transparent)
+                } else {
+                    placeDetailsImage.setBackgroundResource(R.drawable.background_badge)
+                }
                 placeDetailsGoogleNavButton.visible()
                 placeDetailsGoogleNavButton.setOnClickListener {
                     analyticsService.googleMapsClicked()
@@ -78,6 +83,11 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsPrimaryText.text = placeName
                 placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
+                if (placeUiModel.placeType == PlaceType.HIKING_ROUTE) {
+                    placeDetailsImage.setBackgroundResource(R.color.transparent)
+                } else {
+                    placeDetailsImage.setBackgroundResource(R.drawable.background_badge)
+                }
 
                 placeDetailsCloseButton.setOnClickListener {
                     onCloseButtonClick.invoke()

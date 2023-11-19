@@ -10,9 +10,11 @@ sealed class PlaceFinderItem {
 
     object StaticActions : PlaceFinderItem()
 
+    object ShowMoreHistory : PlaceFinderItem()
+
     object Loading : PlaceFinderItem()
 
-    data class Error(
+    data class Info(
         @DrawableRes val drawableRes: Int,
         val messageRes: Message.Res
     ) : PlaceFinderItem()

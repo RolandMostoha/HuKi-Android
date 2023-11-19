@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.huki.service
 
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.ktx.Firebase
 import hu.mostoha.mobile.android.huki.extensions.removeFileExtension
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
@@ -12,10 +12,12 @@ import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     companion object {
         private const val EVENT_SELECT_PLACE = "select_place"
+        private const val EVENT_SELECT_PLACE_FROM_HISTORY = "select_place_from_history"
         private const val EVENT_SELECT_LANDSCAPE = "select_landscape"
         private const val EVENT_SELECT_OKT_CHIP = "select_okt_chip"
         private const val EVENT_SELECT_OKT_ROUTE = "select_okt_route"
@@ -64,6 +66,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SHARE_GPX_HISTORY_ITEM = "share_gpx_history_item"
         private const val EVENT_DELETE_GPX_HISTORY_ITEM = "delete_gpx_history_item"
         private const val EVENT_RENAME_GPX_HISTORY_ITEM = "rename_gpx_history_item"
+        private const val EVENT_OPEN_PLACE_HISTORY_ITEM = "open_place_history_item"
+        private const val EVENT_DELETE_PLACE_HISTORY_ITEM = "delete_place_history_item"
         private const val EVENT_PLACE_REQUESTED_MY_LOCATION = "place_requested_my_location"
         private const val EVENT_PLACE_REQUESTED_PICK_LOCATION = "place_requested_pick_location"
         private const val EVENT_PLACE_REQUESTED_OKT_WAYPOINT = "place_requested_okt_waypoint"
@@ -85,7 +89,11 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     private var firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
-    override fun placeFinderPlaceClicked(searchText: String, placeName: String) {
+    override fun placeFinderPlaceClicked(searchText: String, placeName: String, isFromHistory: Boolean) {
+        if (isFromHistory) {
+            firebaseAnalytics.logEvent(EVENT_SELECT_PLACE_FROM_HISTORY, null)
+        }
+
         firebaseAnalytics.logEvent(EVENT_SELECT_PLACE) {
             param(PARAM_SEARCH_PLACE_TEXT, searchText)
             param(PARAM_SELECTED_PLACE_NAME, placeName)
@@ -259,9 +267,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         when (theme) {
             Theme.LIGHT -> firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_THEME_LIGHT, null)
             Theme.DARK -> firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_THEME_DARK, null)
-            Theme.SYSTEM -> {
-                /** no-op **/
-            }
+            Theme.SYSTEM -> Unit
         }
     }
 
@@ -290,6 +296,14 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun gpxHistoryItemRename() {
         firebaseAnalytics.logEvent(EVENT_RENAME_GPX_HISTORY_ITEM, null)
+    }
+
+    override fun placeHistoryItemOpen() {
+        firebaseAnalytics.logEvent(EVENT_OPEN_PLACE_HISTORY_ITEM, null)
+    }
+
+    override fun placeHistoryItemDelete() {
+        firebaseAnalytics.logEvent(EVENT_DELETE_PLACE_HISTORY_ITEM, null)
     }
 
     override fun oktChipClicked() {

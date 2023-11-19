@@ -18,6 +18,10 @@ annotation class IoDispatcher
 
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
+annotation class DbDispatcher
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
 annotation class MainDispatcher
 
 @Module
@@ -31,6 +35,10 @@ object DispatcherModule {
     @IoDispatcher
     @Provides
     fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+    @DbDispatcher
+    @Provides
+    fun providesDbDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @MainDispatcher
     @Provides

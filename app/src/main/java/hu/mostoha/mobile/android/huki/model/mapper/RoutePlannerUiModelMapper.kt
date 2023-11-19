@@ -1,27 +1,63 @@
 package hu.mostoha.mobile.android.huki.model.mapper
 
+import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.extensions.getRandomNumberText
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.ui.AltitudeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import org.jetbrains.annotations.VisibleForTesting
 import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.Normalizer
+import java.util.UUID
 import javax.inject.Inject
 import kotlin.math.min
 
 class RoutePlannerUiModelMapper @Inject constructor() {
+
+    fun mapToHistory(geoPoint: GeoPoint, placeFeature: PlaceFeature, geocodedPlace: Place? = null): PlaceUiModel {
+        return if (geocodedPlace != null) {
+            PlaceUiModel(
+                osmId = geocodedPlace.osmId,
+                placeType = geocodedPlace.placeType,
+                geoPoint = geoPoint,
+                primaryText = geocodedPlace.name.toMessage(),
+                secondaryText = geocodedPlace.address.toMessage(),
+                iconRes = when (geocodedPlace.placeType) {
+                    PlaceType.NODE -> R.drawable.ic_place_type_node
+                    PlaceType.WAY -> R.drawable.ic_place_type_way
+                    PlaceType.RELATION, PlaceType.HIKING_ROUTE -> R.drawable.ic_place_type_relation
+                },
+                placeFeature = geocodedPlace.placeFeature,
+            )
+        } else {
+            PlaceUiModel(
+                osmId = UUID.randomUUID().toString(),
+                placeType = PlaceType.NODE,
+                geoPoint = geoPoint,
+                primaryText = LocationFormatter.formatText(geoPoint),
+                secondaryText = R.string.place_details_coordinates_text.toMessage(),
+                iconRes = R.drawable.ic_place_type_node,
+                placeFeature = placeFeature,
+            )
+        }
+    }
 
     fun mapToRoutePlanUiModel(
         waypointItems: List<WaypointItem>,

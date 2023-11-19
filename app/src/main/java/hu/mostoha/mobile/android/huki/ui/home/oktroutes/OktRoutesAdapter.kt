@@ -12,7 +12,6 @@ import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
-import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
@@ -21,7 +20,7 @@ import org.osmdroid.util.GeoPoint
 class OktRoutesAdapter(
     val onItemClick: (String) -> Unit,
     val onLinkClick: (String, String) -> Unit,
-    val onEdgePointClick: (String, Message, GeoPoint) -> Unit,
+    val onEdgePointClick: (String, GeoPoint) -> Unit,
 ) : ListAdapter<OktRouteUiModel, RecyclerView.ViewHolder>(DefaultDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -94,7 +93,6 @@ class OktRoutesAdapter(
                     onClick = {
                         onEdgePointClick.invoke(
                             oktRouteUiModel.oktId,
-                            Message.Res(R.string.place_details_okt_start_template, listOf(oktRouteUiModel.oktId)),
                             oktRouteUiModel.start
                         )
                     }
@@ -107,7 +105,6 @@ class OktRoutesAdapter(
                     onClick = {
                         onEdgePointClick.invoke(
                             oktRouteUiModel.oktId,
-                            Message.Res(R.string.place_details_okt_end_template, listOf(oktRouteUiModel.oktId)),
                             oktRouteUiModel.end
                         )
                     }

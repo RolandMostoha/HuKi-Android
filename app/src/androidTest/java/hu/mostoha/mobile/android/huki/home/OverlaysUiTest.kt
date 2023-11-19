@@ -182,7 +182,7 @@ class OverlaysUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns listOf(DEFAULT_PLACE_NODE, DEFAULT_PLACE_WAY)
+        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(DEFAULT_PLACE_NODE, DEFAULT_PLACE_WAY)
     }
 
     private fun answerTestGeometries() {

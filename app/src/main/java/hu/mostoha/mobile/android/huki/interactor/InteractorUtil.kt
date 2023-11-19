@@ -40,3 +40,21 @@ fun <T> flowWithExceptions(request: suspend () -> T, exceptionLogger: ExceptionL
         }
     }
 }
+
+fun Throwable.toDomainException(exceptionLogger: ExceptionLogger): DomainException {
+    val exception = this as Exception
+
+    Timber.w(exception)
+
+    val mappedException = if (exception is DomainException) {
+        exception
+    } else {
+        DomainExceptionMapper.map(exception)
+    }
+
+    if (!BuildConfig.DEBUG && mappedException !is JobCancellationException) {
+        exceptionLogger.recordException(exception)
+    }
+
+    return mappedException
+}

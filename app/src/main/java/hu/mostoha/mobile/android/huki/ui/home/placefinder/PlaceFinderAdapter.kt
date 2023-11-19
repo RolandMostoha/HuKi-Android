@@ -9,6 +9,7 @@ import android.widget.TextView
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderErrorBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderLoadingBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderPlaceBinding
+import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderShowMoreHistoryBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderStaticActionsBinding
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
@@ -18,7 +19,8 @@ import hu.mostoha.mobile.android.huki.model.ui.resolve
 class PlaceFinderAdapter(
     context: Context,
     private val onMyLocationClick: () -> Unit,
-    private val onManualLocationClick: () -> Unit
+    private val onManualLocationClick: () -> Unit,
+    private val onShowMoreHistoryClick: (() -> Unit)? = null,
 ) : ArrayAdapter<PlaceFinderItem>(context, 0) {
 
     private lateinit var itemList: List<PlaceFinderItem>
@@ -61,12 +63,23 @@ class PlaceFinderAdapter(
 
                 view = binding.root
             }
+            is PlaceFinderItem.ShowMoreHistory -> {
+                val binding = ItemPlaceFinderShowMoreHistoryBinding.inflate(parent.context.inflater, parent, false)
+
+                if (onShowMoreHistoryClick != null) {
+                    binding.placeFinderShowMoreHistoryButton.setOnClickListener {
+                        onShowMoreHistoryClick.invoke()
+                    }
+                }
+
+                view = binding.root
+            }
             is PlaceFinderItem.Loading -> {
                 val binding = ItemPlaceFinderLoadingBinding.inflate(parent.context.inflater, parent, false)
 
                 view = binding.root
             }
-            is PlaceFinderItem.Error -> {
+            is PlaceFinderItem.Info -> {
                 val binding = ItemPlaceFinderErrorBinding.inflate(parent.context.inflater, parent, false)
                 binding.placeFinderErrorText.text = parent.context.getString(placeFinderItem.messageRes.res)
                 binding.placeFinderErrorText.setDrawableTop(placeFinderItem.drawableRes)
@@ -82,6 +95,7 @@ class PlaceFinderAdapter(
         itemList = results
 
         clear()
+
         addAll(itemList)
     }
 

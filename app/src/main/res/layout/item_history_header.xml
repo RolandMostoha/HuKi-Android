@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/historyItemDateHeaderText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="@dimen/space_extra_large"
+    android:paddingTop="@dimen/space_small"
+    android:paddingBottom="@dimen/space_large"
+    android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+    tools:text="2023.03.31" />

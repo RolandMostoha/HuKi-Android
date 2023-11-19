@@ -6,6 +6,7 @@ import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
@@ -15,7 +16,6 @@ import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
-import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_JEL
@@ -26,8 +26,6 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_GEOMETRY
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY_CLOSED
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
@@ -40,96 +38,9 @@ import org.osmdroid.util.GeoPoint
 
 class HomeUiModelMapperTest {
 
-    private val mapper = HomeUiModelMapper()
-
-    @Test
-    fun `Given node place UI model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
-        val placeUiModel = DEFAULT_PLACE_UI_MODEL
-
-        val placeDetails = mapper.mapPlaceDetails(placeUiModel)
-
-        assertThat(placeDetails).isEqualTo(
-            PlaceDetailsUiModel(
-                placeUiModel = placeUiModel,
-                geometryUiModel = GeometryUiModel.Node(placeUiModel.geoPoint)
-            )
-        )
-    }
-
-    @Test
-    fun `Given node geometry domain model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
-        val geometry = Geometry.Node(
-            osmId = DEFAULT_PLACE_UI_MODEL.osmId,
-            location = DEFAULT_PLACE_UI_MODEL.geoPoint.toLocation()
-        )
-
-        val placeDetails = mapper.mapPlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
-
-        assertThat(placeDetails).isEqualTo(
-            PlaceDetailsUiModel(
-                placeUiModel = DEFAULT_PLACE_UI_MODEL,
-                geometryUiModel = GeometryUiModel.Node(DEFAULT_PLACE_UI_MODEL.geoPoint)
-            )
-        )
-    }
-
-    @Test
-    fun `Given way geometry domain model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
-        val geometry = DEFAULT_OPEN_WAY_GEOMETRY
-
-        val placeDetails = mapper.mapPlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
-
-        assertThat(placeDetails).isEqualTo(
-            PlaceDetailsUiModel(
-                placeUiModel = DEFAULT_PLACE_UI_MODEL,
-                geometryUiModel = GeometryUiModel.Way(
-                    osmId = geometry.osmId,
-                    geoPoints = geometry.locations.map { it.toGeoPoint() },
-                    isClosed = false
-                )
-            )
-        )
-    }
-
-    @Test
-    fun `Given closed way geometry domain model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
-        val geometry = DEFAULT_CLOSED_WAY_GEOMETRY
-
-        val placeDetails = mapper.mapPlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
-
-        assertThat(placeDetails).isEqualTo(
-            PlaceDetailsUiModel(
-                placeUiModel = DEFAULT_PLACE_UI_MODEL,
-                geometryUiModel = GeometryUiModel.Way(
-                    osmId = geometry.osmId,
-                    geoPoints = geometry.locations.map { it.toGeoPoint() },
-                    isClosed = true
-                )
-            )
-        )
-    }
-
-    @Test
-    fun `Given relation geometry domain model, when mapPlaceDetails, then correct PlaceDetailsUiModel returns`() {
-        val geometry = DEFAULT_CLOSED_RELATION_GEOMETRY
-
-        val placeDetails = mapper.mapPlaceDetails(DEFAULT_PLACE_UI_MODEL, geometry)
-
-        assertThat(placeDetails).isEqualTo(
-            PlaceDetailsUiModel(
-                placeUiModel = DEFAULT_PLACE_UI_MODEL,
-                geometryUiModel = GeometryUiModel.Relation(
-                    ways = geometry.ways.map { way ->
-                        GeometryUiModel.Way(
-                            osmId = geometry.osmId,
-                            geoPoints = way.locations.map { it.toGeoPoint() },
-                            isClosed = way.locations.first() == way.locations.last()
-                        )
-                    }
-                )
-            )
-        )
-    }
+    private val hikingRouteRelationMapper = HikingRouteRelationMapper()
+    private val placeMapper = PlaceDomainUiMapper(hikingRouteRelationMapper)
+    private val mapper = HomeUiModelMapper(placeMapper)
 
     @Test
     fun `Given landscape domain model, when mapLandscapes, then correct LandscapeUiModel returns`() {
@@ -249,7 +160,7 @@ class HomeUiModelMapperTest {
         )
 
         assertThrows(IllegalStateException::class.java) {
-            mapper.mapHikingRouteDetails(hikingRoute, geometry)
+            placeMapper.mapToHikingRouteDetails(hikingRoute, geometry)
         }
     }
 
@@ -276,10 +187,10 @@ class HomeUiModelMapperTest {
             )
         )
 
-        val placeDetailsUiModel = mapper.mapHikingRouteDetails(hikingRoute, geometry)
+        val placeDetailsUiModel = placeMapper.mapToHikingRouteDetails(hikingRoute, geometry)
 
         assertThat(placeDetailsUiModel).isEqualTo(
-            mapper.mapPlaceDetails(
+            placeMapper.mapToPlaceDetailsUiModel(
                 PlaceUiModel(
                     osmId = hikingRoute.osmId,
                     primaryText = hikingRoute.name.toMessage(),
@@ -289,6 +200,7 @@ class HomeUiModelMapperTest {
                     geoPoint = geometry.ways.flatMap { it.locations }
                         .calculateCenter()
                         .toGeoPoint(),
+                    placeFeature = PlaceFeature.HIKING_ROUTE_WAYPOINT,
                     boundingBox = null,
                 ),
                 geometry
@@ -297,25 +209,10 @@ class HomeUiModelMapperTest {
     }
 
     companion object {
-        private val DEFAULT_OPEN_WAY_GEOMETRY = Geometry.Way(
-            osmId = DEFAULT_WAY_OSM_ID,
-            locations = DEFAULT_WAY_GEOMETRY.map { Location(it.first, it.second) },
-            distance = (500..1000).random()
-        )
         private val DEFAULT_CLOSED_WAY_GEOMETRY = Geometry.Way(
             osmId = DEFAULT_WAY_OSM_ID,
             locations = DEFAULT_WAY_GEOMETRY_CLOSED.map { Location(it.first, it.second) },
             distance = (500..1000).random()
-        )
-        private val DEFAULT_CLOSED_RELATION_GEOMETRY = Geometry.Relation(
-            osmId = DEFAULT_RELATION_OSM_ID,
-            ways = DEFAULT_RELATION_GEOMETRY.map { osmIdToGeometry ->
-                Geometry.Way(
-                    osmId = osmIdToGeometry.first,
-                    locations = osmIdToGeometry.second.map { Location(it.first, it.second) },
-                    distance = (500..1000).random()
-                )
-            }
         )
         private val DEFAULT_PLACE_UI_MODEL = PlaceUiModel(
             osmId = DEFAULT_NODE_OSM_ID,
@@ -324,6 +221,7 @@ class HomeUiModelMapperTest {
             secondaryText = DEFAULT_NODE_CITY.toMessage(),
             iconRes = 0,
             geoPoint = GeoPoint(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
+            placeFeature = PlaceFeature.HIKING_ROUTE_WAYPOINT,
             boundingBox = null,
         )
         private val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.first()

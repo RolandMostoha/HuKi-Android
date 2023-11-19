@@ -41,6 +41,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
+import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Before
 import org.junit.Rule
@@ -96,6 +97,8 @@ class OktRoutesUiTest {
         hiltRule.inject()
         osmConfiguration.init()
         Intents.init()
+
+        coEvery { geocodingRepository.getPlace(any(), any()) } returns null
     }
 
     @Test

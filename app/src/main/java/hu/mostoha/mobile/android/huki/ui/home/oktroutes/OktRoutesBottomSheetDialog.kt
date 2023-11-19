@@ -4,7 +4,6 @@ import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetOktRoutesBind
 import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.postMainDelayed
 import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
-import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.RECYCLERVIEW_SCROLL_DELAY
@@ -22,7 +21,7 @@ class OktRoutesBottomSheetDialog(
         oktRoutes: List<OktRouteUiModel>,
         selectedOktId: String,
         onRouteClick: (String) -> Unit,
-        onEdgePointClick: (Message, GeoPoint) -> Unit,
+        onEdgePointClick: (GeoPoint) -> Unit,
         onCloseClick: () -> Unit,
     ) {
         postMain {
@@ -37,9 +36,9 @@ class OktRoutesBottomSheetDialog(
                             analyticsService.oktRouteLinkClicked(oktId)
                             context.startUrlIntent(link)
                         },
-                        onEdgePointClick = { oktId, message, geoPoint ->
+                        onEdgePointClick = { oktId, geoPoint ->
                             analyticsService.oktRouteEdgePointClicked(oktId)
-                            onEdgePointClick.invoke(message, geoPoint)
+                            onEdgePointClick.invoke(geoPoint)
                         }
                     )
                     oktRoutesList.setHasFixedSize(true)

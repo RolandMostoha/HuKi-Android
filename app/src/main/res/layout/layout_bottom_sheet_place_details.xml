@@ -31,7 +31,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/space_extra_large"
             android:layout_marginEnd="@dimen/space_medium"
-            android:padding="@dimen/space_extra_small"
+            android:padding="@dimen/space_small_medium"
             tools:src="@drawable/ic_place_type_relation" />
 
         <LinearLayout

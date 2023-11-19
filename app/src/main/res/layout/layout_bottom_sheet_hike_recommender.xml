@@ -28,7 +28,8 @@
             android:layout_width="@dimen/place_details_bottom_sheet_image_size"
             android:layout_height="@dimen/place_details_bottom_sheet_image_size"
             android:layout_marginStart="@dimen/space_extra_large"
-            android:padding="@dimen/space_extra_small"
+            android:background="@drawable/background_badge"
+            android:padding="@dimen/space_small_medium"
             tools:src="@drawable/ic_landscapes_mountain_high" />
 
         <com.google.android.material.textview.MaterialTextView

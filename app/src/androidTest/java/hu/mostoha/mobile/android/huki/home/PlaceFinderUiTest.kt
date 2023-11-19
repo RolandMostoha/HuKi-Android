@@ -16,6 +16,7 @@ import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.resolve
@@ -26,12 +27,20 @@ import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.PlaceHistoryRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_ADDRESS
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_CENTER_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_CENTER_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_CITY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
@@ -50,6 +59,9 @@ import hu.mostoha.mobile.android.huki.util.espresso.isKeyboardShown
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isSnackbarMessageDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
+import hu.mostoha.mobile.android.huki.util.espresso.waitFor
+import hu.mostoha.mobile.android.huki.util.espresso.waitForInputFocusGain
+import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -107,6 +119,10 @@ class PlaceFinderUiTest {
 
     @BindValue
     @JvmField
+    val placeHistoryRepository: PlaceHistoryRepository = mockk()
+
+    @BindValue
+    @JvmField
     val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @Before
@@ -114,7 +130,24 @@ class PlaceFinderUiTest {
         hiltRule.inject()
         osmConfiguration.init()
 
+        coEvery { placeHistoryRepository.clearOldPlaces() } returns Unit
+        coEvery { placeHistoryRepository.getPlaces() } returns flowOf(emptyList())
+        coEvery { placeHistoryRepository.getPlacesBy(any(), any()) } returns flowOf(emptyList())
+
         answerTestLocationProvider()
+    }
+
+    @Test
+    fun whenSearchInputClicked_thenStaticActionsDisplays() {
+        answerTestPlaces()
+
+        launchScenario<HomeActivity> {
+            R.id.homeSearchBarInput.click()
+            waitForInputFocusGain()
+
+            R.string.place_finder_my_location_button.isPopupTextDisplayed()
+            R.string.place_finder_pick_location_button.isPopupTextDisplayed()
+        }
     }
 
     @Test
@@ -140,6 +173,7 @@ class PlaceFinderUiTest {
             R.id.homeSearchBarInput.hasNoFocus()
 
             R.id.homeSearchBarInput.click()
+            waitForInputFocusGain()
 
             assertThat(isKeyboardShown()).isTrue()
             R.id.homeSearchBarInput.hasFocus()
@@ -181,10 +215,12 @@ class PlaceFinderUiTest {
             val nodeDistance = DEFAULT_PLACE_NODE.location.distanceBetween(BUDAPEST_LOCATION)
             val wayDistance = DEFAULT_PLACE_WAY.location.distanceBetween(BUDAPEST_LOCATION)
 
-            DistanceFormatter.format(nodeDistance)
+            waitFor(5000)
+
+            DistanceFormatter.formatWithoutScale(nodeDistance)
                 .resolve(testAppContext)
                 .isPopupTextDisplayed()
-            DistanceFormatter.format(wayDistance)
+            DistanceFormatter.formatWithoutScale(wayDistance)
                 .resolve(testAppContext)
                 .isPopupTextDisplayed()
         }
@@ -210,22 +246,8 @@ class PlaceFinderUiTest {
     }
 
     @Test
-    fun whenInputSearchText_thenStaticActionsDisplays() {
-        answerTestPlaces()
-
-        launchScenario<HomeActivity> {
-            val searchText = "Mecsek"
-
-            R.id.homeSearchBarInput.typeText(searchText)
-
-            R.string.place_finder_my_location_button.isPopupTextDisplayed()
-            R.string.place_finder_pick_location_button.isPopupTextDisplayed()
-        }
-    }
-
-    @Test
     fun givenEmptyResult_whenTyping_thenEmptyViewDisplays() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns emptyList()
+        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns emptyList()
 
         launchScenario<HomeActivity> {
             val searchText = "QWER"
@@ -237,8 +259,42 @@ class PlaceFinderUiTest {
     }
 
     @Test
+    fun givenHistoryPlaces_whenTyping_thenEmptyViewDisplays() {
+        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns emptyList()
+        coEvery { placeHistoryRepository.getPlaces() } returns flowOf(listOf(DEFAULT_PLACE_HISTORY))
+        coEvery { placeHistoryRepository.getPlacesBy(any(), any()) } returns flowOf(listOf(DEFAULT_PLACE_HISTORY))
+
+        launchScenario<HomeActivity> {
+            val searchText = "QWER"
+
+            R.id.homeSearchBarInput.click()
+            waitForInputFocusGain()
+
+            DEFAULT_PLACE_HISTORY.name.isPopupTextDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+
+            DEFAULT_PLACE_HISTORY.name.isPopupTextDisplayed()
+        }
+    }
+
+    @Test
+    fun givenErrorOnHistoryPlaces_whenTyping_thenErrorViewDisplays() {
+        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns emptyList()
+        coEvery { placeHistoryRepository.getPlacesBy(any(), any()) } returns flowOf(listOf(DEFAULT_PLACE_HISTORY))
+        every { placeHistoryRepository.getPlaces() } returns flowOfError(IllegalStateException("Error"))
+
+        launchScenario<HomeActivity> {
+            R.id.homeSearchBarInput.click()
+            waitForInputFocusGain()
+
+            R.string.error_message_unknown.isPopupTextDisplayed()
+        }
+    }
+
+    @Test
     fun givenIllegalStateException_whenTyping_thenErrorViewDisplaysWithMessageAndDetailsButton() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any()) } throws IllegalStateException("Error")
+        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } throws IllegalStateException("Error")
 
         launchScenario<HomeActivity> {
             val searchText = "QWER"
@@ -252,7 +308,7 @@ class PlaceFinderUiTest {
     @Test
     fun givenTooManyRequestsException_whenTyping_thenErrorViewDisplaysWithMessageOnly() {
         coEvery {
-            geocodingRepository.getPlacesBy(any(), any())
+            geocodingRepository.getPlacesBy(any(), any(), any())
         } throws HttpException(Response.error<Unit>(429, "".toResponseBody()))
 
         launchScenario<HomeActivity> {
@@ -268,7 +324,7 @@ class PlaceFinderUiTest {
     fun givenPlaces_whenRecreate_thenPlacesSearchResultDisplaysAgain() {
         answerTestPlaces()
 
-        launchScenario<HomeActivity> { scenario ->
+        launchScenario<HomeActivity> {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
@@ -276,10 +332,7 @@ class PlaceFinderUiTest {
             DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
             DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
 
-            R.string.place_finder_my_location_button.isPopupTextDisplayed()
-            R.string.place_finder_pick_location_button.isPopupTextDisplayed()
-
-            scenario.recreate()
+            recreate()
 
             R.string.place_finder_my_location_button.isPopupTextDisplayed()
             R.string.place_finder_pick_location_button.isPopupTextDisplayed()
@@ -287,7 +340,7 @@ class PlaceFinderUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any()) } returns listOf(
+        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
             DEFAULT_PLACE_NODE,
             DEFAULT_PLACE_WAY
         )
@@ -302,15 +355,27 @@ class PlaceFinderUiTest {
     companion object {
         private val DEFAULT_PLACE_NODE = Place(
             osmId = DEFAULT_NODE_OSM_ID,
-            name = DEFAULT_NODE_NAME,
             placeType = PlaceType.NODE,
+            name = DEFAULT_NODE_NAME,
+            address = DEFAULT_NODE_CITY,
+            placeFeature = PlaceFeature.MAP_SEARCH,
             location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE)
         )
         private val DEFAULT_PLACE_WAY = Place(
             osmId = DEFAULT_WAY_OSM_ID,
-            name = DEFAULT_WAY_NAME,
             placeType = PlaceType.WAY,
+            name = DEFAULT_WAY_NAME,
+            address = DEFAULT_WAY_CITY,
+            placeFeature = PlaceFeature.ROUTE_PLANNER_SEARCH,
             location = Location(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE)
+        )
+        private val DEFAULT_PLACE_HISTORY = Place(
+            osmId = DEFAULT_RELATION_OSM_ID,
+            placeType = PlaceType.RELATION,
+            name = DEFAULT_RELATION_NAME,
+            address = DEFAULT_RELATION_ADDRESS,
+            placeFeature = PlaceFeature.ROUTE_PLANNER_SEARCH,
+            location = Location(DEFAULT_RELATION_CENTER_LATITUDE, DEFAULT_RELATION_CENTER_LONGITUDE)
         )
     }
 

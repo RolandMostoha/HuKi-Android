@@ -15,10 +15,10 @@
     android:paddingEnd="@dimen/space_small">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/okt_routes_route_number_badge_size"
+        android:layout_height="@dimen/okt_routes_route_number_badge_size"
         android:layout_marginEnd="@dimen/space_medium"
-        android:background="@drawable/background_okt_route_number"
+        android:background="@drawable/background_badge"
         android:duplicateParentState="true"
         android:gravity="center"
         android:orientation="vertical">
