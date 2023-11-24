@@ -6,7 +6,6 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetGpxDetailsBinding
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuActionItem
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
-import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.shareFile
@@ -31,70 +30,67 @@ class GpxDetailsBottomSheetDialog(
         onStartClick: () -> Unit,
         onHideClick: () -> Unit,
     ) {
-        postMain {
-            with(binding) {
-                val hasAltitudeValues = gpxDetails.altitudeUiModel != null
+        with(binding) {
+            val hasAltitudeValues = gpxDetails.altitudeUiModel != null
 
-                gpxDetailsPrimaryText.text = gpxDetails.name
+            gpxDetailsPrimaryText.text = gpxDetails.name
 
-                gpxDetailsAltitudeRangeContainer.visibleOrGone(hasAltitudeValues)
-                with(binding.gpxDetailsRouteAttributesContainer) {
-                    routeAttributesTimeText.setMessageOrGone(gpxDetails.travelTimeText)
-                    routeAttributesDistanceText.setMessageOrGone(gpxDetails.distanceText)
-                    routeAttributesTimeTextSeparator.visibleOrGone(gpxDetails.travelTimeText != null)
+            gpxDetailsAltitudeRangeContainer.visibleOrGone(hasAltitudeValues)
+            with(binding.gpxDetailsRouteAttributesContainer) {
+                routeAttributesTimeText.setMessageOrGone(gpxDetails.travelTimeText)
+                routeAttributesDistanceText.setMessageOrGone(gpxDetails.distanceText)
+                routeAttributesTimeTextSeparator.visibleOrGone(gpxDetails.travelTimeText != null)
 
-                    routeAttributesUphillTextSeparator.visibleOrGone(hasAltitudeValues)
-                    routeAttributesDownhillTextSeparator.visibleOrGone(hasAltitudeValues)
-                    routeAttributesUphillText.setMessageOrGone(gpxDetails.altitudeUiModel?.uphillText)
-                    routeAttributesDownhillText.setMessageOrGone(gpxDetails.altitudeUiModel?.downhillText)
-                }
-                gpxDetailsAltitudeRangeStartText.setMessageOrGone(gpxDetails.altitudeUiModel?.minAltitudeText)
-                gpxDetailsAltitudeRangeEndText.setMessageOrGone(gpxDetails.altitudeUiModel?.maxAltitudeText)
+                routeAttributesUphillTextSeparator.visibleOrGone(hasAltitudeValues)
+                routeAttributesDownhillTextSeparator.visibleOrGone(hasAltitudeValues)
+                routeAttributesUphillText.setMessageOrGone(gpxDetails.altitudeUiModel?.uphillText)
+                routeAttributesDownhillText.setMessageOrGone(gpxDetails.altitudeUiModel?.downhillText)
+            }
+            gpxDetailsAltitudeRangeStartText.setMessageOrGone(gpxDetails.altitudeUiModel?.minAltitudeText)
+            gpxDetailsAltitudeRangeEndText.setMessageOrGone(gpxDetails.altitudeUiModel?.maxAltitudeText)
 
-                gpxDetailsCloseButton.setOnClickListener {
-                    onCloseClick.invoke()
-                    hide()
-                }
-                gpxDetailsStartButton.setOnClickListener {
-                    analyticsService.gpxDetailsStartClicked()
-                    onStartClick.invoke()
-                    hide()
-                }
-                gpxDetailsVisibilityButton.setOnClickListener {
-                    analyticsService.gpxDetailsVisibilityClicked()
-                    onHideClick.invoke()
-                }
-                gpxDetailsGoogleMapsButton.setOnClickListener {
-                    val startWaypoint = gpxDetails.waypoints.find { it.waypointType == WaypointType.START }
-                    if (startWaypoint != null) {
-                        showNavigationPopupMenu(gpxDetailsGoogleMapsButton, gpxDetails)
-                    } else {
-                        analyticsService.googleMapsClicked()
-                        context.startGoogleMapsDirectionsIntent(gpxDetails.geoPoints.first())
-                    }
-                }
-
-                gpxDetailsShareButton.setOnClickListener {
-                    analyticsService.gpxDetailsShareClicked()
-                    context.shareFile(Uri.parse(gpxDetails.fileUri))
-                }
-
-                val hasWaypointsOnly = gpxDetails.geoPoints.isEmpty() && gpxDetails.waypoints.isNotEmpty()
-
-                gpxDetailsWaypointsOnlyText.visibleOrGone(hasWaypointsOnly)
-                gpxDetailsActionButtonContainer.visibleOrGone(!hasWaypointsOnly)
-
-                if (hasWaypointsOnly) {
-                    analyticsService.gpxDetailsWaypointsOnlyImported()
-                    gpxDetailsWaypointsOnlyText.setMessage(
-                        Message.Res(
-                            R.string.gpx_details_bottom_sheet_waypoints_only_counter_template,
-                            listOf(gpxDetails.waypoints.size)
-                        )
-                    )
+            gpxDetailsCloseButton.setOnClickListener {
+                onCloseClick.invoke()
+                hide()
+            }
+            gpxDetailsStartButton.setOnClickListener {
+                analyticsService.gpxDetailsStartClicked()
+                onStartClick.invoke()
+                hide()
+            }
+            gpxDetailsVisibilityButton.setOnClickListener {
+                analyticsService.gpxDetailsVisibilityClicked()
+                onHideClick.invoke()
+            }
+            gpxDetailsGoogleMapsButton.setOnClickListener {
+                val startWaypoint = gpxDetails.waypoints.find { it.waypointType == WaypointType.START }
+                if (startWaypoint != null) {
+                    showNavigationPopupMenu(gpxDetailsGoogleMapsButton, gpxDetails)
+                } else {
+                    analyticsService.googleMapsClicked()
+                    context.startGoogleMapsDirectionsIntent(gpxDetails.geoPoints.first())
                 }
             }
-            show()
+
+            gpxDetailsShareButton.setOnClickListener {
+                analyticsService.gpxDetailsShareClicked()
+                context.shareFile(Uri.parse(gpxDetails.fileUri))
+            }
+
+            val hasWaypointsOnly = gpxDetails.geoPoints.isEmpty() && gpxDetails.waypoints.isNotEmpty()
+
+            gpxDetailsWaypointsOnlyText.visibleOrGone(hasWaypointsOnly)
+            gpxDetailsActionButtonContainer.visibleOrGone(!hasWaypointsOnly)
+
+            if (hasWaypointsOnly) {
+                analyticsService.gpxDetailsWaypointsOnlyImported()
+                gpxDetailsWaypointsOnlyText.setMessage(
+                    Message.Res(
+                        R.string.gpx_details_bottom_sheet_waypoints_only_counter_template,
+                        listOf(gpxDetails.waypoints.size)
+                    )
+                )
+            }
         }
     }
 

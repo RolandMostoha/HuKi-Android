@@ -1,6 +1,8 @@
 package hu.mostoha.mobile.android.huki.util
 
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.toLocation
+import org.osmdroid.api.IGeoPoint
 import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.cos
@@ -29,6 +31,10 @@ fun Location.distanceBetween(other: Location): Int {
     val c = 2 * asin(sqrt(a))
     val distance = EARTH_RADIUS * c
     return distance.roundToInt()
+}
+
+fun IGeoPoint.distanceBetween(other: IGeoPoint): Int {
+    return this.toLocation().distanceBetween(other.toLocation())
 }
 
 fun Location.isCloseWithThreshold(other: Location): Boolean {

@@ -5,7 +5,7 @@
 
     <item
         android:bottom="2dp"
-        android:drawable="@drawable/ic_route_planner_waypoint_intermediate_foreground"
+        android:drawable="@drawable/ic_route_planner_waypoint_foreground_intermediate"
         android:end="2dp"
         android:start="2dp"
         android:top="2dp" />

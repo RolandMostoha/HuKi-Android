@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.model.domain
 
 import android.location.LocationManager
 import io.ticofab.androidgpxparser.parser.domain.WayPoint
+import org.osmdroid.api.IGeoPoint
 import org.osmdroid.util.GeoPoint
 import android.location.Location as AndroidLocation
 
@@ -20,7 +21,7 @@ fun Location.toAndroidLocation() = AndroidLocation(LocationManager.GPS_PROVIDER)
     longitude = this.longitude
 }
 
-fun GeoPoint.toLocation() = Location(latitude, longitude)
+fun IGeoPoint.toLocation() = Location(latitude, longitude)
 
 fun List<GeoPoint>.toLocations() = this.map { it.toLocation() }
 

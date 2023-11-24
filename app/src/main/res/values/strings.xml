@@ -159,6 +159,8 @@
     <string name="accessibility_home_fab_my_location">My location</string>
     <string name="accessibility_home_fab_settings">Settings</string>
     <string name="accessibility_home_fab_history">History</string>
+    <string name="accessibility_home_fab_hike_mode">Hike mode</string>
+    <string name="accessibility_home_fab_hike_mode_compass">Live Compass</string>
     <string name="accessibility_okt_routes_action_button">%s action button</string>
 
 </resources>

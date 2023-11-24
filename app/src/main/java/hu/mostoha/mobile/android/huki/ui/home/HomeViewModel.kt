@@ -17,6 +17,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.OktRoutesMapper
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
+import hu.mostoha.mobile.android.huki.model.ui.HikeModeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
@@ -75,6 +76,10 @@ class HomeViewModel @Inject constructor(
     private val _myLocationUiModel = MutableStateFlow(MyLocationUiModel())
     val myLocationUiModel: StateFlow<MyLocationUiModel> = _myLocationUiModel
         .stateIn(viewModelScope, WhileViewSubscribed, MyLocationUiModel())
+
+    private val _hikeModeUiModel = MutableStateFlow(HikeModeUiModel())
+    val hikeModeUiModel: StateFlow<HikeModeUiModel> = _hikeModeUiModel
+        .stateIn(viewModelScope, WhileViewSubscribed, HikeModeUiModel())
 
     private val _placeDetails = MutableStateFlow<PlaceDetailsUiModel?>(null)
     val placeDetails: StateFlow<PlaceDetailsUiModel?> = _placeDetails
@@ -312,6 +317,37 @@ class HomeViewModel @Inject constructor(
 
             model
         }
+    }
+
+    fun toggleHikeMode() {
+        _hikeModeUiModel.update { uiModel ->
+            val isHikeModeEnabled = !uiModel.isHikeModeEnabled
+            val isPermissionEnabled = myLocationUiModel.value.isLocationPermissionEnabled
+
+            if (isPermissionEnabled) {
+                updateMyLocationConfig(isFollowLocationEnabled = isHikeModeEnabled)
+            }
+
+            uiModel.copy(
+                isHikeModeEnabled = isHikeModeEnabled,
+                isLiveCompassEnabled = isPermissionEnabled && isHikeModeEnabled,
+                isLiveCompassVisible = isPermissionEnabled && isHikeModeEnabled,
+            )
+        }
+    }
+
+    fun onFollowLocationDisabled() {
+        updateMyLocationConfig(isFollowLocationEnabled = false)
+
+        _hikeModeUiModel.update { it.copy(isLiveCompassEnabled = false) }
+    }
+
+    fun toggleLiveCompass() {
+        val isLiveCompassEnabled = _hikeModeUiModel.value.isLiveCompassEnabled
+
+        updateMyLocationConfig(isFollowLocationEnabled = !isLiveCompassEnabled)
+
+        _hikeModeUiModel.update { it.copy(isLiveCompassEnabled = !isLiveCompassEnabled) }
     }
 
     fun saveBoundingBox(boundingBox: BoundingBox) {

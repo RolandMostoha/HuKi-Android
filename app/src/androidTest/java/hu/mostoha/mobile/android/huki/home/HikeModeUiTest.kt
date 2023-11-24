@@ -13,19 +13,14 @@ import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
-import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
-import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_ALTITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
-import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
-import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
-import hu.mostoha.mobile.android.huki.util.espresso.isDisplayedContainsText
-import hu.mostoha.mobile.android.huki.util.espresso.isDisplayedWithText
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isFollowLocationEnabled
-import hu.mostoha.mobile.android.huki.util.espresso.swipeDown
+import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
@@ -42,7 +37,7 @@ import javax.inject.Inject
 @LargeTest
 @HiltAndroidTest
 @UninstallModules(LocationModule::class)
-class MyLocationUiTest {
+class HikeModeUiTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -64,75 +59,31 @@ class MyLocationUiTest {
     fun init() {
         hiltRule.inject()
         osmConfiguration.init()
+
     }
 
     @Test
-    fun whenLocationPermissionEnabled_thenMyLocationOverlayDisplaysAndFollowLocationIsEnabled() {
+    fun whenToggleHikeModeFab_thenHeaderAndFabVisibilityChanges() {
         answerTestLocationProvider()
 
         launchScenario<HomeActivity> {
-            R.id.homeMapView.hasOverlay<MyLocationOverlay>()
-            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
+            R.id.homeHikeModeFab.click()
+
+            R.id.homeRoutePlannerFab.isNotDisplayed()
+            R.id.homeLiveCompassFab.isDisplayed()
+            R.id.homeHistoryFab.isNotDisplayed()
+            R.id.homeLandscapeContainer.isNotDisplayed()
+            R.id.homeSearchBarContainer.isNotDisplayed()
             R.id.homeMapView.isFollowLocationEnabled(true)
-        }
-    }
 
-    @Test
-    fun whenMapViewIsScrolled_thenFollowLocationIsDisabled() {
-        answerTestLocationProvider()
+            R.id.homeHikeModeFab.click()
 
-        launchScenario<HomeActivity> {
-            R.id.homeMapView.click()
-
+            R.id.homeRoutePlannerFab.isDisplayed()
+            R.id.homeLiveCompassFab.isNotDisplayed()
+            R.id.homeHistoryFab.isDisplayed()
+            R.id.homeLandscapeContainer.isDisplayed()
+            R.id.homeSearchBarContainer.isDisplayed()
             R.id.homeMapView.isFollowLocationEnabled(false)
-        }
-    }
-
-    @Test
-    fun whenMyLocationClicked_thenFollowLocationIsEnabled() {
-        answerTestLocationProvider()
-
-        launchScenario<HomeActivity> {
-            R.id.homeMapView.swipeDown()
-            R.id.homeMyLocationButton.click()
-
-            R.id.homeMapView.isFollowLocationEnabled(true)
-        }
-    }
-
-    @Test
-    fun whenAltitudeIsAvailable_thenAltitudeTextDisplays() {
-        answerTestLocationProvider()
-
-        launchScenario<HomeActivity> {
-            R.id.homeAltitudeText.isDisplayedContainsText("162 m")
-        }
-    }
-
-    @Test
-    fun whenAltitudeIsNotAvailable_thenAltitudeTextDoesNotDisplay() {
-        val location = DEFAULT_MY_LOCATION
-            .copy(altitude = null)
-            .toMockLocation()
-        coEvery { asyncMyLocationProvider.getLocationFlow() } returns flowOf(location)
-
-        launchScenario<HomeActivity> {
-            R.id.homeAltitudeText.isDisplayedWithText("")
-        }
-    }
-
-    @Test
-    fun whenRecreate_thenMyLocationOverlayDisplaysAgain() {
-        answerTestLocationProvider()
-
-        launchScenario<HomeActivity> { scenario ->
-            R.id.homeMapView.hasOverlay<MyLocationOverlay>()
-            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
-
-            scenario.recreate()
-
-            R.id.homeMapView.hasOverlay<MyLocationOverlay>()
-            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 

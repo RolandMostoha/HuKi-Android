@@ -15,7 +15,6 @@ import org.osmdroid.views.overlay.compass.IOrientationConsumer
 import org.osmdroid.views.overlay.compass.IOrientationProvider
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
-import timber.log.Timber
 
 /**
  * [MyLocationNewOverlay] implementation that supports follow location callbacks and coroutine based location
@@ -31,11 +30,14 @@ class MyLocationOverlay(
         /**
          * Horizontal/vertical anchor scale values for my location icons.
          */
-        val MY_LOCATION_ICON_ANCHOR = 0.5f to 0.5f
-        val MY_LOCATION_COMPASS_ANCHOR = 0.5f to 0.75f
+        private val MY_LOCATION_ICON_ANCHOR = 0.5f to 0.5f
+        private val MY_LOCATION_COMPASS_ANCHOR = 0.5f to 0.75f
 
         private const val COMPASS_CHANGE_THRESHOLD = 2f
         private val COMPASS_ORIENTATION_RANGE = 0.0f..360.0f
+
+        private const val MY_LOCATION_ANIMATION_DURATION = 100L
+        private const val MY_LOCATION_ANIMATION_RESET_DURATION = 300L
     }
 
     private var isLocationEnabled = false
@@ -45,6 +47,15 @@ class MyLocationOverlay(
 
     var onFollowLocationDisabled: (() -> Unit)? = null
     var onFollowLocationFirstFix: (() -> Unit)? = null
+
+    var isLiveCompassEnabled = false
+        set(value) {
+            field = value
+
+            if (!value) {
+                resetOrientation()
+            }
+        }
 
     init {
         setPersonIcon(R.drawable.ic_marker_my_location.toBitmap(mapView.context))
@@ -61,8 +72,6 @@ class MyLocationOverlay(
         if (isLocationEnabled) {
             isCompassEnabled = orientationProvider.startOrientationProvider(this)
         }
-
-        mapView.postInvalidate()
 
         return provider.getLocationFlow()
     }
@@ -85,9 +94,7 @@ class MyLocationOverlay(
         val zoomLevel = location.calculateZoomLevel().toDouble()
 
         if (mIsFollowing && !mapView.isAnimating && mapView.zoomLevelDouble != zoomLevel) {
-            val geoPoint = GeoPoint(location)
-
-            mapView.centerAndZoom(geoPoint, zoomLevel)
+            mapView.centerAndZoom(GeoPoint(location), zoomLevel)
         }
 
         if (isCompassEnabled) {
@@ -112,7 +119,6 @@ class MyLocationOverlay(
 
     override fun disableFollowLocation() {
         super.disableFollowLocation()
-
         onFollowLocationDisabled?.invoke()
     }
 
@@ -125,12 +131,32 @@ class MyLocationOverlay(
 
         val lastLocation = lastFix
 
-        if (lastLocation != null && !lastLocation.bearing.equalsDelta(orientation, COMPASS_CHANGE_THRESHOLD)) {
-            Timber.d("Compass orientation changed: $orientation")
+        if (lastLocation != null) {
+            if (isLiveCompassEnabled && mIsFollowing) {
+                mapView.controller.animateTo(
+                    GeoPoint(lastLocation),
+                    mapView.zoomLevelDouble,
+                    MY_LOCATION_ANIMATION_DURATION,
+                    -orientation
+                )
+            }
 
-            lastLocation.bearing = orientation
+            if (!lastLocation.bearing.equalsDelta(orientation, COMPASS_CHANGE_THRESHOLD)) {
+                lastLocation.bearing = orientation
 
-            setLocation(lastLocation)
+                setLocation(lastLocation)
+            }
+        }
+    }
+
+    private fun resetOrientation() {
+        if (mapView.mapOrientation != 0f) {
+            mapView.controller.animateTo(
+                GeoPoint(myLocation),
+                mapView.zoomLevelDouble,
+                MY_LOCATION_ANIMATION_RESET_DURATION,
+                0f
+            )
         }
     }
 

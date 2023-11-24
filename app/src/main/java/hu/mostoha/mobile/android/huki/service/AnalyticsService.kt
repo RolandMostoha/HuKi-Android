@@ -111,4 +111,8 @@ interface AnalyticsService {
 
     fun copyrightClicked()
 
+    fun hikeModeClicked()
+
+    fun liveCompassClicked()
+
 }

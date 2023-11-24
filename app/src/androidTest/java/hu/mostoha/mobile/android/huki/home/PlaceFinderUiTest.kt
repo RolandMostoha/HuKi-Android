@@ -59,7 +59,6 @@ import hu.mostoha.mobile.android.huki.util.espresso.isKeyboardShown
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isSnackbarMessageDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
-import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.espresso.waitForInputFocusGain
 import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.launchScenario
@@ -214,8 +213,6 @@ class PlaceFinderUiTest {
 
             val nodeDistance = DEFAULT_PLACE_NODE.location.distanceBetween(BUDAPEST_LOCATION)
             val wayDistance = DEFAULT_PLACE_WAY.location.distanceBetween(BUDAPEST_LOCATION)
-
-            waitFor(5000)
 
             DistanceFormatter.formatWithoutScale(nodeDistance)
                 .resolve(testAppContext)

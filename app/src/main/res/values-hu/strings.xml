@@ -149,6 +149,8 @@
     <string name="accessibility_home_fab_my_location">Saját pozícióm</string>
     <string name="accessibility_home_fab_settings">Beállítások</string>
     <string name="accessibility_home_fab_history">Előzmények</string>
+    <string name="accessibility_home_fab_hike_mode">Túra mód</string>
+    <string name="accessibility_home_fab_hike_mode_compass">Élő iránytű</string>
     <string name="accessibility_okt_routes_action_button">%s menü gomb</string>
 
 </resources>

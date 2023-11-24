@@ -8,9 +8,12 @@ import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
+import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.resolve
+import hu.mostoha.mobile.android.huki.osmdroid.infowindow.DistanceInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.LocationPickerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
@@ -28,7 +31,9 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
+import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
+import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.getGradientColors
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
@@ -94,6 +99,46 @@ inline fun <reified T : OverlayWithIW> MapView.switchOverlayVisibility(overlayId
     invalidate()
 }
 
+inline fun <reified T : InfoWindow> MapView.openInfoWindows() {
+    overlays.filterIsInstance<Marker>()
+        .filter { it.infoWindow != null && it.infoWindow is T }
+        .forEach { marker ->
+            marker.showInfoWindow()
+        }
+}
+
+inline fun <reified T : InfoWindow> MapView.closeInfoWindows() {
+    overlays.filterIsInstance<Marker>()
+        .filter { it.infoWindow != null && it.infoWindow is T }
+        .forEach { marker ->
+            marker.infoWindow.close()
+        }
+}
+
+inline fun <reified I : InfoWindow, reified M : Marker> MapView.openInfoWindowsForMarkerType() {
+    overlays.filterIsInstance<M>()
+        .filter { it.infoWindow != null && it.infoWindow is I }
+        .forEach { marker ->
+            marker.showInfoWindow()
+        }
+}
+
+inline fun <reified I : InfoWindow, reified M : Marker> MapView.closeInfoWindowsForMarkerType() {
+    overlays.filterIsInstance<M>()
+        .filter { it.infoWindow != null && it.infoWindow is I }
+        .forEach { marker ->
+            marker.closeInfoWindow()
+        }
+}
+
+inline fun <reified T : InfoWindow> MapView.doOnInfoWindows(block: (Marker, T) -> Unit) {
+    overlays.filterIsInstance<Marker>()
+        .filter { it.infoWindow != null && it.infoWindow is T }
+        .forEach { marker ->
+            block.invoke(marker, marker.infoWindow as T)
+        }
+}
+
 fun MapView.removeOverlay(overlay: List<Overlay>) {
     overlay.forEach {
         overlays.remove(it)
@@ -146,7 +191,9 @@ fun MapView.addPlaceDetailsMarker(
     name: Message,
     geoPoint: GeoPoint,
     iconDrawable: Drawable,
-    onClick: (PlaceDetailsMarker) -> Unit
+    isHikeModeEnabled: Boolean,
+    myLocation: GeoPoint?,
+    onClick: (PlaceDetailsMarker) -> Unit,
 ): Marker {
     val marker = PlaceDetailsMarker(this, name).apply {
         id = overlayId
@@ -155,6 +202,16 @@ fun MapView.addPlaceDetailsMarker(
         setOnMarkerClickListener { marker, _ ->
             onClick.invoke(marker as PlaceDetailsMarker)
             true
+        }
+        infoWindow = DistanceInfoWindow(this@addPlaceDetailsMarker).apply {
+            if (myLocation != null) {
+                title = DistanceFormatter
+                    .formatWithoutScale(myLocation.toLocation().distanceBetween(geoPoint.toLocation()))
+                    .resolve(context)
+            }
+        }
+        if (isHikeModeEnabled) {
+            showInfoWindow()
         }
     }
 
@@ -171,14 +228,15 @@ fun MapView.removeMarker(marker: Marker) {
 fun MapView.addPolyline(
     overlayId: String = UUID.randomUUID().toString(),
     geoPoints: List<GeoPoint>,
-    @ColorInt colorInt: Int = ContextCompat.getColor(context, R.color.colorPolyline),
+    @ColorInt colorBorder: Int = ContextCompat.getColor(context, R.color.colorPolylineBorder),
+    @ColorInt colorFill: Int = ContextCompat.getColor(context, R.color.colorPolyline),
     onClick: () -> Unit,
 ): Polyline {
     val context = this.context
     val polyline = Polyline(this).apply {
         id = overlayId
         val borderPaint = Paint().apply {
-            color = ContextCompat.getColor(context, R.color.colorPolylineBorder)
+            color = colorBorder
             isAntiAlias = true
             strokeWidth = context.resources.getDimension(R.dimen.default_polyline_width)
             style = Paint.Style.STROKE
@@ -187,7 +245,7 @@ fun MapView.addPolyline(
         }
         outlinePaintLists.add(MonochromaticPaintList(borderPaint))
         val fillPaint = Paint().apply {
-            color = colorInt
+            color = colorFill
             isAntiAlias = true
             strokeWidth = context.resources.getDimension(R.dimen.default_polyline_fill_width)
             style = Paint.Style.FILL_AND_STROKE
@@ -222,7 +280,7 @@ fun MapView.addPolygon(
             strokeCap = Paint.Cap.ROUND
             strokeWidth = context.resources.getDimension(R.dimen.default_polygon_width)
         }
-        fillPaint.color = ContextCompat.getColor(context, R.color.colorPolylineFill)
+        fillPaint.color = ContextCompat.getColor(context, R.color.colorPolygonFill)
         points = geoPoints
         setOnClickListener { _, _, _ ->
             onClick.invoke()
@@ -252,12 +310,12 @@ fun MapView.addLandscapePolyOverlay(
             id = overlayId
             outlinePaint.apply {
                 isAntiAlias = true
-                color = ContextCompat.getColor(context, R.color.colorMarker)
+                color = ContextCompat.getColor(context, R.color.colorPolylineBorder)
                 style = Paint.Style.STROKE
                 strokeCap = Paint.Cap.ROUND
                 strokeWidth = context.resources.getDimension(R.dimen.default_polygon_width)
             }
-            fillPaint.color = ContextCompat.getColor(context, R.color.colorPolylineFill)
+            fillPaint.color = ContextCompat.getColor(context, R.color.colorPolygonFill)
             points = geoPoints
             setOnClickListener { polygon, _, _ ->
                 onClick.invoke(polygon)
@@ -348,6 +406,9 @@ fun MapView.addGpxMarker(
                 true
             }
         }
+        if (waypointType == WaypointType.START || waypointType == WaypointType.END) {
+            infoWindow = DistanceInfoWindow(this@addGpxMarker)
+        }
     }
 
     addOverlay(marker, OverlayComparator)
@@ -374,7 +435,7 @@ fun MapView.addGpxPolyline(
                 ContextCompat.getColor(context, R.color.colorPolyline)
             }
             isAntiAlias = true
-            strokeWidth = context.resources.getDimension(R.dimen.default_polyline_width)
+            strokeWidth = context.resources.getDimension(R.dimen.default_gpx_width)
             style = Paint.Style.STROKE
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
@@ -385,7 +446,7 @@ fun MapView.addGpxPolyline(
         if (useAltitudeColors) {
             val fillPaint = Paint().apply {
                 isAntiAlias = true
-                strokeWidth = context.resources.getDimension(R.dimen.default_polyline_fill_width)
+                strokeWidth = context.resources.getDimension(R.dimen.default_gpx_fill_width)
                 style = Paint.Style.FILL_AND_STROKE
                 strokeJoin = Paint.Join.ROUND
                 strokeCap = Paint.Cap.ROUND
@@ -449,7 +510,7 @@ fun MapView.addRoutePlannerPolyline(
         val borderPaint = Paint().apply {
             color = ContextCompat.getColor(context, R.color.colorPolylineBorder)
             isAntiAlias = true
-            strokeWidth = context.resources.getDimension(R.dimen.default_polyline_width)
+            strokeWidth = context.resources.getDimension(R.dimen.default_gpx_width)
             style = Paint.Style.STROKE
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
@@ -459,7 +520,7 @@ fun MapView.addRoutePlannerPolyline(
         val fillPaint = Paint().apply {
             color = ContextCompat.getColor(context, R.color.colorPolyline)
             isAntiAlias = true
-            strokeWidth = context.resources.getDimension(R.dimen.default_polyline_fill_width)
+            strokeWidth = context.resources.getDimension(R.dimen.default_gpx_fill_width)
             style = Paint.Style.FILL_AND_STROKE
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
@@ -485,8 +546,8 @@ fun MapView.addLocationPickerMarker(
     onSaveClick: (GeoPoint) -> Unit,
     onCloseClick: (() -> Unit)? = null,
 ): Marker {
+    closeInfoWindows<LocationPickerInfoWindow>()
     removeOverlay(OverlayType.LOCATION_PICKER)
-    InfoWindow.closeAllInfoWindowsOn(this)
 
     val mapView = this@addLocationPickerMarker
     var markerGeoPoint = geoPoint
@@ -544,6 +605,7 @@ fun MapView.addHikingRouteDetails(
         val overlay = addPolyline(
             overlayId = overlayId,
             geoPoints = way.geoPoints,
+            colorBorder = ContextCompat.getColor(context, R.color.colorStrokeMarkerDark),
             onClick = { onClick.invoke() }
         )
         overlays.add(overlay)

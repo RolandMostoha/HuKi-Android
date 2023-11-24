@@ -7,6 +7,7 @@ import android.view.View
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
 fun View.gone() {
@@ -23,6 +24,10 @@ fun View.invisible() {
 
 fun View.visibleOrGone(visible: Boolean) {
     if (visible) visible() else gone()
+}
+
+fun FloatingActionButton.showOrHide(visible: Boolean) {
+    if (visible) show() else hide()
 }
 
 fun View.visibleOrInvisible(visible: Boolean) {

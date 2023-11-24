@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <hu.mostoha.mobile.android.huki.views.StrokedTextView
+        android:id="@+id/distanceInfoWindowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:strokeColor="@color/colorStrokeMarker"
+        app:strokeWidth="@dimen/map_view_text_stroke_width"
+        app:textAppearance="@style/DefaultTextAppearance.Bold.Small"
+        tools:text="50 km" />
+
+</FrameLayout>

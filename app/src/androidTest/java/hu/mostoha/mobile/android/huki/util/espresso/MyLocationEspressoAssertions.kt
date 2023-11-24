@@ -24,7 +24,7 @@ fun isFollowLocationEnabledMatcher(isFollowLocationEnabled: Boolean): BoundedMat
                 .filterIsInstance<MyLocationOverlay>()
                 .first()
 
-            return overlay.isMyLocationEnabled && overlay.isFollowLocationEnabled
+            return isFollowLocationEnabled == (overlay.isMyLocationEnabled && overlay.isFollowLocationEnabled)
         }
 
         override fun describeTo(description: Description) {

@@ -5,7 +5,7 @@
 
     <item
         android:bottom="7dp"
-        android:drawable="@drawable/ic_marker_gpx_end_foreground"
+        android:drawable="@drawable/ic_route_planner_waypoint_foreground_end"
         android:end="7dp"
         android:start="7dp"
         android:top="7dp" />

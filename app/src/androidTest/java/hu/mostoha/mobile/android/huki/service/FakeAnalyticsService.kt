@@ -110,4 +110,8 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun copyrightClicked() = Unit
 
+    override fun hikeModeClicked() = Unit
+
+    override fun liveCompassClicked() = Unit
+
 }

@@ -73,6 +73,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_PLACE_REQUESTED_OKT_WAYPOINT = "place_requested_okt_waypoint"
         private const val EVENT_PLACE_REQUESTED_GPX_WAYPOINT = "place_requested_gpx_waypoint"
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
+        private const val EVENT_SELECT_HIKE_MODE = "select_hike_mode"
+        private const val EVENT_SELECT_LIVE_COMPASS = "select_live_compass"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
@@ -356,6 +358,14 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun copyrightClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_COPYRIGHT, null)
+    }
+
+    override fun hikeModeClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_HIKE_MODE, null)
+    }
+
+    override fun liveCompassClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_LIVE_COMPASS, null)
     }
 
 }

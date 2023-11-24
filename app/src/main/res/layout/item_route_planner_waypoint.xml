@@ -23,8 +23,8 @@
 
         <ImageView
             android:id="@+id/routePlannerWaypointImage"
-            android:layout_width="@dimen/icon_size_medium"
-            android:layout_height="@dimen/icon_size_medium"
+            android:layout_width="@dimen/icon_size_large"
+            android:layout_height="@dimen/icon_size_large"
             tools:src="@drawable/ic_marker_gpx_start" />
 
         <hu.mostoha.mobile.android.huki.views.DashedDividerView

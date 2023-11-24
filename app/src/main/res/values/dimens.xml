@@ -41,8 +41,10 @@
     <dimen name="default_icon_only_button_size">50dp</dimen>
     <dimen name="default_icon_only_button_size_small">40dp</dimen>
     <dimen name="default_polygon_width">2dp</dimen>
-    <dimen name="default_polyline_width">6dp</dimen>
+    <dimen name="default_polyline_width">7dp</dimen>
     <dimen name="default_polyline_fill_width">4dp</dimen>
+    <dimen name="default_gpx_width">10dp</dimen>
+    <dimen name="default_gpx_fill_width">4dp</dimen>
     <dimen name="default_horizontal_separator_width">1dp</dimen>
     <dimen name="default_dashed_divider_width">2dp</dimen>
     <dimen name="default_divider_height">1dp</dimen>
@@ -80,7 +82,7 @@
     <dimen name="map_view_default_end_offset">80dp</dimen>
     <dimen name="map_view_bottom_sheet_bottom_offset">230dp</dimen>
     <dimen name="map_view_top_sheet_top_offset">360dp</dimen>
-    <dimen name="map_view_top_sheet_bottom_offset">20dp</dimen>
+    <dimen name="map_view_top_sheet_bottom_offset">100dp</dimen>
     <dimen name="map_view_top_sheet_start_offset">@dimen/map_view_default_start_offset</dimen>
     <dimen name="map_view_top_sheet_end_offset">@dimen/map_view_default_end_offset</dimen>
     <dimen name="map_view_landscape_bottom_sheet_bottom_offset">280dp</dimen>
@@ -88,6 +90,7 @@
     <dimen name="map_view_landscape_end_offset">100dp</dimen>
     <dimen name="map_view_okt_routes_top_offset">200dp</dimen>
     <dimen name="map_view_okt_routes_bottom_offset">360dp</dimen>
+    <dimen name="map_view_text_stroke_width">3dp</dimen>
 
     <dimen name="place_details_bottom_sheet_image_size">45dp</dimen>
 
