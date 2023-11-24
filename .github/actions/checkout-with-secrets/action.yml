@@ -21,6 +21,12 @@ runs:
       with:
         fetch-depth: 0
 
+    - name: Setup Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: 17
+        distribution: "temurin"
+
     - name: Copy Amplify configuration file to raw folder
       uses: jsdaniell/create-json@1.1.2
       with:
