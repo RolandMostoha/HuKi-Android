@@ -1,4 +1,6 @@
-- A pecsételőhelyek is megjelennek mostmár az OKT útvonalakhoz
-- A GPX/OKT állomásokhoz mostmár lehet direktben is navigálni
-- Lekérjük a postacímet minden lerakott ponthoz (hosszú klikk és saját pozíció)
-- Lekérjük a postacímet az útvonaltervező állomásaihoz is
+- Új funkciók: túra mód és helység előzmények
+- Túra mód: élő iránytű térkép forgatással
+- Túra mód alatt a távolság megjelenik a pozícióknál és GPX állomásoknál
+- Túra mód alatt a térkép jobban látható
+- Helység előzmények - a megtekintett pozíciók bekerülnek az előzményekbe
+- A kereső találatokban is megjelennek az előzmények
