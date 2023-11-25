@@ -32,13 +32,12 @@
 -dontwarn org.jetbrains.annotations.**
 -keep class kotlin.Metadata { *; }
 
--keepclassmembers class hu.mostoha.mobile.android.huki.model.* { *; }
-
--keep,allowobfuscation,allowshrinking class com.squareup.moshi.JsonAdapter
+-keep class hu.mostoha.mobile.android.huki.model.** { *; }
+-keepclassmembers class hu.mostoha.mobile.android.huki.model.** { *; }
 
 # AWS
--keepclassmembers class com.amazonaws.mobile.* { *; }
-
+-keep class com.amazonaws.mobile.** { *; }
+-keepclassmembers enum * { *; }
 -dontwarn com.amazonaws.mobile.auth.facebook.FacebookButton
 -dontwarn com.amazonaws.mobile.auth.facebook.FacebookSignInProvider
 -dontwarn com.amazonaws.mobile.auth.google.GoogleButton
@@ -50,4 +49,33 @@
 -dontwarn com.amazonaws.mobile.auth.userpools.CognitoUserPoolsSignInProvider
 -dontwarn kotlinx.parcelize.Parcelize
 
--keepclassmembers enum * { *; }
+# Moshi
+-keep,allowobfuscation,allowshrinking class com.squareup.moshi.JsonAdapter
+-keep @com.squareup.moshi.JsonQualifier interface *
+-keepclassmembers @com.squareup.moshi.JsonClass class * extends java.lang.Enum {
+    <fields>;
+    **[] values();
+}
+-keepclassmembers class com.squareup.moshi.internal.Util {
+    private static java.lang.String getKotlinMetadataClassName();
+}
+-keepclassmembers class * {
+    @com.squareup.moshi.FromJson <methods>;
+    @com.squareup.moshi.ToJson <methods>;
+}
+
+# GSON
+-keepattributes Signature
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
+-keepattributes AnnotationDefault,RuntimeVisibleAnnotations
+
+# Retrofit
+ -keep,allowobfuscation,allowshrinking interface retrofit2.Call
+ -keep,allowobfuscation,allowshrinking class retrofit2.Response
+ -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
+ # Google
+ -keep class com.google.android.gms.** { *; }
+ -dontwarn com.google.android.gms.*
+ -keep class com.google.api.client.** {*;}

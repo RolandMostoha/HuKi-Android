@@ -48,10 +48,10 @@ android {
                     analyticsDisabled: false,
             ]
             archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             firebaseCrashlytics {
-                mappingFileUploadEnabled false
+                mappingFileUploadEnabled true
             }
         }
     }
