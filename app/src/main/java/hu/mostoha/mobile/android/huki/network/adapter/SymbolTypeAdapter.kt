@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonReader
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import timber.log.Timber
 
-object SymbolTypeAdapter {
+class SymbolTypeAdapter {
 
     @FromJson
     fun fromJson(jsonReader: JsonReader, delegate: JsonAdapter<SymbolType>): SymbolType {

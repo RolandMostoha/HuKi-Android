@@ -2,7 +2,7 @@ package hu.mostoha.mobile.android.huki.di.module
 
 import android.content.Context
 import android.webkit.WebSettings
-import com.amazonaws.http.HttpHeader
+import com.google.common.net.HttpHeaders
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -35,7 +35,7 @@ class NetworkModule {
                     chain.request()
                         .newBuilder()
                         .header(
-                            name = HttpHeader.USER_AGENT,
+                            name = HttpHeaders.USER_AGENT,
                             value = "${WebSettings.getDefaultUserAgent(context)} ${BuildConfig.APPLICATION_ID}"
                         )
                         .build()
@@ -54,7 +54,7 @@ class NetworkModule {
     @Provides
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
-            .add(SymbolTypeAdapter)
+            .add(SymbolTypeAdapter())
             .build()
     }
 

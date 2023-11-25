@@ -48,10 +48,10 @@ android {
                     analyticsDisabled: false,
             ]
             archivesBaseName = "HuKi_${defaultConfig.versionName}_${defaultConfig.versionCode}"
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             firebaseCrashlytics {
-                mappingFileUploadEnabled true
+                mappingFileUploadEnabled false
             }
         }
     }
@@ -144,10 +144,11 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     // AWS
-    def awsVersion = '1.37.6'
+    def awsVersion = '2.14.5'
     implementation "com.amplifyframework:core:$awsVersion"
     implementation "com.amplifyframework:aws-storage-s3:$awsVersion"
     implementation "com.amplifyframework:aws-auth-cognito:$awsVersion"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
     // Room
     def room_version = "2.6.0"

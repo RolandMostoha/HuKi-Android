@@ -32,16 +32,13 @@
 -dontwarn org.jetbrains.annotations.**
 -keep class kotlin.Metadata { *; }
 
--keepclassmembers class hu.mostoha.mobile.android.huki.model.** {
-  <init>(...);
-  <fields>;
-}
+-keepclassmembers class hu.mostoha.mobile.android.huki.model.* { *; }
+
+-keep,allowobfuscation,allowshrinking class com.squareup.moshi.JsonAdapter
 
 # AWS
--keepclassmembers class com.amazonaws.mobile.** {
-  <init>(...);
-  <fields>;
-}
+-keepclassmembers class com.amazonaws.mobile.* { *; }
+
 -dontwarn com.amazonaws.mobile.auth.facebook.FacebookButton
 -dontwarn com.amazonaws.mobile.auth.facebook.FacebookSignInProvider
 -dontwarn com.amazonaws.mobile.auth.google.GoogleButton
@@ -51,3 +48,6 @@
 -dontwarn com.amazonaws.mobile.auth.ui.SignInUI$LoginBuilder
 -dontwarn com.amazonaws.mobile.auth.ui.SignInUI
 -dontwarn com.amazonaws.mobile.auth.userpools.CognitoUserPoolsSignInProvider
+-dontwarn kotlinx.parcelize.Parcelize
+
+-keepclassmembers enum * { *; }

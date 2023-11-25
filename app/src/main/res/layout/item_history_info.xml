@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/historyItemInfoViewMessage"
     style="@style/InfoViewTextStyle"
     android:layout_width="match_parent"
@@ -8,4 +8,4 @@
     android:layout_gravity="center_horizontal"
     android:padding="@dimen/space_extra_huge"
     android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
-    app:text="Your created route plans will be here in the future." />
+    tools:text="Your created route plans will be here in the future." />
