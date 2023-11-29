@@ -46,6 +46,7 @@ class AwsMapTileProviderBasic(
 
         val approximationProvider = MapTileApproximater()
         approximationProvider.addProvider(cacheProvider)
+        approximationProvider.addProvider(mapTileDownloader)
         mTileProviderList.add(approximationProvider)
 
         // Protected-cache-tile computers

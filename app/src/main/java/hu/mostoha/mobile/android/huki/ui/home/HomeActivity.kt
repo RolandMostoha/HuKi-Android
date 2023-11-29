@@ -144,6 +144,7 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.HIKE_MODE_INFO_WINDOW_SHOW_DELAY
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
+import hu.mostoha.mobile.android.huki.util.MAP_MAX_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import hu.mostoha.mobile.android.huki.util.distanceBetween
@@ -289,6 +290,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.apply {
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
+            maxZoomLevel = MAP_MAX_ZOOM_LEVEL
             addMapMovedListener {
                 homeViewModel.clearHikingRoutes()
                 hikingRoutesBottomSheet.hide()

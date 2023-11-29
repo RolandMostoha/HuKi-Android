@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.extensions
 
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -13,6 +14,7 @@ import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.DistanceInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.LocationPickerInfoWindow
@@ -830,12 +832,23 @@ fun MapView.addMapMovedListener(onMapMoved: () -> Unit) {
 
 fun MapView.addZoomListener(onZoom: (event: ZoomEvent) -> Unit) {
     addMapListener(object : MapListener {
+        var lastZoom = 0
+
         override fun onScroll(event: ScrollEvent): Boolean {
             return false
         }
 
         override fun onZoom(event: ZoomEvent): Boolean {
             onZoom.invoke(event)
+
+            val actualZoom = event.zoomLevel.toInt()
+
+            if (actualZoom != lastZoom) {
+                this@addZoomListener.context.showToast("$actualZoom".toMessage(), Toast.LENGTH_SHORT)
+
+                lastZoom = actualZoom
+            }
+
             return true
         }
     })
