@@ -5,5 +5,4 @@ import hu.mostoha.mobile.android.huki.util.HUNGARY_BOUNDING_BOX
 
 data class MapUiModel(
     val boundingBox: BoundingBox = HUNGARY_BOUNDING_BOX,
-    val withDefaultOffset: Boolean = true,
 )

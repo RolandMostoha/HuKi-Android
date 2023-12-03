@@ -6,6 +6,7 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.centerAndZoom
 import hu.mostoha.mobile.android.huki.extensions.toBitmap
 import hu.mostoha.mobile.android.huki.util.calculateZoomLevel
+import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.equalsDelta
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -24,7 +25,7 @@ class MyLocationOverlay(
     private val lifecycleScope: LifecycleCoroutineScope,
     private val provider: AsyncMyLocationProvider,
     private val mapView: MapView
-) : MyLocationNewOverlay(provider, mapView), IOrientationConsumer {
+) : MyLocationOverlayBase(provider, mapView), IOrientationConsumer {
 
     companion object {
         /**
@@ -36,8 +37,10 @@ class MyLocationOverlay(
         private const val COMPASS_CHANGE_THRESHOLD = 2f
         private val COMPASS_ORIENTATION_RANGE = 0.0f..360.0f
 
-        private const val MY_LOCATION_ANIMATION_DURATION = 100L
-        private const val MY_LOCATION_ANIMATION_RESET_DURATION = 300L
+        private const val MAX_DISTANCE_TO_ANIMATE = 10_000
+
+        private const val LIVE_COMPASS_ANIMATION_DURATION = 100L
+        private const val NEW_LOCATION_ANIMATION_DURATION = 300L
     }
 
     private var isLocationEnabled = false
@@ -45,17 +48,12 @@ class MyLocationOverlay(
 
     private var orientationProvider = InternalCompassOrientationProvider(mapView.context)
 
+    var lockedZoom: Double? = null
     var onFollowLocationDisabled: (() -> Unit)? = null
     var onFollowLocationFirstFix: (() -> Unit)? = null
+    var onOrientationChanged: ((Float) -> Unit)? = null
 
     var isLiveCompassEnabled = false
-        set(value) {
-            field = value
-
-            if (!value) {
-                resetOrientation()
-            }
-        }
 
     init {
         setPersonIcon(R.drawable.ic_marker_my_location.toBitmap(mapView.context))
@@ -79,6 +77,7 @@ class MyLocationOverlay(
     override fun enableFollowLocation() {
         mIsFollowing = true
         enableAutoStop = true
+        lockedZoom = null
 
         if (isMyLocationEnabled) {
             lifecycleScope.launch {
@@ -91,10 +90,23 @@ class MyLocationOverlay(
     }
 
     override fun setLocation(location: Location) {
+        super.setLocation(location)
+
+        val geoPoint = GeoPoint(location)
         val zoomLevel = location.calculateZoomLevel().toDouble()
 
-        if (mIsFollowing && !mapView.isAnimating && mapView.zoomLevelDouble != zoomLevel) {
-            mapView.centerAndZoom(GeoPoint(location), zoomLevel)
+        if (mIsFollowing && !mapView.isAnimating) {
+            if (mapView.mapCenter.distanceBetween(geoPoint) <= MAX_DISTANCE_TO_ANIMATE) {
+                mapView.controller.animateTo(
+                    GeoPoint(location),
+                    lockedZoom ?: zoomLevel,
+                    NEW_LOCATION_ANIMATION_DURATION,
+                )
+            } else {
+                mapView.centerAndZoom(GeoPoint(location), zoomLevel)
+            }
+        } else {
+            mapView.postInvalidate()
         }
 
         if (isCompassEnabled) {
@@ -104,8 +116,6 @@ class MyLocationOverlay(
                 location.bearing = lastKnownOrientation
             }
         }
-
-        super.setLocation(location)
     }
 
     override fun disableMyLocation() {
@@ -115,6 +125,8 @@ class MyLocationOverlay(
 
         isLocationEnabled = false
         isCompassEnabled = false
+        isLiveCompassEnabled = false
+        lockedZoom = null
     }
 
     override fun disableFollowLocation() {
@@ -132,31 +144,22 @@ class MyLocationOverlay(
         val lastLocation = lastFix
 
         if (lastLocation != null) {
-            if (isLiveCompassEnabled && mIsFollowing) {
-                mapView.controller.animateTo(
-                    GeoPoint(lastLocation),
-                    mapView.zoomLevelDouble,
-                    MY_LOCATION_ANIMATION_DURATION,
-                    -orientation
-                )
-            }
-
             if (!lastLocation.bearing.equalsDelta(orientation, COMPASS_CHANGE_THRESHOLD)) {
                 lastLocation.bearing = orientation
 
                 setLocation(lastLocation)
             }
-        }
-    }
 
-    private fun resetOrientation() {
-        if (mapView.mapOrientation != 0f) {
-            mapView.controller.animateTo(
-                GeoPoint(myLocation),
-                mapView.zoomLevelDouble,
-                MY_LOCATION_ANIMATION_RESET_DURATION,
-                0f
-            )
+            if (isLiveCompassEnabled && mIsFollowing) {
+                onOrientationChanged?.invoke(orientation)
+
+                mapView.controller.animateTo(
+                    GeoPoint(lastLocation),
+                    lockedZoom ?: mapView.zoomLevelDouble,
+                    LIVE_COMPASS_ANIMATION_DURATION,
+                    -orientation
+                )
+            }
         }
     }
 

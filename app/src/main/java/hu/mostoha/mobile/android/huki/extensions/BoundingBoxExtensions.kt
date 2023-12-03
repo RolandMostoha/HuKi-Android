@@ -8,17 +8,20 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.Projection
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox as DomainBoundingBox
 
-private fun BoundingBox.withMapViewOffset(
+fun BoundingBox.withMapViewOffset(
     mapView: MapView,
     @DimenRes top: Int,
     @DimenRes bottom: Int,
     @DimenRes left: Int,
-    @DimenRes right: Int
+    @DimenRes right: Int,
+    inverse: Boolean = false,
 ): BoundingBox {
-    val topPx = mapView.context.resources.getDimensionPixelSize(top)
-    val bottomPx = mapView.context.resources.getDimensionPixelSize(bottom)
-    val leftPx = mapView.context.resources.getDimensionPixelSize(left)
-    val rightPx = mapView.context.resources.getDimensionPixelSize(right)
+    val scale = if (inverse) -1 else 1
+
+    val topPx = scale * mapView.context.resources.getDimensionPixelSize(top)
+    val bottomPx = scale * mapView.context.resources.getDimensionPixelSize(bottom)
+    val leftPx = scale * mapView.context.resources.getDimensionPixelSize(left)
+    val rightPx = scale * mapView.context.resources.getDimensionPixelSize(right)
 
     val width = mapView.width
     val height = mapView.height
@@ -84,6 +87,36 @@ fun BoundingBox.withOffset(mapView: MapView, offsetType: OffsetType): BoundingBo
             OffsetType.LANDSCAPE -> R.dimen.map_view_landscape_end_offset
             else -> R.dimen.map_view_default_end_offset
         }
+    )
+}
+
+@Suppress("ComplexMethod")
+fun BoundingBox.withoutOffset(mapView: MapView, offsetType: OffsetType): BoundingBox {
+    return withMapViewOffset(
+        mapView = mapView,
+        top = when (offsetType) {
+            OffsetType.TOP_SHEET -> R.dimen.map_view_top_sheet_top_offset
+            OffsetType.OKT_ROUTES -> R.dimen.map_view_okt_routes_top_offset
+            else -> R.dimen.map_view_default_top_offset
+        },
+        bottom = when (offsetType) {
+            OffsetType.BOTTOM_SHEET -> R.dimen.map_view_bottom_sheet_bottom_offset
+            OffsetType.TOP_SHEET -> R.dimen.map_view_top_sheet_bottom_offset
+            OffsetType.LANDSCAPE -> R.dimen.map_view_landscape_bottom_sheet_bottom_offset
+            OffsetType.OKT_ROUTES -> R.dimen.map_view_okt_routes_bottom_offset
+            else -> R.dimen.map_view_default_bottom_offset
+        },
+        left = when (offsetType) {
+            OffsetType.TOP_SHEET -> R.dimen.map_view_top_sheet_start_offset
+            OffsetType.LANDSCAPE -> R.dimen.map_view_landscape_start_offset
+            else -> R.dimen.map_view_default_start_offset
+        },
+        right = when (offsetType) {
+            OffsetType.TOP_SHEET -> R.dimen.map_view_top_sheet_end_offset
+            OffsetType.LANDSCAPE -> R.dimen.map_view_landscape_end_offset
+            else -> R.dimen.map_view_default_end_offset
+        },
+        inverse = true,
     )
 }
 

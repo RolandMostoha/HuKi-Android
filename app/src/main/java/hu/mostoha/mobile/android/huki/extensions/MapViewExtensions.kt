@@ -35,6 +35,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
+import hu.mostoha.mobile.android.huki.util.MAP_RESET_ORIENTATION_ANIMATION_DURATION
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.getGradientColors
 import org.osmdroid.events.MapEventsReceiver
@@ -107,6 +108,13 @@ inline fun <reified T : InfoWindow> MapView.openInfoWindows() {
         .forEach { marker ->
             marker.showInfoWindow()
         }
+}
+
+inline fun <reified T : InfoWindow> MapView.areInfoWindowsClosed(): Boolean {
+    return overlays.filterIsInstance<Marker>()
+        .filter { it.infoWindow != null && it.infoWindow is T }
+        .map { !it.isInfoWindowOpen }
+        .all { it }
 }
 
 inline fun <reified T : InfoWindow> MapView.closeInfoWindows() {
@@ -866,4 +874,15 @@ fun MapView.addLongClickHandlerOverlay(onLongClick: (GeoPoint) -> Unit) {
         }
     })
     addOverlay(mapEventsOverlay, OverlayComparator)
+}
+
+fun MapView.resetOrientation() {
+    if (mapOrientation != 0f) {
+        controller.animateTo(
+            mapCenter,
+            zoomLevelDouble,
+            MAP_RESET_ORIENTATION_ANIMATION_DURATION,
+            0f
+        )
+    }
 }

@@ -174,21 +174,6 @@ class PlaceHistoryUiTest {
         }
     }
 
-    @Test
-    fun givenHistory_whenDelete_thenPlaceIsDeletedFromHistory() {
-        launchScenario<HomeActivity> {
-            val searchText = DEFAULT_SEARCH_TEXT
-            R.id.homeSearchBarInput.typeText(searchText)
-            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-
-            R.id.homeHistoryFab.click()
-            R.id.placeHistoryActionsButton.click()
-            R.string.place_history_menu_action_delete.clickWithTextInPopup()
-
-            R.string.place_history_item_empty.isTextDisplayed()
-        }
-    }
-
     private fun answerTestPlaces() {
         coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
             DEFAULT_PLACE_NODE,

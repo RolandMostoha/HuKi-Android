@@ -23,7 +23,8 @@ enum class OverlayType {
     PLACE_DETAILS,
     MY_LOCATION,
     LICENCES,
-    SCALE_BAR_OVERLAY,
+    SCALE_BAR,
+    ROTATION_GESTURE,
     MAP_TOUCH_EVENTS,
     LOCATION_PICKER,
 }
@@ -33,7 +34,8 @@ enum class OverlayType {
  */
 val OVERLAY_TYPE_ORDER_MAP = mapOf(
     OverlayType.LICENCES to listOf(OsmLicencesOverlay::class),
-    OverlayType.SCALE_BAR_OVERLAY to listOf(ScaleBarOverlay::class),
+    OverlayType.SCALE_BAR to listOf(ScaleBarOverlay::class),
+    OverlayType.ROTATION_GESTURE to listOf(RotationGestureOverlay::class),
     OverlayType.HIKING_LAYER to listOf(TilesOverlay::class),
     OverlayType.MY_LOCATION to listOf(MyLocationOverlay::class),
     OverlayType.LANDSCAPE to listOf(LandscapePolyline::class, LandscapePolygon::class, LandscapeMarker::class),

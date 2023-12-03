@@ -94,7 +94,7 @@ class MyLocationUiTest {
 
         launchScenario<HomeActivity> {
             R.id.homeMapView.swipeDown()
-            R.id.homeMyLocationButton.click()
+            R.id.homeMyLocationFab.click()
 
             R.id.homeMapView.isFollowLocationEnabled(true)
         }

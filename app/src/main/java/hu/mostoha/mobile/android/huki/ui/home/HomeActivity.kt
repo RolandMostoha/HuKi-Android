@@ -44,6 +44,7 @@ import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerMarker
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.extensions.addScaleBarOverlay
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
+import hu.mostoha.mobile.android.huki.extensions.areInfoWindowsClosed
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.closeInfoWindows
 import hu.mostoha.mobile.android.huki.extensions.closeInfoWindowsForMarkerType
@@ -64,12 +65,12 @@ import hu.mostoha.mobile.android.huki.extensions.postMainDelayed
 import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
 import hu.mostoha.mobile.android.huki.extensions.removeOverlays
+import hu.mostoha.mobile.android.huki.extensions.resetOrientation
 import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
 import hu.mostoha.mobile.android.huki.extensions.setTextOrInvisible
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
 import hu.mostoha.mobile.android.huki.extensions.showErrorSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showOnly
-import hu.mostoha.mobile.android.huki.extensions.showOrHide
 import hu.mostoha.mobile.android.huki.extensions.showOverlay
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
@@ -91,6 +92,7 @@ import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.domain.toOsm
 import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommenderMapper
+import hu.mostoha.mobile.android.huki.model.ui.CompassState
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikeModeUiModel
@@ -116,6 +118,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.RotationGestureOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -203,14 +206,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeRoutePlannerHeaderGroup by lazy { binding.homeRoutePlannerHeaderGroup }
     private val homeHikeModeHeaderGroup by lazy { binding.homeHikeModeHeaderGroup }
 
-    private val homeMyLocationButton by lazy { binding.homeMyLocationButton }
+    private val homeMyLocationFab by lazy { binding.homeMyLocationFab }
     private val homeRoutePlannerFab by lazy { binding.homeRoutePlannerFab }
     private val homeLayersFab by lazy { binding.homeLayersFab }
     private val homeSettingsFab by lazy { binding.homeSettingsFab }
     private val homeHistoryFab by lazy { binding.homeHistoryFab }
     private val homeHikeModeFab by lazy { binding.homeHikeModeFab }
-    private val homeLiveCompassFab by lazy { binding.homeLiveCompassFab }
+    private val homeCompassFab by lazy { binding.homeCompassFab }
     private val homeAltitudeText by lazy { binding.homeAltitudeText }
+    private val mapZoomControllerPlus by lazy { binding.mapZoomControllerPlus }
+    private val mapZoomControllerMinus by lazy { binding.mapZoomControllerMinus }
 
     private lateinit var placeFinderPopup: PlaceFinderPopup
     private lateinit var placeDetailsBottomSheet: PlaceDetailsBottomSheetDialog
@@ -220,6 +225,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var oktRoutesBottomSheet: OktRoutesBottomSheetDialog
     private lateinit var bottomSheets: List<BottomSheetDialog>
 
+    private var rotationGestureOverlay: RotationGestureOverlay? = null
     private var myLocationOverlay: MyLocationOverlay? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -245,8 +251,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     override fun onPause() {
+        Timber.d("Saving map UI model with: ${homeMapView.boundingBox.toDomain()}")
+
+        homeViewModel.saveMapConfig(homeMapView.boundingBox.toDomain())
+
         myLocationOverlay?.disableMyLocation()
-        homeViewModel.saveBoundingBox(homeMapView.boundingBox.toDomain())
 
         homeMapView.onPause()
 
@@ -301,7 +310,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
             addOnFirstLayoutListener { _, _, _, _, _ ->
                 initFlows()
+
                 homeMapView.addScaleBarOverlay()
+
+                rotationGestureOverlay = RotationGestureOverlay(homeMapView)
+                    .apply {
+                        isEnabled = false
+                        mapRotationListener = {
+                            homeViewModel.setFreeCompass(homeMapView.mapOrientation)
+                        }
+                    }
+                    .also { homeMapView.addOverlay(it, OverlayComparator) }
+
                 pickLocationEventViewModel.updateEvent(PickLocationEvents.LocationPickEnabled)
             }
             setOnTouchListener { view, _ ->
@@ -412,7 +432,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initFabs() {
-        homeMyLocationButton.setOnClickListener {
+        homeMyLocationFab.setOnClickListener {
             analyticsService.myLocationClicked()
 
             when {
@@ -460,9 +480,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             analyticsService.hikeModeClicked()
             homeViewModel.toggleHikeMode()
         }
-        homeLiveCompassFab.setOnClickListener {
+        homeCompassFab.setOnClickListener {
             analyticsService.liveCompassClicked()
-            homeViewModel.toggleLiveCompass()
+
+            homeViewModel.toggleLiveCompass(homeMapView.mapOrientation)
+        }
+        mapZoomControllerPlus.setOnClickListener {
+            myLocationOverlay?.lockedZoom = homeMapView.zoomLevelDouble.inc()
+            homeMapView.controller.zoomIn()
+        }
+        mapZoomControllerMinus.setOnClickListener {
+            myLocationOverlay?.lockedZoom = homeMapView.zoomLevelDouble.dec()
+            homeMapView.controller.zoomOut()
         }
     }
 
@@ -545,19 +574,23 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     runOnFirstFix {
                         postMain {
                             if (isFollowLocationEnabled) {
-                                homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
+                                homeMyLocationFab.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
                             } else {
-                                homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
+                                homeMyLocationFab.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
                             }
                         }
                     }
                     onFollowLocationFirstFix = {
-                        homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
+                        homeMyLocationFab.setImageResource(R.drawable.ic_home_fab_my_location_fixed)
                     }
                     onFollowLocationDisabled = {
-                        homeMyLocationButton.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
+                        homeMyLocationFab.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
 
-                        homeViewModel.onFollowLocationDisabled()
+                        homeViewModel.disableFollowLocation()
+                        homeViewModel.setFreeCompass(homeMapView.mapOrientation)
+                    }
+                    onOrientationChanged = { rotation ->
+                        homeCompassFab.rotation = rotation
                     }
                     homeMapView.addOverlay(this, OverlayComparator)
                 }
@@ -592,8 +625,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         when {
             !previouslyEnabled && isEnabled -> {
-                homeMyLocationButton.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
-                homeMyLocationButton.startDrawableAnimation()
+                homeMyLocationFab.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
+                homeMyLocationFab.startDrawableAnimation()
 
                 locationOverlay.enableFollowLocation()
             }
@@ -625,14 +658,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeViewModel.mapUiModel
                 .flowWithLifecycle(lifecycle)
                 .collect { mapUiModel ->
-                    val boundingBox = if (mapUiModel.withDefaultOffset) {
-                        mapUiModel.boundingBox.toOsm()
-                    } else {
-                        mapUiModel.boundingBox
-                            .toOsm()
-                            .withOffset(homeMapView, OffsetType.DEFAULT)
+                    Timber.d("Restoring map UI model: $mapUiModel")
+
+                    val boundingBox = mapUiModel.boundingBox.toOsm()
+
+                    if (homeMapView.mapOrientation == 0f) {
+                        homeMapView.zoomToBoundingBoxPostMain(boundingBox, false)
                     }
-                    homeMapView.zoomToBoundingBoxPostMain(boundingBox, false)
                 }
         }
         lifecycleScope.launch {
@@ -642,7 +674,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .collect { isEnabled ->
                     if (isEnabled) {
+                        val isFollowingEnabled = homeViewModel.myLocationUiModel.value.isFollowLocationEnabled
+
                         enableMyLocationMonitoring()
+                        enableFollowingLocation(isFollowingEnabled)
                     }
                 }
         }
@@ -833,7 +868,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .collect { uiModel ->
                     Timber.d("HikeModeUiModel updated: $uiModel")
-                    initHikeMode(uiModel)
+                    postMain {
+                        initHikeMode(uiModel)
+                    }
                 }
         }
     }
@@ -954,37 +991,56 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initHikeMode(uiModel: HikeModeUiModel) {
         if (uiModel.isHikeModeEnabled) {
+            rotationGestureOverlay?.isEnabled = true
+            myLocationOverlay?.isLiveCompassEnabled = uiModel.compassState == CompassState.Live
+
             homeHikeModeFab.backgroundTintList = getColorStateList(R.color.colorPrimary)
             homeHikeModeFab.imageTintList = getColorStateList(R.color.colorOnPrimary)
 
-            homeLiveCompassFab.showOrHide(uiModel.isLiveCompassVisible)
+            when (uiModel.compassState) {
+                is CompassState.North -> {
+                    homeCompassFab.backgroundTintList = getColorStateList(R.color.colorBackground)
+                    homeCompassFab.imageTintList = getColorStateList(R.color.colorPrimaryIconStrong)
 
-            bottomSheets.hideAll()
+                    homeMapView.resetOrientation()
+                    homeCompassFab.rotation = 0f
+                }
+                is CompassState.Live -> {
+                    homeCompassFab.backgroundTintList = getColorStateList(R.color.colorPrimary)
+                    homeCompassFab.imageTintList = getColorStateList(R.color.colorOnPrimary)
+                }
+                is CompassState.Free -> {
+                    homeCompassFab.backgroundTintList = getColorStateList(R.color.colorBackground)
+                    homeCompassFab.imageTintList = getColorStateList(R.color.colorPrimaryIconStrong)
 
-            val isLiveCompassEnabled = uiModel.isLiveCompassEnabled
+                    homeCompassFab.rotation = -uiModel.compassState.mapOrientation
+                }
+            }
 
-            myLocationOverlay?.isLiveCompassEnabled = isLiveCompassEnabled
+            homeCompassFab.show()
+            mapZoomControllerPlus.show()
+            mapZoomControllerMinus.show()
 
-            if (isLiveCompassEnabled) {
-                homeLiveCompassFab.backgroundTintList = getColorStateList(R.color.colorPrimary)
-                homeLiveCompassFab.imageTintList = getColorStateList(R.color.colorOnPrimary)
-
+            if (homeMapView.areInfoWindowsClosed<DistanceInfoWindow>()) {
                 postMainDelayed(HIKE_MODE_INFO_WINDOW_SHOW_DELAY) {
                     homeMapView.openInfoWindows<DistanceInfoWindow>()
                 }
-            } else {
-                homeLiveCompassFab.backgroundTintList = getColorStateList(R.color.colorBackground)
-                homeLiveCompassFab.imageTintList = getColorStateList(R.color.colorPrimaryIconStrong)
             }
+
+            bottomSheets.hideAll()
         } else {
             myLocationOverlay?.isLiveCompassEnabled = false
+            rotationGestureOverlay?.isEnabled = false
 
             homeHikeModeFab.backgroundTintList = getColorStateList(R.color.colorBackground)
             homeHikeModeFab.imageTintList = getColorStateList(R.color.colorPrimaryIconStrong)
 
-            homeLiveCompassFab.hide()
+            homeCompassFab.hide()
+            mapZoomControllerPlus.hide()
+            mapZoomControllerMinus.hide()
 
             homeMapView.closeInfoWindows<DistanceInfoWindow>()
+            homeMapView.resetOrientation()
         }
     }
 
@@ -1394,7 +1450,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             )
                             .withOffset(homeMapView, OffsetType.DEFAULT)
 
-                        homeMapView.zoomToBoundingBox(boundingBox, true)
+                        homeMapView.zoomToBoundingBox(boundingBox, false)
 
                         homeViewModel.toggleHikeMode()
                     }
@@ -1405,7 +1461,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             )
             bottomSheets.showOnly(gpxDetailsBottomSheet)
 
-            homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+            homeMapView.zoomToBoundingBox(offsetBoundingBox, false)
         }
     }
 

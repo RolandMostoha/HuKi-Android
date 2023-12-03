@@ -16,6 +16,7 @@ import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.OktRoutesMapper
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
+import hu.mostoha.mobile.android.huki.model.ui.CompassState
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikeModeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
@@ -328,30 +329,49 @@ class HomeViewModel @Inject constructor(
                 updateMyLocationConfig(isFollowLocationEnabled = isHikeModeEnabled)
             }
 
+            val compassState = if (isPermissionEnabled && isHikeModeEnabled) {
+                CompassState.Live
+            } else {
+                CompassState.North
+            }
+
             uiModel.copy(
                 isHikeModeEnabled = isHikeModeEnabled,
-                isLiveCompassEnabled = isPermissionEnabled && isHikeModeEnabled,
-                isLiveCompassVisible = isPermissionEnabled && isHikeModeEnabled,
+                compassState = compassState,
             )
         }
     }
 
-    fun onFollowLocationDisabled() {
+    fun disableFollowLocation() {
         updateMyLocationConfig(isFollowLocationEnabled = false)
-
-        _hikeModeUiModel.update { it.copy(isLiveCompassEnabled = false) }
     }
 
-    fun toggleLiveCompass() {
-        val isLiveCompassEnabled = _hikeModeUiModel.value.isLiveCompassEnabled
+    fun toggleLiveCompass(mapOrientation: Float) {
+        val isPermissionEnabled = myLocationUiModel.value.isLocationPermissionEnabled
 
-        updateMyLocationConfig(isFollowLocationEnabled = !isLiveCompassEnabled)
+        val newCompassSate = when (_hikeModeUiModel.value.compassState) {
+            is CompassState.North -> {
+                if (isPermissionEnabled) {
+                    CompassState.Live
+                } else {
+                    CompassState.Free(mapOrientation)
+                }
+            }
+            is CompassState.Live -> CompassState.Free(mapOrientation)
+            is CompassState.Free -> CompassState.North
+        }
 
-        _hikeModeUiModel.update { it.copy(isLiveCompassEnabled = !isLiveCompassEnabled) }
+        updateMyLocationConfig(isFollowLocationEnabled = isPermissionEnabled && newCompassSate == CompassState.Live)
+
+        _hikeModeUiModel.update { it.copy(compassState = newCompassSate) }
     }
 
-    fun saveBoundingBox(boundingBox: BoundingBox) {
-        _mapUiModel.update { it.copy(boundingBox = boundingBox, withDefaultOffset = true) }
+    fun setFreeCompass(mapOrientation: Float) {
+        _hikeModeUiModel.update { it.copy(compassState = CompassState.Free(mapOrientation)) }
+    }
+
+    fun saveMapConfig(boundingBox: BoundingBox) {
+        _mapUiModel.update { it.copy(boundingBox = boundingBox) }
     }
 
     fun clearPlaceDetails() {

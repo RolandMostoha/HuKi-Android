@@ -6,6 +6,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 const val MAP_MAX_ZOOM_LEVEL = 20.0
 const val MAP_DEFAULT_ZOOM_LEVEL = 15.0
 const val MAP_DEFAULT_SCALE_FACTOR = 1.5
+const val MAP_RESET_ORIENTATION_ANIMATION_DURATION = 300L
 
 const val MY_LOCATION_TIME_MS = 10000L
 const val MY_LOCATION_MIN_INTERVAL_TIME_MS = 4000L
