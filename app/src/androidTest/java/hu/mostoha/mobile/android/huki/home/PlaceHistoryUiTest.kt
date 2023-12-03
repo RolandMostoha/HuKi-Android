@@ -168,7 +168,7 @@ class PlaceHistoryUiTest {
             R.id.routePlannerBackButton.click()
 
             R.id.homeSearchBarInput.click()
-            waitForInputFocusGain()
+            waitFor(800)
 
             R.string.place_finder_show_more_history.isPopupTextDisplayed()
         }
