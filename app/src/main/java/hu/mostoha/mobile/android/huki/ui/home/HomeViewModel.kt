@@ -342,6 +342,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun disableHikeMode() {
+        _hikeModeUiModel.update { it.copy(isHikeModeEnabled = false) }
+    }
+
     fun disableFollowLocation() {
         updateMyLocationConfig(isFollowLocationEnabled = false)
     }

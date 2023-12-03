@@ -1304,6 +1304,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeViewModel.loadPlaceDetailsWithGeometry(placeUiModel)
             },
             onRoutePlanButtonClick = {
+                homeViewModel.disableHikeMode()
+
                 placeDetailsBottomSheet.hide()
 
                 val markers = homeMapView.overlays
