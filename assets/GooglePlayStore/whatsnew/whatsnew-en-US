@@ -1,6 +1,8 @@
-- New: Hike mode and place history
-- Hike mode - live compass with map orientation
-- Hike mode - distance from places and GPX waypoints
-- Hike mode - map has more visibility
-- Place history - watched places are included in history
-- Place history is included in search results
+Hike mode fine-tuning:
+- Map rotation with finger gestures
+- Dedicated buttons for zoom (works with live compass as well)
+- Actual direction indicator
+Bugfixes:
+- Hiking layer quality improvements on maximum zoom level
+- My location animation fixes
+- Other small improvements and fixes

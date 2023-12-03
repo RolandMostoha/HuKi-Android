@@ -91,5 +91,5 @@ private fun waitForAction(millis: Long): ViewAction {
 }
 
 fun waitForInputFocusGain() {
-    waitFor(400)
+    waitFor(500)
 }

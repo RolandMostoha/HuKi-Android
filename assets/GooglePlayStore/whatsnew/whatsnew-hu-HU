@@ -1,6 +1,8 @@
-- Új funkciók: túra mód és helység előzmények
-- Túra mód: élő iránytű térkép forgatással
-- Túra mód alatt a távolság megjelenik a pozícióknál és GPX állomásoknál
-- Túra mód alatt a térkép jobban látható
-- Helység előzmények - a megtekintett pozíciók bekerülnek az előzményekbe
-- A kereső találatokban is megjelennek az előzmények
+Túra mód finomítások:
+- Mostmár kézzel is lehet forgatni a térképet
+- A zoom dedikált gombokat kapott (ezek élő iránytű alatt is működnek)
+- Aktuális irány jelzése az irány gombon
+Hibajavítások:
+- Legnagyobb zoom szinten mostmár élesebb a túra réteg
+- Saját pozíció animációjának javítása
+- Egyéb kisebb javítások
