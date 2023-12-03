@@ -39,6 +39,24 @@ class HistoryUiModelMapperTest {
                     storeDateTime = LocalDateTime.of(2022, 12, 31, 0, 0, 0)
                 )
             ),
+            DEFAULT_PLACE.copy(
+                historyInfo = HistoryInfo(
+                    isFavourite = false,
+                    storeDateTime = LocalDateTime.of(2022, 12, 30, 0, 0, 0)
+                )
+            ),
+            DEFAULT_PLACE.copy(
+                historyInfo = HistoryInfo(
+                    isFavourite = false,
+                    storeDateTime = LocalDateTime.of(2022, 12, 29, 0, 0, 0)
+                )
+            ),
+            DEFAULT_PLACE.copy(
+                historyInfo = HistoryInfo(
+                    isFavourite = false,
+                    storeDateTime = LocalDateTime.of(2022, 12, 20, 0, 0, 0)
+                )
+            ),
         )
         val actualDate = LocalDate.of(2023, 1, 1)
 
@@ -51,13 +69,31 @@ class HistoryUiModelMapperTest {
                         dateText = R.string.default_date_today.toMessage(),
                     )
                 )
-                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places.first())))
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[0])))
                 .plus(
                     PlaceHistoryAdapterModel.Header(
                         dateText = R.string.default_date_yesterday.toMessage(),
                     )
                 )
-                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places.last())))
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[1])))
+                .plus(
+                    PlaceHistoryAdapterModel.Header(
+                        dateText = R.string.default_date_friday.toMessage(),
+                    )
+                )
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[2])))
+                .plus(
+                    PlaceHistoryAdapterModel.Header(
+                        dateText = R.string.default_date_thursday.toMessage(),
+                    )
+                )
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[3])))
+                .plus(
+                    PlaceHistoryAdapterModel.Header(
+                        dateText = "2022.12.20".toMessage(),
+                    )
+                )
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[4])))
         )
     }
 

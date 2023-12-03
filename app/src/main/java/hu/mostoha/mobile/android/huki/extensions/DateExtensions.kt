@@ -30,7 +30,7 @@ fun LocalDate.formatFriendlyDate(today: LocalDate): Message {
     return when {
         this == today -> R.string.default_date_today.toMessage()
         this == today.minusDays(1) -> R.string.default_date_yesterday.toMessage()
-        this.isAfter(today.minusDays(WEEK_DAY_COUNT)) -> when (today.dayOfWeek!!) {
+        this.isAfter(today.minusDays(WEEK_DAY_COUNT)) -> when (this.dayOfWeek!!) {
             DayOfWeek.MONDAY -> R.string.default_date_monday
             DayOfWeek.TUESDAY -> R.string.default_date_tuesday
             DayOfWeek.WEDNESDAY -> R.string.default_date_wednesday
