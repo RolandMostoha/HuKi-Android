@@ -5,11 +5,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ItemGpxHistoryBinding
+import hu.mostoha.mobile.android.huki.databinding.ItemHistoryHeaderBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemHistoryInfoBinding
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuActionItem
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
+import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
@@ -24,6 +26,7 @@ class GpxHistoryAdapter(
     companion object {
         private const val TYPE_ITEM = 0
         private const val TYPE_INFO = 1
+        private const val TYPE_HEADER = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -35,6 +38,9 @@ class GpxHistoryAdapter(
             }
             TYPE_INFO -> {
                 ViewHolderEmpty(ItemHistoryInfoBinding.inflate(inflater, parent, false))
+            }
+            TYPE_HEADER -> {
+                ViewHolderHeader(ItemHistoryHeaderBinding.inflate(inflater, parent, false))
             }
             else -> throw IllegalArgumentException("Not supported viewType")
         }
@@ -48,6 +54,9 @@ class GpxHistoryAdapter(
             is ViewHolderEmpty -> {
                 holder.bind((getItem(position) as GpxHistoryAdapterModel.InfoView))
             }
+            is ViewHolderHeader -> {
+                holder.bind((getItem(position) as GpxHistoryAdapterModel.Header))
+            }
         }
     }
 
@@ -55,6 +64,7 @@ class GpxHistoryAdapter(
         return when (getItem(position)) {
             is GpxHistoryAdapterModel.Item -> TYPE_ITEM
             is GpxHistoryAdapterModel.InfoView -> TYPE_INFO
+            is GpxHistoryAdapterModel.Header -> TYPE_HEADER
         }
     }
 
@@ -68,8 +78,15 @@ class GpxHistoryAdapter(
                 gpxHistoryItemName.text = item.name
                 gpxHistoryActionsButton.setOnClickListener {
                     context.showPopupMenu(
-                        gpxHistoryActionsButton,
-                        listOf(
+                        anchorView = gpxHistoryActionsButton,
+                        actionItems = listOf(
+                            PopupMenuActionItem(
+                                popupMenuItem = PopupMenuItem(
+                                    R.string.gpx_history_menu_action_share,
+                                    R.drawable.ic_gpx_share
+                                ),
+                                onClick = { onGpxShare.invoke(item) }
+                            ),
                             PopupMenuActionItem(
                                 popupMenuItem = PopupMenuItem(
                                     R.string.gpx_history_menu_action_rename,
@@ -84,16 +101,19 @@ class GpxHistoryAdapter(
                                 ),
                                 onClick = { onGpxDelete.invoke(item) }
                             ),
-                        )
+                        ),
                     )
                 }
-                gpxHistoryItemOpenButton.setOnClickListener {
+                gpxHistoryItemContainer.setOnClickListener {
                     onGpxOpen.invoke(item)
                 }
-                gpxHistoryItemShareButton.setOnClickListener {
-                    onGpxShare.invoke(item)
+                with(gpxHistoryRouteAttributesContainer) {
+                    routeAttributesTimeText.setMessageOrGone(item.travelTimeText)
+                    routeAttributesDistanceText.setMessageOrGone(item.distanceText)
+                    routeAttributesUphillText.setMessageOrGone(item.inclineText)
+                    routeAttributesDownhillText.setMessageOrGone(item.declineText)
+                    routeAttributesWaypointCountText.setMessageOrGone(item.waypointCountText)
                 }
-                gpxHistoryDateText.text = item.dateText.resolve(root.context)
             }
         }
     }
@@ -105,6 +125,16 @@ class GpxHistoryAdapter(
             with(binding) {
                 historyItemInfoViewMessage.setText(infoView.message)
                 historyItemInfoViewMessage.setDrawableTop(infoView.iconRes)
+            }
+        }
+    }
+
+    inner class ViewHolderHeader(
+        private val binding: ItemHistoryHeaderBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: GpxHistoryAdapterModel.Header) {
+            with(binding) {
+                historyItemDateHeaderText.text = item.dateText.resolve(binding.root.context)
             }
         }
     }

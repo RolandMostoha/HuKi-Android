@@ -125,13 +125,10 @@
 
     <string name="gpx_history_item_route_planner_empty">Your created route plans will be listed here in the future.</string>
     <string name="gpx_history_item_external_empty">Your imported GPX files will be listed here in the future.</string>
-    <string name="gpx_history_item_route_planner_date_template">Created: %s</string>
-    <string name="gpx_history_item_external_date_template">Imported: %s</string>
-    <string name="gpx_history_item_open_button_title">Open</string>
-    <string name="gpx_history_item_share_button_title">Share</string>
     <string name="gpx_history_item_error">Error occurred during GPX file directory loading.</string>
     <string name="gpx_history_menu_action_rename">Rename</string>
     <string name="gpx_history_menu_action_delete">Delete</string>
+    <string name="gpx_history_menu_action_share">Share</string>
     <string name="gpx_history_rename_input_hint">Rename GPX</string>
     <string name="gpx_history_rename_save_button">Save</string>
     <string name="gpx_history_rename_cancel_button">Cancel</string>

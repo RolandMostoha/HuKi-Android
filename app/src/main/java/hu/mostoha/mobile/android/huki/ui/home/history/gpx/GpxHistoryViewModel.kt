@@ -13,6 +13,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.HistoryUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.GpxHistoryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxRenameResult
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
@@ -36,6 +37,7 @@ class GpxHistoryViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
     private val layersRepository: LayersRepository,
     private val historyUiModelMapper: HistoryUiModelMapper,
+    private val dateTimeProvider: DateTimeProvider,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -97,7 +99,7 @@ class GpxHistoryViewModel @Inject constructor(
                 request = { layersRepository.getGpxHistory() },
                 exceptionLogger = exceptionLogger
             )
-                .map { historyUiModelMapper.mapGpxHistory(it) }
+                .map { historyUiModelMapper.mapGpxHistory(it, dateTimeProvider.now()) }
                 .onEach { _gpxHistory.emit(it) }
                 .catch { throwable ->
                     Timber.e(throwable, "Error while loading gpx history")

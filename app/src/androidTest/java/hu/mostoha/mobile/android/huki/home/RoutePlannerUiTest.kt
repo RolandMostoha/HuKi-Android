@@ -51,7 +51,9 @@ import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
@@ -62,6 +64,7 @@ import java.io.File
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
@@ -84,6 +87,7 @@ class RoutePlannerUiTest {
     @JvmField
     val layersRepository: LayersRepository = FileBasedLayersRepository(
         testAppContext,
+        UnconfinedTestDispatcher(),
         LayersDomainModelMapper(),
         HukiGpxConfiguration(testAppContext),
         FakeExceptionLogger(),

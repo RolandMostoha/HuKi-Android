@@ -12,8 +12,14 @@ sealed class GpxHistoryAdapterModel {
         val name: String,
         val gpxType: GpxType,
         val fileUri: Uri,
-        val dateText: Message.Res
+        val travelTimeText: Message?,
+        val distanceText: Message?,
+        val inclineText: Message?,
+        val declineText: Message?,
+        val waypointCountText: Message?,
     ) : GpxHistoryAdapterModel()
+
+    data class Header(val dateText: Message) : GpxHistoryAdapterModel()
 
     data class InfoView(
         @StringRes val message: Int,

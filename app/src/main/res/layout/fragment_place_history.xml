@@ -13,6 +13,7 @@
         android:background="@color/colorBackgroundLight"
         android:clipToPadding="false"
         android:paddingTop="@dimen/space_medium"
+        android:paddingBottom="@dimen/space_huge"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="3"
         tools:listitem="@layout/item_place_history" />

@@ -67,7 +67,9 @@ import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -77,6 +79,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
@@ -103,6 +106,7 @@ class PlaceFinderUiTest {
     @JvmField
     val layersRepository: LayersRepository = FileBasedLayersRepository(
         testAppContext,
+        UnconfinedTestDispatcher(),
         LayersDomainModelMapper(),
         HukiGpxConfiguration(testAppContext),
         FakeExceptionLogger(),
@@ -141,7 +145,7 @@ class PlaceFinderUiTest {
         answerTestPlaces()
 
         launchScenario<HomeActivity> {
-            R.id.homeSearchBarInput.click()
+            R.id.homeSearchBarInput.typeText("A")
             waitForInputFocusGain()
 
             R.string.place_finder_my_location_button.isPopupTextDisplayed()
@@ -171,7 +175,7 @@ class PlaceFinderUiTest {
             assertThat(isKeyboardShown()).isFalse()
             R.id.homeSearchBarInput.hasNoFocus()
 
-            R.id.homeSearchBarInput.click()
+            R.id.homeSearchBarInput.typeText("A")
             waitForInputFocusGain()
 
             assertThat(isKeyboardShown()).isTrue()
@@ -264,7 +268,7 @@ class PlaceFinderUiTest {
         launchScenario<HomeActivity> {
             val searchText = "QWER"
 
-            R.id.homeSearchBarInput.click()
+            R.id.homeSearchBarInput.typeText("A")
             waitForInputFocusGain()
 
             DEFAULT_PLACE_HISTORY.name.isPopupTextDisplayed()
@@ -282,7 +286,7 @@ class PlaceFinderUiTest {
         every { placeHistoryRepository.getPlaces() } returns flowOfError(IllegalStateException("Error"))
 
         launchScenario<HomeActivity> {
-            R.id.homeSearchBarInput.click()
+            R.id.homeSearchBarInput.typeText("A")
             waitForInputFocusGain()
 
             R.string.error_message_unknown.isPopupTextDisplayed()

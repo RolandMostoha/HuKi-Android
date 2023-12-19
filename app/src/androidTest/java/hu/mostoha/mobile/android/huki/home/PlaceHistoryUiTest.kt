@@ -40,13 +40,16 @@ import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
@@ -69,6 +72,7 @@ class PlaceHistoryUiTest {
     @JvmField
     val layersRepository: LayersRepository = FileBasedLayersRepository(
         testAppContext,
+        UnconfinedTestDispatcher(),
         LayersDomainModelMapper(),
         HukiGpxConfiguration(testAppContext),
         FakeExceptionLogger(),
@@ -167,8 +171,8 @@ class PlaceHistoryUiTest {
             DEFAULT_PLACE_LANDSCAPE.name.clickWithTextInPopup()
             R.id.routePlannerBackButton.click()
 
-            R.id.homeSearchBarInput.click()
-            waitFor(800)
+            R.id.homeSearchBarInput.typeText("A")
+            waitForInputFocusGain()
 
             R.string.place_finder_show_more_history.isPopupTextDisplayed()
         }

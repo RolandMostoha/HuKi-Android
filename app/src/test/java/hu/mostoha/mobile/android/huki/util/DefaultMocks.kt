@@ -8,5 +8,6 @@ import java.time.LocalDate
 val DEFAULT_LOCAL_DATE: LocalDate = LocalDate.of(2023, 1, 1)
 
 fun DateTimeProvider.answerDefaults() {
+    every { now() } returns DEFAULT_LOCAL_DATE
     every { nowInMillis() } returns DEFAULT_LOCAL_DATE.toMillis()
 }

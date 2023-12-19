@@ -7,24 +7,29 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistory
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistoryItem
-import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.mapper.HikingRouteRelationMapper
 import hu.mostoha.mobile.android.huki.model.mapper.HistoryUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
-import hu.mostoha.mobile.android.huki.model.ui.GpxHistoryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxRenameResult
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
+import hu.mostoha.mobile.android.huki.util.DEFAULT_LOCAL_DATE
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
+import hu.mostoha.mobile.android.huki.util.TimberRule
+import hu.mostoha.mobile.android.huki.util.answerDefaults
 import hu.mostoha.mobile.android.huki.util.runTestDefault
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
+import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDateTime
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 
 @ExperimentalCoroutinesApi
 class GpxHistoryViewModelTest {
@@ -33,35 +38,24 @@ class GpxHistoryViewModelTest {
 
     private val exceptionLogger = mockk<ExceptionLogger>()
     private val layersRepository = mockk<LayersRepository>()
+    private val dateTimeProvider = mockk<DateTimeProvider>()
+    private val mapper = HistoryUiModelMapper(PlaceDomainUiMapper(HikingRouteRelationMapper()))
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun setUp() {
+        dateTimeProvider.answerDefaults()
         every { DEFAULT_ROUTE_PLANNER_GPX_FILE_URI.lastPathSegment } returns "route_plan_HuKi938.gpx"
         every { DEFAULT_EXTERNAL_GPX_FILE_URI.lastPathSegment } returns "dera_szurdok.gpx"
-        coEvery { layersRepository.getGpxHistory() } returns GpxHistory(
-            routePlannerGpxList = listOf(
-                GpxHistoryItem(
-                    name = "route_plan_HuKi938.gpx",
-                    fileUri = DEFAULT_ROUTE_PLANNER_GPX_FILE_URI,
-                    lastModified = LocalDateTime.of(2023, 6, 2, 16, 0),
-                )
-            ),
-            externalGpxList = listOf(
-                GpxHistoryItem(
-                    name = "dera_szurdok.gpx",
-                    fileUri = DEFAULT_EXTERNAL_GPX_FILE_URI,
-                    lastModified = LocalDateTime.of(2023, 6, 3, 16, 0),
-                )
-            )
-        )
+        coEvery { layersRepository.getGpxHistory() } returns DEFAULT_GPX_HISTORY
 
         viewModel = GpxHistoryViewModel(
             exceptionLogger,
             layersRepository,
-            HistoryUiModelMapper(PlaceDomainUiMapper(HikingRouteRelationMapper())),
+            mapper,
+            dateTimeProvider,
             mainCoroutineRule.testDispatcher,
         )
     }
@@ -81,12 +75,7 @@ class GpxHistoryViewModelTest {
         runTestDefault {
             viewModel.gpxHistory.test {
                 assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(
-                    GpxHistoryUiModel(
-                        routePlannerGpxList = listOf(DEFAULT_ROUTE_PLANNER_GPX_HISTORY_ITEM),
-                        externalGpxList = listOf(DEFAULT_EXTERNAL_GPX_HISTORY_ITEM),
-                    )
-                )
+                assertThat(awaitItem()).isEqualTo(mapper.mapGpxHistory(DEFAULT_GPX_HISTORY, DEFAULT_LOCAL_DATE))
             }
         }
     }
@@ -118,25 +107,37 @@ class GpxHistoryViewModelTest {
     }
 
     companion object {
+        @get:ClassRule
+        @JvmStatic
+        var timberRule = TimberRule()
+
         private val DEFAULT_ROUTE_PLANNER_GPX_FILE_URI = mockk<Uri>()
         private val DEFAULT_EXTERNAL_GPX_FILE_URI = mockk<Uri>()
-        private val DEFAULT_ROUTE_PLANNER_GPX_HISTORY_ITEM = GpxHistoryAdapterModel.Item(
-            name = "route_plan_HuKi938.gpx",
-            gpxType = GpxType.ROUTE_PLANNER,
-            fileUri = DEFAULT_ROUTE_PLANNER_GPX_FILE_URI,
-            dateText = Message.Res(
-                R.string.gpx_history_item_route_planner_date_template,
-                listOf("2023.06.02 16:00")
+        private val DEFAULT_GPX_HISTORY = GpxHistory(
+            routePlannerGpxList = listOf(
+                GpxHistoryItem(
+                    name = "route_plan_HuKi938.gpx",
+                    fileUri = DEFAULT_ROUTE_PLANNER_GPX_FILE_URI,
+                    lastModified = LocalDateTime.of(2023, 6, 2, 16, 0),
+                    travelTime = 5.hours,
+                    distance = 10000,
+                    incline = 1000,
+                    decline = 1000,
+                    waypointCount = 0,
+                )
             ),
-        )
-        private val DEFAULT_EXTERNAL_GPX_HISTORY_ITEM = GpxHistoryAdapterModel.Item(
-            name = "dera_szurdok.gpx",
-            gpxType = GpxType.EXTERNAL,
-            fileUri = DEFAULT_EXTERNAL_GPX_FILE_URI,
-            dateText = Message.Res(
-                R.string.gpx_history_item_external_date_template,
-                listOf("2023.06.03 16:00")
-            ),
+            externalGpxList = listOf(
+                GpxHistoryItem(
+                    name = "dera_szurdok.gpx",
+                    fileUri = DEFAULT_EXTERNAL_GPX_FILE_URI,
+                    lastModified = LocalDateTime.of(2023, 6, 3, 16, 0),
+                    travelTime = Duration.ZERO,
+                    distance = 0,
+                    incline = 0,
+                    decline = 0,
+                    waypointCount = 100,
+                )
+            )
         )
     }
 

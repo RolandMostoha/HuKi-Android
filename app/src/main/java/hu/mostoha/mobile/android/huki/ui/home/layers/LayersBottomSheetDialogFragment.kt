@@ -22,7 +22,6 @@ import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_HEADER
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_ITEMS
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_MAX
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -86,7 +85,6 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
         lifecycleScope.launch {
             layersViewModel.layerAdapterItems
                 .flowWithLifecycle(lifecycle)
-                .distinctUntilChanged()
                 .collect { layerAdapterItems ->
                     initLayerList(layerAdapterItems)
                 }

@@ -111,7 +111,6 @@ class OktRoutesAdapter(
                 ),
             ),
             width = R.dimen.default_popup_menu_width_with_header,
-            showBackground = true,
             showAtCenter = true,
             headerTitle = oktRouteUiModel.routeName.toMessage(),
         )

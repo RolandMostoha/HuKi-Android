@@ -50,7 +50,9 @@ import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
@@ -59,6 +61,7 @@ import org.junit.runner.RunWith
 import java.net.URLEncoder
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
@@ -85,6 +88,7 @@ class LandscapesUiTest {
     @JvmField
     val layersRepository: LayersRepository = FileBasedLayersRepository(
         testAppContext,
+        UnconfinedTestDispatcher(),
         LayersDomainModelMapper(),
         HukiGpxConfiguration(testAppContext),
         FakeExceptionLogger(),

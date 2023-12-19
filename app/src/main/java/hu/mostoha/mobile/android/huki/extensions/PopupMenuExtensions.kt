@@ -18,7 +18,7 @@ fun Context.showPopupMenu(
     anchorView: View,
     actionItems: List<PopupMenuActionItem>,
     @DimenRes width: Int = R.dimen.default_popup_menu_width,
-    showBackground: Boolean = false,
+    showBackground: Boolean = true,
     showAtCenter: Boolean = false,
     headerTitle: Message? = null,
 ) {

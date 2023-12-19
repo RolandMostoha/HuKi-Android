@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/icon_size_small"
-    android:height="@dimen/icon_size_small"
+    android:width="@dimen/route_attributes_icon_size"
+    android:height="@dimen/route_attributes_icon_size"
     android:viewportWidth="16"
     android:viewportHeight="16">
     <path
-        android:fillColor="@color/colorPrimaryIcon"
+        android:fillColor="@color/colorRouteAttributesIcon"
         android:pathData="M4.207,8.793c0.391,0.391 0.391,1.024 0,1.414c-0.391,0.391 -1.024,0.391 -1.414,0c-0.391,-0.391 -0.391,-1.024 -0,-1.414c0.391,-0.391 1.024,-0.391 1.414,0" />
     <path
-        android:fillColor="@color/colorPrimaryIcon"
+        android:fillColor="@color/colorRouteAttributesIcon"
         android:pathData="M13.207,2.793c0.391,0.391 0.391,1.024 0,1.414c-0.391,0.391 -1.024,0.391 -1.414,0c-0.391,-0.391 -0.391,-1.024 0,-1.414c0.391,-0.391 1.024,-0.391 1.414,-0" />
     <path
-        android:fillColor="@color/colorPrimaryIcon"
+        android:fillColor="@color/colorRouteAttributesIcon"
         android:pathData="M12.5,0c-1.93,0 -3.5,1.57 -3.5,3.5c0,2.141 1.946,4.844 2.766,5.889l-6.25,4.167c0.754,-1.223 1.484,-2.745 1.484,-4.055c0,-1.93 -1.57,-3.5 -3.5,-3.5c-1.93,0 -3.5,1.57 -3.5,3.5c0,2.654 2.993,6.177 3.121,6.325c0.095,0.111 0.233,0.175 0.379,0.175c0.1,0 0.196,-0.03 0.277,-0.084l9,-6c0.038,-0.025 0.072,-0.056 0.102,-0.091c0.127,-0.148 3.121,-3.671 3.121,-6.325c0,-1.93 -1.57,-3.5 -3.5,-3.5ZM3.5,14.703c-0.782,-1.009 -2.5,-3.426 -2.5,-5.203c0,-1.378 1.122,-2.5 2.5,-2.5c1.378,0 2.5,1.122 2.5,2.5c0,1.773 -1.718,4.193 -2.5,5.203ZM12.5,8.703c-0.782,-1.009 -2.5,-3.426 -2.5,-5.203c0,-1.378 1.122,-2.5 2.5,-2.5c1.378,0 2.5,1.122 2.5,2.5c0,1.773 -1.718,4.193 -2.5,5.203Z" />
 </vector>

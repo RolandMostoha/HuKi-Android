@@ -36,16 +36,28 @@ class GpxDetailsBottomSheetDialog(
             gpxDetailsPrimaryText.text = gpxDetails.name
 
             gpxDetailsAltitudeRangeContainer.visibleOrGone(hasAltitudeValues)
-            with(binding.gpxDetailsRouteAttributesContainer) {
+            with(gpxDetailsRouteAttributesContainer) {
                 routeAttributesTimeText.setMessageOrGone(gpxDetails.travelTimeText)
                 routeAttributesDistanceText.setMessageOrGone(gpxDetails.distanceText)
-                routeAttributesTimeTextSeparator.visibleOrGone(gpxDetails.travelTimeText != null)
-
-                routeAttributesUphillTextSeparator.visibleOrGone(hasAltitudeValues)
-                routeAttributesDownhillTextSeparator.visibleOrGone(hasAltitudeValues)
                 routeAttributesUphillText.setMessageOrGone(gpxDetails.altitudeUiModel?.uphillText)
                 routeAttributesDownhillText.setMessageOrGone(gpxDetails.altitudeUiModel?.downhillText)
             }
+
+            val hasWaypointsOnly = gpxDetails.geoPoints.isEmpty() && gpxDetails.waypoints.isNotEmpty()
+
+            gpxDetailsRouteAttributesContainer.routeAttributesWaypointCountText.visibleOrGone(hasWaypointsOnly)
+            gpxDetailsActionButtonContainer.visibleOrGone(!hasWaypointsOnly)
+
+            if (hasWaypointsOnly) {
+                analyticsService.gpxDetailsWaypointsOnlyImported()
+                gpxDetailsRouteAttributesContainer.routeAttributesWaypointCountText.setMessage(
+                    Message.Res(
+                        R.string.gpx_details_bottom_sheet_waypoints_only_counter_template,
+                        listOf(gpxDetails.waypoints.size)
+                    )
+                )
+            }
+
             gpxDetailsAltitudeRangeStartText.setMessageOrGone(gpxDetails.altitudeUiModel?.minAltitudeText)
             gpxDetailsAltitudeRangeEndText.setMessageOrGone(gpxDetails.altitudeUiModel?.maxAltitudeText)
 
@@ -71,25 +83,9 @@ class GpxDetailsBottomSheetDialog(
                     context.startGoogleMapsDirectionsIntent(gpxDetails.geoPoints.first())
                 }
             }
-
             gpxDetailsShareButton.setOnClickListener {
                 analyticsService.gpxDetailsShareClicked()
                 context.shareFile(Uri.parse(gpxDetails.fileUri))
-            }
-
-            val hasWaypointsOnly = gpxDetails.geoPoints.isEmpty() && gpxDetails.waypoints.isNotEmpty()
-
-            gpxDetailsWaypointsOnlyText.visibleOrGone(hasWaypointsOnly)
-            gpxDetailsActionButtonContainer.visibleOrGone(!hasWaypointsOnly)
-
-            if (hasWaypointsOnly) {
-                analyticsService.gpxDetailsWaypointsOnlyImported()
-                gpxDetailsWaypointsOnlyText.setMessage(
-                    Message.Res(
-                        R.string.gpx_details_bottom_sheet_waypoints_only_counter_template,
-                        listOf(gpxDetails.waypoints.size)
-                    )
-                )
             }
         }
     }
@@ -120,7 +116,6 @@ class GpxDetailsBottomSheetDialog(
                 ),
             ),
             width = R.dimen.default_popup_menu_width_with_header,
-            showBackground = true,
             showAtCenter = true,
             headerTitle = R.string.gpx_details_bottom_sheet_google_maps_header.toMessage(),
         )

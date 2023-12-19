@@ -57,7 +57,9 @@ import hu.mostoha.mobile.android.huki.util.testContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
@@ -66,6 +68,7 @@ import org.junit.runner.RunWith
 import java.io.File
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
@@ -92,6 +95,7 @@ class GpxDetailsUiTest {
     @JvmField
     val layersRepository: LayersRepository = FileBasedLayersRepository(
         testAppContext,
+        UnconfinedTestDispatcher(),
         LayersDomainModelMapper(),
         HukiGpxConfiguration(testAppContext),
         FakeExceptionLogger(),
@@ -286,8 +290,6 @@ class GpxDetailsUiTest {
 
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
             R.id.gpxDetailsAltitudeRangeContainer.isNotDisplayed()
-            R.id.routeAttributesUphillTextSeparator.isNotDisplayed()
-            R.id.routeAttributesDownhillTextSeparator.isNotDisplayed()
             TEST_GPX_NAME_WITHOUT_ALTITUDE.isTextDisplayed()
         }
     }
@@ -322,7 +324,7 @@ class GpxDetailsUiTest {
 
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
             R.id.homeMapView.hasOverlayCount<GpxMarker>(245)
-            R.id.gpxDetailsWaypointsOnlyText.isDisplayed()
+            R.id.routeAttributesWaypointCountText.isDisplayed()
         }
     }
 

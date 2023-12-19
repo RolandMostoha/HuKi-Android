@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/icon_size_medium"
-    android:height="@dimen/icon_size_medium"
+    android:width="@dimen/route_attributes_icon_size"
+    android:height="@dimen/route_attributes_icon_size"
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path
-        android:fillColor="@color/colorPrimaryIcon"
-        android:pathData="M3,21V17.29L10.78,12.8L14.55,15L21,11.25V21H3M21,8.94L14.55,12.67L10.78,10.5L3,15V12.79L10.78,8.3L14.55,10.5L21,6.75V8.94Z" />
+        android:fillColor="@color/colorRouteAttributesIcon"
+        android:pathData="M7.41,18.41L6,17L12,11L18,17L16.59,18.41L12,13.83L7.41,18.41M7.41,12.41L6,11L12,5L18,11L16.59,12.41L12,7.83L7.41,12.41Z" />
 </vector>

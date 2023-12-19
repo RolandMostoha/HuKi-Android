@@ -44,6 +44,8 @@ import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.After
@@ -54,6 +56,7 @@ import org.junit.runner.RunWith
 import java.io.File
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
@@ -72,6 +75,7 @@ class GpxHistoryUiTest {
     @JvmField
     val layersRepository: LayersRepository = FileBasedLayersRepository(
         testContext,
+        UnconfinedTestDispatcher(),
         LayersDomainModelMapper(),
         gpxConfiguration,
         FakeExceptionLogger(),
@@ -157,7 +161,7 @@ class GpxHistoryUiTest {
             R.id.historyViewPager.registerViewPagerIdlingResource(this)
             R.id.historyTabLayout.selectTab(2)
 
-            R.id.gpxHistoryItemOpenButton.isDisplayed()
+            R.id.gpxHistoryItemContainer.isDisplayed()
         }
     }
 
@@ -175,7 +179,7 @@ class GpxHistoryUiTest {
             R.id.homeHistoryFab.click()
             R.id.historyViewPager.registerViewPagerIdlingResource(this)
             R.id.historyTabLayout.selectTab(2)
-            R.id.gpxHistoryItemOpenButton.click()
+            R.id.gpxHistoryItemContainer.click()
 
             R.id.gpxDetailsStartButton.isDisplayed()
         }
@@ -204,7 +208,7 @@ class GpxHistoryUiTest {
             R.id.homeHistoryFab.click()
             R.id.historyViewPager.registerViewPagerIdlingResource(this)
             R.id.historyTabLayout.selectTab(1)
-            R.id.gpxHistoryItemOpenButton.click()
+            R.id.gpxHistoryItemContainer.click()
 
             R.id.gpxDetailsStartButton.isDisplayed()
         }
@@ -277,7 +281,8 @@ class GpxHistoryUiTest {
             R.id.homeHistoryFab.click()
             R.id.historyViewPager.registerViewPagerIdlingResource(this)
             R.id.historyTabLayout.selectTab(2)
-            R.id.gpxHistoryItemShareButton.click()
+            R.id.gpxHistoryActionsButton.click()
+            R.string.gpx_history_menu_action_share.clickWithTextInPopup()
         }
     }
 

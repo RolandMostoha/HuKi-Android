@@ -122,4 +122,6 @@
 
     <dimen name="history_card_elevation">2dp</dimen>
 
+    <dimen name="route_attributes_icon_size">@dimen/icon_size_extra_small</dimen>
+
 </resources>

@@ -54,7 +54,9 @@ import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
@@ -64,6 +66,7 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
@@ -86,6 +89,7 @@ class PlacesUiTest {
     @JvmField
     val layersRepository: LayersRepository = FileBasedLayersRepository(
         testAppContext,
+        UnconfinedTestDispatcher(),
         LayersDomainModelMapper(),
         HukiGpxConfiguration(testAppContext),
         FakeExceptionLogger(),
@@ -388,7 +392,7 @@ class PlacesUiTest {
         launchScenario<HomeActivity> {
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
 
-            R.id.homeSearchBarInput.click()
+            R.id.homeSearchBarInput.typeText("A")
             waitForInputFocusGain()
 
             R.id.placeFinderMyLocationButton.clickInPopup()
@@ -411,7 +415,7 @@ class PlacesUiTest {
         launchScenario<HomeActivity> {
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
 
-            R.id.homeSearchBarInput.click()
+            R.id.homeSearchBarInput.typeText("A")
             waitForInputFocusGain()
             R.id.placeFinderMyLocationButton.clickInPopup()
 
