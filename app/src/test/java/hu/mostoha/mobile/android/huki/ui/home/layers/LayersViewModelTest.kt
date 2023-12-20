@@ -241,6 +241,12 @@ class LayersViewModelTest {
                 drawableRes = R.drawable.ic_layers_open_topo,
                 isSelected = selectedLayerTypes.contains(LayerType.OPEN_TOPO)
             ),
+            LayersAdapterItem.Layer(
+                layerType = LayerType.TUHU,
+                titleRes = R.string.layers_tuhu_title,
+                drawableRes = R.drawable.ic_layers_tuhu,
+                isSelected = selectedLayerTypes.contains(LayerType.TUHU)
+            ),
             LayersAdapterItem.Header(R.string.layers_hiking_layers_header),
             LayersAdapterItem.Layer(
                 layerType = LayerType.HUNGARIAN_HIKING_LAYER,

@@ -52,7 +52,10 @@ Huge thanks to the Graphhopper team for the opportunity!
 ## How does it work
 
 - Tile render - [OsmDroid library](https://github.com/osmdroid/osmdroid)
-- Base layers - [Mapnik](https://mapnik.org/) and [OpenTopo](https://opentopomap.org/)
+- Base layers
+  - [Mapnik](https://mapnik.org/)
+  - [OpenTopo](https://opentopomap.org/)
+  - [TuHu - turistautak.hu](https://turistautak.hu/)
 - Hiking tiles - [TuraReteg.sqlitedb](https://data2.openstreetmap.hu/) privately hosted in an AWS S3
   bucket
 - OpenStreetMap data provider - [Overpass API](https://wiki.openstreetmap.org/wiki/Overpass_API)
@@ -60,10 +63,10 @@ Huge thanks to the Graphhopper team for the opportunity!
 - Route planner - [Graphhopper Routing API](https://docs.graphhopper.com/#tag/Routing-API)
 - Location service
   - [Google Fused Location Provider](https://developers.google.com/location-context/fused-location-provider)
-  integrated with OsmDroid
+    integrated with OsmDroid
 - Hike recommendations
-    - [Kirándulástippek](https://kirandulastippek.hu/) link with area tags like `"budai-hegyseg"`
-    - [Természetjáró](https://www.termeszetjaro.hu/) link with search query parameter
+  - [Kirándulástippek](https://kirandulastippek.hu/) link with area tags like `"budai-hegyseg"`
+  - [Természetjáró](https://www.termeszetjaro.hu/) link with search query parameter
 
 ### Tile server optimization
 
@@ -164,6 +167,7 @@ The app is built upon many `OpenStreetMap` related services. There is an in-app 
 - Kirándulástippek - Hike recommendation -  https://kirandulastippek.hu/
 - Természetjáró - Hike recommendation -  https://www.termeszetjaro.hu/
 - OKT - National Blue Trail -  https://www.kektura.hu/
+- TuHu (turistautak.hu) - Base layer -  https://turistautak.hu/
 
 ## Project License
 

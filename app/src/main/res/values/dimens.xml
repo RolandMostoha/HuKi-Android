@@ -73,6 +73,8 @@
 
     <dimen name="home_copyright_bottom_margin">14dp</dimen>
 
+    <dimen name="home_layers_icon_size">60dp</dimen>
+
     <dimen name="route_planner_waypoint_list_max_height">145dp</dimen>
     <dimen name="route_planner_min_width">@null</dimen>
 

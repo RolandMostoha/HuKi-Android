@@ -18,9 +18,11 @@ import hu.mostoha.mobile.android.huki.databinding.FragmentLayersBottomSheetDialo
 import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
+import hu.mostoha.mobile.android.huki.model.domain.isBase
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
+import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_BASE
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_HEADER
-import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_ITEMS
+import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_HIKING
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_MAX
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -106,9 +108,13 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT_MAX)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return when (layerAdapterItems[position]) {
+                return when (val layer = layerAdapterItems[position]) {
                     is LayersAdapterItem.Header -> SPAN_COUNT_LAYER_HEADER
-                    is LayersAdapterItem.Layer -> SPAN_COUNT_LAYER_ITEMS
+                    is LayersAdapterItem.Layer -> if (layer.layerType.isBase()) {
+                        SPAN_COUNT_LAYER_BASE
+                    } else {
+                        SPAN_COUNT_LAYER_HIKING
+                    }
                 }
             }
         }

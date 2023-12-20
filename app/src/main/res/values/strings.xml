@@ -72,7 +72,8 @@
 
     <string name="layers_base_layers_header">Base Layers</string>
     <string name="layers_mapnik_title">Mapnik</string>
-    <string name="layers_open_topo_title">Open Topo</string>
+    <string name="layers_open_topo_title">OpenTopo</string>
+    <string name="layers_tuhu_title">TuHu</string>
     <string name="layers_hiking_layers_header">Hiking Layers</string>
     <string name="layers_hiking_hungarian_title">Hiking Layer</string>
     <string name="layers_gpx_title">GPX Layer</string>
@@ -91,13 +92,17 @@
     <string name="licences_osm_copyright_notice">© OpenStreetMap contributors</string>
     <string name="licences_title">Licenses</string>
     <string name="licences_notices">License resources</string>
+    <string name="licences_ok_button_title">OK</string>
     <string name="licences_openstreetmap_title">OpenStreetMap</string>
     <string name="licences_graphhopper">Graphhopper - Route Planner API</string>
     <string name="licences_hiking_layer_title">Hungarian Hiking Layer (turistautak.openstreetmap.hu)</string>
     <string name="licences_photon_title">Komoot - Photon (Search engine)</string>
     <string name="licences_osmdroid">OsmDroid - Tile render</string>
     <string name="licences_okt">OKT - National Blue Trail</string>
-    <string name="licences_ok_button_title">OK</string>
+    <string name="licences_termeszetjaro">Természetjáró</string>
+    <string name="licences_kirandulastippek">Kirándulástippek</string>
+    <string name="licences_aktiv_magyarorszag">Aktív Magyarország</string>
+    <string name="licences_tuhu">TuHu (turistautak.hu)</string>
 
     <string name="settings_map_scale_title">Map display magnification</string>
     <string name="settings_map_scale_description">Magnification can reduce image quality</string>

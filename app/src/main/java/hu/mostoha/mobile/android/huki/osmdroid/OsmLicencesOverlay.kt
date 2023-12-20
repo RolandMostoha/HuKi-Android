@@ -126,6 +126,27 @@ class OsmLicencesOverlay(
                     license = License.CREATIVE_COMMONS
                 )
             )
+            .setLibrary(
+                Library(
+                    title = context.getString(R.string.licences_termeszetjaro),
+                    url = "https://www.termeszetjaro.hu/",
+                    license = License.CREATIVE_COMMONS
+                )
+            )
+            .setLibrary(
+                Library(
+                    title = context.getString(R.string.licences_kirandulastippek),
+                    url = "https://kirandulastippek.hu/",
+                    license = License.CREATIVE_COMMONS
+                )
+            )
+            .setLibrary(
+                Library(
+                    title = context.getString(R.string.licences_tuhu),
+                    url = "https://turistautak.hu/",
+                    license = License.CREATIVE_COMMONS
+                )
+            )
             .setPositiveButton(R.string.licences_ok_button_title) { dialog, _ ->
                 dialog.dismiss()
             }

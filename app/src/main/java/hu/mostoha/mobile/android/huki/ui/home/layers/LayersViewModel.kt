@@ -83,6 +83,7 @@ class LayersViewModel @Inject constructor(
         when (layerType) {
             LayerType.MAPNIK -> baseLayer.emit(BaseLayer.Mapnik)
             LayerType.OPEN_TOPO -> baseLayer.emit(BaseLayer.OpenTopo)
+            LayerType.TUHU -> baseLayer.emit(BaseLayer.TuHu)
             LayerType.HUNGARIAN_HIKING_LAYER -> switchHikingLayerVisibility()
             LayerType.GPX -> switchGpxDetailsVisibility()
         }

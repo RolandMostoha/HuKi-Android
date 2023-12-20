@@ -70,7 +70,8 @@
 
     <string name="layers_base_layers_header">Alap rétegek</string>
     <string name="layers_mapnik_title">Mapnik</string>
-    <string name="layers_open_topo_title">Open Topo</string>
+    <string name="layers_open_topo_title">OpenTopo</string>
+    <string name="layers_tuhu_title">TuHu</string>
     <string name="layers_hiking_layers_header">Túra rétegek</string>
     <string name="layers_hiking_hungarian_title">Magyar Túraréteg</string>
     <string name="layers_gpx_title">GPX Réteg</string>
@@ -87,13 +88,17 @@
     <string name="licences_osm_copyright_notice">© OpenStreetMap közreműködők</string>
     <string name="licences_title">Licencek</string>
     <string name="licences_notices">Licencek elérhetőségei</string>
+    <string name="licences_ok_button_title">Rendben</string>
     <string name="licences_openstreetmap_title">OpenStreetMap</string>
     <string name="licences_graphhopper">Graphhopper - Útvonaltervező API</string>
     <string name="licences_hiking_layer_title">Magyar Túra réteg (turistautak.openstreetmap.hu)</string>
     <string name="licences_photon_title">Komoot - Photon (Keresőmotor)</string>
     <string name="licences_osmdroid">OsmDroid - Tile render</string>
     <string name="licences_okt">OKT - Országos Kéktúra</string>
-    <string name="licences_ok_button_title">Rendben</string>
+    <string name="licences_termeszetjaro">Természetjáró</string>
+    <string name="licences_aktiv_magyarorszag">Aktív Magyarország</string>
+    <string name="licences_kirandulastippek">Kirándulástippek</string>
+    <string name="licences_tuhu">TuHu (turistautak.hu)</string>
 
     <string name="settings_map_scale_title">Térkép alakzatainak nagyítása</string>
     <string name="settings_map_scale_description">A nagyítás ronthat az alakzatok minőségén</string>

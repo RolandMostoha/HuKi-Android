@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/itemLayersImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/home_layers_icon_size"
+            android:layout_height="@dimen/home_layers_icon_size"
             tools:src="@drawable/ic_layers_mapnik" />
 
         <ImageView

@@ -22,9 +22,11 @@ class LayersAdapter(
     companion object {
         const val TYPE_LAYER_HEADER = 0
         const val TYPE_LAYER_ITEM = 1
-        const val SPAN_COUNT_MAX = 2
-        const val SPAN_COUNT_LAYER_HEADER = 2
-        const val SPAN_COUNT_LAYER_ITEMS = 1
+
+        const val SPAN_COUNT_MAX = 6
+        const val SPAN_COUNT_LAYER_HEADER = 6
+        const val SPAN_COUNT_LAYER_BASE = 2
+        const val SPAN_COUNT_LAYER_HIKING = 3
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

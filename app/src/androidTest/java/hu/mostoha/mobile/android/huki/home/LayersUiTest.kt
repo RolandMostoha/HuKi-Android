@@ -25,6 +25,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.MapnikTileSource
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.TuHuTileSource
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
@@ -113,7 +114,7 @@ class LayersUiTest {
     }
 
     @Test
-    fun whenSelectOpenTopoMap_thenOpenTopoLayerDisplays() {
+    fun whenSelectOpenTopoLayer_thenOpenTopoLayerDisplays() {
         launchScenario<HomeActivity> {
             R.id.homeMapView.hasBaseTileSource(MapnikTileSource)
 
@@ -122,6 +123,19 @@ class LayersUiTest {
             pressBack()
 
             R.id.homeMapView.hasBaseTileSource(TileSourceFactory.OpenTopo)
+        }
+    }
+
+    @Test
+    fun whenSelectTuhuLayer_thenTuHuLayerDisplays() {
+        launchScenario<HomeActivity> {
+            R.id.homeMapView.hasBaseTileSource(MapnikTileSource)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersImageCard.clickWithSibling(R.string.layers_tuhu_title)
+            pressBack()
+
+            R.id.homeMapView.hasBaseTileSource(TuHuTileSource)
         }
     }
 
