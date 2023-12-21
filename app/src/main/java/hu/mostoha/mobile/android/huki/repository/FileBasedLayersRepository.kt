@@ -143,7 +143,7 @@ class FileBasedLayersRepository @Inject constructor(
             val isSuccessful = sourceFile.renameTo(targetFile)
 
             if (!isSuccessful) {
-                error("Renaming GPX file was unsuccessful. source: $sourceFile, target: $targetFile")
+                Timber.e("Renaming GPX file was unsuccessful. source: $sourceFile, target: $targetFile")
             }
         }
     }
