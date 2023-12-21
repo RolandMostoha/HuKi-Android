@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.home.layers
 
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
@@ -54,6 +55,7 @@ class LayersViewModelTest {
         every { layersInteractor.requestHikingLayerZoomRanges() } returns flowOf(emptyList())
 
         viewModel = LayersViewModel(
+            SavedStateHandle(),
             mainCoroutineRule.testDispatcher,
             exceptionLogger,
             tileUrlProvider,

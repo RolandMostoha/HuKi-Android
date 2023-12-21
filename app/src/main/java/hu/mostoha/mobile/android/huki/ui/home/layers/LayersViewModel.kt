@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.home.layers
 
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,13 +37,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LayersViewModel @Inject constructor(
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    private val savedStateHandle: SavedStateHandle,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val exceptionLogger: ExceptionLogger,
     private val hikingTileUrlProvider: HikingTileUrlProvider,
     private val layersInteractor: LayersInteractor,
     private val layersUiModelMapper: LayersUiModelMapper,
     private val analyticsService: AnalyticsService,
 ) : ViewModel() {
+
+    companion object {
+        private const val SAVED_STATE_KEY_GPX_FILE_URI = "gpx_file_uri"
+    }
+
+    private val savedFileUri = savedStateHandle.get<String>(SAVED_STATE_KEY_GPX_FILE_URI)
 
     private lateinit var hikingLayerZoomRanges: List<TileZoomRange>
 
@@ -56,6 +64,7 @@ class LayersViewModel @Inject constructor(
 
     private val _gpxDetailsUiModel = MutableStateFlow<GpxDetailsUiModel?>(null)
     val gpxDetailsUiModel: StateFlow<GpxDetailsUiModel?> = _gpxDetailsUiModel
+        .onEach { savedStateHandle[SAVED_STATE_KEY_GPX_FILE_URI] = it?.fileUri }
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     val layerAdapterItems = layersConfig.combine(gpxDetailsUiModel) { layersConfig, gpxDetails ->
@@ -67,7 +76,7 @@ class LayersViewModel @Inject constructor(
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     init {
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(ioDispatcher) {
             layersInteractor.requestHikingLayerZoomRanges()
                 .onEach { zoomRanges ->
                     hikingLayerZoomRanges = zoomRanges
@@ -76,10 +85,14 @@ class LayersViewModel @Inject constructor(
                 }
                 .catch { Timber.e(it) }
                 .collect()
+
+            if (savedFileUri != null) {
+                loadGpx(Uri.parse(savedFileUri))
+            }
         }
     }
 
-    fun selectLayer(layerType: LayerType) = viewModelScope.launch(dispatcher) {
+    fun selectLayer(layerType: LayerType) = viewModelScope.launch(ioDispatcher) {
         when (layerType) {
             LayerType.MAPNIK -> baseLayer.emit(BaseLayer.Mapnik)
             LayerType.OPEN_TOPO -> baseLayer.emit(BaseLayer.OpenTopo)

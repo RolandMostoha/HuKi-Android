@@ -586,7 +586,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     onFollowLocationDisabled = {
                         homeMyLocationFab.setImageResource(R.drawable.ic_home_fab_my_location_not_fixed)
 
-                        homeViewModel.disableFollowLocation()
+                        homeViewModel.clearFollowLocation()
                         homeViewModel.setFreeCompass(homeMapView.mapOrientation)
                     }
                     onOrientationChanged = { rotation ->
@@ -922,8 +922,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initIntentHandlers(intent: Intent?) {
         if (intent != null && intent.isGpxFileIntent()) {
             lifecycleScope.launch {
-                homeViewModel.clearFollowLocation()
-
                 layersViewModel.loadGpx(intent.data)
 
                 analyticsService.gpxImportedByIntent()
@@ -1394,6 +1392,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeMapView.removeOverlay(OverlayType.GPX)
             return
         }
+
+        homeViewModel.clearFollowLocation()
 
         if (homeMapView.hasOverlay(gpxDetailsUiModel.id)) {
             if (gpxDetailsUiModel.isVisible) {

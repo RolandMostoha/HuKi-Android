@@ -351,10 +351,6 @@ class HomeViewModel @Inject constructor(
         _hikeModeUiModel.update { it.copy(isHikeModeEnabled = false) }
     }
 
-    fun disableFollowLocation() {
-        updateMyLocationConfig(isFollowLocationEnabled = false)
-    }
-
     fun toggleLiveCompass(mapOrientation: Float) {
         val isPermissionEnabled = myLocationUiModel.value.isLocationPermissionEnabled
 
