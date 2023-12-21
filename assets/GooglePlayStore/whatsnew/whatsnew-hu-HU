@@ -1,8 +1,3 @@
-Túra mód finomítások:
-- Mostmár kézzel is lehet forgatni a térképet
-- A zoom dedikált gombokat kapott (ezek élő iránytű alatt is működnek)
-- Aktuális irány jelzése az irány gombon
-Hibajavítások:
-- Legnagyobb zoom szinten mostmár élesebb a túra réteg
-- Saját pozíció animációjának javítása
-- Egyéb kisebb javítások
+- TuHu (turistautak.hu) réteg hozzáadása
+- GPX előzményeknél mostmár megjeleneik a hossz, idő és emelkedés is
+- Hibajavítások

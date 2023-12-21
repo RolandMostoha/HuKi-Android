@@ -1,8 +1,3 @@
-Hike mode fine-tuning:
-- Map rotation with finger gestures
-- Dedicated buttons for zoom (works with live compass as well)
-- Actual direction indicator
-Bugfixes:
-- Hiking layer quality improvements on maximum zoom level
-- My location animation fixes
-- Other small improvements and fixes
+- TuHu (turistautak.hu) layer option
+- GPX history now includes distance, travel time and inclination
+- Bugfixes
