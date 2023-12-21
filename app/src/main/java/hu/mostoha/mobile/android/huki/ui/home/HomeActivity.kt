@@ -1084,8 +1084,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initPlaceDetails(placeDetails: PlaceDetailsUiModel?) {
         when {
             placeDetails == null -> {
-                homeMapView.removeOverlay(OverlayType.PLACE_DETAILS)
                 homeMapView.closeInfoWindowsForMarkerType<DistanceInfoWindow, PlaceDetailsMarker>()
+                homeMapView.removeOverlay(OverlayType.PLACE_DETAILS)
             }
             homeMapView.hasNoOverlay(placeDetails.placeUiModel.osmId) -> {
                 when (placeDetails.geometryUiModel) {
@@ -1326,8 +1326,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             },
             onCloseButtonClick = {
                 homeMapView.closeInfoWindowsForMarkerType<DistanceInfoWindow, PlaceDetailsMarker>()
-                placeDetailsBottomSheet.hide()
                 homeMapView.removeMarker(marker)
+                placeDetailsBottomSheet.hide()
 
                 homeViewModel.clearPlaceDetails()
             },

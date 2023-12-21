@@ -231,6 +231,7 @@ fun MapView.addPlaceDetailsMarker(
 }
 
 fun MapView.removeMarker(marker: Marker) {
+    marker.infoWindow?.close()
     marker.remove(this)
     invalidate()
 }
