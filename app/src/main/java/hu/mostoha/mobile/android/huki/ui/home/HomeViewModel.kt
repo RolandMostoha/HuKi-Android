@@ -309,12 +309,14 @@ class HomeViewModel @Inject constructor(
     fun updateMyLocationConfig(
         isLocationPermissionEnabled: Boolean? = null,
         isFollowLocationEnabled: Boolean? = null,
+        isZoomLocked: Boolean? = null,
     ) {
         _myLocationUiModel.update { locationUiModel ->
             var model = locationUiModel
 
             isLocationPermissionEnabled?.let { model = model.copy(isLocationPermissionEnabled = it) }
             isFollowLocationEnabled?.let { model = model.copy(isFollowLocationEnabled = it) }
+            isZoomLocked?.let { model = model.copy(isZoomLocked = it) }
 
             model
         }
@@ -326,7 +328,10 @@ class HomeViewModel @Inject constructor(
             val isPermissionEnabled = myLocationUiModel.value.isLocationPermissionEnabled
 
             if (isPermissionEnabled) {
-                updateMyLocationConfig(isFollowLocationEnabled = isHikeModeEnabled)
+                updateMyLocationConfig(
+                    isFollowLocationEnabled = isHikeModeEnabled,
+                    isZoomLocked = true,
+                )
             }
 
             val compassState = if (isPermissionEnabled && isHikeModeEnabled) {

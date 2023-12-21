@@ -617,7 +617,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun enableFollowingLocation(isEnabled: Boolean) {
+    private fun enableFollowingLocation(isEnabled: Boolean, isZoomLocked: Boolean) {
         Timber.d("Follow location is enabled: $isEnabled")
 
         val locationOverlay = myLocationOverlay ?: return
@@ -627,6 +627,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             !previouslyEnabled && isEnabled -> {
                 homeMyLocationFab.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
                 homeMyLocationFab.startDrawableAnimation()
+
+                if (isZoomLocked) {
+                    locationOverlay.lockedZoom = homeMapView.zoomLevelDouble
+                } else {
+                    locationOverlay.lockedZoom = null
+                }
 
                 locationOverlay.enableFollowLocation()
             }
@@ -677,17 +683,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         val isFollowingEnabled = homeViewModel.myLocationUiModel.value.isFollowLocationEnabled
 
                         enableMyLocationMonitoring()
-                        enableFollowingLocation(isFollowingEnabled)
+                        enableFollowingLocation(isFollowingEnabled, false)
                     }
                 }
         }
         lifecycleScope.launch {
             homeViewModel.myLocationUiModel
-                .map { it.isFollowLocationEnabled }
+                .map { it.isFollowLocationEnabled to it.isZoomLocked }
                 .distinctUntilChanged()
                 .flowWithLifecycle(lifecycle)
-                .collect { isEnabled ->
-                    enableFollowingLocation(isEnabled)
+                .collect { (isEnabled, isZoomLocked) ->
+                    enableFollowingLocation(isEnabled, isZoomLocked)
                 }
         }
         lifecycleScope.launch {
