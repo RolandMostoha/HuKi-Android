@@ -708,7 +708,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .onStart { delay(TURN_ON_DELAY_HIKE_MODE) }
                 .collect { uiModel ->
-                    initHikeMode(uiModel)
+                    postMain {
+                        initHikeMode(uiModel)
+                    }
                 }
         }
         lifecycleScope.launch {

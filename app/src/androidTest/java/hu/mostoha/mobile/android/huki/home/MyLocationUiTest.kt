@@ -26,6 +26,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isDisplayedContainsText
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayedWithText
 import hu.mostoha.mobile.android.huki.util.espresso.isFollowLocationEnabled
 import hu.mostoha.mobile.android.huki.util.espresso.swipeDown
+import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
@@ -130,6 +131,8 @@ class MyLocationUiTest {
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
             scenario.recreate()
+
+            waitFor(500)
 
             R.id.homeMapView.hasOverlay<MyLocationOverlay>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
