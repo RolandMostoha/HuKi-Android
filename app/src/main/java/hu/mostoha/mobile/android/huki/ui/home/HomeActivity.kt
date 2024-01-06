@@ -150,10 +150,14 @@ import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_MAX_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
+import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_FOLLOW_LOCATION
+import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_HIKE_MODE
+import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_MY_LOCATION
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -161,6 +165,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.views.CustomZoomButtonsController
@@ -653,13 +658,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initFlows() {
         initHomeFlows()
+        initMapFlows()
         initLayersFlows()
         initPlaceFinderFlows()
         initRoutePlannerFlows()
-        initMapSettingsFlows()
     }
 
-    private fun initHomeFlows() {
+    private fun initMapFlows() {
         lifecycleScope.launch {
             homeViewModel.mapUiModel
                 .flowWithLifecycle(lifecycle)
@@ -677,6 +682,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeViewModel.myLocationUiModel
                 .map { it.isLocationPermissionEnabled }
                 .distinctUntilChanged()
+                .onStart { delay(TURN_ON_DELAY_MY_LOCATION) }
                 .flowWithLifecycle(lifecycle)
                 .collect { isEnabled ->
                     if (isEnabled) {
@@ -691,11 +697,31 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeViewModel.myLocationUiModel
                 .map { it.isFollowLocationEnabled to it.isZoomLocked }
                 .distinctUntilChanged()
+                .onStart { delay(TURN_ON_DELAY_FOLLOW_LOCATION) }
                 .flowWithLifecycle(lifecycle)
                 .collect { (isEnabled, isZoomLocked) ->
                     enableFollowingLocation(isEnabled, isZoomLocked)
                 }
         }
+        lifecycleScope.launch {
+            homeViewModel.hikeModeUiModel
+                .flowWithLifecycle(lifecycle)
+                .onStart { delay(TURN_ON_DELAY_HIKE_MODE) }
+                .collect { uiModel ->
+                    initHikeMode(uiModel)
+                }
+        }
+        lifecycleScope.launch {
+            settingsViewModel.mapScaleFactor
+                .flowWithLifecycle(lifecycle)
+                .collect { mapScaleFactor ->
+                    homeMapView.tilesScaleFactor = mapScaleFactor.toFloat()
+                    homeMapView.invalidate()
+                }
+        }
+    }
+
+    private fun initHomeFlows() {
         lifecycleScope.launch {
             homeViewModel.placeDetails
                 .flowWithLifecycle(lifecycle)
@@ -823,17 +849,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initMapSettingsFlows() {
-        lifecycleScope.launch {
-            settingsViewModel.mapScaleFactor
-                .flowWithLifecycle(lifecycle)
-                .collect { mapScaleFactor ->
-                    homeMapView.tilesScaleFactor = mapScaleFactor.toFloat()
-                    homeMapView.invalidate()
-                }
-        }
-    }
-
     private fun initSettingsFlows() {
         lifecycleScope.launch {
             settingsViewModel.theme
@@ -867,16 +882,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .collect { events ->
                     initPickLocationEvents(events)
-                }
-        }
-        lifecycleScope.launch {
-            homeViewModel.hikeModeUiModel
-                .flowWithLifecycle(lifecycle)
-                .collect { uiModel ->
-                    Timber.d("HikeModeUiModel updated: $uiModel")
-                    postMain {
-                        initHikeMode(uiModel)
-                    }
                 }
         }
     }
@@ -994,6 +999,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initHikeMode(uiModel: HikeModeUiModel) {
+        Timber.d("HikeModeUiModel updated: $uiModel")
+
         if (uiModel.isHikeModeEnabled) {
             rotationGestureOverlay?.isEnabled = true
             myLocationOverlay?.isLiveCompassEnabled = uiModel.compassState == CompassState.Live
