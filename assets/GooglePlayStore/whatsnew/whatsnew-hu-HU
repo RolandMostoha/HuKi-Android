@@ -1,3 +1,3 @@
-- TuHu (turistautak.hu) réteg hozzáadása
-- GPX előzményeknél mostmár megjeleneik a hossz, idő és emelkedés is
-- Hibajavítások
+- Már zárolt képernyő mellett is működik az app (nem kell feloldalni)
+- Néhány eszközön beragadt a túra réteg betöltése, ez javítva lett
+- huki.hu weboldal összekötése

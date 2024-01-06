@@ -1,3 +1,3 @@
-- TuHu (turistautak.hu) layer option
-- GPX history now includes distance, travel time and inclination
-- Bugfixes
+- You can use the app in locked screen (unlocking is not necessary)
+- Bugfix: in a few devices the hiking layer loading was stuck
+- huki.hu website link
