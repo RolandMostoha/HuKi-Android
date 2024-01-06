@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki
 import android.app.Application
 import com.amplifyframework.AmplifyException
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
+import com.amplifyframework.auth.options.AuthFetchSessionOptions
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -44,11 +45,27 @@ class HukiApplication : Application() {
             Amplify.addPlugin(AWSCognitoAuthPlugin())
             Amplify.addPlugin(AWSS3StoragePlugin())
             Amplify.configure(applicationContext)
+
+            forceRefreshToken()
         } catch (exception: AmplifyException) {
             Timber.e(exception)
 
             exceptionLogger.recordException(exception)
         }
+    }
+
+    private fun forceRefreshToken() {
+        Amplify.Auth.fetchAuthSession(
+            AuthFetchSessionOptions.builder()
+                .forceRefresh(true)
+                .build(),
+            { _ -> },
+            { authException ->
+                Timber.e(authException, "Amplify.Auth failed to fetch auth session")
+
+                exceptionLogger.recordException(authException)
+            }
+        )
     }
 
     private fun initTimber() {
