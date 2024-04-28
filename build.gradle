@@ -4,15 +4,15 @@ buildscript {
         mavenCentral()
     }
     ext {
-        kotlinVersion = '1.8.22'
-        hiltVersion = '2.45'
+        kotlinVersion = '1.9.22'
+        hiltVersion = '2.51'
         detektVersion = '1.22.0'
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.2'
+        classpath 'com.android.tools.build:gradle:8.1.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
-        classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.google.gms:google-services:4.4.1'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
     }
 }

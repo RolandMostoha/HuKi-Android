@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "hu.mostoha.mobile.android.huki",
+      "sha256_cert_fingerprints": [
+        "C6:39:0A:16:7E:CB:5B:7A:7B:5B:B8:E4:DA:3E:AC:7B:E2:F9:2F:CA:A1:BE:6A:91:EB:8B:2D:DC:50:58:E9:94"
+      ]
+    }
+  }
+]

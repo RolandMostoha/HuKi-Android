@@ -94,11 +94,11 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
 
     // Design
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "com.google.android.material:material:1.10.0"
+    implementation "com.google.android.material:material:1.11.0"
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "com.github.douglasjunior:android-simple-tooltip:1.1.0"
     implementation "com.github.skydoves:powermenu:2.2.4"
@@ -113,20 +113,20 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:$jetpackHiltVersion"
 
     // KTX
-    implementation "androidx.core:core-ktx:1.12.0"
-    def activityKtxVersion = "1.8.0"
+    implementation "androidx.core:core-ktx:1.13.0"
+    def activityKtxVersion = "1.9.0"
     implementation "androidx.activity:activity-ktx:$activityKtxVersion"
     def fragmentKtxVersion = "1.6.2"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
-    def lifecycleVersion = "2.6.2"
+    def lifecycleVersion = "2.7.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
     // Preferences
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.datastore:datastore-preferences:1.1.0"
 
     // Google Play Services Location
-    implementation "com.google.android.gms:play-services-location:21.0.1"
+    implementation "com.google.android.gms:play-services-location:21.2.0"
 
     // GPX
     implementation 'com.github.ticofab:android-gpx-parser:2.3.0'
@@ -136,9 +136,9 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.14'
 
     // Network
-    def moshiVersion = '1.14.0'
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    def moshiVersion = '1.15.1'
+    implementation "com.squareup.retrofit2:retrofit:2.10.0"
+    implementation "com.squareup.retrofit2:converter-moshi:2.10.0"
     implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6"
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
@@ -151,7 +151,7 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
     // Room
-    def room_version = "2.6.0"
+    def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -161,8 +161,8 @@ dependencies {
     implementation "com.jakewharton.timber:timber:5.0.1"
 
     // Analytics + Crashlytics
-    implementation "com.google.firebase:firebase-analytics-ktx:21.5.0"
-    implementation "com.google.firebase:firebase-crashlytics-ktx:18.5.1"
+    implementation "com.google.firebase:firebase-analytics-ktx:21.6.2"
+    implementation "com.google.firebase:firebase-crashlytics-ktx:18.6.4"
 
     // Licenses
     implementation 'com.github.marcoscgdev:Licenser:2.0.0'
