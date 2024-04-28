@@ -150,7 +150,6 @@ The following steps are running on the CI server on `master` push:
 Since the project is still in its early stages, I would be happy to receive ideas, advices or even a code review :)
 
 - If you've found a bug, please file an issue.
-- PRs are more than welcome. Please keep an eye on the CI verification steps.
 - If you want to be a contributor, please [reach out to me](mailto:roland.mostoha@gmail.com).
 
 ## External licenses
