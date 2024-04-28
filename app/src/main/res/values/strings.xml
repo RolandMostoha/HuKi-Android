@@ -10,7 +10,7 @@
     <string name="error_message_too_many_requests">Too many requests initiated from the device! Please try again later.</string>
     <string name="error_message_gateway_timeout">Openstreetmap timeout! Please try again.</string>
     <string name="error_message_unknown_host">The Photon search system is currently unavailable. Please try again later.</string>
-    <string name="error_message_gpx_parse_failed">Cannot process GPX. Please check its format.</string>
+    <string name="error_message_gpx_parse_failed">Cannot process GPX. Please contact us.</string>
     <string name="error_message_gpx_uri_null">Unsuccessful choice. Try again with a valid GPX file.</string>
 
     <string name="default_distance_template_m">%s m</string>

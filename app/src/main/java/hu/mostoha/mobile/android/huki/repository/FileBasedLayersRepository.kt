@@ -22,8 +22,10 @@ import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import io.ticofab.androidgpxparser.parser.GPXParser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.xmlpull.v1.XmlPullParserException
 import timber.log.Timber
 import java.io.File
+import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 import javax.inject.Inject
@@ -93,8 +95,7 @@ class FileBasedLayersRepository @Inject constructor(
 
             var routePlannerGpxDirectoryFiles = routePlannerGpxDirectory.listFiles()
             if (routePlannerGpxDirectoryFiles == null) {
-                val exception =
-                    IllegalStateException("Route planner GPX directory doesn't exist while getting GPX history")
+                val exception = IllegalStateException("Route planner GPX directory doesn't exist while get GPX history")
 
                 Timber.e(exception)
 
@@ -102,14 +103,14 @@ class FileBasedLayersRepository @Inject constructor(
 
                 routePlannerGpxDirectoryFiles = emptyArray()
             }
-            val routePlannerGpxHistoryItems = routePlannerGpxDirectoryFiles.map { file ->
+            val routePlannerGpxHistoryItems = routePlannerGpxDirectoryFiles.mapNotNull { file ->
                 getGpxHistoryItem(file)
             }
 
             val externalGpxDirectory = File(gpxConfiguration.getExternalGpxDirectory())
             var externalGpxGpxDirectoryFiles = externalGpxDirectory.listFiles()
             if (externalGpxGpxDirectoryFiles == null) {
-                val exception = IllegalStateException("External GPX directory doesn't exist while getting GPX history")
+                val exception = IllegalStateException("External GPX directory doesn't exist while get GPX history")
 
                 Timber.e(exception)
 
@@ -117,7 +118,7 @@ class FileBasedLayersRepository @Inject constructor(
 
                 externalGpxGpxDirectoryFiles = emptyArray()
             }
-            val externalGpxGpxHistoryItems = externalGpxGpxDirectoryFiles.map { file ->
+            val externalGpxGpxHistoryItems = externalGpxGpxDirectoryFiles.mapNotNull { file ->
                 getGpxHistoryItem(file)
             }
 
@@ -148,14 +149,24 @@ class FileBasedLayersRepository @Inject constructor(
         }
     }
 
-    private fun getGpxHistoryItem(file: File): GpxHistoryItem {
+    private fun getGpxHistoryItem(file: File): GpxHistoryItem? {
         val fileUri = file.toUri()
         val fileName = "${fileUri.getFileName(context)}.gpx"
         val lastModified = file.lastModified().toLocalDateTime()
 
         val inputStream = context.contentResolver.openInputStream(fileUri)!!
 
-        val gpx = GPXParser().parse(inputStream)
+        val gpx = try {
+            GPXParser().parse(inputStream)
+        } catch (ioException: IOException) {
+            Timber.w("IOException while parsing GPX History item", ioException)
+
+            return null
+        } catch (xmlPullParserException: XmlPullParserException) {
+            Timber.w("XmlPullParserException while parsing GPX History item", xmlPullParserException)
+
+            return null
+        }
 
         return layersDomainModelMapper.mapGpxHistoryItem(fileUri, fileName, gpx, lastModified)
     }

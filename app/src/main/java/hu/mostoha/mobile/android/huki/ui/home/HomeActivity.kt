@@ -73,6 +73,7 @@ import hu.mostoha.mobile.android.huki.extensions.showErrorSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showOnly
 import hu.mostoha.mobile.android.huki.extensions.showOverlay
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
+import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
 import hu.mostoha.mobile.android.huki.extensions.switchOverlayVisibility
 import hu.mostoha.mobile.android.huki.extensions.toDrawable
@@ -758,6 +759,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .collect { errorMessage ->
                     showErrorSnackbar(homeContainer, errorMessage)
+                }
+        }
+        lifecycleScope.launch {
+            layersViewModel.errorMessage
+                .flowWithLifecycle(lifecycle)
+                .filterNotNull()
+                .collect { messageRes ->
+                    showToast(messageRes)
+                    layersViewModel.clearError()
                 }
         }
         lifecycleScope.launch {

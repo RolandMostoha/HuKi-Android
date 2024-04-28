@@ -8,7 +8,7 @@
     <string name="error_message_too_many_requests">Túl sok kérés indult az eszközről! Kérjük próbálkozz később.</string>
     <string name="error_message_gateway_timeout">Openstreetmap időtúllépés! Kérjük próbáld újra.</string>
     <string name="error_message_unknown_host">A Photon kereső rendszere átmenetileg nem elérhető. Kérjük próbálkozz később.</string>
-    <string name="error_message_gpx_parse_failed">GPX feldolgozási hiba. Kérjük ellenőrizd a formátumát!</string>
+    <string name="error_message_gpx_parse_failed">GPX feldolgozási hiba. Kérlek keress fel a kapcsolat menüben!</string>
     <string name="error_message_gpx_uri_null">Sikertelen választás. Próbáld újra egy érvényes GPX fájllal.</string>
 
     <string name="default_distance_template_m">%s m</string>

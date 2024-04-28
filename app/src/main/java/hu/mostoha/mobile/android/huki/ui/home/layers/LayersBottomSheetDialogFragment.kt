@@ -24,6 +24,7 @@ import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPA
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_HEADER
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_HIKING
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_MAX
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -94,12 +95,10 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
         lifecycleScope.launch {
             layersViewModel.errorMessage
                 .flowWithLifecycle(lifecycle)
-                .collect { errorMessage ->
-                    errorMessage?.let { messageRes ->
-                        requireActivity().showToast(messageRes)
-
-                        layersViewModel.clearError()
-                    }
+                .filterNotNull()
+                .collect { messageRes ->
+                    requireActivity().showToast(messageRes)
+                    layersViewModel.clearError()
                 }
         }
     }

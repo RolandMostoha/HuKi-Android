@@ -6,6 +6,7 @@ import androidx.test.filters.MediumTest
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import hu.mostoha.mobile.android.huki.configuration.GpxConfiguration
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxUriNullException
 import hu.mostoha.mobile.android.huki.util.testAppContext
@@ -34,6 +35,9 @@ class FileBasedLayersRepositoryTest {
 
     @Inject
     lateinit var repository: FileBasedLayersRepository
+
+    @Inject
+    lateinit var gpxConfiguration: GpxConfiguration
 
     @Test
     fun givenTileZoomRangesRawResource_whenGetHikingLayerZoomRanges_thenCorrectTileZoomRangeListReturns() =
@@ -64,6 +68,16 @@ class FileBasedLayersRepositoryTest {
         }
     }
 
+    @Test
+    fun givenGpxFiles_whenGetGpxHistory_thenGpxHistoryReturnsWithoutMalformed() =
+        runTest {
+            saveTestGpxHistoryFiles()
+
+            val gpx = repository.getGpxHistory()
+
+            assertThat(gpx.externalGpxList).hasSize(1)
+        }
+
     private fun getTestGpxFileUri(): Uri {
         val inputStream = testContext.assets.open("dera_szurdok.gpx")
         val file = File(testAppContext.cacheDir.path + "/dera_szurdok.gpx").apply {
@@ -71,6 +85,17 @@ class FileBasedLayersRepositoryTest {
         }
 
         return Uri.fromFile(file)
+    }
+
+    private fun saveTestGpxHistoryFiles() {
+        val inputStream1 = testContext.assets.open("dera_szurdok.gpx")
+        File("${gpxConfiguration.getExternalGpxDirectory()}/dera_szurdok.gpx").apply {
+            copyFrom(inputStream1)
+        }
+        val inputStream2 = testContext.assets.open("malformed_gpx.gpx")
+        File("${gpxConfiguration.getExternalGpxDirectory()}/malformed_gpx.gpx").apply {
+            copyFrom(inputStream2)
+        }
     }
 
 }
