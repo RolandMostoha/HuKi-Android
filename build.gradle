@@ -9,7 +9,7 @@ buildscript {
         detektVersion = '1.22.0'
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.4'
+        classpath 'com.android.tools.build:gradle:8.5.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
         classpath 'com.google.gms:google-services:4.4.1'
