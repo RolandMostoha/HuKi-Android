@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/supportContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <!-- Header -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/supportToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorBackground"
+        android:elevation="@dimen/default_elevation"
+        app:navigationIcon="@drawable/ic_route_planner_back"
+        app:navigationIconTint="@color/colorPrimaryIconStrong"
+        app:title="@string/support_title"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/DefaultTextAppearance.Bold.Large" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/supportSwipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ScrollView
+            android:id="@+id/supportScrollContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/colorBackgroundLight">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Info Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/space_extra_large"
+                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardCornerRadius="@dimen/default_corner_size_surface"
+                    app:cardElevation="@dimen/default_elevation">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="@dimen/space_extra_large"
+                        android:paddingBottom="@dimen/space_large">
+
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/supportAnimationView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="200dp"
+                            app:lottie_autoPlay="true"
+                            app:lottie_enableMergePathsForKitKatAndAbove="true"
+                            app:lottie_loop="false"
+                            app:lottie_repeatCount="1" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/supportInfoTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingMultiplier="1.2"
+                            android:text="@string/support_greeting"
+                            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/supportInfoMessage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_medium"
+                            android:layout_marginBottom="@dimen/space_medium"
+                            android:lineSpacingMultiplier="1.2"
+                            android:text="@string/support_message"
+                            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Recurring payments -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_extra_large"
+                    android:layout_marginBottom="@dimen/space_extra_large"
+                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardCornerRadius="@dimen/default_corner_size_surface"
+                    app:cardElevation="@dimen/default_elevation">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_large">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/supportRecurringPaymentsTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/space_small"
+                            android:text="@string/support_recurring_title"
+                            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/supportRecurringPaymentsFirstOption"
+                            style="@style/RoundedSelectableTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_medium"
+                            android:drawableTop="@drawable/ic_support_payments_heart"
+                            android:text="@string/support_recurring_first_option" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/supportRecurringPaymentsSecondOption"
+                            style="@style/RoundedSelectableTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_medium"
+                            android:drawableTop="@drawable/ic_support_payments_heart_double"
+                            android:text="@string/support_recurring_second_option" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- One Time payments -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_extra_large"
+                    android:layout_marginBottom="@dimen/space_extra_large"
+                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardCornerRadius="@dimen/default_corner_size_surface"
+                    app:cardElevation="@dimen/default_elevation">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_large">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/supportOneTimePaymentsTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/space_small"
+                            android:text="@string/support_one_time_title"
+                            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/supportOneTimePaymentsFirstOption"
+                            style="@style/RoundedSelectableTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_medium"
+                            android:drawableTop="@drawable/ic_support_payments_heart"
+                            android:text="@string/support_one_time_first_option" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/supportOneTimePaymentsSecondOption"
+                            style="@style/RoundedSelectableTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_medium"
+                            android:drawableTop="@drawable/ic_support_payments_heart_double"
+                            android:text="@string/support_one_time_second_option" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Contact card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_extra_large"
+                    android:layout_marginBottom="@dimen/space_extra_large"
+                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardCornerRadius="@dimen/default_corner_size_surface"
+                    app:cardElevation="@dimen/default_elevation">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_large">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/space_small"
+                            android:text="@string/support_contact_message"
+                            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/supportContactEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_small"
+                            android:text="@string/settings_email"
+                            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

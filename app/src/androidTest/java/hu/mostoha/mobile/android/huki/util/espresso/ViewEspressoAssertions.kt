@@ -213,6 +213,10 @@ fun @receiver:IdRes Int.swipeDown() {
     onView(withId(this)).perform(ViewActions.swipeDown())
 }
 
+fun @receiver:IdRes Int.swipeUp() {
+    onView(withId(this)).perform(ViewActions.swipeUp())
+}
+
 fun @receiver:IdRes Int.swipeLeft() {
     onView(withId(this)).perform(ViewActions.swipeLeft())
 }

@@ -173,4 +173,14 @@
         <item name="dashDirection">horizontal</item>
     </style>
 
+    <style name="RoundedSelectableTextStyle">
+        <item name="android:background">@drawable/background_rounded_selectable_text</item>
+        <item name="android:paddingVertical">@dimen/space_medium</item>
+        <item name="android:drawablePadding">@dimen/space_large</item>
+        <item name="android:layout_marginHorizontal">@dimen/space_small</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/DefaultTextAppearance.Bold.Small</item>
+        <item name="android:textColor">@color/colorPrimaryTextWhite</item>
+    </style>
+
 </resources>

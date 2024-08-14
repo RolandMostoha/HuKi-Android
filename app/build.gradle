@@ -102,6 +102,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.7.0"
     implementation "com.github.douglasjunior:android-simple-tooltip:1.1.0"
     implementation "com.github.skydoves:powermenu:2.2.4"
+    implementation "com.airbnb.android:lottie:6.5.0"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
 
     // Animations
     implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
@@ -127,6 +129,10 @@ dependencies {
 
     // Google Play Services Location
     implementation "com.google.android.gms:play-services-location:21.3.0"
+
+    // Google Play Billing
+    def billingVersion = "7.0.0"
+    implementation "com.android.billingclient:billing-ktx:$billingVersion"
 
     // GPX
     implementation 'com.github.ticofab:android-gpx-parser:2.3.0'

@@ -38,6 +38,7 @@
     <dimen name="default_corner_size_input">25dp</dimen>
     <dimen name="default_corner_size_input_on_map">30dp</dimen>
     <dimen name="default_corner_size_drag_view">60dp</dimen>
+    <dimen name="default_corner_size_button">35dp</dimen>
     <dimen name="default_icon_only_button_size">50dp</dimen>
     <dimen name="default_icon_only_button_size_small">40dp</dimen>
     <dimen name="default_polygon_width">2dp</dimen>

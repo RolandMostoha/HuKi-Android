@@ -145,6 +145,7 @@
     <string name="okt_routes_menu_action_start_point">Kezdőpont betöltése</string>
     <string name="okt_routes_menu_action_end_point">Végpont betöltése</string>
     <string name="okt_routes_item_prefix">OKT</string>
+    <string name="okt_routes_accessibility_action_button">%s action button</string>
 
     <string name="accessibility_home_fab_layers">Rétegek</string>
     <string name="accessibility_home_fab_route_planner">Útvonaltervező</string>
@@ -154,5 +155,16 @@
     <string name="accessibility_home_fab_hike_mode">Túra mód</string>
     <string name="accessibility_home_fab_hike_mode_compass">Élő iránytű</string>
     <string name="accessibility_okt_routes_action_button">%s menü gomb</string>
+
+    <string name="support_title">Támogatás</string>
+    <string name="support_greeting">Kedves érdeklődő!</string>
+    <string name="support_message">A HuKi továbbra is reklámmentes és minden funkciója ingyenes, a támogatás önkéntes alapú.\n\nAz appot hobbiból fejlesztem munka mellett és a fenntartási költségeit saját zsebből finanszírozom. Mivel örömmel tölt el a fejlesztése és hogy valami hasznosat teszek a túrás közösségnek, ezért ezt egy szintig bevállalom, viszont a havi költségei miatt gondolkoznom kell, hogy tudna önfentartó lenni. \n\nPróbaképp született ez a támógatói oldal, ezért ha tetszik az app és módodban áll, akkor kérlek támogasd a HuKi fejlesztését.</string>
+    <string name="support_recurring_title">Rendeszeres támogatás</string>
+    <string name="support_recurring_first_option">250 Ft / hónap</string>
+    <string name="support_recurring_second_option">500 Ft / hónap</string>
+    <string name="support_one_time_title">Alkalmi támogatás</string>
+    <string name="support_one_time_first_option">500 Ft</string>
+    <string name="support_one_time_second_option">1000 Ft</string>
+    <string name="support_contact_message">Ha más módon szeretnéd támogatni a fejlesztést vagy ötleted van, nyugodtan keress:</string>
 
 </resources>

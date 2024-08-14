@@ -145,6 +145,7 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEvents
 import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
+import hu.mostoha.mobile.android.huki.ui.home.support.SupportFragment
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.HIKE_MODE_INFO_WINDOW_SHOW_DELAY
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
@@ -215,6 +216,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeMyLocationFab by lazy { binding.homeMyLocationFab }
     private val homeRoutePlannerFab by lazy { binding.homeRoutePlannerFab }
     private val homeLayersFab by lazy { binding.homeLayersFab }
+    private val homeSupportFab by lazy { binding.homeSupportFab }
     private val homeSettingsFab by lazy { binding.homeSettingsFab }
     private val homeHistoryFab by lazy { binding.homeHistoryFab }
     private val homeHikeModeFab by lazy { binding.homeHikeModeFab }
@@ -472,6 +474,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeLayersFab.setOnClickListener {
             homeViewModel.clearFollowLocation()
             LayersBottomSheetDialogFragment().show(supportFragmentManager, LayersBottomSheetDialogFragment.TAG)
+        }
+        homeSupportFab.setOnClickListener {
+            analyticsService.supportClicked()
+            supportFragmentManager.addFragment(R.id.homeFragmentContainer, SupportFragment::class.java)
         }
         homeSettingsFab.setOnClickListener {
             analyticsService.settingsClicked()

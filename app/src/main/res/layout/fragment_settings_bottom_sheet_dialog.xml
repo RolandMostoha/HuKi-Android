@@ -11,7 +11,6 @@
     android:paddingVertical="@dimen/space_large">
 
     <!-- Map scale factor title -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +33,6 @@
     </LinearLayout>
 
     <!-- Map scale factor slider -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,7 +62,6 @@
     </LinearLayout>
 
     <!-- Theme -->
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingsThemeTitle"
         android:layout_width="wrap_content"
@@ -111,7 +108,6 @@
     </RadioGroup>
 
     <!-- Offline mode -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -137,14 +133,13 @@
         android:id="@+id/settingsOfflineModeDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lineSpacingMultiplier="1.2"
         android:drawableStart="@drawable/ic_settings_success"
         android:drawablePadding="@dimen/space_medium"
+        android:lineSpacingMultiplier="1.2"
         android:text="@string/settings_offline_mode_description"
         android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall" />
 
     <!-- Contact -->
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingsContactTitle"
         android:layout_width="match_parent"

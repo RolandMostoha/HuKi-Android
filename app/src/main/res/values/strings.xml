@@ -155,6 +155,7 @@
     <string name="okt_routes_menu_action_start_point">Load starting point</string>
     <string name="okt_routes_menu_action_end_point">Load ending point</string>
     <string name="okt_routes_item_prefix">OKT</string>
+    <string name="okt_routes_accessibility_action_button">%s action button</string>
 
     <string name="accessibility_home_fab_layers">Layers</string>
     <string name="accessibility_home_fab_route_planner">Route planner</string>
@@ -164,5 +165,16 @@
     <string name="accessibility_home_fab_hike_mode">Hike mode</string>
     <string name="accessibility_home_fab_hike_mode_compass">Live Compass</string>
     <string name="accessibility_okt_routes_action_button">%s action button</string>
+
+    <string name="support_title">Support</string>
+    <string name="support_greeting">Dear future supporter!</string>
+    <string name="support_message">HuKi is still ad-free and all of its functions are free, support is voluntary.\n\nI develop it in my free time besides my work, and pay the maintenance costs from my own pocket. Since I love developing it and that I\'m doing something useful for the hiking community, I accept this to a certain extent, but due to its monthly costs, I have to think about make it self-sustaining.\n\nThis support page was created as a test, so if you like the app and can afford, please support the development of HuKi.</string>
+    <string name="support_recurring_title">Recurring support</string>
+    <string name="support_recurring_first_option">250 HUF / month</string>
+    <string name="support_recurring_second_option">500 HUF / month</string>
+    <string name="support_one_time_title">One-time support</string>
+    <string name="support_one_time_first_option">500 HUF</string>
+    <string name="support_one_time_second_option">1000 HUF</string>
+    <string name="support_contact_message">If you want to support the development in other ways, or have an idea, feel free to reach out:</string>
 
 </resources>

@@ -115,4 +115,16 @@ interface AnalyticsService {
 
     fun liveCompassClicked()
 
+    fun supportClicked()
+
+    fun supportEmailClicked()
+
+    fun supportRecurringFirstOptionClicked()
+
+    fun supportRecurringSecondOptionClicked()
+
+    fun supportOneTimeFirstOptionClicked()
+
+    fun supportOneTimeSecondOptionClicked()
+
 }

@@ -114,4 +114,16 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun liveCompassClicked() = Unit
 
+    override fun supportClicked() = Unit
+
+    override fun supportEmailClicked() = Unit
+
+    override fun supportRecurringFirstOptionClicked() = Unit
+
+    override fun supportRecurringSecondOptionClicked() = Unit
+
+    override fun supportOneTimeFirstOptionClicked() = Unit
+
+    override fun supportOneTimeSecondOptionClicked() = Unit
+
 }

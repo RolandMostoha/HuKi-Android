@@ -76,6 +76,12 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_COPYRIGHT = "select_copyright"
         private const val EVENT_SELECT_HIKE_MODE = "select_hike_mode"
         private const val EVENT_SELECT_LIVE_COMPASS = "select_live_compass"
+        private const val EVENT_SELECT_SUPPORT = "select_support"
+        private const val EVENT_SELECT_SUPPORT_EMAIL = "select_support_email"
+        private const val EVENT_SELECT_SUPPORT_RECURRING_FIRST_OPTION = "select_support_recurring_first_option"
+        private const val EVENT_SELECT_SUPPORT_RECURRING_SECOND_OPTION = "select_support_recurring_second_option"
+        private const val EVENT_SELECT_SUPPORT_ONE_TIME_FIRST_OPTION = "select_support_one_time_first_option"
+        private const val EVENT_SELECT_SUPPORT_ONE_TIME_SECOND_OPTION = "select_support_one_time_second_option"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
@@ -370,4 +376,27 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_LIVE_COMPASS, null)
     }
 
+    override fun supportClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT, null)
+    }
+
+    override fun supportEmailClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_EMAIL, null)
+    }
+
+    override fun supportRecurringFirstOptionClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_RECURRING_FIRST_OPTION, null)
+    }
+
+    override fun supportRecurringSecondOptionClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_RECURRING_SECOND_OPTION, null)
+    }
+
+    override fun supportOneTimeFirstOptionClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_ONE_TIME_FIRST_OPTION, null)
+    }
+
+    override fun supportOneTimeSecondOptionClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_ONE_TIME_SECOND_OPTION, null)
+    }
 }
