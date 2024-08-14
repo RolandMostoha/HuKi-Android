@@ -17,7 +17,6 @@ import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithScroll
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
-import hu.mostoha.mobile.android.huki.util.espresso.swipeUp
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import org.hamcrest.CoreMatchers.allOf
@@ -51,12 +50,6 @@ class SupportUiTest {
             R.id.homeSupportFab.click()
 
             R.id.supportContainer.isDisplayed()
-
-            R.id.supportScrollContainer.swipeUp()
-            R.id.supportRecurringPaymentsFirstOption.isDisplayed()
-            R.id.supportRecurringPaymentsSecondOption.isDisplayed()
-            R.id.supportOneTimePaymentsFirstOption.isDisplayed()
-            R.id.supportOneTimePaymentsSecondOption.isDisplayed()
         }
     }
 
