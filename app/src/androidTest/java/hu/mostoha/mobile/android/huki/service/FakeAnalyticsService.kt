@@ -4,6 +4,7 @@ import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
+import hu.mostoha.mobile.android.huki.model.ui.BillingAction
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 
 class FakeAnalyticsService : AnalyticsService {
@@ -118,12 +119,14 @@ class FakeAnalyticsService : AnalyticsService {
 
     override fun supportEmailClicked() = Unit
 
-    override fun supportRecurringFirstOptionClicked() = Unit
+    override fun supportRecurringLevel1Clicked() = Unit
 
-    override fun supportRecurringSecondOptionClicked() = Unit
+    override fun supportRecurringLevel2Clicked() = Unit
 
-    override fun supportOneTimeFirstOptionClicked() = Unit
+    override fun supportOneTimeLevel1Clicked() = Unit
 
-    override fun supportOneTimeSecondOptionClicked() = Unit
+    override fun supportOneTimeLevel2Clicked() = Unit
+
+    override fun billingEvent(billingAction: BillingAction, billingResponseCode: Int) = Unit
 
 }

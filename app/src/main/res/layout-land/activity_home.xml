@@ -52,16 +52,19 @@
                 android:layout_marginStart="@dimen/space_large"
                 android:animateLayoutChanges="true">
 
-                <ImageView
+                <hu.mostoha.mobile.android.huki.views.ProductImageView
                     android:id="@+id/homeSearchBarAppIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:importantForAccessibility="no"
+                    android:padding="1dp"
                     android:src="@drawable/ic_home_search_bar"
+                    app:contentPadding="@dimen/space_small_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearance="@style/DefaultShapeAppearance.Circle" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/homeSearchBarInputLayout"
@@ -142,7 +145,8 @@
             android:layout_marginEnd="@dimen/space_large"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_fab_support"
+            android:src="@drawable/ic_home_fab_support"
+            android:visibility="gone"
             app:fabSize="mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeLayersFab" />
@@ -250,13 +254,13 @@
             android:id="@+id/homeRoutePlannerHeaderGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="homeSearchBarContainer, homeLayersFab, homeSettingsFab, homeHistoryFab" />
+            app:constraint_referenced_ids="homeSearchBarContainer, homeLayersFab, homeSettingsFab, homeHistoryFab, homeSupportFab" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/homeHikeModeHeaderGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="homeSearchBarContainer, homeHistoryFab" />
+            app:constraint_referenced_ids="homeSearchBarContainer, homeHistoryFab, homeSupportFab" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

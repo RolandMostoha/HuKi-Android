@@ -32,7 +32,13 @@ fun Message.resolve(context: Context): String {
                         else -> formatArg
                     }
                 }
-            context.getString(message.res, *formatArgs.toTypedArray())
+
+            if (formatArgs.isNotEmpty()) {
+                context.getString(message.res, *formatArgs.toTypedArray())
+            } else {
+                context.getString(message.res)
+            }
+
         }
         is Message.Text -> message.text
     }

@@ -5,15 +5,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import com.google.android.material.snackbar.Snackbar
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.ui.Message
@@ -36,23 +39,25 @@ fun Context.showToast(message: Message, length: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, message.resolve(this), length).show()
 }
 
-fun Context.showSnackbar(view: View, message: Message, @DrawableRes icon: Int? = null) {
-    val snackbar = Snackbar.make(view, message.resolve(this), Snackbar.LENGTH_LONG)
+fun showSnackbar(view: View, message: Message, @DrawableRes icon: Int? = null) {
+    val context = view.context
+
+    val snackbar = Snackbar.make(view, message.resolve(context), Snackbar.LENGTH_LONG)
     val snackbarLayout = snackbar.view
     val textView = snackbarLayout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
 
-    textView.setTextAppearance(R.style.DefaultTextAppearance_SemiBold_Small)
-    snackbar.setBackgroundTint(ContextCompat.getColor(this, R.color.colorBackground))
+    textView.setTextAppearance(R.style.DefaultTextAppearance_SemiBold_Medium)
+    snackbar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorBackground))
 
     if (icon != null) {
         textView.setDrawableStart(icon)
-        textView.compoundDrawablePadding = resources.getDimensionPixelOffset(R.dimen.space_small)
+        textView.compoundDrawablePadding = context.resources.getDimensionPixelOffset(R.dimen.space_small)
     }
 
     snackbar.show()
 }
 
-fun Context.showErrorSnackbar(view: View, message: Message) {
+fun showErrorSnackbar(view: View, message: Message) {
     showSnackbar(view, message, R.drawable.ic_snackbar_error)
 }
 
@@ -95,4 +100,20 @@ fun postMainDelayed(delay: Long, block: () -> Unit) {
     Handler(Looper.getMainLooper()).postDelayed({
         block.invoke()
     }, delay)
+}
+
+@ColorInt
+fun Context.color(@ColorRes res: Int) = ContextCompat.getColor(this, res)
+
+@ColorInt
+fun @receiver:ColorRes Int.color(context: Context) = context.color(this)
+
+@ColorInt
+fun @receiver:ColorInt Int.darken(factor: Float): Int {
+    return ColorUtils.blendARGB(this, Color.BLACK, factor)
+}
+
+@ColorInt
+fun @receiver:ColorInt Int.lighten(factor: Float): Int {
+    return ColorUtils.blendARGB(this, Color.WHITE, factor)
 }

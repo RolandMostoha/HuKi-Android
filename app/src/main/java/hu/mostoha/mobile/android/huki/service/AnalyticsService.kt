@@ -4,6 +4,7 @@ import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
+import hu.mostoha.mobile.android.huki.model.ui.BillingAction
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 
 @Suppress("TooManyFunctions")
@@ -119,12 +120,14 @@ interface AnalyticsService {
 
     fun supportEmailClicked()
 
-    fun supportRecurringFirstOptionClicked()
+    fun supportRecurringLevel1Clicked()
 
-    fun supportRecurringSecondOptionClicked()
+    fun supportRecurringLevel2Clicked()
 
-    fun supportOneTimeFirstOptionClicked()
+    fun supportOneTimeLevel1Clicked()
 
-    fun supportOneTimeSecondOptionClicked()
+    fun supportOneTimeLevel2Clicked()
+
+    fun billingEvent(billingAction: BillingAction, billingResponseCode: Int)
 
 }

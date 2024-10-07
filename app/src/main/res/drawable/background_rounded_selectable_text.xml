@@ -11,7 +11,7 @@
 
     <item>
         <shape>
-            <solid android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorPrimaryExtraLight" />
             <corners android:radius="@dimen/default_corner_size_button" />
         </shape>
     </item>

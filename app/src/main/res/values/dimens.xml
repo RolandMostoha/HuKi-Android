@@ -28,12 +28,15 @@
 
     <dimen name="default_button_vertical_padding">8dp</dimen>
     <dimen name="default_elevation">5dp</dimen>
+    <dimen name="default_card_elevation">3dp</dimen>
+    <dimen name="default_highlighted_card_stroke_width">1dp</dimen>
     <dimen name="default_elevation_map_interactive_views">5dp</dimen>
     <dimen name="default_elevation_map_overlay_views">1dp</dimen>
     <dimen name="default_elevation_fab">10dp</dimen>
     <dimen name="default_elevation_fragments">11dp</dimen>
     <dimen name="default_text_size">@dimen/text_size_medium</dimen>
     <dimen name="default_corner_size_surface">10dp</dimen>
+    <dimen name="default_corner_size_info_card">20dp</dimen>
     <dimen name="default_corner_size_selected">20dp</dimen>
     <dimen name="default_corner_size_input">25dp</dimen>
     <dimen name="default_corner_size_input_on_map">30dp</dimen>
@@ -66,6 +69,7 @@
     <dimen name="home_search_bar_stroke_width">1dp</dimen>
     <dimen name="home_search_bar_progress_size">25dp</dimen>
     <dimen name="home_search_bar_popup_height">350dp</dimen>
+    <dimen name="home_search_bar_app_icon_size">45dp</dimen>
 
     <dimen name="home_landscapes_icon_size">20dp</dimen>
     <dimen name="home_landscapes_chip_min_height">42dp</dimen>
@@ -126,5 +130,8 @@
     <dimen name="history_card_elevation">2dp</dimen>
 
     <dimen name="route_attributes_icon_size">@dimen/icon_size_extra_small</dimen>
+
+    <dimen name="support_supporter_badge_size">65dp</dimen>
+    <dimen name="support_product_icon_size">45dp</dimen>
 
 </resources>

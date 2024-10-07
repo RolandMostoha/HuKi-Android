@@ -1,30 +1,38 @@
 package hu.mostoha.mobile.android.huki.ui.home.support
 
-import android.animation.Animator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.setPadding
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.PendingPurchasesParams
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.ProductDetails
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentSupportBinding
+import hu.mostoha.mobile.android.huki.extensions.color
+import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.hyperlinkStyle
-import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
+import hu.mostoha.mobile.android.huki.extensions.showOnly
+import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.extensions.startEmailIntent
+import hu.mostoha.mobile.android.huki.extensions.toDrawable
+import hu.mostoha.mobile.android.huki.extensions.visible
+import hu.mostoha.mobile.android.huki.model.domain.OneTimeBillingProducts
+import hu.mostoha.mobile.android.huki.model.domain.RecurringBillingProducts
+import hu.mostoha.mobile.android.huki.model.ui.BillingProduct
+import hu.mostoha.mobile.android.huki.model.ui.ProductEvents
+import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,19 +42,36 @@ class SupportFragment : Fragment() {
     lateinit var analyticsService: AnalyticsService
 
     private val insetSharedViewModel: InsetSharedViewModel by activityViewModels()
+    private val productsViewModel: ProductsViewModel by activityViewModels()
 
     private var _binding: FragmentSupportBinding? = null
     private val binding get() = _binding!!
 
+    private var supporterAdapter: SupporterAdapter? = null
+
     private val toolbar by lazy { binding.supportToolbar }
     private val container by lazy { binding.supportContainer }
-    private val swipeRefresh by lazy { binding.supportSwipeRefresh }
-    private val animationView by lazy { binding.supportAnimationView }
-    private val recurringPaymentsFirstOption by lazy { binding.supportRecurringPaymentsFirstOption }
-    private val recurringPaymentsSecondOption by lazy { binding.supportRecurringPaymentsSecondOption }
-    private val oneTimePaymentsFirstOption by lazy { binding.supportOneTimePaymentsFirstOption }
-    private val oneTimePaymentsSecondOption by lazy { binding.supportOneTimePaymentsSecondOption }
+    private val scrollContainer by lazy { binding.supportScrollContainer }
+    private val paymentsContainer by lazy { binding.supportPaymentsContainer }
+    private val infoCard by lazy { binding.supportInfoCard }
+    private val supporterList by lazy { binding.supportSupporterList }
+    private val loadingIndicator by lazy { binding.supportLoadingIndicator.loadingIndicatorContainer }
+    private val errorView by lazy { binding.supportErrorView.errorViewContainer }
+    private val errorViewText by lazy { binding.supportErrorView.errorViewText }
+    private val errorViewRefreshButton by lazy { binding.supportErrorView.errorViewRefreshButton }
+    private val oneTimeLevel2Badge by lazy { binding.supportOneTimeLevel2Badge }
+    private val oneTimeLevel1Badge by lazy { binding.supportOneTimeLevel1Badge }
+    private val recurringLevel2Badge by lazy { binding.supportRecurringLevel2Badge }
+    private val recurringLevel1Badge by lazy { binding.supportRecurringLevel1Badge }
     private val contactEmail by lazy { binding.supportContactEmail }
+
+    private val exclusiveViews by lazy {
+        listOf(
+            paymentsContainer,
+            loadingIndicator,
+            errorView,
+        )
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSupportBinding.inflate(inflater, container, false)
@@ -59,7 +84,6 @@ class SupportFragment : Fragment() {
 
         initViews()
         initFlows()
-        initBilling()
     }
 
     override fun onDestroyView() {
@@ -69,26 +93,8 @@ class SupportFragment : Fragment() {
     }
 
     private fun initViews() {
-        startRandomAnimation()
-
         toolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
-        }
-        swipeRefresh.setOnRefreshListener {
-            startRandomAnimation()
-            swipeRefresh.isRefreshing = false
-        }
-        recurringPaymentsFirstOption.setOnClickListener {
-            analyticsService.supportRecurringFirstOptionClicked()
-        }
-        recurringPaymentsSecondOption.setOnClickListener {
-            analyticsService.supportRecurringSecondOptionClicked()
-        }
-        oneTimePaymentsFirstOption.setOnClickListener {
-            analyticsService.supportOneTimeFirstOptionClicked()
-        }
-        oneTimePaymentsSecondOption.setOnClickListener {
-            analyticsService.supportOneTimeSecondOptionClicked()
         }
         contactEmail.hyperlinkStyle()
         contactEmail.setOnClickListener {
@@ -112,74 +118,140 @@ class SupportFragment : Fragment() {
                     }
                 }
         }
-    }
-
-    private fun startRandomAnimation() {
-        val animations = ANIMATIONS_TO_PADDING.shuffled()
-        var animationIndex = 0
-        val animation = animations[animationIndex]
-
-        animationView.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) = Unit
-
-            override fun onAnimationEnd(animation: Animator) {
-                animationIndex += 1
-
-                if (animationIndex <= animations.size - 1) {
-                    val nextAnimation = ANIMATIONS_TO_PADDING[animationIndex]
-                    animationView.setAnimation(nextAnimation.first)
-                    animationView.setPadding(nextAnimation.second)
-                    animationView.startDrawableAnimation()
-                }
-            }
-
-            override fun onAnimationCancel(animation: Animator) = Unit
-
-            override fun onAnimationRepeat(animation: Animator) = Unit
-        })
-        animationView.setAnimation(animation.first)
-        animationView.setPadding(animation.second)
-        animationView.startDrawableAnimation()
-    }
-
-    private fun initBilling() {
-        BillingClient.newBuilder(requireContext())
-            .setListener { billingResult, purchases ->
-                Timber.d("Billing: result $billingResult, purchases $purchases")
-            }
-            .enablePendingPurchases(
-                PendingPurchasesParams.newBuilder()
-                    .enableOneTimeProducts()
-                    .build()
-            )
-            .build()
-            .startConnection(object : BillingClientStateListener {
-                override fun onBillingSetupFinished(billingResult: BillingResult) {
-                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                        Timber.d("Billing: setup finished")
-                        // The BillingClient is ready. You can query purchases here.
+        lifecycleScope.launch {
+            productsViewModel.productsUiModel
+                .map { it.isLoading to it.error }
+                .distinctUntilChanged()
+                .flowWithLifecycle(lifecycle)
+                .collect { (isLoading, error) ->
+                    when {
+                        isLoading -> exclusiveViews.showOnly(loadingIndicator)
+                        error != null -> {
+                            exclusiveViews.showOnly(errorView)
+                            errorViewText.text = error.resolve(requireContext())
+                            errorView.background = R.drawable.background_error_view.toDrawable(requireContext())
+                            errorViewRefreshButton.visible()
+                            errorViewRefreshButton.setOnClickListener {
+                                productsViewModel.initProducts()
+                            }
+                        }
+                        else -> exclusiveViews.showOnly(paymentsContainer)
                     }
                 }
-
-                override fun onBillingServiceDisconnected() {
-                    Timber.d("Billing: service disconnected")
-                    // Try to restart the connection on the next request to
-                    // Google Play by calling the startConnection() method.
+        }
+        lifecycleScope.launch {
+            productsViewModel.productsUiModel
+                .map { it.products }
+                .distinctUntilChanged()
+                .flowWithLifecycle(lifecycle)
+                .collect { billingProducts ->
+                    initBillingProducts(billingProducts)
                 }
-            })
+        }
+        lifecycleScope.launch {
+            productsViewModel.productsUiModel
+                .map { it.purchases }
+                .distinctUntilChanged()
+                .flowWithLifecycle(lifecycle)
+                .collect { purchases ->
+                    if (purchases.isNotEmpty()) {
+                        scrollContainer.smoothScrollTo(0, 0)
+
+                        infoCard.gone()
+                        supporterList.visible()
+
+                        if (supporterAdapter == null) {
+                            supporterAdapter = SupporterAdapter()
+                            supporterList.setHasFixedSize(true)
+                            supporterList.adapter = supporterAdapter
+                            supporterList.itemAnimator = SlideInUpAnimator()
+                        }
+
+                        supporterAdapter?.submitList(purchases.map { it.productType })
+                    } else {
+                        infoCard.visible()
+                        supporterList.gone()
+                    }
+                }
+        }
+        lifecycleScope.launch {
+            productsViewModel.productsEvents
+                .flowWithLifecycle(lifecycle)
+                .collect { events ->
+                    when (events) {
+                        is ProductEvents.Error -> {
+                            requireContext().showToast(events.error)
+                        }
+                    }
+                }
+        }
     }
 
-    companion object {
-        private val ANIMATIONS_TO_PADDING = listOf(
-            R.raw.lottie_support_1 to 0,
-            R.raw.lottie_support_2 to 0,
-            R.raw.lottie_support_3 to 0,
-            R.raw.lottie_support_4 to 0,
-            R.raw.lottie_support_5 to 0,
-            R.raw.lottie_support_6 to 0,
-            R.raw.lottie_support_7 to 80,
-            R.raw.lottie_support_8 to -120,
-        )
+    private fun initBillingProducts(billingProducts: List<BillingProduct>) {
+        billingProducts.forEach { billingProduct ->
+            when (val type = billingProduct.type) {
+                OneTimeBillingProducts.LEVEL_1 -> {
+                    oneTimeLevel1Badge.productColor = requireContext().color(type.productColorRes)
+                    oneTimeLevel1Badge.badgeIcon = type.productIcon
+                    oneTimeLevel1Badge.badgeTitle = type.productName.resolve(requireContext())
+                    oneTimeLevel1Badge.badgeSubtitle = billingProduct.priceText.resolve(requireContext())
+                    oneTimeLevel1Badge.setOnClickListener {
+                        analyticsService.supportOneTimeLevel1Clicked()
+
+                        launchBillingFlow(billingProduct.productDetails)
+                    }
+                }
+                OneTimeBillingProducts.LEVEL_2 -> {
+                    oneTimeLevel2Badge.productColor = requireContext().color(type.productColorRes)
+                    oneTimeLevel2Badge.badgeIcon = type.productIcon
+                    oneTimeLevel2Badge.badgeTitle = type.productName.resolve(requireContext())
+                    oneTimeLevel2Badge.badgeSubtitle = billingProduct.priceText.resolve(requireContext())
+                    oneTimeLevel2Badge.setOnClickListener {
+                        analyticsService.supportOneTimeLevel2Clicked()
+
+                        launchBillingFlow(billingProduct.productDetails)
+                    }
+                }
+                RecurringBillingProducts.LEVEL_1 -> {
+                    recurringLevel1Badge.productColor = requireContext().color(type.productColorRes)
+                    recurringLevel1Badge.badgeIcon = type.productIcon
+                    recurringLevel1Badge.badgeTitle = type.productName.resolve(requireContext())
+                    recurringLevel1Badge.badgeSubtitle = billingProduct.priceText.resolve(requireContext())
+                    recurringLevel1Badge.setOnClickListener {
+                        analyticsService.supportRecurringLevel1Clicked()
+
+                        launchBillingFlow(billingProduct.productDetails)
+                    }
+                }
+                RecurringBillingProducts.LEVEL_2 -> {
+                    recurringLevel2Badge.productColor = requireContext().color(type.productColorRes)
+                    recurringLevel2Badge.badgeIcon = type.productIcon
+                    recurringLevel2Badge.badgeTitle = type.productName.resolve(requireContext())
+                    recurringLevel2Badge.badgeSubtitle = billingProduct.priceText.resolve(requireContext())
+                    recurringLevel2Badge.setOnClickListener {
+                        analyticsService.supportRecurringLevel2Clicked()
+
+                        launchBillingFlow(billingProduct.productDetails)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun launchBillingFlow(productDetails: ProductDetails) {
+        val billingFlowBuilder = BillingFlowParams.ProductDetailsParams
+            .newBuilder()
+            .setProductDetails(productDetails)
+
+        productDetails.subscriptionOfferDetails?.let {
+            billingFlowBuilder.setOfferToken(it.first().offerToken)
+        }
+
+        val billingFlowParams = BillingFlowParams.newBuilder()
+            .setProductDetailsParamsList(listOf(billingFlowBuilder.build()))
+            .build()
+
+        productsViewModel.launchBillingFlow(requireActivity(), billingFlowParams)
     }
 
 }

@@ -25,6 +25,7 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemHomeLandscapesChipBinding
+import hu.mostoha.mobile.android.huki.deeplink.DeeplinkHandler
 import hu.mostoha.mobile.android.huki.extensions.OffsetType
 import hu.mostoha.mobile.android.huki.extensions.addFragment
 import hu.mostoha.mobile.android.huki.extensions.addGpxMarker
@@ -48,6 +49,7 @@ import hu.mostoha.mobile.android.huki.extensions.areInfoWindowsClosed
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.closeInfoWindows
 import hu.mostoha.mobile.android.huki.extensions.closeInfoWindowsForMarkerType
+import hu.mostoha.mobile.android.huki.extensions.color
 import hu.mostoha.mobile.android.huki.extensions.doOnInfoWindows
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.hasNoOverlay
@@ -81,6 +83,7 @@ import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
 import hu.mostoha.mobile.android.huki.extensions.zoomToBoundingBoxPostMain
+import hu.mostoha.mobile.android.huki.model.domain.DeeplinkEvent
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.GPX_WAYPOINT
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.MAP_MY_LOCATION
@@ -145,6 +148,7 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEvents
 import hu.mostoha.mobile.android.huki.ui.home.shared.PermissionSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
+import hu.mostoha.mobile.android.huki.ui.home.support.ProductsViewModel
 import hu.mostoha.mobile.android.huki.ui.home.support.SupportFragment
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.HIKE_MODE_INFO_WINDOW_SHOW_DELAY
@@ -155,9 +159,12 @@ import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_FOLLOW_LOCATION
 import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_HIKE_MODE
 import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_MY_LOCATION
+import hu.mostoha.mobile.android.huki.util.adjustBrightness
+import hu.mostoha.mobile.android.huki.util.colorStateList
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
+import hu.mostoha.mobile.android.huki.util.productIconColor
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -170,6 +177,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.OverlayWithIW
@@ -203,6 +211,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val permissionSharedViewModel: PermissionSharedViewModel by viewModels()
     private val mapTouchEventSharedViewModel: MapTouchEventSharedViewModel by viewModels()
     private val pickLocationEventViewModel: PickLocationEventSharedViewModel by viewModels()
+    private val productsViewModel: ProductsViewModel by viewModels()
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
@@ -672,6 +681,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initLayersFlows()
         initPlaceFinderFlows()
         initRoutePlannerFlows()
+        initProductFlows()
     }
 
     private fun initMapFlows() {
@@ -903,6 +913,44 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .collect { events ->
                     initPickLocationEvents(events)
+                }
+        }
+    }
+
+    private fun initProductFlows() {
+        lifecycleScope.launch {
+            productsViewModel.productsUiModel
+                .map { it.purchases.firstOrNull() }
+                .distinctUntilChanged()
+                .flowWithLifecycle(lifecycle)
+                .collect { purchase ->
+                    if (purchase != null) {
+                        with(binding.homeSearchBarAppIcon) {
+                            setProductIcon(purchase.productType)
+                            setOnClickListener {
+                                analyticsService.supportClicked()
+                                supportFragmentManager.addFragment(
+                                    R.id.homeFragmentContainer,
+                                    SupportFragment::class.java
+                                )
+                            }
+                        }
+                        with(binding.homeSupportFab) {
+                            imageTintList = if (isDarkMode()) {
+                                purchase.productType.productColorRes
+                                    .color(this@HomeActivity)
+                                    .adjustBrightness(2.0f)
+                                    .colorStateList()
+                            } else {
+                                purchase.productType.productColorRes
+                                    .color(this@HomeActivity)
+                                    .productIconColor(this@HomeActivity)
+                                    .colorStateList()
+                            }
+                            setImageResource(R.drawable.ic_home_fab_support_purchased)
+                        }
+                    }
+                    binding.homeSupportFab.show()
                 }
         }
     }

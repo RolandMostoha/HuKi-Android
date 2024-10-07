@@ -32,4 +32,11 @@
         <attr name="textAppearance" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="ProductBadgeView">
+        <attr name="badgeCornerRadius" format="reference|dimension" />
+        <attr name="badgeBackgroundColor" format="reference|color" />
+        <attr name="badgeIconColor" format="reference|color" />
+        <attr name="badgeIcon" format="reference" />
+    </declare-styleable>
+
 </resources>

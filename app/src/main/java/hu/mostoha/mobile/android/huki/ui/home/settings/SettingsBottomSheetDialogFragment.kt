@@ -144,11 +144,11 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     private fun initFlows() {
         lifecycleScope.launch {
-            val mapScaleFactor = settingsViewModel.mapScaleFactor
+            mapScaleSlider.value = settingsViewModel.mapScaleFactor
                 .flowWithLifecycle(lifecycle)
                 .first()
-
-            mapScaleSlider.value = mapScaleFactor.toPercentageFromScale().toFloat()
+                .toPercentageFromScale()
+                .toFloat()
         }
         lifecycleScope.launch {
             val theme = settingsViewModel.theme

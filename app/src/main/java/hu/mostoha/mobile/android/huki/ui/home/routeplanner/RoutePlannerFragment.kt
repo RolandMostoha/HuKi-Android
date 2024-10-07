@@ -266,7 +266,7 @@ class RoutePlannerFragment : Fragment() {
                 waypointInput.clearFocusAndHideKeyboard()
                 placeFinderViewModel.cancelSearch()
 
-                requireContext().showSnackbar(
+                showSnackbar(
                     binding.routePlannerContainer,
                     R.string.place_finder_pick_location_message.toMessage(),
                     R.drawable.ic_snackbar_place_finder_pick_location

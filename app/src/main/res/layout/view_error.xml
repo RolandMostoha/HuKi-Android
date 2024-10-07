@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/errorViewContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/space_extra_large">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/errorViewText"
+        style="@style/InfoViewTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_small"
+        android:layout_marginBottom="@dimen/space_medium"
+        android:drawableTop="@drawable/ic_search_bar_error"
+        tools:text="Timeout error!" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/errorViewRefreshButton"
+        style="@style/DefaultButton.Contained.Shadowless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:iconPadding="@dimen/space_small"
+        android:text="@string/error_refresh_button"
+        app:icon="@drawable/ic_refresh" />
+
+</LinearLayout>

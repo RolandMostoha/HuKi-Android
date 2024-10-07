@@ -1,14 +1,17 @@
 package hu.mostoha.mobile.android.huki.service
 
+import com.android.billingclient.api.BillingClient
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.ktx.Firebase
+import hu.mostoha.mobile.android.huki.billing.fieldName
 import hu.mostoha.mobile.android.huki.extensions.removeFileExtension
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
+import hu.mostoha.mobile.android.huki.model.ui.BillingAction
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import javax.inject.Inject
 
@@ -78,10 +81,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_LIVE_COMPASS = "select_live_compass"
         private const val EVENT_SELECT_SUPPORT = "select_support"
         private const val EVENT_SELECT_SUPPORT_EMAIL = "select_support_email"
-        private const val EVENT_SELECT_SUPPORT_RECURRING_FIRST_OPTION = "select_support_recurring_first_option"
-        private const val EVENT_SELECT_SUPPORT_RECURRING_SECOND_OPTION = "select_support_recurring_second_option"
-        private const val EVENT_SELECT_SUPPORT_ONE_TIME_FIRST_OPTION = "select_support_one_time_first_option"
-        private const val EVENT_SELECT_SUPPORT_ONE_TIME_SECOND_OPTION = "select_support_one_time_second_option"
+        private const val EVENT_SELECT_SUPPORT_RECURRING_LEVEL_1 = "select_support_recurring_level_1"
+        private const val EVENT_SELECT_SUPPORT_RECURRING_LEVEL_2 = "select_support_recurring_level_2"
+        private const val EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_1 = "select_support_one_time_level_1"
+        private const val EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_2 = "select_support_one_time_level_2"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
@@ -384,19 +387,34 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_EMAIL, null)
     }
 
-    override fun supportRecurringFirstOptionClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_RECURRING_FIRST_OPTION, null)
+    override fun supportRecurringLevel1Clicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_RECURRING_LEVEL_1, null)
     }
 
-    override fun supportRecurringSecondOptionClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_RECURRING_SECOND_OPTION, null)
+    override fun supportRecurringLevel2Clicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_RECURRING_LEVEL_2, null)
     }
 
-    override fun supportOneTimeFirstOptionClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_ONE_TIME_FIRST_OPTION, null)
+    override fun supportOneTimeLevel1Clicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_1, null)
     }
 
-    override fun supportOneTimeSecondOptionClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_ONE_TIME_SECOND_OPTION, null)
+    override fun supportOneTimeLevel2Clicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_2, null)
     }
+
+    override fun billingEvent(billingAction: BillingAction, billingResponseCode: Int) {
+        val isStartupAction = billingAction == BillingAction.START_CONNECTION ||
+            billingAction == BillingAction.QUERY_PRODUCTS ||
+            billingAction == BillingAction.QUERY_PURCHASES
+
+        if (isStartupAction && BillingClient.BillingResponseCode.OK == billingResponseCode) {
+            return
+        }
+
+        val eventName = "billing_${billingAction.name.lowercase()}_${billingResponseCode.fieldName()?.lowercase()}"
+
+        firebaseAnalytics.logEvent(eventName, null)
+    }
+
 }

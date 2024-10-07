@@ -12,6 +12,7 @@
     <string name="error_message_unknown_host">The Photon search system is currently unavailable. Please try again later.</string>
     <string name="error_message_gpx_parse_failed">Cannot process GPX. Please contact us.</string>
     <string name="error_message_gpx_uri_null">Unsuccessful choice. Try again with a valid GPX file.</string>
+    <string name="error_refresh_button">Refresh</string>
 
     <string name="default_distance_template_m">%s m</string>
     <string name="default_distance_template_km">%s km</string>
@@ -168,13 +169,44 @@
 
     <string name="support_title">Support</string>
     <string name="support_greeting">Dear future supporter!</string>
-    <string name="support_message">HuKi is still ad-free and all of its functions are free, support is voluntary.\n\nI develop it in my free time besides my work, and pay the maintenance costs from my own pocket. Since I love developing it and that I\'m doing something useful for the hiking community, I accept this to a certain extent, but due to its monthly costs, I have to think about make it self-sustaining.\n\nThis support page was created as a test, so if you like the app and can afford, please support the development of HuKi.</string>
+    <string name="support_message">HuKi is still ad-free and all of its functions are free, support is voluntary.\n\nI develop it in my free time and I love that I\'m doing something useful for the hiking community. Since more and more of us are using it, its monthly cost is raising, so I have to think about make it self-sustaining.\n\nThis support page was created as a test, so if you like the app and can afford, please consider supporting the development of HuKi.</string>
     <string name="support_recurring_title">Recurring support</string>
-    <string name="support_recurring_first_option">250 HUF / month</string>
-    <string name="support_recurring_second_option">500 HUF / month</string>
     <string name="support_one_time_title">One-time support</string>
-    <string name="support_one_time_first_option">500 HUF</string>
-    <string name="support_one_time_second_option">1000 HUF</string>
     <string name="support_contact_message">If you want to support the development in other ways, or have an idea, feel free to reach out:</string>
+    <string name="support_product_name_one_time_level_1">Owl</string>
+    <string name="support_product_name_one_time_level_2">Squirrel</string>
+    <string name="support_product_name_recurring_level_1">Boar</string>
+    <string name="support_product_name_recurring_level_2">Deer</string>
+    <string name="support_recurring_payment_month_template">%s / month</string>
+
+    <string name="support_supporter_title_template">Thanks for being a(n) \"%s\" supporter!</string>
+    <string name="support_supporter_message_one_time_level_2"><![CDATA[
+        <p><strong>Interesting fact:</strong> During the fall, squirrels hide large amounts of food - nuts, hazelnuts, acorns - in different places. Interestingly, they often forget where they hid these seeds, thus contributing to the spread of the trees in the forest.</p>
+        <p><strong>Habitat:</strong> Red squirrels can be found almost everywhere in the forests of Hungary, but most likely in oak and pine forests, where there are many nuts, acorns and other seeds. For example, the surroundings of the <a href="https://huki.hu/landscape?osmId=3716160" aria-invalid="true">Buda Mountains</a> or the mountainous areas of <a href="https://huki.hu/landscape?osmId=279583932" aria-invalid="true">M&aacute;tra</a> and <a href="https://huki.hu/landscape?osmId=279573777" aria-invalid="true">B&uuml;kk</a> are rich in mixed forests, where squirrels like to live.</p>
+    ]]>
+    </string>
+    <string name="support_supporter_message_one_time_level_1"><![CDATA[
+        <p><strong>Interesting fact:</strong> When owls are nervous or excited, they sometimes make strange, dancing movements by moving their heads and bodies. This strange behavior is like seeing an owl dance to observe what is happening around it.</p>
+        <p><strong>Habitat: </strong>The dense, mountainous forests of the <a href="https://huki.hu/landscape?osmId=279573777" aria-invalid="true">B&uuml;kk Mountains</a> and <a href="https://huki.hu/landscape?osmId=279660398" aria-invalid="true">Aggteleki National Park</a> provide an excellent habitat for the short-eared owl and the rare owl. The closed forests of <a href="https://huki.hu/landscape?osmId=279656184" aria-invalid="true">Zempl&eacute;n</a> are perfect hiding places for the barn owl.</p>
+    ]]>
+    </string>
+    <string name="support_supporter_message_recurring_level_2"><![CDATA[
+        <p><strong>Interesting fact: </strong>Red deer shed their antlers every year, and then new ones grow in their place. In autumn, during the mating season, red deer hum extremely loudly, which is one of the most special "music" of the forests.</p>
+        <p><strong>Habitat: </strong>The largest and best-known deer habitat in the country is the <a href="https://huki.hu/place?lat=46.2030029&amp;lon=18.8787173" aria-invalid="true">Gemenci forest</a>. The red deer that live here are famous, and during the autumn rutting period, special wildlife watching programs are also organized. In addition to these, you can also often meet roe deer and deer in <a href="https://huki.hu/landscape?osmId=279564162" aria-invalid="true">B&ouml;rzs&ouml;ny</a>.</p>
+    ]]>
+    </string>
+    <string name="support_supporter_message_recurring_level_1"><![CDATA[
+        <p><strong>Interesting fact: </strong>Wild boars live in matriarchal families, where the sow leads the group. Piglets are born with characteristic striped fur, which changes over time to "adult" gray-black fur. This striped pattern helps them hide from predators.</p>
+        <p><strong>Habitat: </strong>Wild boars can be found almost all over the country, the dense forests of the <a href="https://huki.hu/landscape?osmId=279656184" aria-invalid="true">Zempl&eacute;ni Mountains</a> are ideal for them. The lush vegetation of the <a href="https://huki.hu/landscape?osmId=279665156" aria-invalid="true">Bakony</a> and the forest clearings are also favorable for them.</p>
+    ]]>
+    </string>
+
+    <string name="support_error_start_connection">There was an error on Google Billing connection.</string>
+    <string name="support_error_query_products">There was an error on Google Billing query products.</string>
+    <string name="support_error_query_purchases">There was an error on Google Billing query purchases.</string>
+    <string name="support_error_purchases_updated">There was an error on Google Billing during payment.</string>
+    <string name="support_error_launch_billing_flow">There was an error on Google Billing payment launch.</string>
+    <string name="support_error_acknowledge_purchase">There was an error on Google Billing payment acknowledgement.</string>
+    <string name="support_error_consume_purchase">There was an error on Google Billing payment consume.</string>
 
 </resources>

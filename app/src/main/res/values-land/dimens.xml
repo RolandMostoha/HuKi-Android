@@ -5,6 +5,8 @@
 
     <dimen name="home_copyright_bottom_margin">@dimen/space_medium</dimen>
 
+    <dimen name="support_product_icon_size">35dp</dimen>
+
     <dimen name="route_planner_waypoint_list_max_height">@null</dimen>
     <dimen name="route_planner_min_width">300dp</dimen>
 

@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderErrorBinding
-import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderLoadingBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderPlaceBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderShowMoreHistoryBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderStaticActionsBinding
+import hu.mostoha.mobile.android.huki.databinding.ViewErrorBinding
+import hu.mostoha.mobile.android.huki.databinding.ViewLoadingIndicatorBinding
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
@@ -75,14 +75,14 @@ class PlaceFinderAdapter(
                 view = binding.root
             }
             is PlaceFinderItem.Loading -> {
-                val binding = ItemPlaceFinderLoadingBinding.inflate(parent.context.inflater, parent, false)
+                val binding = ViewLoadingIndicatorBinding.inflate(parent.context.inflater, parent, false)
 
                 view = binding.root
             }
             is PlaceFinderItem.Info -> {
-                val binding = ItemPlaceFinderErrorBinding.inflate(parent.context.inflater, parent, false)
-                binding.placeFinderErrorText.text = parent.context.getString(placeFinderItem.messageRes.res)
-                binding.placeFinderErrorText.setDrawableTop(placeFinderItem.drawableRes)
+                val binding = ViewErrorBinding.inflate(parent.context.inflater, parent, false)
+                binding.errorViewText.text = parent.context.getString(placeFinderItem.messageRes.res)
+                binding.errorViewText.setDrawableTop(placeFinderItem.drawableRes)
 
                 view = binding.root
             }

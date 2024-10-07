@@ -1,10 +1,17 @@
 package hu.mostoha.mobile.android.huki.util
 
+import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import hu.mostoha.mobile.android.huki.extensions.darken
+import hu.mostoha.mobile.android.huki.extensions.isDarkMode
+import hu.mostoha.mobile.android.huki.extensions.lighten
 
 const val DARK_MODE_HIKING_LAYER_BRIGHTNESS = 0.85f
 
@@ -111,4 +118,86 @@ fun getGradientColors(
 
         ColorUtils.blendARGB(startColor, endColor, weight)
     }
+}
+
+@Suppress("MagicNumber")
+@ColorInt
+fun Int.productIconColor(context: Context): Int {
+    return if (context.isDarkMode()) {
+        this.lighten(0.65f).adjustBrightness(1.2f)
+    } else {
+        this
+    }
+}
+
+@Suppress("MagicNumber")
+@ColorInt
+fun Int.productTextColor(context: Context): Int {
+    return if (context.isDarkMode()) {
+        this.lighten(0.9f)
+    } else {
+        this.darken(0.35f)
+    }
+}
+
+@Suppress("MagicNumber")
+@ColorInt
+fun Int.productStrongTextColor(context: Context): Int {
+    return if (context.isDarkMode()) {
+        this.lighten(0.95f)
+    } else {
+        this.darken(0.45f)
+    }
+}
+
+@Suppress("MagicNumber")
+@ColorInt
+fun Int.productStrokeColor(context: Context): Int {
+    return if (context.isDarkMode()) {
+        this.darken(0.5f)
+    } else {
+        this.lighten(0.8f)
+    }
+}
+
+@Suppress("MagicNumber")
+@ColorInt
+fun Int.productBackgroundColor(context: Context): Int {
+    return if (context.isDarkMode()) {
+        this
+    } else {
+        this.adjustBrightness(1.5f).lighten(0.85f)
+    }
+}
+
+@Suppress("MagicNumber")
+@ColorInt
+fun Int.productHighlightColor(context: Context): Int {
+    return if (context.isDarkMode()) {
+        this.productIconColor(context).darken(0.2f)
+    } else {
+        this.lighten(0.2f)
+    }
+}
+
+@Suppress("MagicNumber")
+@ColorInt
+fun Int.adjustBrightness(factor: Float): Int {
+    val red = (Color.red(this) * factor).coerceIn(0f, 255f).toInt()
+    val green = (Color.green(this) * factor).coerceIn(0f, 255f).toInt()
+    val blue = (Color.blue(this) * factor).coerceIn(0f, 255f).toInt()
+    return Color.rgb(red, green, blue)
+}
+
+fun @receiver:ColorInt Int.colorStateList(): ColorStateList {
+    return ColorStateList.valueOf(this)
+}
+
+fun @receiver:ColorRes Int.colorStateList(context: Context): ColorStateList {
+    return ContextCompat.getColorStateList(context, this)!!
+}
+
+@ColorInt
+fun @receiver:ColorRes Int.color(context: Context): Int {
+    return ContextCompat.getColor(context, this)
 }

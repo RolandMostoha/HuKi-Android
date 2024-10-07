@@ -158,13 +158,44 @@
 
     <string name="support_title">Támogatás</string>
     <string name="support_greeting">Kedves érdeklődő!</string>
-    <string name="support_message">A HuKi továbbra is reklámmentes és minden funkciója ingyenes, a támogatás önkéntes alapú.\n\nAz appot hobbiból fejlesztem munka mellett és a fenntartási költségeit saját zsebből finanszírozom. Mivel örömmel tölt el a fejlesztése és hogy valami hasznosat teszek a túrás közösségnek, ezért ezt egy szintig bevállalom, viszont a havi költségei miatt gondolkoznom kell, hogy tudna önfentartó lenni. \n\nPróbaképp született ez a támógatói oldal, ezért ha tetszik az app és módodban áll, akkor kérlek támogasd a HuKi fejlesztését.</string>
+    <string name="support_message">A HuKi továbbra is ingyenes és reklámmentes, a támogatás önkéntes alapú.\n\nAz appot hobbiból fejlesztem és örömmel tölt el, hogy valami hasznosat teszek a túrás közösségnek. Mivel egyre többen használjuk, a fenntartási költségei is emelkednek, és gondolkoznom kell, hogy tudna önfentartó lenni.\n\nKísérleti jelleggel született ez a támógatói oldal. Ha neked is hasznos a HuKi és módodban áll, akkor kérlek fontold meg a támogatását.</string>
     <string name="support_recurring_title">Rendeszeres támogatás</string>
-    <string name="support_recurring_first_option">250 Ft / hónap</string>
-    <string name="support_recurring_second_option">500 Ft / hónap</string>
-    <string name="support_one_time_title">Alkalmi támogatás</string>
-    <string name="support_one_time_first_option">500 Ft</string>
-    <string name="support_one_time_second_option">1000 Ft</string>
+    <string name="support_one_time_title">Egyszeri támogatás</string>
     <string name="support_contact_message">Ha más módon szeretnéd támogatni a fejlesztést vagy ötleted van, nyugodtan keress:</string>
+    <string name="support_product_name_one_time_level_1">Bagoly</string>
+    <string name="support_product_name_one_time_level_2">Mókus</string>
+    <string name="support_product_name_recurring_level_1">Vaddisznó</string>
+    <string name="support_product_name_recurring_level_2">Szarvas</string>
+    <string name="support_recurring_payment_month_template">%s / hónap</string>
+
+    <string name="support_supporter_title_template">Köszönöm, hogy \"%s\" támogató vagy!</string>
+    <string name="support_supporter_message_one_time_level_2"><![CDATA[
+        <p><strong>&Eacute;rdekess&eacute;g: </strong>A&nbsp;m&oacute;kusok az őszi időszakban nagy mennyis&eacute;gű &eacute;lelmet &ndash; di&oacute;t, mogyor&oacute;t, makkot &ndash; rejtenek el k&uuml;l&ouml;nb&ouml;ző helyekre. &Eacute;rdekes m&oacute;don gyakran elfelejtik, hogy hova rejtett&eacute;k ezeket a magvakat, &iacute;gy hozz&aacute;j&aacute;rulnak az erdő f&aacute;inak terjed&eacute;s&eacute;hez.</p>
+        <p><strong>&Eacute;lőhely: </strong>A&nbsp;v&ouml;r&ouml;s m&oacute;kusok megtal&aacute;lhat&oacute;k szinte mindenhol Magyarorsz&aacute;g erdeiben, de legnagyobb es&eacute;llyel a t&ouml;lgyesekben, fenyvesekben, ahol sok di&oacute;, makk &eacute;s m&aacute;s mag tal&aacute;lhat&oacute;. P&eacute;ld&aacute;ul a <strong><a href="https://huki.hu/landscape?osmId=3716160" aria-invalid="true">Budai-hegys&eacute;g</a>&nbsp;</strong>k&ouml;rny&eacute;ke, vagy a <a href="https://huki.hu/landscape?osmId=279583932" aria-invalid="true"><strong>M&aacute;tra</strong></a> &eacute;s a <a href="https://huki.hu/landscape?osmId=279573777" aria-invalid="true"><strong>B&uuml;kk</strong></a> hegyvid&eacute;ki ter&uuml;letei&nbsp;gazdagok vegyes erdőkben.</p>
+    ]]>
+    </string>
+    <string name="support_supporter_message_one_time_level_1"><![CDATA[
+        <p><strong>&Eacute;rdekess&eacute;g: </strong>Ha a baglyok idegesek vagy izgatottak, n&eacute;ha furcsa, t&aacute;ncol&oacute;<strong> </strong>mozdulatokat tesznek a fej&uuml;k &eacute;s test&uuml;k mozgat&aacute;s&aacute;val. Ez a k&uuml;l&ouml;n&ouml;s viselked&eacute;s olyan, mintha egy bagolyt&aacute;ncot l&aacute;tn&aacute;l, amelynek c&eacute;lja, hogy megfigyelje, mi t&ouml;rt&eacute;nik k&ouml;r&uuml;l&ouml;tte.</p>
+        <p><strong>&Eacute;lőhely:</strong>&nbsp;&nbsp;<strong><a href="https://huki.hu/landscape?osmId=279573777" aria-invalid="true">B&uuml;kk-hegys&eacute;g</a> </strong>&eacute;s <strong><a href="https://huki.hu/landscape?osmId=279660398" aria-invalid="true">Aggteleki Nemzeti Park</a></strong>&nbsp;sűrű, hegyvid&eacute;ki erdei&nbsp;kiv&aacute;l&oacute; &eacute;lőhelyet ny&uacute;jtanak az <strong>erdei f&uuml;lesbagoly</strong> &eacute;s a ritka <strong>uhuk</strong> sz&aacute;m&aacute;ra. A <strong><a href="https://huki.hu/landscape?osmId=279656184" aria-invalid="true">Zempl&eacute;n</a></strong>&nbsp;z&aacute;rt erdei pedig&nbsp;t&ouml;k&eacute;letes rejtekhelyek a <strong>macskabagoly</strong> sz&aacute;m&aacute;ra</p>
+    ]]>
+    </string>
+    <string name="support_supporter_message_recurring_level_2"><![CDATA[
+        <p><strong>&Eacute;rdekess&eacute;g:&nbsp;</strong>A g&iacute;mszarvasok minden &eacute;vben elhullajtj&aacute;k az agancsaikat, majd &uacute;jak nőnek helyett&uuml;k. Ősszel, a p&aacute;rz&aacute;si időszak alatt rendk&iacute;v&uuml;l hangosan bőgnek, ami az erdők egyik legk&uuml;l&ouml;nlegesebb &bdquo;zen&eacute;je&rdquo;.&nbsp;</p>
+        <p><strong>&Eacute;lőhely:</strong>&nbsp; Az orsz&aacute;g legnagyobb &eacute;s legismertebb szarvas&eacute;lőhelye a&nbsp;<a href="https://huki.hu/place?lat=46.2030029&amp;lon=18.8787173" aria-invalid="true"><strong>Gemenci erdő</strong></a>. Az itt &eacute;lő g&iacute;mszarvasok h&iacute;resek, &eacute;s az őszi bőg&eacute;si időszak alatt k&uuml;l&ouml;nleges vadmegfigyel&eacute;si programokat is szerveznek. Ezek mellett a <a href="https://huki.hu/landscape?osmId=279564162" aria-invalid="true"><strong>B&ouml;rzs&ouml;nyben</strong></a> is gyakran tal&aacute;lkozhatsz őzekkel &eacute;s szarvasokkal.</p>
+    ]]>
+    </string>
+    <string name="support_supporter_message_recurring_level_1"><![CDATA[
+        <p><strong>&Eacute;rdekess&eacute;g: </strong>A vaddiszn&oacute;k matriarch&aacute;lis csal&aacute;dokban &eacute;lnek, ahol az anyakoca vezeti a csoportot.&nbsp;A kismalacok jellegzetes cs&iacute;kos bund&aacute;val sz&uuml;letnek, ami idővel &bdquo;felnőtt&rdquo; sz&uuml;rk&eacute;s-fekete szőrzetre v&aacute;ltozik. Ez a cs&iacute;kos minta seg&iacute;t nekik rejtőzk&ouml;dni a ragadoz&oacute;k elől.</p>
+        <p><strong>&Eacute;lőhely:</strong> &nbsp;A vaddiszn&oacute;k szinte az eg&eacute;sz orsz&aacute;g ter&uuml;let&eacute;n megtal&aacute;lhat&oacute;k, <a href="https://huki.hu/landscape?osmId=279656184" aria-invalid="true"><strong>Zempl&eacute;ni-hegys&eacute;g</strong></a>&nbsp;sűrű erdős&eacute;gei ide&aacute;lisak nekik. A <a href="https://huki.hu/landscape?osmId=279665156" aria-invalid="true"><strong>Bakony</strong></a>&nbsp;d&uacute;s n&ouml;v&eacute;nyzete &eacute;s az erdei tiszt&aacute;sok szint&eacute;n kedveznek sz&aacute;mukra.</p>
+    ]]>
+    </string>
+
+    <string name="support_error_start_connection">Hiba történt a Google Billing csatlakozásban.</string>
+    <string name="support_error_query_products">Hiba történt a Google Billing termékek betöltésében.</string>
+    <string name="support_error_query_purchases">Hiba történt a Google Billing vásárlás-történet betöltésében.</string>
+    <string name="support_error_purchases_updated">Hiba történt a Google Billing vásárlása közben.</string>
+    <string name="support_error_launch_billing_flow">Hiba történt a Google Billing vásárlás indításában.</string>
+    <string name="support_error_acknowledge_purchase">Hiba történt a Google Billing rendszeres vásárlás visszaigazolásában.</string>
+    <string name="support_error_consume_purchase">Hiba történt a Google Billing egyszeri vásárlás visszaigazolásában.</string>
 
 </resources>

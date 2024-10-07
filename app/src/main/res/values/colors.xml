@@ -5,6 +5,7 @@
     <color name="colorLauncherIcon">#ffffff</color>
     <color name="colorLauncherDebug">#e64a19</color>
 
+    <color name="colorPrimaryExtraLight">#EAF9E6</color>
     <color name="colorPrimary">#2e7d32</color>
     <color name="colorPrimaryStrong">#2e7d32</color>
     <color name="colorOnPrimary">#ffffff</color>
@@ -12,7 +13,7 @@
     <color name="colorPrimaryIconStrong">#363636</color>
     <color name="colorPrimaryIconWhite">#ffffff</color>
     <color name="colorPrimaryText">#262626</color>
-    <color name="colorPrimaryTextWhite">#ffffff</color>
+    <color name="colorPrimaryTextWhite">#fffff7</color>
     <color name="colorPrimaryTextStrong">#000000</color>
     <color name="colorPrimaryTextDisabled">#61262626</color>
     <color name="colorSecondaryText">#404040</color>
@@ -20,6 +21,7 @@
     <color name="colorBackground">#ffffff</color>
     <color name="colorBackgroundLight">#F8F9FA</color>
     <color name="colorError">#c62828</color>
+    <color name="colorHeart">#f44336</color>
     <color name="colorRipple">#000000</color>
     <color name="colorStroke">#DEDEDE</color>
     <color name="colorStrokeOnMap">#C4C4C4</color>
@@ -48,6 +50,10 @@
     <color name="colorRoutePlannerWaypointIcon">@color/colorPrimaryIcon</color>
     <color name="colorRouteAttributesText">@color/colorPrimaryText</color>
     <color name="colorRouteAttributesIcon">@color/colorPrimary</color>
+    <color name="colorPaymentsSquirrelIcon">#d45500</color>
+    <color name="colorPaymentsOwlIcon">#2C3E4F</color>
+    <color name="colorPaymentsDeerIcon">#885129</color>
+    <color name="colorPaymentsBoarIcon">#972422</color>
 
     <color name="colorSymbolStroke">#000000</color>
     <color name="colorSymbolBlue">#0000cc</color>

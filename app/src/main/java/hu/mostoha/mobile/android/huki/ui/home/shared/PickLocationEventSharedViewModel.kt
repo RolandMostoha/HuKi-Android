@@ -10,11 +10,11 @@ class PickLocationEventSharedViewModel @Inject constructor() : EventSharedViewMo
 
 sealed class PickLocationEvents {
 
-    object LocationPickEnabled : PickLocationEvents()
+    data object LocationPickEnabled : PickLocationEvents()
 
-    object LocationPickDisabled : PickLocationEvents()
+    data object LocationPickDisabled : PickLocationEvents()
 
-    object RoutePlannerPickStarted : PickLocationEvents()
+    data object RoutePlannerPickStarted : PickLocationEvents()
 
     data class RoutePlannerPickEnded(val geoPoint: GeoPoint) : PickLocationEvents()
 

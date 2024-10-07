@@ -25,6 +25,11 @@
         <item name="cornerSizeTopRight">@dimen/default_corner_size_input</item>
     </style>
 
+    <style name="DefaultShapeAppearance.Circle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <style name="DefaultButton" parent="Widget.MaterialComponents.Button">
         <item name="android:paddingTop">@dimen/default_button_vertical_padding</item>
         <item name="android:paddingBottom">@dimen/default_button_vertical_padding</item>
@@ -175,12 +180,13 @@
 
     <style name="RoundedSelectableTextStyle">
         <item name="android:background">@drawable/background_rounded_selectable_text</item>
-        <item name="android:paddingVertical">@dimen/space_medium</item>
-        <item name="android:drawablePadding">@dimen/space_large</item>
+        <item name="android:paddingVertical">@dimen/space_large</item>
+        <item name="android:drawablePadding">@dimen/space_medium</item>
         <item name="android:layout_marginHorizontal">@dimen/space_small</item>
         <item name="android:gravity">center</item>
-        <item name="android:textAppearance">@style/DefaultTextAppearance.Bold.Small</item>
-        <item name="android:textColor">@color/colorPrimaryTextWhite</item>
+        <item name="android:drawableTint">@color/colorPrimaryStrong</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:lineSpacingExtra">12dp</item>
     </style>
 
 </resources>

@@ -101,8 +101,7 @@ class PlaceFinderViewModel @Inject constructor(
         }
         viewModelScope.launch(ioDispatcher) {
             val myLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation()
-            val historyPlaces = placeHistoryRepository
-                .getPlaces()
+            val historyPlaces = placeHistoryRepository.getPlaces()
                 .map { placeFinderUiModelMapper.mapHistoryItems(feature, it, myLocation) }
                 .catch {
                     val error = PlaceFinderItem.Info(

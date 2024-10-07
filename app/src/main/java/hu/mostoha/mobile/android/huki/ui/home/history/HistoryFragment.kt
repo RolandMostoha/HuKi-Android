@@ -59,7 +59,7 @@ class HistoryFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        historyViewPager.offscreenPageLimit = HistoryTab.values().size
+        historyViewPager.offscreenPageLimit = HistoryTab.entries.size
         historyViewPager.adapter = HistoryViewPagerAdapter(this)
 
         TabLayoutMediator(historyTabLayout, historyViewPager) { tab, position ->

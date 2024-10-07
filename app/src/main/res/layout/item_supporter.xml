@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/supporterCard"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/space_extra_large"
+    android:layout_marginHorizontal="@dimen/space_extra_large"
+    app:cardCornerRadius="@dimen/default_corner_size_info_card"
+    app:cardElevation="@dimen/default_card_elevation"
+    app:strokeWidth="@dimen/default_highlighted_card_stroke_width">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/space_extra_large"
+        android:paddingHorizontal="@dimen/space_extra_large">
+
+        <ImageView
+            android:id="@+id/supporterBadgeImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:importantForAccessibility="no"
+            tools:src="@drawable/ic_product_squirrel" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/supporterBadgeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_medium"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+            android:textSize="14sp"
+            tools:text="Köszönöm hogy HuKi támogató vagy!" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/supporterBadgeMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_large"
+            android:lineSpacingMultiplier="1.2"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+            tools:text="A mókusok hajlamosak elfelejteni, hogy hova rejtették el az élelmüket! A becslések szerint akár az általuk elásott magvak és diók 30%-át is elfelejtik, ami valójában nagyon hasznos a természet számára, hiszen így hozzájárulnak az új fák növekedéséhez." />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
