@@ -7,7 +7,8 @@
       "namespace": "android_app",
       "package_name": "hu.mostoha.mobile.android.huki",
       "sha256_cert_fingerprints": [
-        "C6:39:0A:16:7E:CB:5B:7A:7B:5B:B8:E4:DA:3E:AC:7B:E2:F9:2F:CA:A1:BE:6A:91:EB:8B:2D:DC:50:58:E9:94"
+        "C6:39:0A:16:7E:CB:5B:7A:7B:5B:B8:E4:DA:3E:AC:7B:E2:F9:2F:CA:A1:BE:6A:91:EB:8B:2D:DC:50:58:E9:94",
+        "2C:DD:C8:11:7E:26:EE:68:47:C1:6C:2C:A6:8C:6D:43:04:56:A8:D8:0F:A1:7D:15:FB:C8:EC:58:14:D6:D4:5E"
       ]
     }
   }

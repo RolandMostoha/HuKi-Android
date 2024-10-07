@@ -44,7 +44,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -146,6 +148,14 @@ class HomeViewModel @Inject constructor(
             .onCompletion { showLoading(false) }
             .catch { showError(it) }
             .collect()
+    }
+
+    fun loadLandscapeDetails(osmId: String) = viewModelScope.launch {
+        landscapeInteractor.requestGetLandscapesFlow()
+            .map { homeUiModelMapper.mapLandscapes(it) }
+            .mapNotNull { landscapes -> landscapes.firstOrNull { it.osmId == osmId } }
+            .catch { showError(it) }
+            .collectLatest { loadLandscapeDetails(it) }
     }
 
     fun loadPlaceDetails(placeUiModel: PlaceUiModel) = viewModelScope.launch {

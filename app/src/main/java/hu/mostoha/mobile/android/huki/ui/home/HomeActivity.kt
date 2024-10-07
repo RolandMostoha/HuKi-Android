@@ -191,6 +191,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     @Inject
     lateinit var settingsRepository: SettingsRepository
 
+    @Inject
+    lateinit var deeplinkHandler: DeeplinkHandler
+
     private val homeViewModel: HomeViewModel by viewModels()
     private val layersViewModel: LayersViewModel by viewModels()
     private val placeFinderViewModel: PlaceFinderViewModel by viewModels()
@@ -943,11 +946,23 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initIntentHandlers(intent: Intent?) {
-        if (intent != null && intent.isGpxFileIntent()) {
-            lifecycleScope.launch {
-                layersViewModel.loadGpx(intent.data)
+        if (intent != null) {
+            if (intent.isGpxFileIntent()) {
+                lifecycleScope.launch {
+                    layersViewModel.loadGpx(intent.data)
 
-                analyticsService.gpxImportedByIntent()
+                    analyticsService.gpxImportedByIntent()
+                }
+            }
+
+            when (val event = deeplinkHandler.handleDeeplink(intent)) {
+                is DeeplinkEvent.LandscapeDetails -> {
+                    homeViewModel.loadLandscapeDetails(event.osmId)
+                }
+                is DeeplinkEvent.PlaceDetails -> {
+                    homeViewModel.loadPlaceDetailsWithGeocoding(GeoPoint(event.lat, event.lon), MAP_SEARCH)
+                }
+                null -> Unit
             }
         }
     }
