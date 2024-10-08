@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BaseTheme.HuKiTheme">
+
+        <item name="android:windowSplashScreenBackground">@color/colorLauncher</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/anim_splash</item>
+        <item name="android:windowSplashScreenAnimationDuration">
+            @integer/splash_animation_duration
+        </item>
+
+    </style>
+
+</resources>

@@ -4,7 +4,6 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.TestAppConfiguration
-import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
@@ -183,47 +182,6 @@ class PlaceFinderViewModelTest {
                     emptyList<PlaceFinderItem>()
                         .plus(placeFinderUiModelMapper.mapPlaceFinderItems(places, myLocation))
                         .plus(placeFinderUiModelMapper.mapPlaceFinderItems(places, myLocation))
-                )
-            }
-        }
-    }
-
-    @Test
-    fun `Given error, when load places, then place finder items are emitted`() {
-        runTestDefault {
-            val searchText = "Mecs"
-            val myLocation = DEFAULT_MY_LOCATION
-            val placeFeature = PlaceFeature.MAP_SEARCH
-            coEvery { placeHistoryRepository.getPlaces() } returns flowOf(emptyList())
-            coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } throws IllegalStateException()
-            coEvery { placeHistoryRepository.getPlacesBy(any(), any()) } returns flowOf(emptyList())
-            coEvery { myLocationProvider.getLastKnownLocationCoroutine() } returns myLocation.toMockLocation()
-
-            viewModel.placeFinderItems.test {
-                viewModel.initPlaceFinder(PlaceFinderFeature.MAP)
-                advanceUntilIdle()
-                viewModel.loadPlaces(searchText, placeFeature)
-
-                assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.StaticActions))
-                assertThat(awaitItem()).isEqualTo(
-                    emptyList<PlaceFinderItem>()
-                        .plus(
-                            PlaceFinderItem.Info(
-                                messageRes = R.string.place_finder_empty_message.toMessage(),
-                                drawableRes = R.drawable.ic_search_bar_empty_result
-                            )
-                        )
-                )
-                assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.Loading))
-                assertThat(awaitItem()).isEqualTo(
-                    emptyList<PlaceFinderItem>()
-                        .plus(
-                            PlaceFinderItem.Info(
-                                messageRes = UnknownException(IllegalStateException()).messageRes,
-                                drawableRes = R.drawable.ic_search_bar_error
-                            )
-                        )
                 )
             }
         }

@@ -104,6 +104,7 @@ dependencies {
     implementation "com.github.skydoves:powermenu:2.2.4"
     implementation "com.airbnb.android:lottie:6.5.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Animations
     implementation 'jp.wasabeef:recyclerview-animators:4.0.2'

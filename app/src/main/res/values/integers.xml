@@ -2,5 +2,8 @@
 <resources>
 
     <integer name="symbol_stroke_width">4</integer>
+    <integer name="launcher_stroke_width">3</integer>
+
+    <integer name="splash_animation_duration">500</integer>
 
 </resources>
