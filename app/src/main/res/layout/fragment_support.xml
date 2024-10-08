@@ -72,7 +72,7 @@
                         app:lottie_autoPlay="true"
                         app:lottie_enableMergePathsForKitKatAndAbove="true"
                         app:lottie_loop="true"
-                        app:lottie_rawRes="@raw/lottie_support_9" />
+                        app:lottie_rawRes="@raw/lottie_support" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/supportInfoTitle"
