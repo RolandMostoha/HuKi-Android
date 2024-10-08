@@ -10,6 +10,7 @@
     <string name="error_message_unknown_host">A Photon kereső rendszere átmenetileg nem elérhető. Kérjük próbálkozz később.</string>
     <string name="error_message_gpx_parse_failed">GPX feldolgozási hiba. Kérlek keress fel a kapcsolat menüben!</string>
     <string name="error_message_gpx_uri_null">Sikertelen választás. Próbáld újra egy érvényes GPX fájllal.</string>
+    <string name="error_refresh_button">Frissítés</string>
 
     <string name="default_distance_template_m">%s m</string>
     <string name="default_distance_template_km">%s km</string>
