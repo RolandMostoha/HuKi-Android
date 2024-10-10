@@ -6,12 +6,12 @@
         android:propertyName="scaleX"
         android:valueType="floatType"
         android:valueFrom="0.38"
-        android:valueTo="0.42" />
+        android:valueTo="0.44" />
 
     <propertyValuesHolder
         android:propertyName="scaleY"
         android:valueType="floatType"
         android:valueFrom="0.38"
-        android:valueTo="0.42" />
+        android:valueTo="0.44" />
 
 </objectAnimator>

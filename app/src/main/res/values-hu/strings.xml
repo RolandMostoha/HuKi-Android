@@ -159,7 +159,7 @@
 
     <string name="support_title">Támogatás</string>
     <string name="support_greeting">Kedves érdeklődő!</string>
-    <string name="support_message">A HuKi továbbra is ingyenes és reklámmentes, a támogatás önkéntes alapú.\n\nAz appot hobbiból fejlesztem és örömmel tölt el, hogy valami hasznosat teszek a túrás közösségnek. Mivel egyre többen használjuk, a fenntartási költségei is emelkednek, és gondolkoznom kell, hogy tudna önfentartó lenni.\n\nKísérleti jelleggel született ez a támógatói oldal. Ha neked is hasznos a HuKi és módodban áll, akkor kérlek fontold meg a támogatását.</string>
+    <string name="support_message">A HuKi továbbra is ingyenes és reklámmentes, a támogatás önkéntes alapú. Ha neked is segít az app és módodban áll, akkor kérlek fontold meg a támogatását.\n\nAz appot hobbiból fejlesztem és örömmel tölt el, hogy valami hasznosat teszek a túrás közösségnek. Mivel egyre többen használjuk, a fenntartási költségei is emelkednek, és gondolkoznom kell, hogy tudna önfentartó lenni. Kísérleti jelleggel született ez a támógatói oldal. </string>
     <string name="support_recurring_title">Rendeszeres támogatás</string>
     <string name="support_one_time_title">Egyszeri támogatás</string>
     <string name="support_contact_message">Ha más módon szeretnéd támogatni a fejlesztést vagy ötleted van, nyugodtan keress:</string>
