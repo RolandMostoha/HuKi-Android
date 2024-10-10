@@ -41,7 +41,7 @@
             <!-- Close button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/oktRoutesCloseButton"
-                style="@style/DefaultButton.IconOnly"
+                style="@style/DefaultButton.BottomSheetAction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/space_medium"
@@ -64,10 +64,11 @@
         android:id="@+id/oktRoutesList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:nestedScrollingEnabled="true"
         android:clipToPadding="false"
+        android:nestedScrollingEnabled="true"
+        android:paddingTop="@dimen/space_small"
         android:paddingBottom="@dimen/space_large"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_okt_routes" />
 
 </LinearLayout>
