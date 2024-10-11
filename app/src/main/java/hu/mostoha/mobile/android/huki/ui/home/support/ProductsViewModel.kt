@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClient.BillingResponseCode
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
@@ -34,6 +35,7 @@ import hu.mostoha.mobile.android.huki.model.ui.BillingAction
 import hu.mostoha.mobile.android.huki.model.ui.ProductEvents
 import hu.mostoha.mobile.android.huki.model.ui.ProductsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -51,7 +53,8 @@ class ProductsViewModel @Inject constructor(
     @ApplicationContext val context: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val billingResponseHandler: BillingResponseHandler,
-    private val productsUiModelMapper: ProductsUiModelMapper
+    private val productsUiModelMapper: ProductsUiModelMapper,
+    private val analyticsService: AnalyticsService
 ) : ViewModel(), PurchasesUpdatedListener {
 
     private val _productsUiModel = MutableStateFlow(ProductsUiModel())
@@ -152,6 +155,8 @@ class ProductsViewModel @Inject constructor(
             val recurringList = recurringProductDetails.productDetailsList.orEmpty()
 
             if (oneTimeList.isEmpty() && recurringList.isEmpty()) {
+                analyticsService.billingEvent(BillingAction.QUERY_PRODUCTS, BillingResponseCode.ITEM_UNAVAILABLE)
+
                 _productsUiModel.update {
                     it.copy(
                         products = emptyList(),
