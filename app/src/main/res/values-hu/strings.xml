@@ -24,6 +24,15 @@
     <string name="default_date_saturday">Szombat</string>
     <string name="default_date_sunday">Vasárnap</string>
 
+    <string name="accessibility_home_fab_layers">Rétegek</string>
+    <string name="accessibility_home_fab_route_planner">Útvonaltervező</string>
+    <string name="accessibility_home_fab_my_location">Saját pozícióm</string>
+    <string name="accessibility_home_fab_settings">Beállítások</string>
+    <string name="accessibility_home_fab_history">Előzmények</string>
+    <string name="accessibility_home_fab_hike_mode">Túra mód</string>
+    <string name="accessibility_home_fab_hike_mode_compass">Élő iránytű</string>
+    <string name="accessibility_okt_routes_action_button">%s menü gomb</string>
+
     <string name="search_bar_hint">Keresés helységek között</string>
 
     <string name="place_finder_empty_message">Nincs találat</string>
@@ -148,15 +157,6 @@
     <string name="okt_routes_item_prefix">OKT</string>
     <string name="okt_routes_accessibility_action_button">%s action button</string>
 
-    <string name="accessibility_home_fab_layers">Rétegek</string>
-    <string name="accessibility_home_fab_route_planner">Útvonaltervező</string>
-    <string name="accessibility_home_fab_my_location">Saját pozícióm</string>
-    <string name="accessibility_home_fab_settings">Beállítások</string>
-    <string name="accessibility_home_fab_history">Előzmények</string>
-    <string name="accessibility_home_fab_hike_mode">Túra mód</string>
-    <string name="accessibility_home_fab_hike_mode_compass">Élő iránytű</string>
-    <string name="accessibility_okt_routes_action_button">%s menü gomb</string>
-
     <string name="support_title">Támogatás</string>
     <string name="support_greeting">Kedves érdeklődő!</string>
     <string name="support_message">A HuKi továbbra is ingyenes és reklámmentes, a támogatás önkéntes alapú. Ha neked is segít az app és módodban áll, akkor kérlek fontold meg a támogatását.\n\nAz appot hobbiból fejlesztem és örömmel tölt el, hogy valami hasznosat teszek a túrás közösségnek. Mivel egyre többen használjuk, a fenntartási költségei is emelkednek, és gondolkoznom kell, hogy tudna önfentartó lenni. Kísérleti jelleggel született ez a támógatói oldal. </string>
@@ -198,5 +198,8 @@
     <string name="support_error_launch_billing_flow">Hiba történt a Google Billing vásárlás indításában.</string>
     <string name="support_error_acknowledge_purchase">Hiba történt a Google Billing rendszeres vásárlás visszaigazolásában.</string>
     <string name="support_error_consume_purchase">Hiba történt a Google Billing egyszeri vásárlás visszaigazolásában.</string>
+
+    <string name="new_features_title_template">Új funkciók (%s)</string>
+    <string name="new_features_ok_button">OK</string>
 
 </resources>

@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layersHeaderTitle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/space_medium"
-    android:layout_marginBottom="@dimen/space_small"
-    android:textAllCaps="true"
-    android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
-    tools:text="Base layers" />
+    android:layout_marginTop="@dimen/space_small"
+    android:layout_marginBottom="@dimen/space_extra_small"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/layersHeaderTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAllCaps="true"
+        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+        tools:text="Base layers" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/layersHeaderCloseButton"
+        style="@style/DefaultButton.BottomSheetAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_small"
+        app:icon="@drawable/ic_bottom_sheet_clear" />
+
+</LinearLayout>

@@ -42,6 +42,10 @@ fun @receiver:IdRes Int.isNotCompletelyDisplayed() {
     onView(withId(this)).check(matches(not(isCompletelyDisplayed())))
 }
 
+fun @receiver:IdRes Int.doesNotExist() {
+    onView(withId(this)).check(ViewAssertions.doesNotExist())
+}
+
 fun @receiver:IdRes Int.isDisplayedWithText(text: String) {
     onView(withId(this)).check(matches(withText(text)))
 }

@@ -10,9 +10,12 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
+import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
+import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_ALTITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
@@ -36,7 +39,10 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(LocationModule::class)
+@UninstallModules(
+    LocationModule::class,
+    VersionConfigurationModule::class
+)
 class HikeModeUiTest {
 
     @get:Rule
@@ -50,6 +56,10 @@ class HikeModeUiTest {
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
+
+    @BindValue
+    @JvmField
+    val versionConfiguration: VersionConfiguration = FakeVersionConfiguration()
 
     @BindValue
     @JvmField

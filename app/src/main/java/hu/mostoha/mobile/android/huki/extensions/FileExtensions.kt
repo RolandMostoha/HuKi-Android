@@ -9,8 +9,10 @@ import androidx.annotation.RawRes
 import androidx.core.net.toFile
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.io.InputStream
 
 fun getOrCreateDirectory(parent: String, child: String): File? {
@@ -32,6 +34,23 @@ fun getOrCreateDirectory(parent: String, child: String): File? {
 fun File.copyFrom(inputStream: InputStream) {
     this.outputStream().use { fileOut ->
         inputStream.copyTo(fileOut)
+    }
+}
+
+fun Context.readText(filePath: String): String? {
+    try {
+        val inputStream = assets.open(filePath)
+        val size = inputStream.available()
+        val buffer = ByteArray(size)
+
+        inputStream.read(buffer)
+        inputStream.close()
+
+        return String(buffer, Charsets.UTF_8)
+    } catch (ioException: IOException) {
+        Timber.e(ioException, "Failed to read text from file: $filePath")
+
+        return null
     }
 }
 

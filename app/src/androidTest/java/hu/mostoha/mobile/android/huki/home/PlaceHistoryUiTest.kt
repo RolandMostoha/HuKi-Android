@@ -6,7 +6,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -18,6 +18,8 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
+import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
+import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
@@ -26,14 +28,31 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
-import hu.mostoha.mobile.android.huki.repository.*
-import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.LayersRepository
+import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
+import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_ADDRESS
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_NODE
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_RELATION
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.espresso.*
+import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
+import hu.mostoha.mobile.android.huki.util.espresso.hasDescendantWithText
+import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.typeText
+import hu.mostoha.mobile.android.huki.util.espresso.waitForInputFocusGain
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -53,7 +72,11 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class, LocationModule::class)
+@UninstallModules(
+    RepositoryModule::class,
+    LocationModule::class,
+    VersionConfigurationModule::class
+)
 class PlaceHistoryUiTest {
 
     @get:Rule
@@ -67,6 +90,10 @@ class PlaceHistoryUiTest {
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
+
+    @BindValue
+    @JvmField
+    val versionConfiguration: VersionConfiguration = FakeVersionConfiguration()
 
     @BindValue
     @JvmField

@@ -26,6 +26,15 @@
     <string name="default_date_saturday">Saturday</string>
     <string name="default_date_sunday">Sunday</string>
 
+    <string name="accessibility_home_fab_layers">Layers</string>
+    <string name="accessibility_home_fab_route_planner">Route planner</string>
+    <string name="accessibility_home_fab_my_location">My location</string>
+    <string name="accessibility_home_fab_settings">Settings</string>
+    <string name="accessibility_home_fab_history">History</string>
+    <string name="accessibility_home_fab_hike_mode">Hike mode</string>
+    <string name="accessibility_home_fab_hike_mode_compass">Live Compass</string>
+    <string name="accessibility_okt_routes_action_button">%s action button</string>
+
     <string name="search_bar_hint">Search for places</string>
 
     <string name="place_finder_empty_message">No results found</string>
@@ -158,15 +167,6 @@
     <string name="okt_routes_item_prefix">OKT</string>
     <string name="okt_routes_accessibility_action_button">%s action button</string>
 
-    <string name="accessibility_home_fab_layers">Layers</string>
-    <string name="accessibility_home_fab_route_planner">Route planner</string>
-    <string name="accessibility_home_fab_my_location">My location</string>
-    <string name="accessibility_home_fab_settings">Settings</string>
-    <string name="accessibility_home_fab_history">History</string>
-    <string name="accessibility_home_fab_hike_mode">Hike mode</string>
-    <string name="accessibility_home_fab_hike_mode_compass">Live Compass</string>
-    <string name="accessibility_okt_routes_action_button">%s action button</string>
-
     <string name="support_title">Support</string>
     <string name="support_greeting">Dear future supporter!</string>
     <string name="support_message">HuKi is still ad-free and all of its functions are free, support is voluntary.\n\nI develop it in my free time and I love that I\'m doing something useful for the hiking community. Since more and more of us are using it, its monthly cost is raising, so I have to think about make it self-sustaining.\n\nThis support page was created as a test, so if you like the app and can afford, please consider supporting the development of HuKi.</string>
@@ -208,5 +208,8 @@
     <string name="support_error_launch_billing_flow">There was an error on Google Billing payment launch.</string>
     <string name="support_error_acknowledge_purchase">There was an error on Google Billing payment acknowledgement.</string>
     <string name="support_error_consume_purchase">There was an error on Google Billing payment consume.</string>
+
+    <string name="new_features_title_template">New features (%s)</string>
+    <string name="new_features_ok_button">OK</string>
 
 </resources>

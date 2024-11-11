@@ -78,7 +78,7 @@
         android:layout_marginHorizontal="@dimen/space_large"
         android:layout_marginTop="@dimen/space_large"
         android:text="@string/gpx_history_rename_save_button"
-        app:icon="@drawable/ic_location_picker_done"
+        app:icon="@drawable/ic_done"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/gpxRenameVerticalGuideline"

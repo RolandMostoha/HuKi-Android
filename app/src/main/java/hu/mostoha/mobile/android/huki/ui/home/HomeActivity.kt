@@ -134,6 +134,7 @@ import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.history.HistoryFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
+import hu.mostoha.mobile.android.huki.ui.home.newfeatures.NewFeaturesBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.oktroutes.OktRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.placedetails.PlaceDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
@@ -739,6 +740,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .collect { mapScaleFactor ->
                     homeMapView.tilesScaleFactor = mapScaleFactor.toFloat()
                     homeMapView.invalidate()
+                }
+        }
+        lifecycleScope.launch {
+            settingsViewModel.newFeatures
+                .flowWithLifecycle(lifecycle)
+                .collect { newFeatures ->
+                    if (newFeatures != null) {
+                        NewFeaturesBottomSheetDialogFragment.showDialog(this@HomeActivity, newFeatures)
+                    }
                 }
         }
     }

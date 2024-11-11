@@ -15,7 +15,8 @@ import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import dagger.hilt.android.testing.BindValue
@@ -25,12 +26,20 @@ import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
+import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
+import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
-import hu.mostoha.mobile.android.huki.repository.*
-import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.LayersRepository
+import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
+import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.Gpx.TEST_GPX_NAME
 import hu.mostoha.mobile.android.huki.testdata.Gpx.getTestGpxFileResult
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_NODE
@@ -38,7 +47,14 @@ import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_RELATION
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
 import hu.mostoha.mobile.android.huki.testdata.RoutePlanner.DEFAULT_ROUTE_PLAN
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.espresso.*
+import hu.mostoha.mobile.android.huki.util.espresso.ViewPagerIdlingResource
+import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithSibling
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.selectTab
+import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
@@ -60,7 +76,10 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class)
+@UninstallModules(
+    RepositoryModule::class,
+    VersionConfigurationModule::class
+)
 class GpxHistoryUiTest {
 
     @get:Rule
@@ -70,6 +89,10 @@ class GpxHistoryUiTest {
     lateinit var osmConfiguration: OsmConfiguration
 
     private val gpxConfiguration = HukiGpxConfiguration(testAppContext)
+
+    @BindValue
+    @JvmField
+    val versionConfiguration: VersionConfiguration = FakeVersionConfiguration()
 
     @BindValue
     @JvmField

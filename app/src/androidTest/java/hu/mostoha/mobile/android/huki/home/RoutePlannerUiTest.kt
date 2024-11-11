@@ -14,7 +14,8 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasFocus
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -26,7 +27,9 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
+import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
+import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
@@ -40,10 +43,47 @@ import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
-import hu.mostoha.mobile.android.huki.repository.*
-import hu.mostoha.mobile.android.huki.testdata.*
+import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
+import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.LayersRepository
+import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
+import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
+import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_ADDRESS
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_CENTER_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_CENTER_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_ALTITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_ALTITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_CITY
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.espresso.*
+import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithContentDescription
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
+import hu.mostoha.mobile.android.huki.util.espresso.hasDisplayedItemAtPosition
+import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
@@ -68,7 +108,11 @@ import kotlin.time.Duration.Companion.minutes
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class, LocationModule::class)
+@UninstallModules(
+    RepositoryModule::class,
+    LocationModule::class,
+    VersionConfigurationModule::class
+)
 class RoutePlannerUiTest {
 
     @get:Rule
@@ -82,6 +126,10 @@ class RoutePlannerUiTest {
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
+
+    @BindValue
+    @JvmField
+    val versionConfiguration: VersionConfiguration = FakeVersionConfiguration()
 
     @BindValue
     @JvmField

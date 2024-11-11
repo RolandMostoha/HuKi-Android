@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
+import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_SCALE_FACTOR
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
@@ -25,6 +26,7 @@ class SettingsViewModelTest {
     private lateinit var viewModel: SettingsViewModel
 
     private val settingsRepository = mockk<SettingsRepository>()
+    private val versionConfiguration = mockk<VersionConfiguration>()
     private val analyticsService = mockk<AnalyticsService>(relaxed = true)
 
     @get:Rule
@@ -34,10 +36,12 @@ class SettingsViewModelTest {
     fun setUp() {
         every { settingsRepository.getMapScaleFactor() } returns flowOf(2.0)
         every { settingsRepository.getTheme() } returns flowOf(Theme.SYSTEM)
+        coEvery { versionConfiguration.getNewFeatures(any()) } returns flowOf(null)
 
         viewModel = SettingsViewModel(
             settingsRepository,
-            analyticsService,
+            versionConfiguration,
+            analyticsService
         )
     }
 
@@ -89,6 +93,20 @@ class SettingsViewModelTest {
             advanceUntilIdle()
 
             coVerify(inverse = true) { settingsRepository.saveTheme(Theme.LIGHT) }
+        }
+    }
+
+    @Test
+    fun `Given version, when updateNewFeaturesSeen, then version is saved`() {
+        runTestDefault {
+            val version = "v1.0.5"
+            coEvery { versionConfiguration.saveNewFeaturesSeen(any()) } returns Unit
+
+            viewModel.updateNewFeaturesSeen(version)
+
+            advanceUntilIdle()
+
+            coVerify { versionConfiguration.saveNewFeaturesSeen(version) }
         }
     }
 

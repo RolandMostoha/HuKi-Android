@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newFeaturesBottomSheetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_bottom_sheet"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/space_medium">
+
+    <View
+        style="@style/DragViewStyle"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_small" />
+
+    <LinearLayout
+        android:id="@+id/newFeaturesHeaderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_extra_large"
+        android:layout_marginEnd="@dimen/space_medium"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/newFeaturesTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:drawableStart="@drawable/ic_launcher_small"
+            android:drawablePadding="12dp"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large"
+            tools:text="Új funkciók (v1.5.0)" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/newFeaturesCloseButton"
+            style="@style/DefaultButton.BottomSheetAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_bottom_sheet_clear" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/newFeaturesMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
+        android:lineSpacingExtra="1dp"
+        android:layout_marginHorizontal="@dimen/space_extra_large"
+        android:layout_marginVertical="@dimen/space_small"
+        tools:text="- OKT utak és bélyegzőhelyek frissítése\n- Támogatás funkció" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/newFeaturesOkButton"
+            style="@style/DefaultButton.Contained.Shadowless.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_large"
+            android:text="@string/new_features_ok_button"
+            app:icon="@drawable/ic_done" />
+
+    </LinearLayout>
+
+</LinearLayout>

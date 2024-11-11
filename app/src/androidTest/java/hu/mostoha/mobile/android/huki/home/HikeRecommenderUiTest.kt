@@ -13,6 +13,8 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
+import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
+import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
@@ -23,6 +25,7 @@ import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
+import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
 import hu.mostoha.mobile.android.huki.testdata.HikingRoutes.DEFAULT_HIKING_ROUTE
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_GEOMETRY_LANDSCAPE
@@ -52,7 +55,11 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 @HiltAndroidTest
-@UninstallModules(RepositoryModule::class, LocationModule::class)
+@UninstallModules(
+    RepositoryModule::class,
+    LocationModule::class,
+    VersionConfigurationModule::class
+)
 class HikeRecommenderUiTest {
 
     @get:Rule
@@ -66,6 +73,10 @@ class HikeRecommenderUiTest {
 
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
+
+    @BindValue
+    @JvmField
+    val versionConfiguration: VersionConfiguration = FakeVersionConfiguration()
 
     @BindValue
     @JvmField

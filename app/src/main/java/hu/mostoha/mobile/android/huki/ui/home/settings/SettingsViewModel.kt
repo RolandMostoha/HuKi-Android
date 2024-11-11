@@ -3,8 +3,10 @@ package hu.mostoha.mobile.android.huki.ui.home.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
+import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_SCALE_FACTOR
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
@@ -17,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
+    private val versionConfiguration: VersionConfiguration,
     private val analyticsService: AnalyticsService,
 ) : ViewModel() {
 
@@ -25,6 +28,9 @@ class SettingsViewModel @Inject constructor(
 
     val theme: StateFlow<Theme> = settingsRepository.getTheme()
         .stateIn(viewModelScope, WhileViewSubscribed, Theme.SYSTEM)
+
+    val newFeatures: StateFlow<String?> = versionConfiguration.getNewFeatures(BuildConfig.VERSION_NAME)
+        .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     fun updateMapScale(percentage: Int) {
         viewModelScope.launch {
@@ -40,6 +46,12 @@ class SettingsViewModel @Inject constructor(
                 analyticsService.settingsThemeClicked(theme)
                 settingsRepository.saveTheme(theme)
             }
+        }
+    }
+
+    fun updateNewFeaturesSeen(version: String) {
+        viewModelScope.launch {
+            versionConfiguration.saveNewFeaturesSeen(version)
         }
     }
 

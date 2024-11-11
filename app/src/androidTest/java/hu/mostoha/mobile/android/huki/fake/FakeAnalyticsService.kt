@@ -1,4 +1,4 @@
-package hu.mostoha.mobile.android.huki.service
+package hu.mostoha.mobile.android.huki.fake
 
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
@@ -6,8 +6,10 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.BillingAction
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
+import javax.inject.Inject
 
-class FakeAnalyticsService : AnalyticsService {
+class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun placeFinderPlaceClicked(searchText: String, placeName: String, isFromHistory: Boolean) = Unit
 
