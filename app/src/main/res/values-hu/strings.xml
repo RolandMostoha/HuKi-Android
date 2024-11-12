@@ -82,6 +82,8 @@
     <string name="layers_mapnik_title">Mapnik</string>
     <string name="layers_open_topo_title">OpenTopo</string>
     <string name="layers_tuhu_title">TuHu</string>
+    <string name="layers_google_satellite_title">Google Műhold</string>
+    <string name="layers_merretekerjek_title">Merretekerjek</string>
     <string name="layers_hiking_layers_header">Túra rétegek</string>
     <string name="layers_hiking_hungarian_title">Magyar Túraréteg</string>
     <string name="layers_gpx_title">GPX Réteg</string>
@@ -109,6 +111,8 @@
     <string name="licences_aktiv_magyarorszag">Aktív Magyarország</string>
     <string name="licences_kirandulastippek">Kirándulástippek</string>
     <string name="licences_tuhu">TuHu (turistautak.hu)</string>
+    <string name="licences_google_satellite">Google Satellite</string>
+    <string name="licences_merretekerjek">MerreTekerjek (merretekerjek.hu)</string>
 
     <string name="settings_map_scale_title">Térkép alakzatainak nagyítása</string>
     <string name="settings_map_scale_description">A nagyítás ronthat az alakzatok minőségén</string>

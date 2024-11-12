@@ -26,7 +26,9 @@ import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.GoogleSateliteTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.MapnikTileSource
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.MerreTekerjekTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.TuHuTileSource
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
@@ -124,7 +126,7 @@ class LayersUiTest {
     }
 
     @Test
-    fun whenSelectOpenTopoLayer_thenOpenTopoLayerDisplays() {
+    fun whenSelectOpenTopoLayer_thenLayerDisplays() {
         launchScenario<HomeActivity> {
             R.id.homeMapView.hasBaseTileSource(MapnikTileSource)
 
@@ -137,7 +139,7 @@ class LayersUiTest {
     }
 
     @Test
-    fun whenSelectTuhuLayer_thenTuHuLayerDisplays() {
+    fun whenSelectTuhuLayer_thenLayerDisplays() {
         launchScenario<HomeActivity> {
             R.id.homeMapView.hasBaseTileSource(MapnikTileSource)
 
@@ -146,6 +148,32 @@ class LayersUiTest {
             pressBack()
 
             R.id.homeMapView.hasBaseTileSource(TuHuTileSource)
+        }
+    }
+
+    @Test
+    fun whenSelectGoogleSatelliteLayer_thenLayerDisplays() {
+        launchScenario<HomeActivity> {
+            R.id.homeMapView.hasBaseTileSource(MapnikTileSource)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersImageCard.clickWithSibling(R.string.layers_google_satellite_title)
+            pressBack()
+
+            R.id.homeMapView.hasBaseTileSource(GoogleSateliteTileSource)
+        }
+    }
+
+    @Test
+    fun whenSelectMerreTekerjekLayer_thenLayerDisplays() {
+        launchScenario<HomeActivity> {
+            R.id.homeMapView.hasBaseTileSource(MapnikTileSource)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersImageCard.clickWithSibling(R.string.layers_merretekerjek_title)
+            pressBack()
+
+            R.id.homeMapView.hasBaseTileSource(MerreTekerjekTileSource)
         }
     }
 
@@ -166,6 +194,21 @@ class LayersUiTest {
 
             R.id.homeMapView.hasNoOverlay<TilesOverlay>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
+        }
+    }
+
+    @Test
+    fun givenSelectedBaseLayer_whenRecreateActivity_thenSelectedLayerDisplays() {
+        launchScenario<HomeActivity> {
+            R.id.homeMapView.hasBaseTileSource(MapnikTileSource)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersImageCard.clickWithSibling(R.string.layers_open_topo_title)
+            pressBack()
+
+            recreate()
+
+            R.id.homeMapView.hasBaseTileSource(TileSourceFactory.OpenTopo)
         }
     }
 

@@ -1,7 +1,6 @@
 package hu.mostoha.mobile.android.huki.ui.home.layers
 
 import android.view.ViewGroup
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +16,7 @@ import hu.mostoha.mobile.android.huki.model.domain.LayerType
 class LayersAdapter(
     val onLayerClick: (LayersAdapterItem.Layer) -> Unit,
     val onActionButtonClick: (LayerType) -> Unit,
+    val onCloseClick: () -> Unit,
 ) : ListAdapter<LayersAdapterItem, RecyclerView.ViewHolder>(LayersItemDiffUtilCallback) {
 
     companion object {
@@ -44,7 +44,7 @@ class LayersAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ViewHolderHeader -> {
-                holder.bind((getItem(position) as LayersAdapterItem.Header).titleRes)
+                holder.bind((getItem(position) as LayersAdapterItem.Header))
             }
             is ViewHolderItem -> {
                 holder.bind((getItem(position) as LayersAdapterItem.Layer))
@@ -61,8 +61,12 @@ class LayersAdapter(
     }
 
     inner class ViewHolderHeader(private val binding: ItemLayersHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(@StringRes titleRes: Int) {
-            binding.layersHeaderTitle.text = binding.root.context.getString(titleRes)
+        fun bind(header: LayersAdapterItem.Header) {
+            binding.layersHeaderTitle.text = binding.root.context.getString(header.titleRes)
+            binding.layersHeaderCloseButton.visibleOrGone(header.isCloseVisible)
+            binding.layersHeaderCloseButton.setOnClickListener {
+                onCloseClick.invoke()
+            }
         }
     }
 

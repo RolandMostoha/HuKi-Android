@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
-import hu.mostoha.mobile.android.huki.interactor.LayersInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
+import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
@@ -19,6 +19,8 @@ import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.repository.LayersRepository
+import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
@@ -39,10 +41,11 @@ import javax.inject.Inject
 class LayersViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val exceptionLogger: ExceptionLogger,
-    private val hikingTileUrlProvider: HikingTileUrlProvider,
-    private val layersInteractor: LayersInteractor,
+    private val layersRepository: LayersRepository,
+    private val settingsRepository: SettingsRepository,
     private val layersUiModelMapper: LayersUiModelMapper,
+    private val hikingTileUrlProvider: HikingTileUrlProvider,
+    private val exceptionLogger: ExceptionLogger,
     private val analyticsService: AnalyticsService,
 ) : ViewModel() {
 
@@ -54,13 +57,14 @@ class LayersViewModel @Inject constructor(
 
     private lateinit var hikingLayerZoomRanges: List<TileZoomRange>
 
-    private val baseLayer = MutableStateFlow<BaseLayer>(BaseLayer.Mapnik)
+    private val baseLayer = settingsRepository.getBaseLayer()
+        .stateIn(viewModelScope, WhileViewSubscribed, BaseLayer.MAPNIK)
 
     private val hikingLayer = MutableStateFlow<HikingLayer?>(null)
 
     val layersConfig = baseLayer.combine(hikingLayer) { baseLayer, hikingLayer ->
         LayersConfig(baseLayer, hikingLayer)
-    }.stateIn(viewModelScope, WhileViewSubscribed, LayersConfig(baseLayer = BaseLayer.Mapnik, hikingLayer = null))
+    }.stateIn(viewModelScope, WhileViewSubscribed, LayersConfig(baseLayer = BaseLayer.MAPNIK, hikingLayer = null))
 
     private val _gpxDetailsUiModel = MutableStateFlow<GpxDetailsUiModel?>(null)
     val gpxDetailsUiModel: StateFlow<GpxDetailsUiModel?> = _gpxDetailsUiModel
@@ -77,7 +81,10 @@ class LayersViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(ioDispatcher) {
-            layersInteractor.requestHikingLayerZoomRanges()
+            flowWithExceptions(
+                request = { layersRepository.getHikingLayerZoomRanges() },
+                exceptionLogger = exceptionLogger
+            )
                 .onEach { zoomRanges ->
                     hikingLayerZoomRanges = zoomRanges
 
@@ -92,18 +99,23 @@ class LayersViewModel @Inject constructor(
         }
     }
 
-    fun selectLayer(layerType: LayerType) = viewModelScope.launch(ioDispatcher) {
-        when (layerType) {
-            LayerType.MAPNIK -> baseLayer.emit(BaseLayer.Mapnik)
-            LayerType.OPEN_TOPO -> baseLayer.emit(BaseLayer.OpenTopo)
-            LayerType.TUHU -> baseLayer.emit(BaseLayer.TuHu)
-            LayerType.HUNGARIAN_HIKING_LAYER -> switchHikingLayerVisibility()
-            LayerType.GPX -> switchGpxDetailsVisibility()
-        }
+    fun selectBaseLayer(layer: BaseLayer) = viewModelScope.launch(ioDispatcher) {
+        settingsRepository.saveBaseLayer(layer)
     }
 
-    suspend fun loadGpx(uri: Uri?) {
-        layersInteractor.requestGpxDetails(uri)
+    fun selectHikingLayer() {
+        switchHikingLayerVisibility()
+    }
+
+    fun selectGpxLayer() {
+        switchGpxDetailsVisibility()
+    }
+
+    fun loadGpx(uri: Uri?) = viewModelScope.launch(ioDispatcher) {
+        flowWithExceptions(
+            request = { layersRepository.getGpxDetails(uri) },
+            exceptionLogger = exceptionLogger
+        )
             .onEach {
                 val gpxDetails = layersUiModelMapper.mapGpxDetails(it)
 
@@ -115,8 +127,11 @@ class LayersViewModel @Inject constructor(
             .collect()
     }
 
-    suspend fun loadRoutePlannerGpx(uri: Uri) {
-        layersInteractor.requestRoutePlannerGpxDetails(uri)
+    fun loadRoutePlannerGpx(uri: Uri) = viewModelScope.launch(ioDispatcher) {
+        flowWithExceptions(
+            request = { layersRepository.getRoutePlannerGpxDetails(uri) },
+            exceptionLogger = exceptionLogger
+        )
             .onEach { _gpxDetailsUiModel.emit(layersUiModelMapper.mapGpxDetails(it)) }
             .catch { showError(it) }
             .collect()

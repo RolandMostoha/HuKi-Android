@@ -79,6 +79,7 @@ class OsmLicencesOverlay(
         return hitRect.contains(x, y)
     }
 
+    @Suppress("LongMethod")
     private fun showLicencesDialog() {
         LicenserDialog(context)
             .setTitle(R.string.licences_title)
@@ -144,6 +145,20 @@ class OsmLicencesOverlay(
                 Library(
                     title = context.getString(R.string.licences_tuhu),
                     url = "https://turistautak.hu/",
+                    license = License.CREATIVE_COMMONS
+                )
+            )
+            .setLibrary(
+                Library(
+                    title = context.getString(R.string.licences_merretekerjek),
+                    url = "https://merretekerjek.hu/",
+                    license = License.CREATIVE_COMMONS
+                )
+            )
+            .setLibrary(
+                Library(
+                    title = context.getString(R.string.licences_google_satellite),
+                    url = "https://developers.google.com/maps/documentation/tile/satellite",
                     license = License.CREATIVE_COMMONS
                 )
             )

@@ -274,7 +274,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     override fun onPause() {
         Timber.d("Saving map UI model with: ${homeMapView.boundingBox.toDomain()}")
 
-        homeViewModel.saveMapConfig(homeMapView.boundingBox.toDomain())
+        homeViewModel.saveMapBoundingBox(homeMapView.boundingBox.toDomain())
 
         myLocationOverlay?.disableMyLocation()
 
@@ -1006,11 +1006,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initIntentHandlers(intent: Intent?) {
         if (intent != null) {
             if (intent.isGpxFileIntent()) {
-                lifecycleScope.launch {
-                    layersViewModel.loadGpx(intent.data)
+                layersViewModel.loadGpx(intent.data)
 
-                    analyticsService.gpxImportedByIntent()
-                }
+                analyticsService.gpxImportedByIntent()
             }
 
             when (val event = deeplinkHandler.handleDeeplink(intent)) {

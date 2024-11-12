@@ -10,10 +10,10 @@ object DataStoreConstants {
     const val USER_PREFERENCES = "user_preferences"
 
     object Settings {
+        val BASE_LAYER = stringPreferencesKey("settings_base_layer")
         val THEME = intPreferencesKey("settings_theme")
         val MAP_SCALE_FACTOR = doublePreferencesKey("settings_map_scale_factor")
         val HIKE_RECOMMENDER_INFO_ENABLED = booleanPreferencesKey("settings_hike_recommender_info_enabled")
-
     }
 
     object NewFeatures {

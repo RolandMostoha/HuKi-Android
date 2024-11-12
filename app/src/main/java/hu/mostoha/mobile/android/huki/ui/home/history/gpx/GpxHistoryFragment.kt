@@ -78,13 +78,11 @@ class GpxHistoryFragment : Fragment() {
             onGpxOpen = { gpxHistoryItem ->
                 analyticsService.gpxHistoryItemOpened(gpxHistoryItem.gpxType)
 
-                lifecycleScope.launch {
-                    when (gpxHistoryItem.gpxType) {
-                        GpxType.ROUTE_PLANNER -> layersViewModel.loadRoutePlannerGpx(gpxHistoryItem.fileUri)
-                        GpxType.EXTERNAL -> layersViewModel.loadGpx(gpxHistoryItem.fileUri)
-                    }
-                    requireActivity().supportFragmentManager.popBackStack()
+                when (gpxHistoryItem.gpxType) {
+                    GpxType.ROUTE_PLANNER -> layersViewModel.loadRoutePlannerGpx(gpxHistoryItem.fileUri)
+                    GpxType.EXTERNAL -> layersViewModel.loadGpx(gpxHistoryItem.fileUri)
                 }
+                requireActivity().supportFragmentManager.popBackStack()
             },
             onGpxShare = { gpxHistoryItem ->
                 analyticsService.gpxHistoryItemShared()

@@ -17,8 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.databinding.FragmentLayersBottomSheetDialogBinding
 import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import hu.mostoha.mobile.android.huki.extensions.showToast
+import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
-import hu.mostoha.mobile.android.huki.model.domain.isBase
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_BASE
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapter.Companion.SPAN_COUNT_LAYER_HEADER
@@ -46,15 +46,13 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
 
     private val openGpxFileResultLauncher = registerForActivityResult(OpenDocument()) { gpxFileUri: Uri? ->
-        lifecycleScope.launch {
-            layersViewModel.loadGpx(gpxFileUri)
+        layersViewModel.loadGpx(gpxFileUri)
 
-            if (gpxFileUri != null) {
-                analyticsService.gpxImportedByFileExplorer()
-            }
-
-            dismiss()
+        if (gpxFileUri != null) {
+            analyticsService.gpxImportedByFileExplorer()
         }
+
+        dismiss()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -109,11 +107,7 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
             override fun getSpanSize(position: Int): Int {
                 return when (val layer = layerAdapterItems[position]) {
                     is LayersAdapterItem.Header -> SPAN_COUNT_LAYER_HEADER
-                    is LayersAdapterItem.Layer -> if (layer.layerType.isBase()) {
-                        SPAN_COUNT_LAYER_BASE
-                    } else {
-                        SPAN_COUNT_LAYER_HIKING
-                    }
+                    is LayersAdapterItem.Layer -> getLayerSpanCount(layer.layerType)
                 }
             }
         }
@@ -121,7 +115,16 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val adapter = LayersAdapter(
             onLayerClick = { layerItem ->
                 analyticsService.onLayerSelected(layerItem.layerType)
-                layersViewModel.selectLayer(layerItem.layerType)
+
+                when (layerItem.layerType) {
+                    LayerType.MAPNIK -> layersViewModel.selectBaseLayer(BaseLayer.MAPNIK)
+                    LayerType.OPEN_TOPO -> layersViewModel.selectBaseLayer(BaseLayer.OPEN_TOPO)
+                    LayerType.TUHU -> layersViewModel.selectBaseLayer(BaseLayer.TUHU)
+                    LayerType.GOOGLE_SATELLITE -> layersViewModel.selectBaseLayer(BaseLayer.GOOGLE_SATELLITE)
+                    LayerType.MERRETEKERJEK -> layersViewModel.selectBaseLayer(BaseLayer.MERRETEKERJEK)
+                    LayerType.HUNGARIAN_HIKING_LAYER -> layersViewModel.selectHikingLayer()
+                    LayerType.GPX -> layersViewModel.selectGpxLayer()
+                }
             },
             onActionButtonClick = { layerType ->
                 if (layerType == LayerType.GPX) {
@@ -129,11 +132,22 @@ class LayersBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
                     analyticsService.gpxImportClicked()
                 }
+            },
+            onCloseClick = {
+                dismiss()
             }
         )
         binding.layersList.layoutManager = layoutManager
         binding.layersList.adapter = adapter
         adapter.submitList(layerAdapterItems)
+    }
+
+    private fun getLayerSpanCount(layerType: LayerType): Int {
+        return if (layerType == LayerType.MAPNIK || layerType == LayerType.OPEN_TOPO || layerType == LayerType.TUHU) {
+            SPAN_COUNT_LAYER_BASE
+        } else {
+            SPAN_COUNT_LAYER_HIKING
+        }
     }
 
 }

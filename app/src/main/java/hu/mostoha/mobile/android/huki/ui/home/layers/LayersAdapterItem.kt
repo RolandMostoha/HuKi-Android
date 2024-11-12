@@ -6,7 +6,10 @@ import hu.mostoha.mobile.android.huki.model.domain.LayerType
 
 sealed class LayersAdapterItem {
 
-    data class Header(@StringRes val titleRes: Int) : LayersAdapterItem()
+    data class Header(
+        @StringRes val titleRes: Int,
+        val isCloseVisible: Boolean
+    ) : LayersAdapterItem()
 
     data class Layer(
         val layerType: LayerType,

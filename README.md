@@ -56,6 +56,8 @@ Huge thanks to the Graphhopper team for the opportunity!
   - [Mapnik](https://mapnik.org/)
   - [OpenTopo](https://opentopomap.org/)
   - [TuHu - turistautak.hu](https://turistautak.hu/)
+  - [MerreTekerjek - merretekerjek.hu](https://merretekerjek.hu/)
+  - [Google Satellite](https://developers.google.com/maps/documentation/tile/satellite)
 - Hiking tiles - [TuraReteg.sqlitedb](https://data2.openstreetmap.hu/) privately hosted in an AWS S3
   bucket
 - OpenStreetMap data provider - [Overpass API](https://wiki.openstreetmap.org/wiki/Overpass_API)
@@ -171,6 +173,8 @@ The app is built upon many `OpenStreetMap` related services. There is an in-app 
 - Természetjáró - Hike recommendation -  https://www.termeszetjaro.hu/
 - OKT - National Blue Trail -  https://www.kektura.hu/
 - TuHu (turistautak.hu) - Base layer -  https://turistautak.hu/
+- MerreTekerjek (merretekerjek.hu) - Base layer -  https://merretekerjek.hu/
+- Google Satellite - Base layer -  https://developers.google.com/maps/documentation/tile/satellite
 
 ## Project License
 

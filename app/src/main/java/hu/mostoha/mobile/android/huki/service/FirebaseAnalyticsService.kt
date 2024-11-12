@@ -50,11 +50,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_GPX_SHARE = "select_gpx_share"
         private const val EVENT_SELECT_GPX_WAYPOINT = "select_gpx_waypoint"
         private const val EVENT_GPX_WAYPOINTS_ONLY_IMPORTED = "gpx_imported_waypoints_only"
-        private const val EVENT_LAYER_MAPNIK_SELECTED = "layer_mapnik_selected"
-        private const val EVENT_LAYER_OPEN_TOPO_SELECTED = "layer_open_topo_selected"
-        private const val EVENT_LAYER_TUHU_SELECTED = "layer_tuhu_selected"
-        private const val EVENT_LAYER_HIKING_SELECTED = "layer_hiking_selected"
-        private const val EVENT_LAYER_GPX_SELECTED = "layer_gpx_selected"
+        private const val EVENT_LAYER_SELECTED_TEMPLATE = "layer_%s_selected"
         private const val EVENT_SELECT_SETTINGS = "select_settings"
         private const val EVENT_SELECT_SETTINGS_MAP_SCALE_INFO = "select_settings_map_scale_info"
         private const val EVENT_SELECT_SETTINGS_MAP_SCALE = "select_settings_map_scale"
@@ -239,13 +235,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun onLayerSelected(layerType: LayerType) {
         firebaseAnalytics.logEvent(
-            when (layerType) {
-                LayerType.MAPNIK -> EVENT_LAYER_MAPNIK_SELECTED
-                LayerType.OPEN_TOPO -> EVENT_LAYER_OPEN_TOPO_SELECTED
-                LayerType.TUHU -> EVENT_LAYER_TUHU_SELECTED
-                LayerType.HUNGARIAN_HIKING_LAYER -> EVENT_LAYER_HIKING_SELECTED
-                LayerType.GPX -> EVENT_LAYER_GPX_SELECTED
-            },
+            EVENT_LAYER_SELECTED_TEMPLATE.format(EVENT_LAYER_SELECTED_TEMPLATE, layerType.name.lowercase()),
             null
         )
     }

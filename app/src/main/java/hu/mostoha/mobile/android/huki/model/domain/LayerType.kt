@@ -4,10 +4,8 @@ enum class LayerType {
     MAPNIK,
     OPEN_TOPO,
     TUHU,
+    GOOGLE_SATELLITE,
+    MERRETEKERJEK,
     HUNGARIAN_HIKING_LAYER,
     GPX
-}
-
-fun LayerType.isBase(): Boolean {
-    return this == LayerType.MAPNIK || this == LayerType.OPEN_TOPO || this == LayerType.TUHU
 }

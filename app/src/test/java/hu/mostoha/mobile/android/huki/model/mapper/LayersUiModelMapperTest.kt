@@ -39,7 +39,7 @@ class LayersUiModelMapperTest {
 
     @Test
     fun `Given Mapnik base layer and null hiking layer, when mapLayerAdapterItems, then adapter items with selected Mapnik returns`() {
-        val baseLayer = BaseLayer.Mapnik
+        val baseLayer = BaseLayer.MAPNIK
         val hikingLayer = null
         val gpxDetails = null
 
@@ -47,7 +47,10 @@ class LayersUiModelMapperTest {
 
         assertThat(adapterItems).isEqualTo(
             listOf(
-                LayersAdapterItem.Header(R.string.layers_base_layers_header),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_base_layers_header,
+                    isCloseVisible = true
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.MAPNIK,
                     titleRes = R.string.layers_mapnik_title,
@@ -64,9 +67,24 @@ class LayersUiModelMapperTest {
                     layerType = LayerType.TUHU,
                     titleRes = R.string.layers_tuhu_title,
                     drawableRes = R.drawable.ic_layers_tuhu,
-                    isSelected = baseLayer.layerType == LayerType.TUHU
+                    isSelected = false
                 ),
-                LayersAdapterItem.Header(R.string.layers_hiking_layers_header),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.GOOGLE_SATELLITE,
+                    titleRes = R.string.layers_google_satellite_title,
+                    drawableRes = R.drawable.ic_layers_google_satellite,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.MERRETEKERJEK,
+                    titleRes = R.string.layers_merretekerjek_title,
+                    drawableRes = R.drawable.ic_layers_merretekerjek,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_hiking_layers_header,
+                    isCloseVisible = false
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.HUNGARIAN_HIKING_LAYER,
                     titleRes = R.string.layers_hiking_hungarian_title,
@@ -85,7 +103,7 @@ class LayersUiModelMapperTest {
 
     @Test
     fun `Given OpenTopo base layer and null hiking layer, when mapLayerAdapterItems, then adapter items with selected OpenTopo returns`() {
-        val baseLayer = BaseLayer.OpenTopo
+        val baseLayer = BaseLayer.OPEN_TOPO
         val hikingLayer = null
         val gpxDetails = null
 
@@ -93,7 +111,10 @@ class LayersUiModelMapperTest {
 
         assertThat(adapterItems).isEqualTo(
             listOf(
-                LayersAdapterItem.Header(R.string.layers_base_layers_header),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_base_layers_header,
+                    isCloseVisible = true
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.MAPNIK,
                     titleRes = R.string.layers_mapnik_title,
@@ -110,9 +131,24 @@ class LayersUiModelMapperTest {
                     layerType = LayerType.TUHU,
                     titleRes = R.string.layers_tuhu_title,
                     drawableRes = R.drawable.ic_layers_tuhu,
-                    isSelected = baseLayer.layerType == LayerType.TUHU
+                    isSelected = false
                 ),
-                LayersAdapterItem.Header(R.string.layers_hiking_layers_header),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.GOOGLE_SATELLITE,
+                    titleRes = R.string.layers_google_satellite_title,
+                    drawableRes = R.drawable.ic_layers_google_satellite,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.MERRETEKERJEK,
+                    titleRes = R.string.layers_merretekerjek_title,
+                    drawableRes = R.drawable.ic_layers_merretekerjek,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_hiking_layers_header,
+                    isCloseVisible = false
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.HUNGARIAN_HIKING_LAYER,
                     titleRes = R.string.layers_hiking_hungarian_title,
@@ -131,7 +167,7 @@ class LayersUiModelMapperTest {
 
     @Test
     fun `Given Mapnik base layer and hiking layer, when mapLayerAdapterItems, then adapter items with selected OpenTopo and Hiking Layer returns`() {
-        val baseLayer = BaseLayer.Mapnik
+        val baseLayer = BaseLayer.MAPNIK
         val hikingLayer = HikingLayer(LayerType.HUNGARIAN_HIKING_LAYER, AwsHikingTileSource(urlProvider, emptyList()))
         val gpxDetails = null
 
@@ -139,7 +175,10 @@ class LayersUiModelMapperTest {
 
         assertThat(adapterItems).isEqualTo(
             listOf(
-                LayersAdapterItem.Header(R.string.layers_base_layers_header),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_base_layers_header,
+                    isCloseVisible = true
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.MAPNIK,
                     titleRes = R.string.layers_mapnik_title,
@@ -156,9 +195,24 @@ class LayersUiModelMapperTest {
                     layerType = LayerType.TUHU,
                     titleRes = R.string.layers_tuhu_title,
                     drawableRes = R.drawable.ic_layers_tuhu,
-                    isSelected = baseLayer.layerType == LayerType.TUHU
+                    isSelected = false
                 ),
-                LayersAdapterItem.Header(R.string.layers_hiking_layers_header),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.GOOGLE_SATELLITE,
+                    titleRes = R.string.layers_google_satellite_title,
+                    drawableRes = R.drawable.ic_layers_google_satellite,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.MERRETEKERJEK,
+                    titleRes = R.string.layers_merretekerjek_title,
+                    drawableRes = R.drawable.ic_layers_merretekerjek,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_hiking_layers_header,
+                    isCloseVisible = false
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.HUNGARIAN_HIKING_LAYER,
                     titleRes = R.string.layers_hiking_hungarian_title,
@@ -177,7 +231,7 @@ class LayersUiModelMapperTest {
 
     @Test
     fun `Given layers with GPX details, when mapLayerAdapterItems, then adapter items with selected GPX layer returns`() {
-        val baseLayer = BaseLayer.Mapnik
+        val baseLayer = BaseLayer.MAPNIK
         val hikingLayer = null
         val gpxDetails = DEFAULT_GPX_DETAILS_UI_MODEL
 
@@ -185,7 +239,10 @@ class LayersUiModelMapperTest {
 
         assertThat(adapterItems).isEqualTo(
             listOf(
-                LayersAdapterItem.Header(R.string.layers_base_layers_header),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_base_layers_header,
+                    isCloseVisible = true
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.MAPNIK,
                     titleRes = R.string.layers_mapnik_title,
@@ -202,9 +259,24 @@ class LayersUiModelMapperTest {
                     layerType = LayerType.TUHU,
                     titleRes = R.string.layers_tuhu_title,
                     drawableRes = R.drawable.ic_layers_tuhu,
-                    isSelected = baseLayer.layerType == LayerType.TUHU
+                    isSelected = false
                 ),
-                LayersAdapterItem.Header(R.string.layers_hiking_layers_header),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.GOOGLE_SATELLITE,
+                    titleRes = R.string.layers_google_satellite_title,
+                    drawableRes = R.drawable.ic_layers_google_satellite,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.MERRETEKERJEK,
+                    titleRes = R.string.layers_merretekerjek_title,
+                    drawableRes = R.drawable.ic_layers_merretekerjek,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_hiking_layers_header,
+                    isCloseVisible = false
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.HUNGARIAN_HIKING_LAYER,
                     titleRes = R.string.layers_hiking_hungarian_title,
@@ -223,7 +295,7 @@ class LayersUiModelMapperTest {
 
     @Test
     fun `Given layers with invisible GPX details, when mapLayerAdapterItems, then adapter items with unselected GPX layer returns`() {
-        val baseLayer = BaseLayer.Mapnik
+        val baseLayer = BaseLayer.MAPNIK
         val hikingLayer = null
         val gpxDetails = DEFAULT_GPX_DETAILS_UI_MODEL.copy(isVisible = false)
 
@@ -231,7 +303,10 @@ class LayersUiModelMapperTest {
 
         assertThat(adapterItems).isEqualTo(
             listOf(
-                LayersAdapterItem.Header(R.string.layers_base_layers_header),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_base_layers_header,
+                    isCloseVisible = true
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.MAPNIK,
                     titleRes = R.string.layers_mapnik_title,
@@ -248,9 +323,24 @@ class LayersUiModelMapperTest {
                     layerType = LayerType.TUHU,
                     titleRes = R.string.layers_tuhu_title,
                     drawableRes = R.drawable.ic_layers_tuhu,
-                    isSelected = baseLayer.layerType == LayerType.TUHU
+                    isSelected = false
                 ),
-                LayersAdapterItem.Header(R.string.layers_hiking_layers_header),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.GOOGLE_SATELLITE,
+                    titleRes = R.string.layers_google_satellite_title,
+                    drawableRes = R.drawable.ic_layers_google_satellite,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Layer(
+                    layerType = LayerType.MERRETEKERJEK,
+                    titleRes = R.string.layers_merretekerjek_title,
+                    drawableRes = R.drawable.ic_layers_merretekerjek,
+                    isSelected = false
+                ),
+                LayersAdapterItem.Header(
+                    titleRes = R.string.layers_hiking_layers_header,
+                    isCloseVisible = false
+                ),
                 LayersAdapterItem.Layer(
                     layerType = LayerType.HUNGARIAN_HIKING_LAYER,
                     titleRes = R.string.layers_hiking_hungarian_title,

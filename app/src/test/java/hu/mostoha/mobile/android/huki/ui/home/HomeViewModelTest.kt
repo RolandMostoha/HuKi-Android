@@ -426,7 +426,7 @@ class HomeViewModelTest {
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
 
             viewModel.mapUiModel.test {
-                viewModel.saveMapConfig(boundingBox)
+                viewModel.saveMapBoundingBox(boundingBox)
 
                 assertThat(awaitItem()).isEqualTo(MapUiModel())
                 assertThat(awaitItem()).isEqualTo(MapUiModel(boundingBox))

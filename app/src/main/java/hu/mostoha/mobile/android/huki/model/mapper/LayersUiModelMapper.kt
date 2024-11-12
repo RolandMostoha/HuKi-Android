@@ -28,26 +28,44 @@ class LayersUiModelMapper @Inject constructor() {
         gpxDetails: GpxDetailsUiModel?
     ): List<LayersAdapterItem> {
         return listOf(
-            LayersAdapterItem.Header(R.string.layers_base_layers_header),
+            LayersAdapterItem.Header(
+                titleRes = R.string.layers_base_layers_header,
+                isCloseVisible = true
+            ),
             LayersAdapterItem.Layer(
                 layerType = LayerType.MAPNIK,
                 titleRes = R.string.layers_mapnik_title,
                 drawableRes = R.drawable.ic_layers_mapnik,
-                isSelected = baseLayer.layerType == LayerType.MAPNIK
+                isSelected = baseLayer == BaseLayer.MAPNIK
             ),
             LayersAdapterItem.Layer(
                 layerType = LayerType.OPEN_TOPO,
                 titleRes = R.string.layers_open_topo_title,
                 drawableRes = R.drawable.ic_layers_open_topo,
-                isSelected = baseLayer.layerType == LayerType.OPEN_TOPO
+                isSelected = baseLayer == BaseLayer.OPEN_TOPO
             ),
             LayersAdapterItem.Layer(
                 layerType = LayerType.TUHU,
                 titleRes = R.string.layers_tuhu_title,
                 drawableRes = R.drawable.ic_layers_tuhu,
-                isSelected = baseLayer.layerType == LayerType.TUHU
+                isSelected = baseLayer == BaseLayer.TUHU
             ),
-            LayersAdapterItem.Header(R.string.layers_hiking_layers_header),
+            LayersAdapterItem.Layer(
+                layerType = LayerType.GOOGLE_SATELLITE,
+                titleRes = R.string.layers_google_satellite_title,
+                drawableRes = R.drawable.ic_layers_google_satellite,
+                isSelected = baseLayer == BaseLayer.GOOGLE_SATELLITE
+            ),
+            LayersAdapterItem.Layer(
+                layerType = LayerType.MERRETEKERJEK,
+                titleRes = R.string.layers_merretekerjek_title,
+                drawableRes = R.drawable.ic_layers_merretekerjek,
+                isSelected = baseLayer == BaseLayer.MERRETEKERJEK
+            ),
+            LayersAdapterItem.Header(
+                titleRes = R.string.layers_hiking_layers_header,
+                isCloseVisible = false
+            ),
             LayersAdapterItem.Layer(
                 layerType = LayerType.HUNGARIAN_HIKING_LAYER,
                 titleRes = R.string.layers_hiking_hungarian_title,

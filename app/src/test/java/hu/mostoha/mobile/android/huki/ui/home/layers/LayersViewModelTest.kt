@@ -5,7 +5,6 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.interactor.LayersInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
@@ -20,16 +19,20 @@ import hu.mostoha.mobile.android.huki.model.mapper.LayersUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.repository.LayersRepository
+import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.calculateTravelTime
-import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.runTestDefault
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
 import org.junit.Rule
@@ -41,7 +44,8 @@ class LayersViewModelTest {
     private lateinit var viewModel: LayersViewModel
 
     private val exceptionLogger = mockk<ExceptionLogger>()
-    private val layersInteractor = mockk<LayersInteractor>()
+    private val layersRepository = mockk<LayersRepository>()
+    private val settingsRepository = mockk<SettingsRepository>()
     private val tileUrlProvider = mockk<HikingTileUrlProvider>()
     private val gpxFileUri = mockk<Uri>()
     private val analyticsService = mockk<AnalyticsService>(relaxed = true)
@@ -52,15 +56,18 @@ class LayersViewModelTest {
 
     @Before
     fun setUp() {
-        every { layersInteractor.requestHikingLayerZoomRanges() } returns flowOf(emptyList())
+        coEvery { layersRepository.getHikingLayerZoomRanges() } returns emptyList()
+        coEvery { settingsRepository.saveBaseLayer(any()) } returns Unit
+        every { settingsRepository.getBaseLayer() } returns flowOf(BaseLayer.MAPNIK)
 
         viewModel = LayersViewModel(
             SavedStateHandle(),
-            mainCoroutineRule.testDispatcher,
-            exceptionLogger,
-            tileUrlProvider,
-            layersInteractor,
+            UnconfinedTestDispatcher(),
+            layersRepository,
+            settingsRepository,
             layersUiModelMapper,
+            tileUrlProvider,
+            exceptionLogger,
             analyticsService,
         )
     }
@@ -71,13 +78,13 @@ class LayersViewModelTest {
             viewModel.layersConfig.test {
                 assertThat(awaitItem()).isEqualTo(
                     LayersConfig(
-                        baseLayer = BaseLayer.Mapnik,
+                        baseLayer = BaseLayer.MAPNIK,
                         hikingLayer = null
                     )
                 )
                 assertThat(awaitItem()).isEqualTo(
                     LayersConfig(
-                        baseLayer = BaseLayer.Mapnik,
+                        baseLayer = BaseLayer.MAPNIK,
                         hikingLayer = HikingLayer(
                             LayerType.HUNGARIAN_HIKING_LAYER,
                             AwsHikingTileSource(tileUrlProvider, emptyList())
@@ -102,25 +109,13 @@ class LayersViewModelTest {
         }
 
     @Test
-    fun `Given new base layer, when selectLayer, then layers config is updated`() =
-        runTestDefault {
-            viewModel.layersConfig.test {
-                advanceUntilIdle()
+    fun `Given new base layer, when selectLayer, then layer is saved in repository`() {
+        viewModel.selectBaseLayer(BaseLayer.OPEN_TOPO)
 
-                viewModel.selectLayer(LayerType.OPEN_TOPO)
-
-                skipItems(2)
-                assertThat(awaitItem()).isEqualTo(
-                    LayersConfig(
-                        baseLayer = BaseLayer.OpenTopo,
-                        hikingLayer = HikingLayer(
-                            LayerType.HUNGARIAN_HIKING_LAYER,
-                            AwsHikingTileSource(tileUrlProvider, emptyList())
-                        )
-                    )
-                )
-            }
+        coVerify {
+            settingsRepository.saveBaseLayer(BaseLayer.OPEN_TOPO)
         }
+    }
 
     @Test
     fun `When deselect hiking layer, then layers config is updated with null hiking layer`() =
@@ -128,54 +123,13 @@ class LayersViewModelTest {
             viewModel.layersConfig.test {
                 advanceUntilIdle()
 
-                viewModel.selectLayer(LayerType.HUNGARIAN_HIKING_LAYER)
+                viewModel.selectHikingLayer()
 
                 skipItems(2)
                 assertThat(awaitItem()).isEqualTo(
                     LayersConfig(
-                        baseLayer = BaseLayer.Mapnik,
+                        baseLayer = BaseLayer.MAPNIK,
                         hikingLayer = null
-                    )
-                )
-            }
-        }
-
-    @Test
-    fun `When select Open Topo and deselect Hiking layer, then layer adapter items are updated`() =
-        runTestDefault {
-            viewModel.layerAdapterItems.test {
-                advanceUntilIdle()
-
-                viewModel.selectLayer(LayerType.OPEN_TOPO)
-                viewModel.selectLayer(LayerType.HUNGARIAN_HIKING_LAYER)
-
-                skipItems(3)
-
-                assertThat(awaitItem()).isEqualTo(createSelectedAdapterItems(listOf(LayerType.OPEN_TOPO)))
-            }
-        }
-
-    @Test
-    fun `Given loaded GPX, when deselect GPX layer, then layer adapter items are updated`() =
-        runTestDefault {
-            every { layersInteractor.requestGpxDetails(gpxFileUri) } returns flowOf(DEFAULT_GPX_DETAILS)
-
-            viewModel.layerAdapterItems.test {
-                advanceUntilIdle()
-
-                viewModel.loadGpx(gpxFileUri)
-                viewModel.selectLayer(LayerType.GPX)
-
-                skipItems(3)
-
-                assertThat(awaitItem()).isEqualTo(
-                    createSelectedAdapterItems(
-                        listOf(LayerType.MAPNIK, LayerType.HUNGARIAN_HIKING_LAYER, LayerType.GPX)
-                    )
-                )
-                assertThat(awaitItem()).isEqualTo(
-                    createSelectedAdapterItems(
-                        listOf(LayerType.MAPNIK, LayerType.HUNGARIAN_HIKING_LAYER)
                     )
                 )
             }
@@ -184,7 +138,7 @@ class LayersViewModelTest {
     @Test
     fun `Given file URI, when loadGpx, then gpx details UI model is emitted`() =
         runTestDefault {
-            every { layersInteractor.requestGpxDetails(gpxFileUri) } returns flowOf(DEFAULT_GPX_DETAILS)
+            coEvery { layersRepository.getGpxDetails(gpxFileUri) } returns DEFAULT_GPX_DETAILS
 
             viewModel.loadGpx(gpxFileUri)
 
@@ -197,9 +151,9 @@ class LayersViewModelTest {
     @Test
     fun `Given error during request gpx, when loadGpx, then error message is emitted`() =
         runTestDefault {
-            every {
-                layersInteractor.requestGpxDetails(gpxFileUri)
-            } returns flowOfError(GpxParseFailedException(IllegalStateException("")))
+            coEvery {
+                layersRepository.getGpxDetails(gpxFileUri)
+            } throws GpxParseFailedException(IllegalStateException(""))
 
             viewModel.loadGpx(gpxFileUri)
 
@@ -212,9 +166,9 @@ class LayersViewModelTest {
     @Test
     fun `When clear error, then null error message is emitted`() =
         runTestDefault {
-            every {
-                layersInteractor.requestGpxDetails(null)
-            } returns flowOfError(GpxParseFailedException(IllegalStateException("")))
+            coEvery {
+                layersRepository.getGpxDetails(null)
+            } throws GpxParseFailedException(IllegalStateException(""))
 
             viewModel.loadGpx(null)
 
@@ -230,7 +184,10 @@ class LayersViewModelTest {
 
     private fun createSelectedAdapterItems(selectedLayerTypes: List<LayerType>): List<LayersAdapterItem> {
         return listOf(
-            LayersAdapterItem.Header(R.string.layers_base_layers_header),
+            LayersAdapterItem.Header(
+                titleRes = R.string.layers_base_layers_header,
+                isCloseVisible = true
+            ),
             LayersAdapterItem.Layer(
                 layerType = LayerType.MAPNIK,
                 titleRes = R.string.layers_mapnik_title,
@@ -249,7 +206,22 @@ class LayersViewModelTest {
                 drawableRes = R.drawable.ic_layers_tuhu,
                 isSelected = selectedLayerTypes.contains(LayerType.TUHU)
             ),
-            LayersAdapterItem.Header(R.string.layers_hiking_layers_header),
+            LayersAdapterItem.Layer(
+                layerType = LayerType.GOOGLE_SATELLITE,
+                titleRes = R.string.layers_google_satellite_title,
+                drawableRes = R.drawable.ic_layers_google_satellite,
+                isSelected = selectedLayerTypes.contains(LayerType.GOOGLE_SATELLITE)
+            ),
+            LayersAdapterItem.Layer(
+                layerType = LayerType.MERRETEKERJEK,
+                titleRes = R.string.layers_merretekerjek_title,
+                drawableRes = R.drawable.ic_layers_merretekerjek,
+                isSelected = selectedLayerTypes.contains(LayerType.MERRETEKERJEK)
+            ),
+            LayersAdapterItem.Header(
+                titleRes = R.string.layers_hiking_layers_header,
+                isCloseVisible = false
+            ),
             LayersAdapterItem.Layer(
                 layerType = LayerType.HUNGARIAN_HIKING_LAYER,
                 titleRes = R.string.layers_hiking_hungarian_title,

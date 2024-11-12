@@ -385,7 +385,7 @@ class HomeViewModel @Inject constructor(
         _hikeModeUiModel.update { it.copy(compassState = CompassState.Free(mapOrientation)) }
     }
 
-    fun saveMapConfig(boundingBox: BoundingBox) {
+    fun saveMapBoundingBox(boundingBox: BoundingBox) {
         _mapUiModel.update { it.copy(boundingBox = boundingBox) }
     }
 
