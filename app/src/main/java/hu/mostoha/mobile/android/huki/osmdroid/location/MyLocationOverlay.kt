@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.lifecycle.LifecycleCoroutineScope
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.centerAndZoom
+import hu.mostoha.mobile.android.huki.extensions.postMainDelayed
 import hu.mostoha.mobile.android.huki.extensions.toBitmap
 import hu.mostoha.mobile.android.huki.util.calculateZoomLevel
 import hu.mostoha.mobile.android.huki.util.distanceBetween
@@ -41,6 +42,7 @@ class MyLocationOverlay(
 
         private const val LIVE_COMPASS_ANIMATION_DURATION = 100L
         private const val NEW_LOCATION_ANIMATION_DURATION = 300L
+        private const val ZOOM_ANIMATION_DELAY = 1000L
     }
 
     private var isLocationEnabled = false
@@ -48,7 +50,7 @@ class MyLocationOverlay(
 
     private var orientationProvider = InternalCompassOrientationProvider(mapView.context)
 
-    var lockedZoom: Double? = null
+    private var lockedZoom: Double? = null
     var onFollowLocationDisabled: (() -> Unit)? = null
     var onFollowLocationFirstFix: (() -> Unit)? = null
     var onOrientationChanged: ((Float) -> Unit)? = null
@@ -77,7 +79,6 @@ class MyLocationOverlay(
     override fun enableFollowLocation() {
         mIsFollowing = true
         enableAutoStop = true
-        lockedZoom = null
 
         if (isMyLocationEnabled) {
             lifecycleScope.launch {
@@ -93,17 +94,19 @@ class MyLocationOverlay(
         super.setLocation(location)
 
         val geoPoint = GeoPoint(location)
-        val zoomLevel = location.calculateZoomLevel().toDouble()
+        val actualZoom = mapView.zoomLevelDouble
+        val calculatedZoomLevel = location.calculateZoomLevel().toDouble()
+        val zoom = if (actualZoom > calculatedZoomLevel) {
+            actualZoom
+        } else {
+            calculatedZoomLevel
+        }
 
         if (mIsFollowing && !mapView.isAnimating) {
             if (mapView.mapCenter.distanceBetween(geoPoint) <= MAX_DISTANCE_TO_ANIMATE) {
-                mapView.controller.animateTo(
-                    GeoPoint(location),
-                    lockedZoom ?: zoomLevel,
-                    NEW_LOCATION_ANIMATION_DURATION,
-                )
+                mapView.controller.animateTo(geoPoint, zoom, NEW_LOCATION_ANIMATION_DURATION)
             } else {
-                mapView.centerAndZoom(GeoPoint(location), zoomLevel)
+                mapView.centerAndZoom(geoPoint, zoom)
             }
         } else {
             mapView.postInvalidate()
@@ -126,7 +129,6 @@ class MyLocationOverlay(
         isLocationEnabled = false
         isCompassEnabled = false
         isLiveCompassEnabled = false
-        lockedZoom = null
     }
 
     override fun disableFollowLocation() {
@@ -160,6 +162,14 @@ class MyLocationOverlay(
                     -orientation
                 )
             }
+        }
+    }
+
+    fun lockZoom(zoom: Double) {
+        lockedZoom = zoom
+
+        postMainDelayed(ZOOM_ANIMATION_DELAY) {
+            lockedZoom = null
         }
     }
 

@@ -509,12 +509,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeViewModel.toggleLiveCompass(homeMapView.mapOrientation)
         }
         mapZoomControllerPlus.setOnClickListener {
-            myLocationOverlay?.lockedZoom = homeMapView.zoomLevelDouble.inc()
             homeMapView.controller.zoomIn()
+            myLocationOverlay?.lockZoom(homeMapView.zoomLevelDouble.inc())
         }
         mapZoomControllerMinus.setOnClickListener {
-            myLocationOverlay?.lockedZoom = homeMapView.zoomLevelDouble.dec()
             homeMapView.controller.zoomOut()
+            myLocationOverlay?.lockZoom(homeMapView.zoomLevelDouble.dec())
         }
     }
 
