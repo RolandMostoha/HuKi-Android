@@ -49,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
-        android:lineSpacingExtra="1dp"
+        android:lineSpacingExtra="2dp"
         android:layout_marginHorizontal="@dimen/space_extra_large"
         android:layout_marginVertical="@dimen/space_small"
         tools:text="- OKT utak és bélyegzőhelyek frissítése\n- Támogatás funkció" />

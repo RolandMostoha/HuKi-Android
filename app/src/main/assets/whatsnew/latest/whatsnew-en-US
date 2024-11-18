@@ -1,4 +1,4 @@
-- Update OKT routes and stamp locations
-- Support function
-- Design refinements
-- Platform maintenance updates
+- New layer: Google Satellite
+- New layer: Merretekerjek (Bicycle)
+- GPS fixes and my location fixes
+- Hike mode restoration
