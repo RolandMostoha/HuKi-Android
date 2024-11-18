@@ -9,6 +9,10 @@ import retrofit2.http.Query
 
 interface PhotonService {
 
+    companion object {
+        const val GEOCODE_TIMEOUT = 3000
+    }
+
     /**
      *  E.g. https://photon.komoot.io/api?q="Mecsek"&limit=10&lat=47.5452098&lon=19.1130386
      */
@@ -23,7 +27,7 @@ interface PhotonService {
     /**
      *  E.g. https://photon.komoot.io/reverse?limit=10&lat=47.5452098&lon=19.1130386
      */
-    @Headers("$HEADER_TIMEOUT:1500")
+    @Headers("$HEADER_TIMEOUT:$GEOCODE_TIMEOUT")
     @GET("/reverse")
     suspend fun reverseGeocode(
         @Query("limit") limit: Int,
