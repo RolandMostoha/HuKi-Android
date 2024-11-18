@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface PhotonService {
 
     companion object {
-        const val GEOCODE_TIMEOUT = 3000
+        private const val GEOCODE_TIMEOUT = 3000
     }
 
     /**

@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
@@ -26,7 +27,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
-import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
+import hu.mostoha.mobile.android.huki.model.ui.MapConfigUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
@@ -107,6 +108,7 @@ class HomeViewModelTest {
         mockOktRoutes()
 
         viewModel = HomeViewModel(
+            SavedStateHandle(),
             exceptionLogger,
             analyticsService,
             placesRepository,
@@ -425,11 +427,11 @@ class HomeViewModelTest {
         runTestDefault {
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
 
-            viewModel.mapUiModel.test {
+            viewModel.mapConfigUiModel.test {
                 viewModel.saveMapBoundingBox(boundingBox)
 
-                assertThat(awaitItem()).isEqualTo(MapUiModel())
-                assertThat(awaitItem()).isEqualTo(MapUiModel(boundingBox))
+                assertThat(awaitItem()).isEqualTo(MapConfigUiModel())
+                assertThat(awaitItem()).isEqualTo(MapConfigUiModel(boundingBox))
             }
         }
 

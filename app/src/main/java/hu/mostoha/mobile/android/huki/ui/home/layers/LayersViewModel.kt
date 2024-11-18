@@ -80,7 +80,7 @@ class LayersViewModel @Inject constructor(
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     init {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             flowWithExceptions(
                 request = { layersRepository.getHikingLayerZoomRanges() },
                 exceptionLogger = exceptionLogger
@@ -93,9 +93,7 @@ class LayersViewModel @Inject constructor(
                 .catch { Timber.e(it) }
                 .collect()
 
-            if (savedFileUri != null) {
-                loadGpx(Uri.parse(savedFileUri))
-            }
+            restoreSavedState()
         }
     }
 
@@ -172,6 +170,12 @@ class LayersViewModel @Inject constructor(
             _errorMessage.emit(throwable.messageRes)
         } else {
             exceptionLogger.recordException(throwable)
+        }
+    }
+
+    private fun restoreSavedState() {
+        if (savedFileUri != null) {
+            loadGpx(Uri.parse(savedFileUri))
         }
     }
 

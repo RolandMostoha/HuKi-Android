@@ -272,8 +272,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     override fun onPause() {
-        Timber.d("Saving map UI model with: ${homeMapView.boundingBox.toDomain()}")
-
         homeViewModel.saveMapBoundingBox(homeMapView.boundingBox.toDomain())
 
         myLocationOverlay?.disableMyLocation()
@@ -642,7 +640,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun enableFollowingLocation(isEnabled: Boolean, isZoomLocked: Boolean) {
+    private fun enableFollowingLocation(isEnabled: Boolean) {
         Timber.d("Follow location is enabled: $isEnabled")
 
         val locationOverlay = myLocationOverlay ?: return
@@ -653,15 +651,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeMyLocationFab.setImageResource(R.drawable.ic_anim_home_fab_my_location_not_fixed)
                 homeMyLocationFab.startDrawableAnimation()
 
-                if (isZoomLocked) {
-                    locationOverlay.lockedZoom = homeMapView.zoomLevelDouble
-                } else {
-                    locationOverlay.lockedZoom = null
-                }
-
                 locationOverlay.enableFollowLocation()
             }
-            previouslyEnabled && !isEnabled -> {
+            !isEnabled -> {
                 locationOverlay.disableFollowLocation()
             }
         }
@@ -687,10 +679,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initMapFlows() {
         lifecycleScope.launch {
-            homeViewModel.mapUiModel
+            homeViewModel.mapConfigUiModel
                 .flowWithLifecycle(lifecycle)
                 .collect { mapUiModel ->
-                    Timber.d("Restoring map UI model: $mapUiModel")
+                    Timber.d("Restoring map config: $mapUiModel")
 
                     val boundingBox = mapUiModel.boundingBox.toOsm()
 
@@ -710,18 +702,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         val isFollowingEnabled = homeViewModel.myLocationUiModel.value.isFollowLocationEnabled
 
                         enableMyLocationMonitoring()
-                        enableFollowingLocation(isFollowingEnabled, false)
+                        enableFollowingLocation(isFollowingEnabled)
                     }
                 }
         }
         lifecycleScope.launch {
             homeViewModel.myLocationUiModel
-                .map { it.isFollowLocationEnabled to it.isZoomLocked }
+                .map { it.isFollowLocationEnabled }
                 .distinctUntilChanged()
                 .onStart { delay(TURN_ON_DELAY_FOLLOW_LOCATION) }
                 .flowWithLifecycle(lifecycle)
-                .collect { (isEnabled, isZoomLocked) ->
-                    enableFollowingLocation(isEnabled, isZoomLocked)
+                .collect { isEnabled ->
+                    enableFollowingLocation(isEnabled)
                 }
         }
         lifecycleScope.launch {
@@ -1007,6 +999,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         if (intent != null) {
             if (intent.isGpxFileIntent()) {
                 layersViewModel.loadGpx(intent.data)
+                homeViewModel.clearFollowLocation()
 
                 analyticsService.gpxImportedByIntent()
             }
@@ -1483,89 +1476,89 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initGpxDetails(gpxDetailsUiModel: GpxDetailsUiModel?) {
-        if (gpxDetailsUiModel == null) {
-            InfoWindow.closeAllInfoWindowsOn(homeMapView)
-            homeMapView.removeOverlay(OverlayType.GPX)
-            return
-        }
-
-        homeViewModel.clearFollowLocation()
-
-        if (homeMapView.hasOverlay(gpxDetailsUiModel.id)) {
-            if (gpxDetailsUiModel.isVisible) {
-                homeMapView.showOverlay(gpxDetailsUiModel.id)
-            } else {
-                homeMapView.hideOverlay(gpxDetailsUiModel.id)
+        when {
+            gpxDetailsUiModel == null -> {
+                InfoWindow.closeAllInfoWindowsOn(homeMapView)
+                homeMapView.removeOverlay(OverlayType.GPX)
+                return
             }
-            return
-        }
-
-        homeMapView.removeOverlay(OverlayType.GPX)
-
-        val offsetBoundingBox = gpxDetailsUiModel.boundingBox.withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
-
-        homeMapView.addGpxPolyline(
-            overlayId = gpxDetailsUiModel.id,
-            geoPoints = gpxDetailsUiModel.geoPoints,
-            useAltitudeColors = gpxDetailsUiModel.altitudeUiModel != null,
-            onClick = {
-                gpxDetailsBottomSheet.show()
-                homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
-            }
-        )
-
-        gpxDetailsUiModel.waypoints.forEach { waypointItem ->
-            homeMapView.addGpxMarker(
-                overlayId = gpxDetailsUiModel.id,
-                geoPoint = waypointItem.geoPoint,
-                waypointType = waypointItem.waypointType,
-                infoWindowTitle = waypointItem.name?.resolve(this),
-                infoWindowDescription = waypointItem.description?.resolve(this),
-                onMarkerClick = {
-                    gpxDetailsBottomSheet.show()
-                    homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
-                },
-                onWaypointClick = {
-                    analyticsService.gpxImportClicked()
-                },
-                onWaypointNavigationClick = { geoPoint ->
-                    homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, GPX_WAYPOINT)
+            homeMapView.hasOverlay(gpxDetailsUiModel.id) -> {
+                if (gpxDetailsUiModel.isVisible) {
+                    homeMapView.showOverlay(gpxDetailsUiModel.id)
+                } else {
+                    homeMapView.hideOverlay(gpxDetailsUiModel.id)
                 }
-            )
-        }
+            }
+            homeMapView.hasNoOverlay(gpxDetailsUiModel.id) -> {
+                homeMapView.removeOverlay(OverlayType.GPX)
 
-        postMain {
-            gpxDetailsBottomSheet.initBottomSheet(
-                gpxDetails = gpxDetailsUiModel,
-                onCloseClick = { layersViewModel.clearGpxDetails() },
-                onStartClick = {
-                    lifecycleScope.launch {
-                        val lastKnownGeoPoint = myLocationProvider.getLastKnownLocationCoroutine()
-                            ?.toLocation()
-                            ?.toGeoPoint()
+                val offsetBoundingBox = gpxDetailsUiModel.boundingBox.withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
 
-                        val boundingBox = BoundingBox
-                            .fromGeoPoints(
-                                if (lastKnownGeoPoint != null) {
-                                    gpxDetailsUiModel.geoPoints.plus(lastKnownGeoPoint)
-                                } else {
-                                    gpxDetailsUiModel.geoPoints
-                                }
-                            )
-                            .withOffset(homeMapView, OffsetType.DEFAULT)
-
-                        homeMapView.zoomToBoundingBox(boundingBox, false)
-
-                        homeViewModel.toggleHikeMode()
+                homeMapView.addGpxPolyline(
+                    overlayId = gpxDetailsUiModel.id,
+                    geoPoints = gpxDetailsUiModel.geoPoints,
+                    useAltitudeColors = gpxDetailsUiModel.altitudeUiModel != null,
+                    onClick = {
+                        gpxDetailsBottomSheet.show()
+                        homeViewModel.clearFollowLocation()
+                        homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
                     }
-                },
-                onHideClick = {
-                    homeMapView.switchOverlayVisibility<GpxPolyline>(gpxDetailsUiModel.id)
+                )
+                gpxDetailsUiModel.waypoints.forEach { waypointItem ->
+                    homeMapView.addGpxMarker(
+                        overlayId = gpxDetailsUiModel.id,
+                        geoPoint = waypointItem.geoPoint,
+                        waypointType = waypointItem.waypointType,
+                        infoWindowTitle = waypointItem.name?.resolve(this),
+                        infoWindowDescription = waypointItem.description?.resolve(this),
+                        onMarkerClick = {
+                            gpxDetailsBottomSheet.show()
+                            homeViewModel.clearFollowLocation()
+                            homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+                        },
+                        onWaypointClick = {
+                            analyticsService.gpxImportClicked()
+                        },
+                        onWaypointNavigationClick = { geoPoint ->
+                            homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, GPX_WAYPOINT)
+                        }
+                    )
                 }
-            )
-            bottomSheets.showOnly(gpxDetailsBottomSheet)
 
-            homeMapView.zoomToBoundingBox(offsetBoundingBox, false)
+                postMain {
+                    gpxDetailsBottomSheet.initBottomSheet(
+                        gpxDetails = gpxDetailsUiModel,
+                        onCloseClick = { layersViewModel.clearGpxDetails() },
+                        onStartClick = {
+                            lifecycleScope.launch {
+                                val lastKnownGeoPoint = myLocationProvider.getLastKnownLocationCoroutine()
+                                    ?.toLocation()
+                                    ?.toGeoPoint()
+
+                                val boundingBox = BoundingBox
+                                    .fromGeoPoints(
+                                        if (lastKnownGeoPoint != null) {
+                                            gpxDetailsUiModel.geoPoints.plus(lastKnownGeoPoint)
+                                        } else {
+                                            gpxDetailsUiModel.geoPoints
+                                        }
+                                    )
+                                    .withOffset(homeMapView, OffsetType.TOP_SHEET)
+
+                                homeMapView.zoomToBoundingBox(boundingBox, false)
+
+                                homeViewModel.toggleHikeMode()
+                            }
+                        },
+                        onHideClick = {
+                            homeMapView.switchOverlayVisibility<GpxPolyline>(gpxDetailsUiModel.id)
+                        }
+                    )
+                    bottomSheets.showOnly(gpxDetailsBottomSheet)
+
+                    homeMapView.zoomToBoundingBox(offsetBoundingBox, false)
+                }
+            }
         }
     }
 

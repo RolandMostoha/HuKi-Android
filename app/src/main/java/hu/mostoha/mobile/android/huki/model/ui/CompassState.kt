@@ -1,11 +1,17 @@
 package hu.mostoha.mobile.android.huki.model.ui
 
-sealed class CompassState {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-    object North : CompassState()
+sealed class CompassState : Parcelable {
 
-    object Live : CompassState()
+    @Parcelize
+    data object North : CompassState()
 
+    @Parcelize
+    data object Live : CompassState()
+
+    @Parcelize
     data class Free(val mapOrientation: Float) : CompassState()
 
 }

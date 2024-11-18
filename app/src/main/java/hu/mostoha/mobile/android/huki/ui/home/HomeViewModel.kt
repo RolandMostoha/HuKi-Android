@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
 import android.location.Location
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,7 @@ import hu.mostoha.mobile.android.huki.model.ui.HikeModeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
-import hu.mostoha.mobile.android.huki.model.ui.MapUiModel
+import hu.mostoha.mobile.android.huki.model.ui.MapConfigUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
@@ -59,6 +60,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val exceptionLogger: ExceptionLogger,
     private val analyticsService: AnalyticsService,
     private val placesRepository: PlacesRepository,
@@ -72,16 +74,29 @@ class HomeViewModel @Inject constructor(
     private val dateTimeProvider: DateTimeProvider,
 ) : ViewModel() {
 
-    private val _mapUiModel = MutableStateFlow(MapUiModel())
-    val mapUiModel: StateFlow<MapUiModel> = _mapUiModel
-        .stateIn(viewModelScope, WhileViewSubscribed, MapUiModel())
+    companion object {
+        private const val SAVED_STATE_KEY_MAP_CONFIG = "map_config"
+        private const val SAVED_STATE_HIKE_MODE = "map_hike_mode"
+        private const val SAVED_STATE_MY_LOCATION = "my_location"
+    }
+
+    private val savedHikeMode = savedStateHandle.get<HikeModeUiModel>(SAVED_STATE_HIKE_MODE)
+    private val savedMapConfig = savedStateHandle.get<MapConfigUiModel>(SAVED_STATE_KEY_MAP_CONFIG)
+    private val savedMyLocation = savedStateHandle.get<MyLocationUiModel>(SAVED_STATE_MY_LOCATION)
+
+    private val _mapConfigUiModel = MutableStateFlow(MapConfigUiModel())
+    val mapConfigUiModel: StateFlow<MapConfigUiModel> = _mapConfigUiModel
+        .onEach { savedStateHandle[SAVED_STATE_KEY_MAP_CONFIG] = it }
+        .stateIn(viewModelScope, WhileViewSubscribed, MapConfigUiModel())
 
     private val _myLocationUiModel = MutableStateFlow(MyLocationUiModel())
     val myLocationUiModel: StateFlow<MyLocationUiModel> = _myLocationUiModel
+        .onEach { savedStateHandle[SAVED_STATE_MY_LOCATION] = it }
         .stateIn(viewModelScope, WhileViewSubscribed, MyLocationUiModel())
 
     private val _hikeModeUiModel = MutableStateFlow(HikeModeUiModel())
     val hikeModeUiModel: StateFlow<HikeModeUiModel> = _hikeModeUiModel
+        .onEach { savedStateHandle[SAVED_STATE_HIKE_MODE] = it }
         .stateIn(viewModelScope, WhileViewSubscribed, HikeModeUiModel())
 
     private val _placeDetails = MutableStateFlow<PlaceDetailsUiModel?>(null)
@@ -119,6 +134,8 @@ class HomeViewModel @Inject constructor(
                 .collect()
 
             placeHistoryRepository.clearOldPlaces()
+
+            restoreSavedState()
         }
     }
 
@@ -319,16 +336,12 @@ class HomeViewModel @Inject constructor(
     fun updateMyLocationConfig(
         isLocationPermissionEnabled: Boolean? = null,
         isFollowLocationEnabled: Boolean? = null,
-        isZoomLocked: Boolean? = null,
     ) {
-        _myLocationUiModel.update { locationUiModel ->
-            var model = locationUiModel
-
-            isLocationPermissionEnabled?.let { model = model.copy(isLocationPermissionEnabled = it) }
-            isFollowLocationEnabled?.let { model = model.copy(isFollowLocationEnabled = it) }
-            isZoomLocked?.let { model = model.copy(isZoomLocked = it) }
-
-            model
+        _myLocationUiModel.update { uiModel ->
+            uiModel.copy(
+                isLocationPermissionEnabled = isLocationPermissionEnabled ?: uiModel.isLocationPermissionEnabled,
+                isFollowLocationEnabled = isFollowLocationEnabled ?: uiModel.isFollowLocationEnabled,
+            )
         }
     }
 
@@ -338,10 +351,7 @@ class HomeViewModel @Inject constructor(
             val isPermissionEnabled = myLocationUiModel.value.isLocationPermissionEnabled
 
             if (isPermissionEnabled) {
-                updateMyLocationConfig(
-                    isFollowLocationEnabled = isHikeModeEnabled,
-                    isZoomLocked = true,
-                )
+                updateMyLocationConfig(isFollowLocationEnabled = isHikeModeEnabled)
             }
 
             val compassState = if (isPermissionEnabled && isHikeModeEnabled) {
@@ -386,7 +396,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun saveMapBoundingBox(boundingBox: BoundingBox) {
-        _mapUiModel.update { it.copy(boundingBox = boundingBox) }
+        _mapConfigUiModel.update { it.copy(boundingBox = boundingBox) }
     }
 
     fun clearPlaceDetails() {
@@ -428,6 +438,18 @@ class HomeViewModel @Inject constructor(
             _errorMessage.emit(throwable.messageRes)
         } else {
             exceptionLogger.recordException(throwable)
+        }
+    }
+
+    private suspend fun restoreSavedState() {
+        if (savedHikeMode != null) {
+            _hikeModeUiModel.emit(savedHikeMode)
+        }
+        if (savedMapConfig != null) {
+            _mapConfigUiModel.emit(savedMapConfig)
+        }
+        if (savedMyLocation != null) {
+            _myLocationUiModel.emit(savedMyLocation)
         }
     }
 

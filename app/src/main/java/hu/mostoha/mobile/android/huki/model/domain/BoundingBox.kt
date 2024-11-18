@@ -1,13 +1,16 @@
 package hu.mostoha.mobile.android.huki.model.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import org.osmdroid.util.BoundingBox as OsmBoundingBox
 
+@Parcelize
 data class BoundingBox(
     val north: Double,
     val east: Double,
     val south: Double,
     val west: Double
-) {
+) : Parcelable {
     override fun toString(): String {
         return "north: %.5f, east: %.5f, south: %.5f, west: %.5f".format(north, east, south, west)
     }
