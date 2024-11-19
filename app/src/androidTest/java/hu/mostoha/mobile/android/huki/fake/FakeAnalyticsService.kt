@@ -129,6 +129,8 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun supportOneTimeLevel2Clicked() = Unit
 
+    override fun newFeaturesSeen(version: String) = Unit
+
     override fun billingEvent(billingAction: BillingAction, billingResponseCode: Int) = Unit
 
 }

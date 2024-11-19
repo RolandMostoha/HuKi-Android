@@ -128,6 +128,8 @@ interface AnalyticsService {
 
     fun supportOneTimeLevel2Clicked()
 
+    fun newFeaturesSeen(version: String)
+
     fun billingEvent(billingAction: BillingAction, billingResponseCode: Int)
 
 }

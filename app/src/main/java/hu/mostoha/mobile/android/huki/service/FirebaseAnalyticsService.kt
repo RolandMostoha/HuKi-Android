@@ -81,6 +81,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_SUPPORT_RECURRING_LEVEL_2 = "select_support_recurring_level_2"
         private const val EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_1 = "select_support_one_time_level_1"
         private const val EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_2 = "select_support_one_time_level_2"
+        private const val EVENT_VIEW_NEW_FEATURES = "view_new_features"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
@@ -93,6 +94,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_ROUTE_PLANNER_WAYPOINT_COUNT = "route_planner_waypoint_count"
         private const val PARAM_ROUTE_PLANNER_DISTANCE = "route_planner_distance"
         private const val PARAM_OKT_ID = "okt_id"
+        private const val PARAM_NEW_FEATURES_VERSION = "version"
     }
 
     private var firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
@@ -391,6 +393,12 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun supportOneTimeLevel2Clicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_2, null)
+    }
+
+    override fun newFeaturesSeen(version: String) {
+        firebaseAnalytics.logEvent(EVENT_VIEW_NEW_FEATURES) {
+            param(PARAM_NEW_FEATURES_VERSION, version)
+        }
     }
 
     override fun billingEvent(billingAction: BillingAction, billingResponseCode: Int) {

@@ -43,8 +43,8 @@ class SettingsViewModel @Inject constructor(
             val actualTheme = this@SettingsViewModel.theme.value
 
             if (actualTheme != theme) {
-                analyticsService.settingsThemeClicked(theme)
                 settingsRepository.saveTheme(theme)
+                analyticsService.settingsThemeClicked(theme)
             }
         }
     }
@@ -52,6 +52,7 @@ class SettingsViewModel @Inject constructor(
     fun updateNewFeaturesSeen(version: String) {
         viewModelScope.launch {
             versionConfiguration.saveNewFeaturesSeen(version)
+            analyticsService.newFeaturesSeen(version)
         }
     }
 
