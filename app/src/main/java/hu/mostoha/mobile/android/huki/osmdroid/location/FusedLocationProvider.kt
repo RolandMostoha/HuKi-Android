@@ -40,10 +40,6 @@ class FusedLocationProvider @Inject constructor(
     private val _locationFlow = callbackFlow {
         Timber.d("Requesting location updates")
 
-        getLastKnownLocationCoroutine()?.let { lastKnownLocation ->
-            trySend(lastKnownLocation)
-        }
-
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val lastLocation = locationResult.lastLocation ?: return
@@ -52,13 +48,14 @@ class FusedLocationProvider @Inject constructor(
 
                 trySend(lastLocation)
 
-                Timber.d("Location update: ${locationResult.lastLocation}")
+                Timber.d("Location update: $lastLocation")
             }
         }
 
         val locationRequest = LocationRequest.Builder(MY_LOCATION_TIME_MS)
             .setPriority(PRIORITY_HIGH_ACCURACY)
             .setMinUpdateIntervalMillis(MY_LOCATION_MIN_INTERVAL_TIME_MS)
+            .setWaitForAccurateLocation(true)
             .build()
 
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
