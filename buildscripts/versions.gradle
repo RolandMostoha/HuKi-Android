@@ -16,7 +16,7 @@ import org.ajoberstar.grgit.Grgit
 
 ext {
     git = Grgit.open(currentDir: "$project.rootDir/buildscripts")
-    gitVersionName = git.describe()
+    gitVersionName = git.describe().replaceAll(/-\w+$/, '')
     gitVersionCode = git.log().size()
 }
 
