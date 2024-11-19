@@ -206,6 +206,8 @@ class PlaceFinderUiTest {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
+            waitForInputFocusGain()
+
             DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
             DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
 
@@ -225,6 +227,7 @@ class PlaceFinderUiTest {
             val searchText = "Mecsek"
 
             R.id.homeSearchBarInput.typeText(searchText)
+            waitForInputFocusGain()
 
             val nodeDistance = DEFAULT_PLACE_NODE.location.distanceBetween(BUDAPEST_LOCATION)
             val wayDistance = DEFAULT_PLACE_WAY.location.distanceBetween(BUDAPEST_LOCATION)

@@ -18,8 +18,10 @@ class VersionDataStoreConfiguration @Inject constructor(
 ) : VersionConfiguration {
 
     companion object {
-        const val WHATS_NEW_LATEST_DIRECTORY = "latest"
-        const val WHATS_NEW_EN_TAG_MATCHER = "en"
+        private const val WHATS_NEW_LATEST_DIRECTORY = "latest"
+        private const val WHATS_NEW_EN_TAG_MATCHER = "en"
+        private const val WHATS_NEW_HU_TAG_MATCHER = "hu"
+        private val LOCALE_HU = Locale.forLanguageTag("hu-HU")
     }
 
     override fun getNewFeatures(versionName: String): Flow<String?> {
@@ -30,10 +32,10 @@ class VersionDataStoreConfiguration @Inject constructor(
 
                 val locale = Locale.getDefault()
                 val localeLanguageTag = locale.toLanguageTag()
-                val languageTag = if (localeLanguageTag.contains(WHATS_NEW_EN_TAG_MATCHER)) {
-                    Locale.US.toLanguageTag()
-                } else {
-                    localeLanguageTag
+                val languageTag = when {
+                    localeLanguageTag.contains(WHATS_NEW_EN_TAG_MATCHER) -> Locale.US.toLanguageTag()
+                    localeLanguageTag.contains(WHATS_NEW_HU_TAG_MATCHER) -> LOCALE_HU.toLanguageTag()
+                    else -> Locale.US.toLanguageTag()
                 }
 
                 if (lastSeenVersion != versionName) {

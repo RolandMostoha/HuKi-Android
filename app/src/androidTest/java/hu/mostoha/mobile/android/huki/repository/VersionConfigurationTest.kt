@@ -55,6 +55,28 @@ class VersionConfigurationTest {
     }
 
     @Test
+    fun givenHULocale_whenGetNewFeatures_thenWhatsNewIsReturned() {
+        runTest {
+            Locale.setDefault(Locale.forLanguageTag("hu"))
+
+            val newFeatures = configuration.getNewFeatures(BuildConfig.VERSION_NAME).first()
+
+            assertThat(newFeatures).isNotEmpty()
+        }
+    }
+
+    @Test
+    fun givenGermanLocale_whenGetNewFeatures_thenWhatsNewIsReturned() {
+        runTest {
+            Locale.setDefault(Locale.GERMAN)
+
+            val newFeatures = configuration.getNewFeatures(BuildConfig.VERSION_NAME).first()
+
+            assertThat(newFeatures).isNotEmpty()
+        }
+    }
+
+    @Test
     fun givenOldVersion_whenGetNewFeatures_thenWhatsNewIsReturned() {
         runTest {
             Locale.setDefault(Locale.forLanguageTag("hu-HU"))
