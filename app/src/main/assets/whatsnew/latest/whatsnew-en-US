@@ -1,3 +1,4 @@
+- Fix crash after GPS permission is revoked
 - New layer: Google Satellite
 - New layer: Merretekerjek (Bicycle)
 - GPS is way more accurate with less jumping
