@@ -264,9 +264,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     override fun onResume() {
         super.onResume()
 
-        if (isLocationPermissionGranted()) {
-            homeViewModel.updateMyLocationConfig(isLocationPermissionEnabled = true)
-        }
+        homeViewModel.updateMyLocationConfig(isLocationPermissionGranted())
 
         homeMapView.onResume()
     }
@@ -589,7 +587,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun enableMyLocationMonitoring() {
-        Timber.d("My location is enabled")
+        Timber.d("MyLocation: my location monitoring enabled")
 
         if (myLocationOverlay == null) {
             myLocationOverlay = MyLocationOverlay(lifecycleScope, myLocationProvider, homeMapView)
@@ -698,11 +696,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .onStart { delay(TURN_ON_DELAY_MY_LOCATION) }
                 .flowWithLifecycle(lifecycle)
                 .collect { isEnabled ->
-                    if (isEnabled) {
-                        val isFollowingEnabled = homeViewModel.myLocationUiModel.value.isFollowLocationEnabled
+                    if (isLocationPermissionGranted()) {
+                        if (isEnabled) {
+                            val isFollowingEnabled = homeViewModel.myLocationUiModel.value.isFollowLocationEnabled
 
-                        enableMyLocationMonitoring()
-                        enableFollowingLocation(isFollowingEnabled)
+                            enableMyLocationMonitoring()
+                            enableFollowingLocation(isFollowingEnabled)
+                        }
+                    } else {
+                        homeViewModel.updateMyLocationConfig(false)
                     }
                 }
         }
