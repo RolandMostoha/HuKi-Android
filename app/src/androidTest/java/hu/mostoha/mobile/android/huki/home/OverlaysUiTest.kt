@@ -36,6 +36,7 @@ import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_NODE
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
+import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithScroll
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
@@ -131,6 +132,7 @@ class OverlaysUiTest {
         answerTestGeometries()
 
         launchScenario<HomeActivity> {
+            R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
             R.id.homeMapView.hasOverlay<LandscapePolygon>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
@@ -142,7 +144,7 @@ class OverlaysUiTest {
             R.id.homeMapView.hasNoOverlay<LandscapePolygon>()
             R.id.homeMapView.hasOverlay<Marker>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
-            R.id.homeHikeRecommenderBottomSheetContainer.isNotDisplayed()
+            R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
             R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
         }
     }
@@ -162,6 +164,7 @@ class OverlaysUiTest {
             R.id.homeMapView.hasOverlay<Polyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
+            R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
 
             R.id.homeMapView.hasNoOverlay<Polyline>()

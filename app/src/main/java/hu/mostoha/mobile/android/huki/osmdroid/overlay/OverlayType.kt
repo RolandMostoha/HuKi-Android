@@ -38,10 +38,16 @@ val OVERLAY_TYPE_ORDER_MAP = mapOf(
     OverlayType.ROTATION_GESTURE to listOf(RotationGestureOverlay::class),
     OverlayType.HIKING_LAYER to listOf(TilesOverlay::class),
     OverlayType.MY_LOCATION to listOf(MyLocationOverlay::class),
-    OverlayType.LANDSCAPE to listOf(LandscapePolyline::class, LandscapePolygon::class, LandscapeMarker::class),
+    OverlayType.LANDSCAPE to listOf(LandscapePolyline::class, LandscapePolygon::class),
     OverlayType.OKT_ROUTES_BASE to listOf(OktBasePolyline::class),
     OverlayType.OKT_ROUTES to listOf(OktMarker::class, OktPolyline::class),
-    OverlayType.PLACE_DETAILS to listOf(Marker::class, PlaceDetailsMarker::class, Polyline::class, Polygon::class),
+    OverlayType.PLACE_DETAILS to listOf(
+        Marker::class,
+        PlaceDetailsMarker::class,
+        PlaceCategoryMarker::class,
+        Polyline::class,
+        Polygon::class
+    ),
     OverlayType.GPX to listOf(GpxMarker::class, GpxPolyline::class),
     OverlayType.ROUTE_PLANNER to listOf(RoutePlannerMarker::class, RoutePlannerPolyline::class),
     OverlayType.MAP_TOUCH_EVENTS to listOf(MapEventsOverlay::class),

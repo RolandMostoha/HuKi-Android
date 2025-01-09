@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/DefaultBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/space_large"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="@dimen/default_bottom_sheet_peek_height"
+    app:behavior_saveFlags="all">
+
+    <View
+        android:id="@+id/placeCategoryBottomSheetDragView"
+        style="@style/DragViewStyle"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_medium" />
+
+    <!-- Header -->
+    <include
+        android:id="@+id/placeCategoryBottomSheetHeaderContainer"
+        layout="@layout/view_place_header" />
+
+    <!--  Hike recommendations Header -->
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/space_extra_large"
+        android:paddingVertical="@dimen/space_medium"
+        android:text="@string/place_category_hike_recommendations_header_title"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+    <!--  Hike recommendations -->
+    <HorizontalScrollView
+        android:id="@+id/placeCategoryBottomSheetHikeRecommendationsScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/placeCategoryBottomSheetHikeRecommendationsChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/space_large"
+            android:paddingEnd="@dimen/space_large" />
+
+    </HorizontalScrollView>
+
+    <!--  Place category groups  -->
+    <LinearLayout
+        android:id="@+id/placeCategoryBottomSheetGroups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+</LinearLayout>

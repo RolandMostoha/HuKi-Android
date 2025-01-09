@@ -14,7 +14,7 @@ class PlaceFinderUiModelMapper @Inject constructor(
 ) {
 
     fun mapPlaceFinderItems(places: List<Place>, myLocation: Location? = null): List<PlaceFinderItem> {
-        return places.map { PlaceFinderItem.Place(placeMapper.mapHistoryPlace(it, myLocation)) }
+        return places.map { PlaceFinderItem.Place(placeMapper.mapToPlaceUiModel(it, myLocation)) }
     }
 
     fun mapHistoryItems(
@@ -27,13 +27,13 @@ class PlaceFinderUiModelMapper @Inject constructor(
                 .plus(
                     places
                         .take(PLACE_FINDER_MAX_HISTORY_ITEM)
-                        .map { PlaceFinderItem.Place(placeMapper.mapHistoryPlace(it, myLocation)) }
+                        .map { PlaceFinderItem.Place(placeMapper.mapToPlaceUiModel(it, myLocation)) }
                 )
                 .plus(PlaceFinderItem.ShowMoreHistory)
         } else {
             places
                 .take(PLACE_FINDER_MAX_HISTORY_ITEM)
-                .map { PlaceFinderItem.Place(placeMapper.mapHistoryPlace(it, myLocation)) }
+                .map { PlaceFinderItem.Place(placeMapper.mapToPlaceUiModel(it, myLocation)) }
         }
     }
 

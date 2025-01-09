@@ -5,18 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.ColorUtils
 import com.google.android.material.snackbar.Snackbar
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.ui.Message
@@ -48,10 +46,12 @@ fun showSnackbar(view: View, message: Message, @DrawableRes icon: Int? = null) {
 
     textView.setTextAppearance(R.style.DefaultTextAppearance_SemiBold_Medium)
     snackbar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorBackground))
+    snackbar.view.background = R.drawable.background_snackbar.toDrawable(context)
 
     if (icon != null) {
         textView.setDrawableStart(icon)
         textView.compoundDrawablePadding = context.resources.getDimensionPixelOffset(R.dimen.space_small)
+        textView.gravity = Gravity.CENTER
     }
 
     snackbar.show()
@@ -100,20 +100,4 @@ fun postMainDelayed(delay: Long, block: () -> Unit) {
     Handler(Looper.getMainLooper()).postDelayed({
         block.invoke()
     }, delay)
-}
-
-@ColorInt
-fun Context.color(@ColorRes res: Int) = ContextCompat.getColor(this, res)
-
-@ColorInt
-fun @receiver:ColorRes Int.color(context: Context) = context.color(this)
-
-@ColorInt
-fun @receiver:ColorInt Int.darken(factor: Float): Int {
-    return ColorUtils.blendARGB(this, Color.BLACK, factor)
-}
-
-@ColorInt
-fun @receiver:ColorInt Int.lighten(factor: Float): Int {
-    return ColorUtils.blendARGB(this, Color.WHITE, factor)
 }

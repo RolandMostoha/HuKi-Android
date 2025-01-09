@@ -1,6 +1,5 @@
 package hu.mostoha.mobile.android.huki.repository
 
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -13,7 +12,6 @@ object DataStoreConstants {
         val BASE_LAYER = stringPreferencesKey("settings_base_layer")
         val THEME = intPreferencesKey("settings_theme")
         val MAP_SCALE_FACTOR = doublePreferencesKey("settings_map_scale_factor")
-        val HIKE_RECOMMENDER_INFO_ENABLED = booleanPreferencesKey("settings_hike_recommender_info_enabled")
     }
 
     object NewFeatures {

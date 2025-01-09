@@ -9,6 +9,8 @@ import hu.mostoha.mobile.android.huki.databinding.ItemHomeHikingRoutesHeaderBind
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setDrawableStart
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
+import hu.mostoha.mobile.android.huki.model.ui.resolve
 
 class HikingRoutesAdapter(
     val onItemClick: (HikingRouteUiModel) -> Unit,
@@ -41,7 +43,7 @@ class HikingRoutesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ViewHolderHeader -> {
-                holder.bind((getItem(position) as HikingRoutesItem.Header).title)
+                holder.bind((getItem(position) as HikingRoutesItem.Header).placeArea)
             }
             is ViewHolderItem -> {
                 holder.bind((getItem(position) as HikingRoutesItem.Item).hikingRouteUiModel)
@@ -60,9 +62,12 @@ class HikingRoutesAdapter(
     inner class ViewHolderHeader(
         private val binding: ItemHomeHikingRoutesHeaderBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(text: String) {
+        fun bind(placeArea: PlaceArea) {
+            val context = binding.root.context
+
             with(binding) {
-                hikingRoutesHeaderText.text = text
+                hikingRoutesHeaderText.text = placeArea.addressMessage.resolve(context)
+                hikingRoutesSubtitleText.text = placeArea.distanceMessage.resolve(context)
                 hikingRoutesCloseButton.setOnClickListener {
                     onCloseClick.invoke()
                 }

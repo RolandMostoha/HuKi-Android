@@ -37,8 +37,8 @@ class RoutePlannerUiModelMapper @Inject constructor() {
                 osmId = geocodedPlace.osmId,
                 placeType = geocodedPlace.placeType,
                 geoPoint = geoPoint,
-                primaryText = geocodedPlace.name.toMessage(),
-                secondaryText = geocodedPlace.address.toMessage(),
+                primaryText = geocodedPlace.name,
+                secondaryText = geocodedPlace.fullAddress.toMessage(),
                 iconRes = when (geocodedPlace.placeType) {
                     PlaceType.NODE -> R.drawable.ic_place_type_node
                     PlaceType.WAY -> R.drawable.ic_place_type_way

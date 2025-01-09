@@ -119,7 +119,7 @@ class OktRoutesUiTest {
     @Test
     fun whenClickOnOktChip_thenOktBottomSheetDisplays() {
         launchScenario<HomeActivity> {
-            R.string.okt_routes_chip_label.clickWithText()
+            R.id.homeOktFab.click()
 
             R.string.okt_routes_bottom_sheet_title.isTextDisplayed()
         }
@@ -128,7 +128,7 @@ class OktRoutesUiTest {
     @Test
     fun whenClickOnOktChip_thenBaseRouteDisplaysOnMap() {
         launchScenario<HomeActivity> {
-            R.string.okt_routes_chip_label.clickWithText()
+            R.id.homeOktFab.click()
 
             waitForMapClear()
 
@@ -140,7 +140,7 @@ class OktRoutesUiTest {
     @Test
     fun givenOktRoute_whenSelect_thenOktRouteDisplaysOnMap() {
         launchScenario<HomeActivity> {
-            R.string.okt_routes_chip_label.clickWithText()
+            R.id.homeOktFab.click()
 
             waitForMapClear()
 
@@ -158,7 +158,7 @@ class OktRoutesUiTest {
     @Test
     fun givenOktRoute_whenClickOnLink_thenOktWebPageRequested() {
         launchScenario<HomeActivity> {
-            R.string.okt_routes_chip_label.clickWithText()
+            R.id.homeOktFab.click()
 
             waitForMapClear()
 
@@ -177,7 +177,7 @@ class OktRoutesUiTest {
     @Test
     fun givenOktRoute_whenClickOnStartPoint_thenPlaceDetailsDisplays() {
         launchScenario<HomeActivity> {
-            R.string.okt_routes_chip_label.clickWithText()
+            R.id.homeOktFab.click()
 
             waitForMapClear()
 
@@ -198,7 +198,7 @@ class OktRoutesUiTest {
     @Test
     fun givenOktRoute_whenClickOnEndPoint_thenPlaceDetailsDisplays() {
         launchScenario<HomeActivity> {
-            R.string.okt_routes_chip_label.clickWithText()
+            R.id.homeOktFab.click()
 
             waitForMapClear()
 
@@ -219,7 +219,7 @@ class OktRoutesUiTest {
     @Test
     fun whenCloseClick_thenBottomSheetHides() {
         launchScenario<HomeActivity> {
-            R.string.okt_routes_chip_label.clickWithText()
+            R.id.homeOktFab.click()
 
             waitForMapClear()
 
@@ -236,7 +236,7 @@ class OktRoutesUiTest {
     @Test
     fun whenRecreate_thenOktRoutesDisplaysAgain() {
         launchScenario<HomeActivity> { scenario ->
-            R.string.okt_routes_chip_label.clickWithText()
+            R.id.homeOktFab.click()
 
             scenario.recreate()
             waitForMapClear()

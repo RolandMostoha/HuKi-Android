@@ -6,16 +6,15 @@ import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.network.overpass.Element
 import hu.mostoha.mobile.android.huki.model.network.overpass.ElementType
 import hu.mostoha.mobile.android.huki.model.network.overpass.Geom
 import hu.mostoha.mobile.android.huki.model.network.overpass.Member
 import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
-import hu.mostoha.mobile.android.huki.model.network.overpass.Tags
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_JEL
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
@@ -134,9 +133,8 @@ class PlaceDetailsNetworkDomainMapperTest {
                 Element(
                     id = 12345L,
                     type = ElementType.RELATION,
-                    tags = Tags(
-                        name = null,
-                        jel = SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL)
+                    tags = mapOf(
+                        "jel" to SymbolType.entries.first().osmValue
                     )
                 )
             )
@@ -148,8 +146,10 @@ class PlaceDetailsNetworkDomainMapperTest {
             listOf(
                 HikingRoute(
                     osmId = DEFAULT_OVERPASS_ELEMENT_HIKING_ROUTE.id.toString(),
-                    name = DEFAULT_OVERPASS_ELEMENT_HIKING_ROUTE.tags!!.name!!,
-                    symbolType = DEFAULT_OVERPASS_ELEMENT_HIKING_ROUTE.tags!!.jel!!
+                    name = DEFAULT_OVERPASS_ELEMENT_HIKING_ROUTE.tags!!["name"]!!,
+                    symbolType = SymbolType.entries.first {
+                        it.osmValue == DEFAULT_OVERPASS_ELEMENT_HIKING_ROUTE.tags!!["jel"]
+                    }
                 )
             )
         )
@@ -167,6 +167,17 @@ class PlaceDetailsNetworkDomainMapperTest {
         val locations = mapper.extractLocations(geometries)
 
         assertThat(locations).isEqualTo(listOf(Location(47.12345, 19.12345)))
+    }
+
+    @Test
+    fun `Given overpass place category list, when mapPlacesByCategories, then Place list returns`() {
+        val categories = setOf(PlaceCategory.PARKING, PlaceCategory.PUBLIC_TRANSPORT)
+        val queryResponse = OverpassQueryResponse(DEFAULT_OVERPASS_CATEGORY_PLACES)
+
+        val places = mapper.mapPlacesByCategories(queryResponse, categories)
+
+        assertThat(places).hasSize(2)
+        assertThat(places.all { it.name == "Parkoló".toMessage() || it.name == "Busz".toMessage() }).isTrue()
     }
 
     companion object {
@@ -200,11 +211,44 @@ class PlaceDetailsNetworkDomainMapperTest {
         private val DEFAULT_OVERPASS_ELEMENT_HIKING_ROUTE = Element(
             id = DEFAULT_HIKING_ROUTE_OSM_ID.toLong(),
             type = ElementType.RELATION,
-            tags = Tags(
-                name = DEFAULT_HIKING_ROUTE_NAME,
-                jel = SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL)
+            tags = mapOf(
+                "name" to "Kéktúra",
+                "jel" to SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL).osmValue
             )
         )
+        private val DEFAULT_OVERPASS_CATEGORY_PLACES =
+            listOf(
+                Element(
+                    id = DEFAULT_NODE_OSM_ID.toLong(),
+                    type = ElementType.NODE,
+                    tags = mapOf(
+                        "name" to "Busz",
+                        "public_transport" to "unknown/null"
+                    ),
+                    lat = DEFAULT_NODE_LATITUDE,
+                    lon = DEFAULT_NODE_LONGITUDE,
+                ),
+                Element(
+                    id = DEFAULT_NODE_OSM_ID.toLong(),
+                    type = ElementType.NODE,
+                    tags = mapOf(
+                        "name" to "Parkoló",
+                        "amenity" to "parking"
+                    ),
+                    lat = DEFAULT_NODE_LATITUDE,
+                    lon = DEFAULT_NODE_LONGITUDE,
+                ),
+                Element(
+                    id = DEFAULT_NODE_OSM_ID.toLong(),
+                    type = ElementType.NODE,
+                    tags = mapOf(
+                        "name" to "unknown/null",
+                        "amenity" to "unknown/null"
+                    ),
+                    lat = DEFAULT_NODE_LATITUDE,
+                    lon = DEFAULT_NODE_LONGITUDE,
+                )
+            )
     }
 
 }

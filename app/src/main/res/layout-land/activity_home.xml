@@ -164,16 +164,17 @@
             android:src="@drawable/ic_home_fab_settings"
             app:fabSize="mini"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/homeLandscapeContainer" />
+            app:layout_constraintTop_toBottomOf="@id/homePlaceCategoryContainer" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mapZoomControllerPlus"
+            android:id="@+id/mapZoomInFab"
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_large"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_zoom_in"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_map_zoom_controller_plus"
             app:fabSize="mini"
@@ -181,18 +182,19 @@
             app:layout_constraintTop_toBottomOf="@id/homeSettingsFab" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mapZoomControllerMinus"
+            android:id="@+id/mapZoomOutFab"
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_large"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_zoom_out"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_map_zoom_controller_minus"
             app:fabSize="mini"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mapZoomControllerPlus" />
+            app:layout_constraintTop_toBottomOf="@id/mapZoomInFab" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/homeHistoryFab"
@@ -209,8 +211,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeSettingsFab" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homePlaceCategoriesFab"
+            style="@style/DefaultFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginEnd="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_fab_place_categories"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
+            android:src="@drawable/ic_home_fab_place_category"
+            app:fabSize="mini"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/homeHistoryFab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homeOktFab"
+            style="@style/DefaultFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginEnd="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_fab_okt"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
+            android:src="@drawable/ic_home_fab_okt"
+            app:fabSize="mini"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/homePlaceCategoriesFab" />
+
         <HorizontalScrollView
-            android:id="@+id/homeLandscapeContainer"
+            android:id="@+id/homePlaceCategoryContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_small"
@@ -221,14 +253,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeSearchBarContainer">
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/homeLandscapeChipGroup"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingStart="@dimen/space_large"
-                android:paddingEnd="@dimen/space_large"
-                app:singleLine="true" />
+                android:paddingEnd="@dimen/space_large">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/homePlaceCategoryRefreshButton"
+                    style="@style/DefaultButton.IconOnly.Stroked"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:icon="@drawable/ic_refresh"
+                    app:iconTint="@color/colorOnPrimary"
+                    app:strokeColor="@color/colorStrokeLight"
+                    app:strokeWidth="@dimen/default_chip_stroke_width" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/homePlaceCategoryChipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="@dimen/space_small_medium"
+                    app:singleLine="true" />
+
+            </LinearLayout>
 
         </HorizontalScrollView>
 
@@ -348,8 +400,8 @@
         tools:visibility="gone" />
 
     <include
-        android:id="@+id/homeHikeRecommenderBottomSheetContainer"
-        layout="@layout/layout_bottom_sheet_hike_recommender"
+        android:id="@+id/homePlaceCategoryBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_place_category"
         tools:visibility="gone" />
 
     <include

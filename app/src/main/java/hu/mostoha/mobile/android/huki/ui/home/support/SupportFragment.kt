@@ -14,7 +14,6 @@ import com.android.billingclient.api.ProductDetails
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentSupportBinding
-import hu.mostoha.mobile.android.huki.extensions.color
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.hyperlinkStyle
 import hu.mostoha.mobile.android.huki.extensions.showOnly
@@ -29,6 +28,7 @@ import hu.mostoha.mobile.android.huki.model.ui.ProductEvents
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
+import hu.mostoha.mobile.android.huki.util.color
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map

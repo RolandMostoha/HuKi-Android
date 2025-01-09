@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/placeCategoryChip"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+    app:chipBackgroundColor="@color/colorBackground"
+    app:chipIconSize="@dimen/default_chip_icon_size"
+    app:chipMinHeight="@dimen/default_chip_min_height"
+    app:chipStrokeColor="@color/colorStrokeLight"
+    app:iconStartPadding="@dimen/space_small"
+    app:textStartPadding="@dimen/space_small" />

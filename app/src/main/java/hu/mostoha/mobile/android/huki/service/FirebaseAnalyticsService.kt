@@ -9,6 +9,7 @@ import hu.mostoha.mobile.android.huki.billing.fieldName
 import hu.mostoha.mobile.android.huki.extensions.removeFileExtension
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.BillingAction
@@ -22,7 +23,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_PLACE = "select_place"
         private const val EVENT_SELECT_PLACE_FROM_HISTORY = "select_place_from_history"
         private const val EVENT_SELECT_LANDSCAPE = "select_landscape"
-        private const val EVENT_SELECT_OKT_CHIP = "select_okt_chip"
+        private const val EVENT_SELECT_OKT = "select_okt"
         private const val EVENT_SELECT_OKT_ROUTE = "select_okt_route"
         private const val EVENT_SELECT_OKT_ROUTE_LINK = "select_okt_link"
         private const val EVENT_SELECT_OKT_ROUTE_EDGE_POINT = "select_okt_edge_point"
@@ -50,6 +51,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_GPX_SHARE = "select_gpx_share"
         private const val EVENT_SELECT_GPX_WAYPOINT = "select_gpx_waypoint"
         private const val EVENT_GPX_WAYPOINTS_ONLY_IMPORTED = "gpx_imported_waypoints_only"
+        private const val EVENT_LAYERS_SELECTED = "select_layers"
         private const val EVENT_LAYER_SELECTED_TEMPLATE = "layer_%s_selected"
         private const val EVENT_SELECT_SETTINGS = "select_settings"
         private const val EVENT_SELECT_SETTINGS_MAP_SCALE_INFO = "select_settings_map_scale_info"
@@ -60,6 +62,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_SETTINGS_THEME_LIGHT = "select_settings_theme_light"
         private const val EVENT_SELECT_SETTINGS_THEME_DARK = "select_settings_theme_dark"
         private const val EVENT_SELECT_SETTINGS_OFFLINE_MODE_INFO = "select_settings_offline_mode_info"
+        private const val EVENT_SELECT_HISTORY = "select_history"
         private const val EVENT_SELECT_GPX_HISTORY = "select_gpx_history"
         private const val EVENT_OPEN_GPX_HISTORY_ITEM = "open_gpx_history_item"
         private const val EVENT_OPEN_ROUTE_PLANNER_HISTORY_ITEM = "open_route_planner_history_item"
@@ -81,13 +84,13 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_SUPPORT_RECURRING_LEVEL_2 = "select_support_recurring_level_2"
         private const val EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_1 = "select_support_one_time_level_1"
         private const val EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_2 = "select_support_one_time_level_2"
+        private const val EVENT_SELECT_ALL_OSM_DATA = "select_all_osm_data"
         private const val EVENT_VIEW_NEW_FEATURES = "view_new_features"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
         private const val PARAM_SELECTED_LANDSCAPE = "selected_landscape"
         private const val PARAM_SELECTED_PLACE_DETAILS = "selected_place_details"
-        private const val PARAM_LOAD_HIKING_ROUTE_FOR = "load_hiking_route_for"
         private const val PARAM_SELECTED_HIKING_ROUTE_DETAILS = "selected_hiking_route_details"
         private const val PARAM_MAP_SCALE_PERCENTAGE = "map_scale_percentage"
         private const val PARAM_IMPORTED_GPX_NAME = "imported_gpx_name"
@@ -116,20 +119,16 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         }
     }
 
-    override fun placeDetailsHikeRecommenderClicked() {
+    override fun placeDetailsFinderClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_PLACE_DETAILS_HIKE_RECOMMENDER, null)
     }
 
-    override fun hikeRecommenderKirandulastippekClicked(placeName: String) {
-        firebaseAnalytics.logEvent(EVENT_SELECT_HIKE_RECOMMENDER_KIRANDULASTIPPEK) {
-            param(PARAM_SELECTED_LANDSCAPE, placeName)
-        }
+    override fun hikeRecommenderKirandulastippekClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_HIKE_RECOMMENDER_KIRANDULASTIPPEK, null)
     }
 
-    override fun hikeRecommenderTermeszetjaroClicked(placeName: String) {
-        firebaseAnalytics.logEvent(EVENT_SELECT_HIKE_RECOMMENDER_TERMESZETJARO) {
-            param(PARAM_SELECTED_LANDSCAPE, placeName)
-        }
+    override fun hikeRecommenderTermeszetjaroClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_HIKE_RECOMMENDER_TERMESZETJARO, null)
     }
 
     override fun hikeRecommenderInfoCloseClicked() {
@@ -142,10 +141,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         }
     }
 
-    override fun loadHikingRoutesClicked(placeName: String) {
-        firebaseAnalytics.logEvent(EVENT_SEARCH_HIKING_ROUTES) {
-            param(PARAM_LOAD_HIKING_ROUTE_FOR, placeName)
-        }
+    override fun loadHikingRoutesClicked() {
+        firebaseAnalytics.logEvent(EVENT_SEARCH_HIKING_ROUTES, null)
     }
 
     override fun loadHikingRouteDetailsClicked(routeName: String) {
@@ -235,6 +232,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_GPX_WAYPOINTS_ONLY_IMPORTED, null)
     }
 
+    override fun layersClicked() {
+        firebaseAnalytics.logEvent(EVENT_LAYERS_SELECTED, null)
+    }
+
     override fun onLayerSelected(layerType: LayerType) {
         firebaseAnalytics.logEvent(
             EVENT_LAYER_SELECTED_TEMPLATE.format(EVENT_LAYER_SELECTED_TEMPLATE, layerType.name.lowercase()),
@@ -280,6 +281,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_OFFLINE_MODE_INFO, null)
     }
 
+    override fun historyClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_HISTORY, null)
+    }
+
     override fun gpxHistoryClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_GPX_HISTORY, null)
     }
@@ -311,8 +316,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_DELETE_PLACE_HISTORY_ITEM, null)
     }
 
-    override fun oktChipClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_CHIP, null)
+    override fun oktClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT, null)
     }
 
     override fun oktRouteClicked(oktId: String) {
@@ -413,6 +418,26 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         val eventName = "billing_${billingAction.name.lowercase()}_${billingResponseCode.fieldName()?.lowercase()}"
 
         firebaseAnalytics.logEvent(eventName, null)
+    }
+
+    override fun placeCategoryClicked(placeCategory: PlaceCategory) {
+        firebaseAnalytics.logEvent("select_place_category_${placeCategory.name.lowercase()}", null)
+    }
+
+    @Suppress("MagicNumber")
+    override fun placeCategoryLoaded(numberOfPlaces: Int) {
+        val eventName = when {
+            numberOfPlaces <= 0 -> return
+            numberOfPlaces < 50 -> "view_place_category_less_50"
+            numberOfPlaces in 50..100 -> "view_place_category_50_to_100"
+            else -> "view_place_category_above_100"
+        }
+
+        firebaseAnalytics.logEvent(eventName, null)
+    }
+
+    override fun allOsmDataClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_ALL_OSM_DATA, null)
     }
 
 }

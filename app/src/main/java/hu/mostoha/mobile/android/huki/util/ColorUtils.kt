@@ -3,15 +3,16 @@ package hu.mostoha.mobile.android.huki.util
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
-import hu.mostoha.mobile.android.huki.extensions.darken
 import hu.mostoha.mobile.android.huki.extensions.isDarkMode
-import hu.mostoha.mobile.android.huki.extensions.lighten
 
 const val DARK_MODE_HIKING_LAYER_BRIGHTNESS = 0.85f
 
@@ -198,6 +199,25 @@ fun @receiver:ColorRes Int.colorStateList(context: Context): ColorStateList {
 }
 
 @ColorInt
-fun @receiver:ColorRes Int.color(context: Context): Int {
-    return ContextCompat.getColor(context, this)
+fun Context.color(@ColorRes res: Int) = ContextCompat.getColor(this, res)
+
+@ColorInt
+fun @receiver:ColorRes Int.color(context: Context) = context.color(this)
+
+@ColorInt
+fun @receiver:ColorInt Int.darken(factor: Float): Int {
+    return ColorUtils.blendARGB(this, Color.BLACK, factor)
+}
+
+@ColorInt
+fun @receiver:ColorInt Int.lighten(factor: Float): Int {
+    return ColorUtils.blendARGB(this, Color.WHITE, factor)
+}
+
+fun @receiver:ColorRes Int.toColorFilter(context: Context): ColorFilter {
+    return PorterDuffColorFilter(this.color(context), PorterDuff.Mode.SRC_IN)
+}
+
+fun @receiver:ColorInt Int.toColorFilter(): ColorFilter {
+    return PorterDuffColorFilter(this, PorterDuff.Mode.SRC_IN)
 }

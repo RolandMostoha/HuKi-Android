@@ -1,31 +1,34 @@
 package hu.mostoha.mobile.android.huki.model.network.overpass
 
+import com.google.gson.annotations.JsonAdapter
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import hu.mostoha.mobile.android.huki.network.adapter.JsonMapAdapter
 
 @JsonClass(generateAdapter = true)
 data class Element(
-    @field:Json(name = "type")
-    var type: ElementType,
+    @Json(name = "type")
+    val type: ElementType,
 
-    @field:Json(name = "id")
-    var id: Long,
+    @Json(name = "id")
+    val id: Long,
 
-    @field:Json(name = "tags")
-    var tags: Tags? = null,
+    @Json(name = "tags")
+    @JsonAdapter(JsonMapAdapter::class)
+    val tags: Map<String, String>? = null,
 
-    @field:Json(name = "lat")
-    var lat: Double? = null,
+    @Json(name = "lat")
+    val lat: Double? = null,
 
-    @field:Json(name = "lon")
-    var lon: Double? = null,
+    @Json(name = "lon")
+    val lon: Double? = null,
 
-    @field:Json(name = "geometry")
-    var geometry: List<Geom>? = null,
+    @Json(name = "geometry")
+    val geometry: List<Geom>? = null,
 
-    @field:Json(name = "members")
-    var members: List<Member>? = null,
+    @Json(name = "members")
+    val members: List<Member>? = null,
 
-    @field:Json(name = "bounds")
-    var bounds: Bounds? = null
+    @Json(name = "bounds")
+    val bounds: Bounds? = null
 )

@@ -49,7 +49,7 @@ class PlaceFinderUiModelMapperTest {
 
         assertThat(placeFinderItems).isEqualTo(
             listOf(
-                PlaceFinderItem.Place(placeMapper.mapHistoryPlace(DEFAULT_PLACE_WAY, null))
+                PlaceFinderItem.Place(placeMapper.mapToPlaceUiModel(DEFAULT_PLACE_WAY, null))
             )
         )
     }
@@ -96,7 +96,7 @@ class PlaceFinderUiModelMapperTest {
     companion object {
         private val DEFAULT_PLACE_WAY = Place(
             osmId = DEFAULT_WAY_OSM_ID,
-            name = DEFAULT_WAY_NAME,
+            name = DEFAULT_WAY_NAME.toMessage(),
             placeType = PlaceType.WAY,
             location = Location(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE),
             boundingBox = BoundingBox(
@@ -105,7 +105,7 @@ class PlaceFinderUiModelMapperTest {
                 south = DEFAULT_WAY_EXTENT_SOUTH,
                 west = DEFAULT_WAY_EXTENT_WEST
             ),
-            address = "$DEFAULT_WAY_POST_CODE $DEFAULT_WAY_CITY",
+            fullAddress = "$DEFAULT_WAY_POST_CODE $DEFAULT_WAY_CITY",
             placeFeature = PlaceFeature.MAP_SEARCH,
         )
     }

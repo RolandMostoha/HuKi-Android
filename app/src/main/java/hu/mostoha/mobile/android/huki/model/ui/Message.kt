@@ -22,6 +22,10 @@ fun @receiver:StringRes Int.toMessage(): Message.Res {
     return Message.Res(this)
 }
 
+fun @receiver:StringRes Int.toMessage(formatArgs: List<Any>): Message.Res {
+    return Message.Res(this, formatArgs)
+}
+
 fun Message.resolve(context: Context): String {
     return when (val message = this) {
         is Message.Res -> {

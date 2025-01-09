@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/placeHeaderContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_place_category_header"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/space_small_medium">
+
+    <ImageView
+        android:id="@+id/placeHeaderImage"
+        android:layout_width="@dimen/place_details_bottom_sheet_image_size"
+        android:layout_height="@dimen/place_details_bottom_sheet_image_size"
+        android:layout_marginStart="@dimen/space_extra_large"
+        android:background="@drawable/background_badge"
+        android:importantForAccessibility="no"
+        android:padding="@dimen/space_small"
+        tools:src="@drawable/ic_place_type_node" />
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/placeHeaderShimmer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_extra_large"
+                    android:background="@color/colorShimmer"
+                    android:textAppearance="@style/DefaultTextAppearance.Bold.Large" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_extra_extra_large"
+                    android:layout_marginTop="@dimen/space_extra_small"
+                    android:background="@color/colorShimmer"
+                    android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <LinearLayout
+            android:id="@+id/placeHeaderContentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_small"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/placeHeaderTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:maxLines="2"
+                android:textAppearance="@style/DefaultTextAppearance.Bold.Large"
+                tools:text="Pilis-hegység" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/placeHeaderSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_extra_small"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
+                tools:text="10 km-es körzetében" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/placeHeaderCloseButton"
+        style="@style/DefaultButton.BottomSheetAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_medium"
+        app:icon="@drawable/ic_bottom_sheet_clear" />
+
+</LinearLayout>

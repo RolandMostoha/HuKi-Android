@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.service
 
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.BillingAction
@@ -14,17 +15,17 @@ interface AnalyticsService {
 
     fun loadLandscapeClicked(placeName: String)
 
-    fun placeDetailsHikeRecommenderClicked()
+    fun placeDetailsFinderClicked()
 
-    fun hikeRecommenderKirandulastippekClicked(placeName: String)
+    fun hikeRecommenderKirandulastippekClicked()
 
-    fun hikeRecommenderTermeszetjaroClicked(placeName: String)
+    fun hikeRecommenderTermeszetjaroClicked()
 
     fun hikeRecommenderInfoCloseClicked()
 
     fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType)
 
-    fun loadHikingRoutesClicked(placeName: String)
+    fun loadHikingRoutesClicked()
 
     fun loadHikingRouteDetailsClicked(routeName: String)
 
@@ -58,6 +59,8 @@ interface AnalyticsService {
 
     fun gpxDetailsWaypointsOnlyImported()
 
+    fun layersClicked()
+
     fun onLayerSelected(layerType: LayerType)
 
     fun settingsClicked()
@@ -76,6 +79,8 @@ interface AnalyticsService {
 
     fun settingsOfflineModeInfoClicked()
 
+    fun historyClicked()
+
     fun gpxHistoryClicked()
 
     fun gpxHistoryItemOpened(gpxType: GpxType)
@@ -90,7 +95,7 @@ interface AnalyticsService {
 
     fun placeHistoryItemDelete()
 
-    fun oktChipClicked()
+    fun oktClicked()
 
     fun oktRouteClicked(oktId: String)
 
@@ -131,5 +136,11 @@ interface AnalyticsService {
     fun newFeaturesSeen(version: String)
 
     fun billingEvent(billingAction: BillingAction, billingResponseCode: Int)
+
+    fun placeCategoryClicked(placeCategory: PlaceCategory)
+
+    fun placeCategoryLoaded(numberOfPlaces: Int)
+
+    fun allOsmDataClicked()
 
 }

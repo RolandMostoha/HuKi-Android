@@ -26,6 +26,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
@@ -225,8 +226,8 @@ class PlaceHistoryUiTest {
         private val DEFAULT_PLACE_LANDSCAPE = Place(
             osmId = DEFAULT_LANDSCAPE_OSM_ID,
             placeType = PlaceType.RELATION,
-            name = DEFAULT_LANDSCAPE_NAME,
-            address = DEFAULT_LANDSCAPE_ADDRESS,
+            name = DEFAULT_LANDSCAPE_NAME.toMessage(),
+            fullAddress = DEFAULT_LANDSCAPE_ADDRESS,
             placeFeature = PlaceFeature.ROUTE_PLANNER_SEARCH,
             location = Location(DEFAULT_LANDSCAPE_LATITUDE, DEFAULT_LANDSCAPE_LONGITUDE)
         )

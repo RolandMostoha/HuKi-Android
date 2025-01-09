@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/homePlaceCategoryChip"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+    android:textColor="@color/colorOnPrimary"
+    app:closeIconSize="@dimen/default_chip_icon_size"
+    app:chipMinHeight="@dimen/default_chip_min_height"
+    app:closeIconEnabled="true"
+    app:chipStrokeColor="@color/colorStrokeLight"
+    app:chipStrokeWidth="@dimen/default_chip_stroke_width"
+    app:textStartPadding="@dimen/space_medium"
+    android:padding="@dimen/space_large"
+    app:textEndPadding="@dimen/space_medium" />

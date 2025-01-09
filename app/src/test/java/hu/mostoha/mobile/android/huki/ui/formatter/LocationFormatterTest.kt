@@ -14,7 +14,7 @@ class LocationFormatterTest {
 
         val result = LocationFormatter.formatText(location)
 
-        assertThat(result).isEqualTo(Message.Text("47.8194,19.1347"))
+        assertThat(result).isEqualTo(Message.Text("(47.8194,19.1347)"))
     }
 
     @Test
@@ -23,7 +23,7 @@ class LocationFormatterTest {
 
         val result = LocationFormatter.formatText(location)
 
-        assertThat(result).isEqualTo(Message.Text("47.8194,19.1347"))
+        assertThat(result).isEqualTo(Message.Text("(47.8194,19.1347)"))
     }
 
 }

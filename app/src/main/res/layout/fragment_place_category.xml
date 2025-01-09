@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/placeCategoryContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/colorBackgroundLight"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <!-- Header -->
+    <include
+        android:id="@+id/placeCategoryHeaderContainer"
+        layout="@layout/view_place_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_large"
+        android:layout_marginTop="@dimen/space_large" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/space_medium">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--  Landscapes Header -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/space_extra_large"
+                android:paddingTop="@dimen/space_medium"
+                android:paddingBottom="@dimen/space_medium"
+                android:text="@string/place_category_landscapes_header_title"
+                android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+            <!--  Landscapes  -->
+            <HorizontalScrollView
+                android:id="@+id/placeCategoryLandscapeScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/default_elevation_map_interactive_views"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/placeCategoryLandscapeChipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingStart="@dimen/space_large"
+                    android:paddingTop="@dimen/space_medium"
+                    android:paddingEnd="@dimen/space_large"
+                    android:paddingBottom="@dimen/space_medium" />
+
+            </HorizontalScrollView>
+
+            <!--  Hike recommendations Header -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/space_extra_large">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/place_category_hike_recommendations_header_title"
+                    android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+                <hu.mostoha.mobile.android.huki.views.InfoButtonView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:messageRes="@string/place_category_hike_recommendations_info" />
+
+            </LinearLayout>
+
+            <!--  Hike recommendations -->
+            <HorizontalScrollView
+                android:id="@+id/placeCategoryHikeRecommendationsScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/placeCategoryHikeRecommendationsChipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingStart="@dimen/space_large"
+                    android:paddingEnd="@dimen/space_large" />
+
+            </HorizontalScrollView>
+
+            <!--  Place category groups  -->
+            <LinearLayout
+                android:id="@+id/placeCategoryGroups"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

@@ -13,6 +13,7 @@ import hu.mostoha.mobile.android.huki.databinding.ViewErrorBinding
 import hu.mostoha.mobile.android.huki.databinding.ViewLoadingIndicatorBinding
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
+import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 
@@ -48,7 +49,7 @@ class PlaceFinderAdapter(
                 }
 
                 holder.primaryText.text = placeFinderItem.placeUiModel.primaryText.resolve(context)
-                holder.secondaryText.setMessageOrGone(placeFinderItem.placeUiModel.secondaryText)
+                holder.secondaryText.setMessage(placeFinderItem.placeUiModel.secondaryText)
                 holder.iconImage.setImageResource(placeFinderItem.placeUiModel.iconRes)
                 holder.distanceText.setMessageOrGone(placeFinderItem.placeUiModel.distanceText)
             }

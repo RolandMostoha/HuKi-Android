@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.views
 
 import android.content.Context
+import android.content.res.Resources
 import android.view.View
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -12,6 +13,7 @@ open class BottomSheetDialog(binding: ViewBinding) {
     private val bottomSheetBehavior: BottomSheetBehavior<View> = BottomSheetBehavior.from(binding.root)
 
     protected val context: Context = binding.root.context
+    protected val resources: Resources = context.resources
 
     fun hide() {
         bottomSheetBehavior.hide()
@@ -19,6 +21,18 @@ open class BottomSheetDialog(binding: ViewBinding) {
 
     fun show() {
         bottomSheetBehavior.collapse()
+    }
+
+    fun addStateListener(onExpanded: (Int) -> Unit) {
+        bottomSheetBehavior.addBottomSheetCallback(
+            object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    onExpanded.invoke(newState)
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
+            }
+        )
     }
 
 }

@@ -1,8 +1,6 @@
 package hu.mostoha.mobile.android.huki.model.mapper
 
 import androidx.core.util.toRange
-import hu.mostoha.mobile.android.huki.constants.KEKTURA_ROUTE_URL_TEMPLATE
-import hu.mostoha.mobile.android.huki.constants.KEKTURA_URL
 import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.Location
@@ -15,6 +13,8 @@ import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.util.KEKTURA_ROUTE_URL_TEMPLATE
+import hu.mostoha.mobile.android.huki.util.KEKTURA_URL
 import io.ticofab.androidgpxparser.parser.domain.WayPoint
 import javax.inject.Inject
 

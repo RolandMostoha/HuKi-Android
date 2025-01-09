@@ -8,11 +8,11 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
 import androidx.core.view.marginTop
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
@@ -24,7 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
-import hu.mostoha.mobile.android.huki.databinding.ItemHomeLandscapesChipBinding
 import hu.mostoha.mobile.android.huki.deeplink.DeeplinkHandler
 import hu.mostoha.mobile.android.huki.extensions.OffsetType
 import hu.mostoha.mobile.android.huki.extensions.addFragment
@@ -38,6 +37,7 @@ import hu.mostoha.mobile.android.huki.extensions.addMapMovedListener
 import hu.mostoha.mobile.android.huki.extensions.addOktBasePolyline
 import hu.mostoha.mobile.android.huki.extensions.addOktRoute
 import hu.mostoha.mobile.android.huki.extensions.addOverlay
+import hu.mostoha.mobile.android.huki.extensions.addPlaceCategoryMarker
 import hu.mostoha.mobile.android.huki.extensions.addPlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.extensions.addPolygon
 import hu.mostoha.mobile.android.huki.extensions.addPolyline
@@ -46,10 +46,10 @@ import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.extensions.addScaleBarOverlay
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
 import hu.mostoha.mobile.android.huki.extensions.areInfoWindowsClosed
+import hu.mostoha.mobile.android.huki.extensions.center
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.closeInfoWindows
 import hu.mostoha.mobile.android.huki.extensions.closeInfoWindowsForMarkerType
-import hu.mostoha.mobile.android.huki.extensions.color
 import hu.mostoha.mobile.android.huki.extensions.doOnInfoWindows
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.hasNoOverlay
@@ -74,6 +74,7 @@ import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
 import hu.mostoha.mobile.android.huki.extensions.showErrorSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showOnly
 import hu.mostoha.mobile.android.huki.extensions.showOverlay
+import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
@@ -85,6 +86,7 @@ import hu.mostoha.mobile.android.huki.extensions.withOffset
 import hu.mostoha.mobile.android.huki.extensions.zoomToBoundingBoxPostMain
 import hu.mostoha.mobile.android.huki.model.domain.DeeplinkEvent
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.GPX_WAYPOINT
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.MAP_MY_LOCATION
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.MAP_PICKED_LOCATION
@@ -95,18 +97,18 @@ import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.domain.toOsm
-import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommenderMapper
+import hu.mostoha.mobile.android.huki.model.mapper.PlaceAreaMapper
 import hu.mostoha.mobile.android.huki.model.ui.CompassState
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikeModeUiModel
-import hu.mostoha.mobile.android.huki.model.ui.HikeRecommendation
+import hu.mostoha.mobile.android.huki.model.ui.HomeEvents
 import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
-import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
+import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceFinderFeature
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
@@ -121,14 +123,15 @@ import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceCategoryMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RotationGestureOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
+import hu.mostoha.mobile.android.huki.ui.adapter.PlaceCategoryAdapter.Companion.addSelectionChip
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.gpx.GpxDetailsBottomSheetDialog
-import hu.mostoha.mobile.android.huki.ui.home.hikerecommender.HikeRecommenderBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.history.HistoryFragment
@@ -136,6 +139,10 @@ import hu.mostoha.mobile.android.huki.ui.home.layers.LayersBottomSheetDialogFrag
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.newfeatures.NewFeaturesBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.oktroutes.OktRoutesBottomSheetDialog
+import hu.mostoha.mobile.android.huki.ui.home.placecategory.PlaceCategoryBottomSheetDialog
+import hu.mostoha.mobile.android.huki.ui.home.placecategory.PlaceCategoryEvent
+import hu.mostoha.mobile.android.huki.ui.home.placecategory.PlaceCategoryEventViewModel
+import hu.mostoha.mobile.android.huki.ui.home.placecategory.PlaceCategoryFragment
 import hu.mostoha.mobile.android.huki.ui.home.placedetails.PlaceDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
@@ -161,6 +168,7 @@ import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_FOLLOW_LOCATION
 import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_HIKE_MODE
 import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_MY_LOCATION
 import hu.mostoha.mobile.android.huki.util.adjustBrightness
+import hu.mostoha.mobile.android.huki.util.color
 import hu.mostoha.mobile.android.huki.util.colorStateList
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
@@ -213,6 +221,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val mapTouchEventSharedViewModel: MapTouchEventSharedViewModel by viewModels()
     private val pickLocationEventViewModel: PickLocationEventSharedViewModel by viewModels()
     private val productsViewModel: ProductsViewModel by viewModels()
+    private val placeCategoryEventViewModel: PlaceCategoryEventViewModel by viewModels()
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
@@ -232,15 +241,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeSupportFab by lazy { binding.homeSupportFab }
     private val homeSettingsFab by lazy { binding.homeSettingsFab }
     private val homeHistoryFab by lazy { binding.homeHistoryFab }
+    private val homePlaceCategoriesFab by lazy { binding.homePlaceCategoriesFab }
+    private val homeOktFab by lazy { binding.homeOktFab }
+    private val placeCategoriesChipGroup by lazy { binding.homePlaceCategoryChipGroup }
     private val homeHikeModeFab by lazy { binding.homeHikeModeFab }
     private val homeCompassFab by lazy { binding.homeCompassFab }
     private val homeAltitudeText by lazy { binding.homeAltitudeText }
-    private val mapZoomControllerPlus by lazy { binding.mapZoomControllerPlus }
-    private val mapZoomControllerMinus by lazy { binding.mapZoomControllerMinus }
+    private val mapZoomInFab by lazy { binding.mapZoomInFab }
+    private val mapZoomOutFab by lazy { binding.mapZoomOutFab }
 
     private lateinit var placeFinderPopup: PlaceFinderPopup
     private lateinit var placeDetailsBottomSheet: PlaceDetailsBottomSheetDialog
-    private lateinit var hikeRecommenderBottomSheet: HikeRecommenderBottomSheetDialog
+    private lateinit var placeCategoryBottomSheetDialog: PlaceCategoryBottomSheetDialog
     private lateinit var hikingRoutesBottomSheet: HikingRoutesBottomSheetDialog
     private lateinit var gpxDetailsBottomSheet: GpxDetailsBottomSheetDialog
     private lateinit var oktRoutesBottomSheet: OktRoutesBottomSheetDialog
@@ -481,6 +493,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             supportFragmentManager.addFragment(R.id.homeRoutePlannerContainer, RoutePlannerFragment::class.java)
         }
         homeLayersFab.setOnClickListener {
+            analyticsService.layersClicked()
             homeViewModel.clearFollowLocation()
             LayersBottomSheetDialogFragment().show(supportFragmentManager, LayersBottomSheetDialogFragment.TAG)
         }
@@ -493,9 +506,20 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             SettingsBottomSheetDialogFragment().show(supportFragmentManager, SettingsBottomSheetDialogFragment.TAG)
         }
         homeHistoryFab.setOnClickListener {
-            analyticsService.gpxHistoryClicked()
+            analyticsService.historyClicked()
             homeViewModel.clearFollowLocation()
             supportFragmentManager.addFragment(R.id.homeFragmentContainer, HistoryFragment::class.java)
+        }
+        homePlaceCategoriesFab.setOnClickListener {
+            PlaceCategoryFragment.addFragment(
+                supportFragmentManager,
+                R.id.homeFragmentContainer,
+                homeMapView.boundingBox.toDomain()
+            )
+        }
+        homeOktFab.setOnClickListener {
+            analyticsService.oktClicked()
+            homeViewModel.loadOktRoutes()
         }
         homeHikeModeFab.setOnClickListener {
             analyticsService.hikeModeClicked()
@@ -506,11 +530,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
             homeViewModel.toggleLiveCompass(homeMapView.mapOrientation)
         }
-        mapZoomControllerPlus.setOnClickListener {
+        mapZoomInFab.setOnClickListener {
             homeMapView.controller.zoomIn()
             myLocationOverlay?.lockZoom(homeMapView.zoomLevelDouble.inc())
         }
-        mapZoomControllerMinus.setOnClickListener {
+        mapZoomOutFab.setOnClickListener {
             homeMapView.controller.zoomOut()
             myLocationOverlay?.lockZoom(homeMapView.zoomLevelDouble.dec())
         }
@@ -547,27 +571,26 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             binding.homePlaceDetailsBottomSheetContainer,
             analyticsService
         )
-        hikeRecommenderBottomSheet = HikeRecommenderBottomSheetDialog(
-            binding.homeHikeRecommenderBottomSheetContainer,
+        placeCategoryBottomSheetDialog = PlaceCategoryBottomSheetDialog(
+            binding.homePlaceCategoryBottomSheetContainer,
             analyticsService
         )
         oktRoutesBottomSheet = OktRoutesBottomSheetDialog(
             binding.homeOktRoutesBottomSheetContainer,
             analyticsService
         )
-
         bottomSheets = listOf(
             placeDetailsBottomSheet,
             hikingRoutesBottomSheet,
             gpxDetailsBottomSheet,
-            hikeRecommenderBottomSheet,
+            placeCategoryBottomSheetDialog,
             oktRoutesBottomSheet,
         )
 
         placeDetailsBottomSheet.hide()
         hikingRoutesBottomSheet.hide()
         gpxDetailsBottomSheet.hide()
-        hikeRecommenderBottomSheet.hide()
+        placeCategoryBottomSheetDialog.hide()
         oktRoutesBottomSheet.hide()
     }
 
@@ -621,8 +644,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 overlay.startLocationFlow()
                     .distinctUntilChanged()
                     .onEach { myLocation ->
-                        homeViewModel.loadLandscapes(myLocation)
-
                         initAltitude(myLocation.altitude)
 
                         homeMapView.doOnInfoWindows<DistanceInfoWindow> { marker, infoWindow ->
@@ -673,6 +694,44 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         initPlaceFinderFlows()
         initRoutePlannerFlows()
         initProductFlows()
+        initPlaceCategoryFlows()
+    }
+
+    private fun initPlaceCategoryFlows() {
+        lifecycleScope.launch {
+            homeViewModel.placesByCategories
+                .flowWithLifecycle(lifecycle)
+                .collect { placesByCategories ->
+                    bottomSheets.hideAll()
+                    initPlaceCategories(placesByCategories)
+                    binding.homePlaceCategoryRefreshButton.setOnClickListener {
+                        val placeCategories = placesByCategories.keys
+                        val boundingBox = homeMapView.boundingBox.toDomain()
+
+                        homeViewModel.loadPlaceCategories(placeCategories, boundingBox, true)
+                    }
+                }
+        }
+        lifecycleScope.launch {
+            placeCategoryEventViewModel.event
+                .flowWithLifecycle(lifecycle)
+                .collect { event ->
+                    when (event) {
+                        is PlaceCategoryEvent.PlaceCategorySelected -> {
+                            val boundingBox = homeMapView.boundingBox.toDomain()
+
+                            homeViewModel.loadPlaceCategories(setOf(event.placeCategory), boundingBox)
+                        }
+                        is PlaceCategoryEvent.LandscapeSelected -> {
+                            homeViewModel.loadLandscapeDetails(event.landscape)
+                        }
+                        is PlaceCategoryEvent.HikingRouteSelected -> {
+                            homeViewModel.loadHikingRoutes(event.placeArea)
+                            placeCategoryBottomSheetDialog.hide()
+                        }
+                    }
+                }
+        }
     }
 
     private fun initMapFlows() {
@@ -754,13 +813,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .collect { initPlaceDetails(it) }
         }
         lifecycleScope.launch {
-            homeViewModel.landscapes
-                .flowWithLifecycle(lifecycle)
-                .collect { landscapes ->
-                    landscapes?.let { initLandscapes(it) }
-                }
-        }
-        lifecycleScope.launch {
             homeViewModel.landscapeDetails
                 .flowWithLifecycle(lifecycle)
                 .collect { initLandscapeDetails(it) }
@@ -794,10 +846,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
         }
         lifecycleScope.launch {
-            homeViewModel.loading
+            homeViewModel.isLoading
                 .flowWithLifecycle(lifecycle)
                 .collect { isLoading ->
                     binding.homeSearchBarProgress.visibleOrGone(isLoading)
+                }
+        }
+        lifecycleScope.launch {
+            homeViewModel.homeEvents
+                .flowWithLifecycle(lifecycle)
+                .collect { homeEvents ->
+                    initHomeEvents(homeEvents)
                 }
         }
     }
@@ -858,11 +917,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                                 homeHikeModeHeaderGroup.gone()
                                 homeHikeModeFab.show()
                                 homeRoutePlannerFab.hide()
+                                homeViewModel.clearPlaceCategories()
                             }
                             !isHikeModeEnabled -> {
                                 homeRoutePlannerHeaderGroup.gone()
                                 homeHikeModeFab.hide()
                                 homeRoutePlannerFab.hide()
+                                homeViewModel.clearPlaceCategories()
                             }
                         }
                     }
@@ -959,6 +1020,41 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
+    private fun initHomeEvents(homeEvents: HomeEvents) {
+        when (homeEvents) {
+            is HomeEvents.OsmTagsLoaded -> {
+                showPopupMenu(
+                    anchorView = binding.root,
+                    actionItems = emptyList(),
+                    width = R.dimen.default_popup_menu_width_with_header,
+                    showAtCenter = true,
+                    headerTitle = R.string.osm_data_popup_title.toMessage(),
+                    footerMessage = R.string.place_details_osm_id_template
+                        .toMessage(listOf(homeEvents.osmId))
+                        .resolve(this@HomeActivity)
+                        .plus(homeEvents.osmTags)
+                        .toMessage()
+                )
+            }
+            is HomeEvents.PlaceCategoryEmpty -> {
+                showErrorSnackbar(
+                    homeContainer,
+                    Message.Res(
+                        res = R.string.place_category_empty_message,
+                        formatArgs = listOf(
+                            homeEvents.emptyCategories.joinToString(", ") {
+                                getString(
+                                    R.string.place_category_empty_message_category_template,
+                                    it.title.resolve(this@HomeActivity)
+                                )
+                            }
+                        )
+                    )
+                )
+            }
+        }
+    }
+
     private fun initPickLocationEvents(events: PickLocationEvents) {
         when (events) {
             PickLocationEvents.LocationPickEnabled -> {
@@ -1045,43 +1141,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.invalidate()
     }
 
-    private fun initLandscapes(landscapes: List<LandscapeUiModel>) {
-        binding.homeLandscapeChipGroup.removeAllViews()
-        addChip(
-            label = R.string.okt_routes_chip_label.toMessage(),
-            iconRes = R.drawable.ic_okt_routes_chip,
-            onClick = {
-                analyticsService.oktChipClicked()
-                homeViewModel.loadOktRoutes()
-                layersViewModel.clearGpxDetails()
-            }
-        )
-        landscapes.forEach { landscape ->
-            addChip(
-                label = landscape.name,
-                iconRes = landscape.iconRes,
-                onClick = {
-                    analyticsService.loadLandscapeClicked(landscape.name.resolve(this))
-                    homeViewModel.loadLandscapeDetails(landscape)
-                }
-            )
-        }
-    }
-
-    private fun addChip(label: Message, @DrawableRes iconRes: Int, onClick: () -> Unit) {
-        val chipBinding = ItemHomeLandscapesChipBinding.inflate(
-            layoutInflater,
-            binding.homeLandscapeChipGroup,
-            false
-        )
-        with(chipBinding.landscapesChip) {
-            text = label.resolve(this@HomeActivity)
-            setChipIconResource(iconRes)
-            setOnClickListener { onClick.invoke() }
-        }
-        binding.homeLandscapeChipGroup.addView(chipBinding.root)
-    }
-
     private fun initHikeMode(uiModel: HikeModeUiModel) {
         Timber.d("HikeModeUiModel updated: $uiModel")
 
@@ -1113,8 +1172,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
 
             homeCompassFab.show()
-            mapZoomControllerPlus.show()
-            mapZoomControllerMinus.show()
+            mapZoomInFab.show()
+            mapZoomOutFab.show()
 
             if (homeMapView.areInfoWindowsClosed<DistanceInfoWindow>()) {
                 postMainDelayed(HIKE_MODE_INFO_WINDOW_SHOW_DELAY) {
@@ -1131,8 +1190,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             homeHikeModeFab.imageTintList = getColorStateList(R.color.colorPrimaryIconStrong)
 
             homeCompassFab.hide()
-            mapZoomControllerPlus.hide()
-            mapZoomControllerMinus.hide()
+            mapZoomInFab.hide()
+            mapZoomOutFab.hide()
 
             homeMapView.closeInfoWindows<DistanceInfoWindow>()
             homeMapView.resetOrientation()
@@ -1152,16 +1211,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 val boundingBox = BoundingBox.fromGeoPoints(geometryUiModel.ways.flatMap { it.geoPoints })
                 val offsetBoundingBox = boundingBox.withOffset(homeMapView, OffsetType.LANDSCAPE)
                 val overlays = mutableListOf<OverlayWithIW>()
-                val hikeRecommendation = HikeRecommenderMapper.map(landscapeUiModel, boundingBox)
+                val placeArea = PlaceAreaMapper.map(landscapeUiModel, boundingBox)
 
                 geometryUiModel.ways.forEach { way ->
                     val landscapeOverlays = homeMapView.addLandscapePolyOverlay(
                         overlayId = landscapeUiModel.osmId,
-                        center = landscapeUiModel.geoPoint,
-                        centerMarkerDrawable = landscapeUiModel.markerRes.toDrawable(this),
                         way = way,
                         onClick = {
-                            initHikeRecommenderBottomSheet(hikeRecommendation)
+                            initPlaceCategoryBottomSheet(placeArea)
 
                             homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
                         }
@@ -1169,7 +1226,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     overlays.addAll(landscapeOverlays)
                 }
 
-                initHikeRecommenderBottomSheet(hikeRecommendation)
+                initPlaceCategoryBottomSheet(placeArea)
 
                 homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
             }
@@ -1355,6 +1412,63 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
     }
 
+    private fun initPlaceCategories(placesByCategories: Map<PlaceCategory, List<PlaceUiModel>>) {
+        if (placesByCategories.isEmpty()) {
+            binding.homePlaceCategoryContainer.gone()
+            placeCategoriesChipGroup.removeAllViews()
+            homeMapView.removeOverlays(PlaceCategoryMarker::class.java)
+        } else {
+            binding.homePlaceCategoryContainer.visible()
+
+            placeCategoriesChipGroup.children.forEach { chip ->
+                if (chip.tag !in placesByCategories.keys.map { it.name }) {
+                    placeCategoriesChipGroup.removeView(chip)
+                }
+            }
+
+            placesByCategories.forEach { placeByCategory ->
+                val placeCategory = placeByCategory.key
+                val places = placeByCategory.value
+
+                if (placeCategoriesChipGroup.children.none { it.tag == placeCategory.name }) {
+                    placeCategoriesChipGroup.addSelectionChip(
+                        viewTag = placeCategory.name,
+                        title = placeCategory.title,
+                        backgroundColorRes = placeCategory.categoryColorRes,
+                        onClick = {
+                            homeViewModel.clearPlaceCategory(placeCategory)
+                            removePlaceCategoryMarkers(listOf(placeCategory))
+                            homeMapView.invalidate()
+                        }
+                    )
+                }
+
+                places.forEach { placeUiModel ->
+                    homeMapView.addPlaceCategoryMarker(
+                        placeCategory = placeCategory,
+                        geoPoint = placeUiModel.geoPoint,
+                        infoWindowTitle = placeUiModel.primaryText.resolve(this@HomeActivity),
+                        iconDrawable = placeUiModel.iconRes.toDrawable(this@HomeActivity),
+                        onMarkerClick = { marker ->
+                            initNodeBottomSheet(placeUiModel, marker)
+
+                            homeMapView.center(placeUiModel.geoPoint)
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun removePlaceCategoryMarkers(placeCategories: List<PlaceCategory>) {
+        placeCategories.forEach { placeCategory ->
+            homeMapView.overlays.removeAll {
+                it is PlaceCategoryMarker && it.placeCategory == placeCategory
+            }
+            homeMapView.invalidate()
+        }
+    }
+
     private fun initOktRoutesBottomSheet(oktRoutes: OktRoutesUiModel, selectedOktId: String) {
         oktRoutesBottomSheet.init(
             oktRoutes = oktRoutes.routes,
@@ -1426,10 +1540,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
                 homeViewModel.clearPlaceDetails()
             },
-            onHikeRecommenderClick = {
-                val hikeRecommendation = HikeRecommenderMapper.map(placeUiModel, homeMapView.boundingBox)
-
-                initHikeRecommenderBottomSheet(hikeRecommendation)
+            onPlaceCategoryFinderClick = {
+                initPlaceCategoryBottomSheet(PlaceAreaMapper.map(placeUiModel, homeMapView.boundingBox))
+            },
+            onAllOsmDataClick = {
+                homeViewModel.loadOsmTags(placeUiModel)
             }
         )
         bottomSheets.showOnly(placeDetailsBottomSheet)
@@ -1447,32 +1562,24 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         bottomSheets.showOnly(placeDetailsBottomSheet)
     }
 
-    private fun initHikeRecommenderBottomSheet(hikeRecommendation: HikeRecommendation) {
+    private fun initPlaceCategoryBottomSheet(placeArea: PlaceArea) {
         lifecycleScope.launch {
-            val isInfoButtonEnabled = settingsRepository.isHikeRecommenderInfoEnabled().first()
-
             postMain {
-                hikeRecommenderBottomSheet.init(
-                    hikeRecommendation = hikeRecommendation,
-                    isInfoButtonEnabled = isInfoButtonEnabled,
+                placeCategoryBottomSheetDialog.init(
+                    placeArea = placeArea,
                     onHikingTrailsClick = {
-                        val title = hikeRecommendation.title.resolve(this@HomeActivity)
-                        val boundingBox = hikeRecommendation.hikingRoutesBoundingBox
-
-                        homeViewModel.loadHikingRoutes(title, boundingBox)
-                        hikeRecommenderBottomSheet.hide()
+                        homeViewModel.loadHikingRoutes(placeArea)
+                        placeCategoryBottomSheetDialog.hide()
+                    },
+                    onCategoryClick = { placeCategory ->
+                        homeViewModel.loadPlaceCategories(setOf(placeCategory), placeArea.boundingBox)
                     },
                     onCloseClick = {
                         homeViewModel.clearLandscapeDetails()
-                        hikeRecommenderBottomSheet.hide()
-                    },
-                    onCloseInfoTextClick = {
-                        lifecycleScope.launch {
-                            settingsRepository.saveHikeRecommenderInfoEnabled(false)
-                        }
+                        placeCategoryBottomSheetDialog.hide()
                     },
                 )
-                bottomSheets.showOnly(hikeRecommenderBottomSheet)
+                bottomSheets.showOnly(placeCategoryBottomSheetDialog)
             }
         }
     }

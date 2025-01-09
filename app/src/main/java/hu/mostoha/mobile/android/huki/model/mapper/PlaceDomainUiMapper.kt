@@ -3,18 +3,22 @@ package hu.mostoha.mobile.android.huki.model.mapper
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.OsmTags
 import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
+import hu.mostoha.mobile.android.huki.util.OSM_ID_UNKNOWN_PREFIX
 import hu.mostoha.mobile.android.huki.util.calculateCenter
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import org.osmdroid.util.GeoPoint
@@ -25,16 +29,15 @@ class PlaceDomainUiMapper @Inject constructor(
     private val hikingRouteRelationMapper: HikingRouteRelationMapper,
 ) {
 
-    fun mapHistoryPlace(place: Place, myLocation: Location? = null): PlaceUiModel {
+    fun mapToPlaceUiModel(place: Place, myLocation: Location? = null): PlaceUiModel {
         return PlaceUiModel(
             osmId = place.osmId,
             placeType = place.placeType,
-            primaryText = place.name.toMessage(),
-            secondaryText = place.address.toMessage(),
-            iconRes = if (place.historyInfo != null) {
-                R.drawable.ic_place_type_history
-            } else {
-                when (place.placeType) {
+            primaryText = place.name,
+            secondaryText = place.fullAddress.toMessage(),
+            iconRes = when {
+                place.historyInfo != null -> R.drawable.ic_place_type_history
+                else -> when (place.placeType) {
                     PlaceType.NODE -> R.drawable.ic_place_type_node
                     PlaceType.WAY -> R.drawable.ic_place_type_way
                     PlaceType.RELATION, PlaceType.HIKING_ROUTE -> R.drawable.ic_place_type_relation
@@ -46,7 +49,77 @@ class PlaceDomainUiMapper @Inject constructor(
                 DistanceFormatter.formatWithoutScale(place.location.distanceBetween(myLocation))
             },
             placeFeature = place.placeFeature,
+            historyInfo = place.historyInfo
+        )
+    }
+
+    fun mapWithCategory(
+        placeCategories: Set<PlaceCategory>,
+        places: List<Place>
+    ): Map<PlaceCategory, List<PlaceUiModel>> {
+        return placeCategories.associateWith { category ->
+            places
+                .filter { it.placeCategory == category }
+                .map { mapPlaceWithCategory(it, category) }
+        }
+    }
+
+    private fun mapPlaceWithCategory(place: Place, placeCategory: PlaceCategory): PlaceUiModel {
+        return PlaceUiModel(
+            osmId = place.osmId,
+            placeType = place.placeType,
+            primaryText = place.name,
+            secondaryText = if (place.osmTags == null) {
+                place.fullAddress.toMessage()
+            } else {
+                val importantOsmTags = placeCategory.importantOsmTags
+                    .mapNotNull { tag ->
+                        val osmTag = place.osmTags.entries.firstOrNull { it.key == tag.osmKey }
+                        if (osmTag == null) {
+                            return@mapNotNull null
+                        }
+                        val osmTagValue = osmTag.value
+                        val title = tag.title.toMessage()
+                        val resolvedValue = tag.valueResolver?.invoke(osmTagValue) ?: osmTagValue.toMessage()
+
+                        title to resolvedValue
+                    }
+                val resolvedTags = importantOsmTags
+                    .mapIndexed { index, (title, value) ->
+                        if (index == importantOsmTags.lastIndex) {
+                            Message.Res(R.string.place_details_osm_tag_template_end, listOf(title, value))
+                        } else {
+                            Message.Res(R.string.place_details_osm_tag_template, listOf(title, value))
+                        }
+                    }
+
+                val formatArgs = (0..2).map { resolvedTags.getOrNull(it) ?: "" }
+
+                if (formatArgs.all { it is String && it.isBlank() }) {
+                    place.fullAddress.toMessage()
+                } else {
+                    Message.Res(
+                        res = R.string.place_details_osm_tags_template,
+                        formatArgs = formatArgs
+                    )
+                }
+            },
+            osmTags = place.osmTags
+                ?.map { "${it.key}: ${it.value}" }
+                ?.joinToString("\n"),
+            resolvedOsmTags = place.osmTags
+                ?.mapNotNull { (key, value) ->
+                    val osmTag = OsmTags.entries.firstOrNull { key == it.osmKey } ?: return@mapNotNull null
+
+                    osmTag to value
+                }
+                ?.associate { it.first to it.second },
+            iconRes = placeCategory.iconRes,
+            geoPoint = place.location.toGeoPoint(),
+            boundingBox = place.boundingBox,
+            placeFeature = place.placeFeature,
             historyInfo = place.historyInfo,
+            placeCategory = placeCategory
         )
     }
 
@@ -116,8 +189,8 @@ class PlaceDomainUiMapper @Inject constructor(
                 osmId = geocodedPlace.osmId,
                 placeType = geocodedPlace.placeType,
                 geoPoint = geoPoint,
-                primaryText = geocodedPlace.name.toMessage(),
-                secondaryText = geocodedPlace.address.toMessage(),
+                primaryText = geocodedPlace.name,
+                secondaryText = geocodedPlace.fullAddress.toMessage(),
                 iconRes = when (geocodedPlace.placeType) {
                     PlaceType.NODE -> R.drawable.ic_place_type_node
                     PlaceType.WAY -> R.drawable.ic_place_type_way
@@ -127,7 +200,7 @@ class PlaceDomainUiMapper @Inject constructor(
             )
         } else {
             PlaceUiModel(
-                osmId = UUID.randomUUID().toString(),
+                osmId = "$OSM_ID_UNKNOWN_PREFIX${UUID.randomUUID()}",
                 placeType = PlaceType.NODE,
                 geoPoint = geoPoint,
                 primaryText = LocationFormatter.formatText(geoPoint),

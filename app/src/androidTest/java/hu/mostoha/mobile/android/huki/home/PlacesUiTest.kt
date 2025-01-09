@@ -162,7 +162,7 @@ class PlacesUiTest {
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
 
             R.string.home_bottom_sheet_route_plan_button.isTextDisplayed()
-            R.id.placeDetailsHikingRecommenderButton.isDisplayed()
+            R.id.placeDetailsFinderButton.isDisplayed()
             R.id.placeDetailsButtonGroupScrollView.swipeLeft()
             R.id.placeDetailsGoogleNavButton.isDisplayed()
             R.string.home_bottom_sheet_show_points_button.isTextNotDisplayed()
@@ -245,10 +245,8 @@ class PlacesUiTest {
     }
 
     @Test
-    fun givenNodePlace_whenClickHikeRecommender_thenHikeRecommenderBottomSheetDisplays() {
-        Intents.init()
+    fun givenNodePlace_whenClickFinder_thenPlaceCategoryBottomSheetDisplays() {
         answerTestPlaces()
-        answerTestGeometries()
 
         launchScenario<HomeActivity> {
             val searchText = DEFAULT_SEARCH_TEXT
@@ -257,9 +255,9 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
-            R.id.placeDetailsHikingRecommenderButton.click()
+            R.id.placeDetailsFinderButton.click()
 
-            R.id.hikeRecommenderContentContainer.isDisplayed()
+            R.id.homePlaceCategoryBottomSheetContainer.isDisplayed()
         }
     }
 
@@ -293,7 +291,7 @@ class PlacesUiTest {
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
 
             R.string.home_bottom_sheet_route_plan_button.isTextDisplayed()
-            R.string.home_bottom_sheet_hike_recommender_button.isTextDisplayed()
+            R.string.place_details_finder_button.isTextDisplayed()
             R.id.placeDetailsButtonGroupScrollView.swipeLeft()
             R.string.home_bottom_sheet_show_points_button.isTextDisplayed()
         }
@@ -367,14 +365,13 @@ class PlacesUiTest {
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
             R.string.home_bottom_sheet_show_points_button.clickWithTextWithScroll()
 
-
             DEFAULT_PLACE_RELATION.name.isTextDisplayed()
             R.id.placeDetailsButtonGroupScrollView.isNotDisplayed()
         }
     }
 
     @Test
-    fun givenRelationPlace_whenClickOnAllShowPointsButton_thenPlaceDetailsDisplayOnMap() {
+    fun givenRelationPlace_whenClickOnShowAllPointsButton_thenPlaceDetailsDisplayOnMap() {
         answerTestPlaces()
         answerTestGeometries()
 

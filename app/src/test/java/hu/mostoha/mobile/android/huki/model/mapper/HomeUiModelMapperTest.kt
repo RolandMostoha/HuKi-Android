@@ -32,6 +32,7 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.util.calculateCenter
+import hu.mostoha.mobile.android.huki.util.toTestPlaceArea
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.osmdroid.util.GeoPoint
@@ -56,7 +57,6 @@ class HomeUiModelMapperTest {
                     name = landscape.nameRes.toMessage(),
                     geoPoint = landscape.center.toGeoPoint(),
                     iconRes = R.drawable.ic_landscapes_mountain_medium,
-                    markerRes = R.drawable.ic_marker_landscapes_mountain_medium,
                 )
             )
         )
@@ -79,7 +79,6 @@ class HomeUiModelMapperTest {
                     name = landscape.nameRes.toMessage(),
                     geoPoint = landscape.center.toGeoPoint(),
                     iconRes = R.drawable.ic_landscapes_mountain_medium,
-                    markerRes = R.drawable.ic_marker_landscapes_mountain_medium,
                 )
             )
         )
@@ -110,23 +109,23 @@ class HomeUiModelMapperTest {
 
     @Test
     fun `Given hiking route domain models, when mapHikingRoutes, then correct HikingRoutesItem returns`() {
-        val placeName = DEFAULT_HIKING_ROUTE_NAME
+        val placeArea = DEFAULT_HIKING_ROUTE_NAME.toTestPlaceArea()
         val hikingRoute = HikingRoute(
             osmId = DEFAULT_HIKING_ROUTE_OSM_ID,
             name = DEFAULT_HIKING_ROUTE_NAME,
             symbolType = SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL)
         )
 
-        val hikingRouteItems = mapper.mapHikingRoutes(placeName, listOf(hikingRoute))
+        val hikingRouteItems = mapper.mapHikingRoutes(placeArea, listOf(hikingRoute))
 
         assertThat(hikingRouteItems).isEqualTo(
             listOf(
-                HikingRoutesItem.Header(placeName),
+                HikingRoutesItem.Header(placeArea),
                 HikingRoutesItem.Item(
                     HikingRouteUiModel(
                         osmId = hikingRoute.osmId,
                         name = hikingRoute.name,
-                        symbolIcon = hikingRoute.symbolType.getIconRes()
+                        symbolIcon = hikingRoute.symbolType.iconRes
                     )
                 )
             )
@@ -135,13 +134,13 @@ class HomeUiModelMapperTest {
 
     @Test
     fun `Given empty hiking route domain models, when mapHikingRoutes, then empty HikingRoutesItem with header returns`() {
-        val placeName = DEFAULT_HIKING_ROUTE_NAME
+        val placeArea = DEFAULT_HIKING_ROUTE_NAME.toTestPlaceArea()
 
-        val hikingRouteItems = mapper.mapHikingRoutes(placeName, emptyList())
+        val hikingRouteItems = mapper.mapHikingRoutes(placeArea, emptyList())
 
         assertThat(hikingRouteItems).isEqualTo(
             listOf(
-                HikingRoutesItem.Header(placeName),
+                HikingRoutesItem.Header(placeArea),
                 HikingRoutesItem.Empty
             )
         )
@@ -152,7 +151,7 @@ class HomeUiModelMapperTest {
         val hikingRoute = HikingRouteUiModel(
             osmId = DEFAULT_HIKING_ROUTE_OSM_ID,
             name = DEFAULT_HIKING_ROUTE_NAME,
-            symbolIcon = SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL).getIconRes()
+            symbolIcon = SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL).iconRes
         )
         val geometry = Geometry.Node(
             osmId = DEFAULT_PLACE_UI_MODEL.osmId,
@@ -169,7 +168,7 @@ class HomeUiModelMapperTest {
         val hikingRoute = HikingRouteUiModel(
             osmId = DEFAULT_HIKING_ROUTE_OSM_ID,
             name = DEFAULT_HIKING_ROUTE_NAME,
-            symbolIcon = SymbolType.PC.getIconRes()
+            symbolIcon = SymbolType.PC.iconRes
         )
         val geometry = Geometry.Relation(
             osmId = hikingRoute.osmId,

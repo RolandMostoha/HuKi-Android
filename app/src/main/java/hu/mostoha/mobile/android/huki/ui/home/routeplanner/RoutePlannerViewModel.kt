@@ -185,7 +185,7 @@ class RoutePlannerViewModel @Inject constructor(
             _wayPointItems.update { wayPointItemList ->
                 wayPointItemList.update(waypointItem) { wayPointItem ->
                     wayPointItem.copy(
-                        primaryText = place?.name?.toMessage() ?: defaultPrimaryText,
+                        primaryText = place?.name ?: defaultPrimaryText,
                         location = lastKnownLocation,
                         searchText = null
                     )
@@ -210,7 +210,7 @@ class RoutePlannerViewModel @Inject constructor(
             _wayPointItems.update { wayPointItemList ->
                 wayPointItemList.update(waypointItem) { wayPointItem ->
                     wayPointItem.copy(
-                        primaryText = place?.name?.toMessage() ?: defaultPrimaryText,
+                        primaryText = place?.name ?: defaultPrimaryText,
                         location = location,
                         searchText = null
                     )

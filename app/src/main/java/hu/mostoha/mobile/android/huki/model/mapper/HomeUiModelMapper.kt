@@ -11,6 +11,7 @@ import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import javax.inject.Inject
@@ -26,8 +27,7 @@ class HomeUiModelMapper @Inject constructor(
                 osmType = landscape.osmType,
                 name = landscape.nameRes.toMessage(),
                 geoPoint = landscape.center.toGeoPoint(),
-                iconRes = getLandscapeIcon(landscape),
-                markerRes = getMarkerIcon(landscape),
+                iconRes = getLandscapeIcon(landscape)
             )
         }
     }
@@ -50,21 +50,21 @@ class HomeUiModelMapper @Inject constructor(
         )
     }
 
-    fun mapHikingRoutes(placeName: String, hikingRoutes: List<HikingRoute>): List<HikingRoutesItem> {
+    fun mapHikingRoutes(placeArea: PlaceArea, hikingRoutes: List<HikingRoute>): List<HikingRoutesItem> {
         return if (hikingRoutes.isEmpty()) {
             mutableListOf<HikingRoutesItem>()
-                .plus(HikingRoutesItem.Header(placeName))
+                .plus(HikingRoutesItem.Header(placeArea))
                 .plus(HikingRoutesItem.Empty)
         } else {
             mutableListOf<HikingRoutesItem>()
-                .plus(HikingRoutesItem.Header(placeName))
+                .plus(HikingRoutesItem.Header(placeArea))
                 .plus(
                     hikingRoutes.map { hikingRoute ->
                         HikingRoutesItem.Item(
                             HikingRouteUiModel(
                                 osmId = hikingRoute.osmId,
                                 name = hikingRoute.name,
-                                symbolIcon = hikingRoute.symbolType.getIconRes()
+                                symbolIcon = hikingRoute.symbolType.iconRes
                             )
                         )
                     }
@@ -85,22 +85,6 @@ class HomeUiModelMapper @Inject constructor(
             LandscapeType.STAR_GAZING_AREA -> R.drawable.ic_landscapes_telescope
             LandscapeType.FOREST_AREA -> R.drawable.ic_landscapes_forest
             LandscapeType.PLAIN_LAND -> R.drawable.ic_landscapes_plain_land
-        }
-    }
-
-    @DrawableRes
-    private fun getMarkerIcon(landscape: Landscape): Int {
-        return when (landscape.landscapeType) {
-            LandscapeType.MOUNTAIN_LOW -> R.drawable.ic_marker_landscapes_mountain_low
-            LandscapeType.MOUNTAIN_MEDIUM -> R.drawable.ic_marker_landscapes_mountain_medium
-            LandscapeType.MOUNTAIN_HIGH -> R.drawable.ic_marker_landscapes_mountain_high
-            LandscapeType.MOUNTAIN_WITH_LAKE -> R.drawable.ic_marker_landscapes_lake
-            LandscapeType.MOUNTAIN_WITH_CASTLE -> R.drawable.ic_marker_landscapes_castle
-            LandscapeType.CAVE_SYSTEM -> R.drawable.ic_marker_landscapes_cave
-            LandscapeType.WINE_AREA -> R.drawable.ic_marker_landscapes_grape
-            LandscapeType.STAR_GAZING_AREA -> R.drawable.ic_marker_landscapes_telescope
-            LandscapeType.FOREST_AREA -> R.drawable.ic_marker_landscapes_forest
-            LandscapeType.PLAIN_LAND -> R.drawable.ic_marker_landscapes_plain_land
         }
     }
 

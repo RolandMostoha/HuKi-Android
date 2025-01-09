@@ -4,6 +4,7 @@ import android.view.MotionEvent
 import android.widget.TextView
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.gone
+import hu.mostoha.mobile.android.huki.extensions.visible
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 
@@ -11,7 +12,7 @@ class GpxMarkerInfoWindow(
     mapView: MapView,
     private val title: String,
     private val description: String? = null,
-    private val onNavigationClick: () -> Unit,
+    private val onNavigationClick: (() -> Unit)? = null,
 ) : InfoWindow(R.layout.info_window_gpx_marker, mapView) {
 
     init {
@@ -37,9 +38,14 @@ class GpxMarkerInfoWindow(
             descriptionTextView.text = description
         }
 
-        navigationButton.setOnClickListener {
-            onNavigationClick()
-            close()
+        if (onNavigationClick != null) {
+            navigationButton.visible()
+            navigationButton.setOnClickListener {
+                onNavigationClick.invoke()
+                close()
+            }
+        } else {
+            navigationButton.gone()
         }
     }
 

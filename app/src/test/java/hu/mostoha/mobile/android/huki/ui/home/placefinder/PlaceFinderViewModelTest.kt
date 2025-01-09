@@ -214,8 +214,8 @@ class PlaceFinderViewModelTest {
         )
         private val DEFAULT_PLACE = Place(
             osmId = DEFAULT_NODE_OSM_ID,
-            name = DEFAULT_NODE_NAME,
-            address = DEFAULT_NODE_CITY,
+            name = DEFAULT_NODE_NAME.toMessage(),
+            fullAddress = DEFAULT_NODE_CITY,
             placeType = PlaceType.NODE,
             location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
             placeFeature = PlaceFeature.MAP_SEARCH,

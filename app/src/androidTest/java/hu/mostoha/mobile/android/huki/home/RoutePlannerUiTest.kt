@@ -580,24 +580,24 @@ class RoutePlannerUiTest {
         private val DEFAULT_PLACE_NODE = Place(
             osmId = DEFAULT_NODE_OSM_ID,
             placeType = PlaceType.NODE,
-            name = DEFAULT_NODE_NAME,
-            address = DEFAULT_NODE_CITY,
+            name = DEFAULT_NODE_NAME.toMessage(),
+            fullAddress = DEFAULT_NODE_CITY,
             placeFeature = PlaceFeature.MAP_SEARCH,
             location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE)
         )
         private val DEFAULT_PLACE_WAY = Place(
             osmId = DEFAULT_WAY_OSM_ID,
             placeType = PlaceType.WAY,
-            name = DEFAULT_WAY_NAME,
-            address = DEFAULT_WAY_CITY,
+            name = DEFAULT_WAY_NAME.toMessage(),
+            fullAddress = DEFAULT_WAY_CITY,
             placeFeature = PlaceFeature.MAP_SEARCH,
             location = Location(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE)
         )
         private val DEFAULT_PLACE_RELATION = Place(
             osmId = DEFAULT_RELATION_OSM_ID,
             placeType = PlaceType.RELATION,
-            name = DEFAULT_RELATION_NAME,
-            address = DEFAULT_RELATION_ADDRESS,
+            name = DEFAULT_RELATION_NAME.toMessage(),
+            fullAddress = DEFAULT_RELATION_ADDRESS,
             placeFeature = PlaceFeature.MAP_SEARCH,
             location = Location(DEFAULT_RELATION_CENTER_LATITUDE, DEFAULT_RELATION_CENTER_LONGITUDE)
         )

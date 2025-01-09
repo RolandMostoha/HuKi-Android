@@ -15,7 +15,6 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import android.location.Location as AndroidLocation
 
-private const val EARTH_RADIUS = 6_372_800
 private const val WAY_CLOSED_DISTANCE_THRESHOLD_METER = 20
 
 /**
@@ -29,7 +28,7 @@ fun Location.distanceBetween(other: Location): Int {
 
     val a = sin(dLat / 2).pow(2.toDouble()) + sin(dLon / 2).pow(2.toDouble()) * cos(originLat) * cos(destinationLat)
     val c = 2 * asin(sqrt(a))
-    val distance = EARTH_RADIUS * c
+    val distance = EARTH_RADIUS_M * c
     return distance.roundToInt()
 }
 

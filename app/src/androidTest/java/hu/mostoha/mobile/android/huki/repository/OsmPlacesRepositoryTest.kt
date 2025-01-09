@@ -8,6 +8,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH
@@ -16,6 +17,10 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_BOUNDING_BOX
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_PLACE_CATEGORY_BOUNDING_BOX_EAST
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_PLACE_CATEGORY_BOUNDING_BOX_NORTH
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_PLACE_CATEGORY_BOUNDING_BOX_SOUTH
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_PLACE_CATEGORY_BOUNDING_BOX_WEST
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_RELATION_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -83,17 +88,30 @@ class OsmPlacesRepositoryTest {
 
     @Test
     fun givenBoundingBox_whenGetHikingRoutes_thenHikingRouteListIsNotEmpty() = runTest {
-        val hikingRoutes = repository.getHikingRoutes(DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES)
+        val hikingRoutes = repository.getHikingRoutes(BOUNDING_BOX_HIKING_ROUTES)
 
         assertThat(hikingRoutes).isNotEmpty()
     }
 
+    @Test
+    fun givenBoundingBox_whenGetPlacesByCategory_thenPlaceListReturns() = runTest {
+        val places = repository.getPlacesByCategories(setOf(PlaceCategory.PARKING), BOUNDING_BOX_PARKING)
+
+        assertThat(places).isNotEmpty()
+    }
+
     companion object {
-        private val DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES = BoundingBox(
+        private val BOUNDING_BOX_HIKING_ROUTES = BoundingBox(
             north = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_NORTH,
             east = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_EAST,
             south = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH,
             west = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_WEST
+        )
+        private val BOUNDING_BOX_PARKING = BoundingBox(
+            north = DEFAULT_PLACE_CATEGORY_BOUNDING_BOX_NORTH,
+            east = DEFAULT_PLACE_CATEGORY_BOUNDING_BOX_EAST,
+            south = DEFAULT_PLACE_CATEGORY_BOUNDING_BOX_SOUTH,
+            west = DEFAULT_PLACE_CATEGORY_BOUNDING_BOX_WEST,
         )
     }
 

@@ -14,6 +14,7 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.util.replaceVowelsWithWildcards
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -37,8 +38,8 @@ class PlaceHistoryRepository @Inject constructor(
                     .map { placeEntity ->
                         Place(
                             osmId = placeEntity.osmId,
-                            name = placeEntity.name,
-                            address = placeEntity.address,
+                            name = placeEntity.name.toMessage(),
+                            fullAddress = placeEntity.address,
                             placeType = PlaceType.NODE,
                             location = Location(placeEntity.latitude, placeEntity.longitude),
                             boundingBox = placeEntity.boundingBox,
@@ -66,8 +67,8 @@ class PlaceHistoryRepository @Inject constructor(
                     .map { placeEntity ->
                         Place(
                             osmId = placeEntity.osmId,
-                            name = placeEntity.name,
-                            address = placeEntity.address,
+                            name = placeEntity.name.toMessage(),
+                            fullAddress = placeEntity.address,
                             placeType = PlaceType.NODE,
                             location = Location(placeEntity.latitude, placeEntity.longitude),
                             boundingBox = placeEntity.boundingBox,

@@ -83,31 +83,31 @@ class HistoryUiModelMapperTest {
                         dateText = R.string.default_date_today.toMessage(),
                     )
                 )
-                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[0])))
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapToPlaceUiModel(places[0])))
                 .plus(
                     PlaceHistoryAdapterModel.Header(
                         dateText = R.string.default_date_yesterday.toMessage(),
                     )
                 )
-                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[1])))
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapToPlaceUiModel(places[1])))
                 .plus(
                     PlaceHistoryAdapterModel.Header(
                         dateText = R.string.default_date_friday.toMessage(),
                     )
                 )
-                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[2])))
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapToPlaceUiModel(places[2])))
                 .plus(
                     PlaceHistoryAdapterModel.Header(
                         dateText = R.string.default_date_thursday.toMessage(),
                     )
                 )
-                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[3])))
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapToPlaceUiModel(places[3])))
                 .plus(
                     PlaceHistoryAdapterModel.Header(
                         dateText = "2022.12.20".toMessage(),
                     )
                 )
-                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(places[4])))
+                .plus(PlaceHistoryAdapterModel.Item(placeMapper.mapToPlaceUiModel(places[4])))
         )
     }
 
@@ -157,9 +157,9 @@ class HistoryUiModelMapperTest {
     companion object {
         private val DEFAULT_PLACE = Place(
             osmId = DEFAULT_NODE_OSM_ID,
-            name = DEFAULT_NODE_NAME,
+            name = DEFAULT_NODE_NAME.toMessage(),
             placeType = PlaceType.NODE,
-            address = DEFAULT_NODE_CITY,
+            fullAddress = DEFAULT_NODE_CITY,
             location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
             placeFeature = PlaceFeature.MAP_SEARCH,
         )

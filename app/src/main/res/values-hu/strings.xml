@@ -29,8 +29,12 @@
     <string name="accessibility_home_fab_my_location">Saját pozícióm</string>
     <string name="accessibility_home_fab_settings">Beállítások</string>
     <string name="accessibility_home_fab_history">Előzmények</string>
+    <string name="accessibility_home_fab_place_categories">Kategória kereső</string>
+    <string name="accessibility_home_fab_okt">Országos Kék Túra</string>
     <string name="accessibility_home_fab_hike_mode">Túra mód</string>
     <string name="accessibility_home_fab_hike_mode_compass">Élő iránytű</string>
+    <string name="accessibility_home_zoom_in">Zoom be</string>
+    <string name="accessibility_home_zoom_out">Zoom ki</string>
     <string name="accessibility_okt_routes_action_button">%s menü gomb</string>
 
     <string name="search_bar_hint">Keresés helységek között</string>
@@ -47,17 +51,16 @@
     <string name="place_details_pick_location_text">Kiválasztott pozíció</string>
     <string name="place_details_okt_waypoint_text">GPX állomás</string>
     <string name="place_details_gpx_waypoint_text">OKT állomás</string>
+    <string name="place_details_finder_button">Kereső</string>
 
     <string name="hike_recommender_landscape_title_template">%s közelében</string>
     <string name="hike_recommender_place_title_template">%s környékén</string>
     <string name="hike_recommender_hiking_trails_button">Nemzeti túraútvonalak</string>
-    <string name="hike_recommender_termeszetjaro_button">Természetjáró túraajánló</string>
-    <string name="hike_recommender_kirandulastippek_button">Kirándulástippek túraajánló</string>
-    <string name="hike_recommender_info">A túraajánlókból letöltött GPX fájlok megnyithatóak az alkalmazással.</string>
+    <string name="hike_recommender_termeszetjaro_button">Természetjáró</string>
+    <string name="hike_recommender_kirandulastippek_button">Kirándulástippek</string>
 
     <string name="home_bottom_sheet_directions_button">Google Nav</string>
     <string name="home_bottom_sheet_show_points_button">Összes pont</string>
-    <string name="home_bottom_sheet_hike_recommender_button">Túraajánló</string>
     <string name="home_bottom_sheet_route_plan_button">Útvonalterv</string>
     <string name="home_bottom_sheet_landscape_secondary">Tájegység</string>
 
@@ -65,6 +68,7 @@
     <string name="gpx_details_bottom_sheet_google_maps_header">Google Maps Navigáció</string>
     <string name="gpx_details_bottom_sheet_google_maps_start">Kezdőponthoz</string>
     <string name="gpx_details_bottom_sheet_google_maps_end">Végponthoz</string>
+    <string name="home_bottom_sheet_osm_data_button">OSM Adatok</string>
     <string name="gpx_details_bottom_sheet_waypoints_only_counter_template">%d állomás</string>
 
     <string name="my_location_rationale_title">Helyadatok engedélyezése</string>
@@ -153,7 +157,6 @@
     <string name="place_history_menu_action_favourite">Kedvenc</string>
     <string name="place_history_menu_action_delete">Törlés</string>
 
-    <string name="okt_routes_chip_label">OKT</string>
     <string name="okt_routes_bottom_sheet_title">OKT - Országos Kéktúra</string>
     <string name="okt_routes_menu_action_details">Részletek és GPX</string>
     <string name="okt_routes_menu_action_start_point">Kezdőpont betöltése</string>
@@ -205,5 +208,76 @@
 
     <string name="new_features_title_template">Új funkciók (%s)</string>
     <string name="new_features_ok_button">OK</string>
+
+    <string name="place_area_distance_template">%s-es körzetében</string>
+
+    <string name="place_category_landscapes_header_title">Tájegységek</string>
+    <string name="place_category_hike_recommendations_header_title">Túraajánlók</string>
+    <string name="place_category_hike_recommendations_info">A túraajánlókból letöltött GPX fájlok megnyithatóak az alkalmazással.</string>
+    <string name="place_category_national_routes_chip_title">Túraútvonalak</string>
+
+    <string name="place_category_group_travel">Közlekedés</string>
+    <string name="place_category_group_nature">Természet</string>
+    <string name="place_category_group_attractions">Látnivalók</string>
+    <string name="place_category_group_shops">Üzletek</string>
+    <string name="place_category_group_useful">Hasznos</string>
+    <string name="place_category_peak">Hegycsúcs</string>
+    <string name="place_category_viewpoint">Kilátó</string>
+    <string name="place_category_historic">Emlékhely</string>
+    <string name="place_category_church">Templom</string>
+    <string name="place_category_museum">Múzeum</string>
+    <string name="place_category_castle">Vár,Kastély</string>
+    <string name="place_category_river">Folyó,Patak</string>
+    <string name="place_category_forest">Erdő</string>
+    <string name="place_category_waterfall">Vízesés</string>
+    <string name="place_category_cave">Barlang</string>
+    <string name="place_category_rock">Szikla</string>
+    <string name="place_category_grocery">Bolt</string>
+    <string name="place_category_restaurant">Étterem,Kávézó</string>
+    <string name="place_category_pharmacy">Gyógyszertár</string>
+    <string name="place_category_parking">Parkolás</string>
+    <string name="place_category_public_transport">Tömegközlekedés</string>
+    <string name="place_category_drinking_water">Ivóvíz</string>
+    <string name="place_category_toilets">Nyilvános WC</string>
+    <string name="place_category_camp_site">Piknikező</string>
+    <string name="place_category_fireplace">Tűzrakóhely</string>
+
+    <string name="place_category_osm_tag_name">Megnevezés</string>
+    <string name="place_category_osm_tag_ele">Magasság</string>
+    <string name="place_category_osm_tag_website">Weboldal</string>
+    <string name="place_category_osm_tag_url">Weboldal</string>
+    <string name="place_category_osm_tag_description">Leírás</string>
+    <string name="place_category_osm_tag_inscription">Felirat</string>
+    <string name="place_category_osm_tag_opening_hours">Nyitvatartás</string>
+    <string name="place_category_osm_tag_operator">Üzemeltető</string>
+    <string name="place_category_osm_tag_capacity">Férőhely</string>
+    <string name="place_category_osm_tag_fee">Fizetős</string>
+    <string name="place_category_osm_tag_ref">Járatszám</string>
+    <string name="place_category_osm_tag_religion">Vallás</string>
+    <string name="place_category_osm_tag_denomination">Felekezet</string>
+    <string name="place_category_osm_tag_jel">Turistajelzés</string>
+    <string name="place_category_empty_message">Nem található %s a környéken!</string>
+    <string name="place_category_too_many_places">Maximum %s találatot töltünk be, kérlek szűkítsd a keresést.</string>
+
+    <string name="okt_okt_title">OKT</string>
+    <string name="okt_okt_subtitle">Országos Kéktúra</string>
+    <string name="okt_rpddk_title">RPDDK</string>
+    <string name="okt_rpddk_subtitle">Dél-dunántúli Kéktúra</string>
+
+    <string name="osm_tag_no">Nem</string>
+    <string name="osm_tag_yes">Igen</string>
+    <string name="osm_tag_christian">Keresztény</string>
+    <string name="osm_tag_muslim">Muslim</string>
+    <string name="osm_tag_jewish">Zsidó</string>
+    <string name="osm_tag_buddhist">Buddhista</string>
+    <string name="osm_tag_hindu">Hindu</string>
+    <string name="osm_tag_pagan">Pogány</string>
+    <string name="osm_tag_catholic">Katolikus</string>
+    <string name="osm_tag_roman_catholic">Római katolikus</string>
+    <string name="osm_tag_greek_catholic">Görög katolikus</string>
+    <string name="osm_tag_protestant">Protestáns</string>
+    <string name="osm_tag_reformed">Református</string>
+
+    <string name="osm_data_popup_title">OSM Adatok</string>
 
 </resources>

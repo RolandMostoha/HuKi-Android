@@ -4,6 +4,7 @@ import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceNetworkDomainMapper
 import hu.mostoha.mobile.android.huki.network.PhotonService
 import timber.log.Timber
@@ -41,6 +42,24 @@ class PhotonGeocodingRepository @Inject constructor(
         }
 
         return placeMapper.mapPlace(response, placeFeature).firstOrNull()
+    }
+
+    override suspend fun getPlaceProfile(location: Location): PlaceProfile? {
+        val response = try {
+            photonService.reverseGeocode(
+                limit = 1,
+                latitude = location.latitude,
+                longitude = location.longitude,
+            )
+        } catch (exception: Exception) {
+            Timber.e(exception, "Network error during geocoding address request")
+
+            exceptionLogger.recordException(exception)
+
+            return null
+        }
+
+        return placeMapper.mapPlaceProfile(response)
     }
 
 }

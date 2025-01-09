@@ -19,3 +19,10 @@ data class BoundingBox(
 fun BoundingBox.toOsm() = OsmBoundingBox(north, east, south, west)
 
 fun OsmBoundingBox.toDomain() = BoundingBox(latNorth, lonEast, latSouth, lonWest)
+
+fun BoundingBox.center(): Location {
+    val centerLat = (south + north) / 2
+    val centerLon = (west + east) / 2
+
+    return Location(centerLat, centerLon)
+}

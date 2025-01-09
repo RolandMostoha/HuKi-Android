@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.fake
 
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.BillingAction
@@ -15,17 +16,17 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun loadLandscapeClicked(placeName: String) = Unit
 
-    override fun placeDetailsHikeRecommenderClicked() = Unit
+    override fun placeDetailsFinderClicked() = Unit
 
-    override fun hikeRecommenderKirandulastippekClicked(placeName: String) = Unit
+    override fun hikeRecommenderKirandulastippekClicked() = Unit
 
-    override fun hikeRecommenderTermeszetjaroClicked(placeName: String) = Unit
+    override fun hikeRecommenderTermeszetjaroClicked() = Unit
 
     override fun hikeRecommenderInfoCloseClicked() = Unit
 
     override fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType) = Unit
 
-    override fun loadHikingRoutesClicked(placeName: String) = Unit
+    override fun loadHikingRoutesClicked() = Unit
 
     override fun loadHikingRouteDetailsClicked(routeName: String) = Unit
 
@@ -59,6 +60,8 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun gpxDetailsWaypointsOnlyImported() = Unit
 
+    override fun layersClicked() = Unit
+
     override fun onLayerSelected(layerType: LayerType) = Unit
 
     override fun settingsClicked() = Unit
@@ -77,6 +80,8 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun settingsOfflineModeInfoClicked() = Unit
 
+    override fun historyClicked() = Unit
+
     override fun gpxHistoryClicked() = Unit
 
     override fun gpxHistoryItemOpened(gpxType: GpxType) = Unit
@@ -91,7 +96,7 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun placeHistoryItemDelete() = Unit
 
-    override fun oktChipClicked() = Unit
+    override fun oktClicked() = Unit
 
     override fun oktRouteClicked(oktId: String) = Unit
 
@@ -132,5 +137,11 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
     override fun newFeaturesSeen(version: String) = Unit
 
     override fun billingEvent(billingAction: BillingAction, billingResponseCode: Int) = Unit
+
+    override fun placeCategoryClicked(placeCategory: PlaceCategory) = Unit
+
+    override fun placeCategoryLoaded(numberOfPlaces: Int) = Unit
+
+    override fun allOsmDataClicked() = Unit
 
 }

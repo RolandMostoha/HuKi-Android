@@ -8,6 +8,7 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.mapper.HikingRouteRelationMapper
 import hu.mostoha.mobile.android.huki.model.mapper.HistoryUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.PlaceHistoryRepository
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
@@ -73,9 +74,9 @@ class PlaceHistoryViewModelTest {
 
         private val DEFAULT_PLACE = Place(
             osmId = DEFAULT_NODE_OSM_ID,
-            name = DEFAULT_NODE_NAME,
+            name = DEFAULT_NODE_NAME.toMessage(),
             placeType = PlaceType.NODE,
-            address = DEFAULT_NODE_CITY,
+            fullAddress = DEFAULT_NODE_CITY,
             location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
             placeFeature = PlaceFeature.MAP_SEARCH,
         )

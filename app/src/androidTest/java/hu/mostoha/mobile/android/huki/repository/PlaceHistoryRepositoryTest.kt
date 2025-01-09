@@ -72,7 +72,7 @@ class PlaceHistoryRepositoryTest {
                 val placeList = awaitItem()
 
                 assertThat(placeList.size).isEqualTo(1)
-                assertThat(placeList.first().name).isEqualTo("Dobogókő Szánkópálya")
+                assertThat(placeList.first().name).isEqualTo("Dobogókő Szánkópálya".toMessage())
             }
         }
     }

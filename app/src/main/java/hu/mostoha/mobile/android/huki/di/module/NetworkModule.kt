@@ -14,7 +14,6 @@ import hu.mostoha.mobile.android.huki.network.GraphhopperService
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
 import hu.mostoha.mobile.android.huki.network.PhotonService
-import hu.mostoha.mobile.android.huki.network.adapter.SymbolTypeAdapter
 import hu.mostoha.mobile.android.huki.network.interceptor.TimeoutInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -53,9 +52,7 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideMoshi(): Moshi {
-        return Moshi.Builder()
-            .add(SymbolTypeAdapter())
-            .build()
+        return Moshi.Builder().build()
     }
 
     @Singleton

@@ -55,6 +55,10 @@
     <dimen name="default_tab_indicator_height">4dp</dimen>
     <dimen name="default_popup_menu_width">195dp</dimen>
     <dimen name="default_popup_menu_width_with_header">250dp</dimen>
+    <dimen name="default_bottom_sheet_peek_height">250dp</dimen>
+    <dimen name="default_chip_min_height">50dp</dimen>
+    <dimen name="default_chip_icon_size">@dimen/icon_size_medium</dimen>
+    <dimen name="default_chip_stroke_width">3dp</dimen>
 
     <dimen name="progress_fab_progress_bar_size_mini">46dp</dimen>
     <dimen name="progress_fab_progress_bar_size_normal">64dp</dimen>
@@ -64,15 +68,15 @@
     <dimen name="home_marker_size_poi">45dp</dimen>
     <dimen name="home_fab_container_bottom_margin">@dimen/space_extra_extra_large</dimen>
 
-    <dimen name="home_search_bar_height">61dp</dimen>
+    <dimen name="home_search_bar_height">62dp</dimen>
     <dimen name="home_search_bar_vertical_offset">3dp</dimen>
     <dimen name="home_search_bar_stroke_width">1dp</dimen>
     <dimen name="home_search_bar_progress_size">25dp</dimen>
     <dimen name="home_search_bar_popup_height">350dp</dimen>
     <dimen name="home_search_bar_app_icon_size">45dp</dimen>
+    <dimen name="home_horizontal_margin">18dp</dimen>
 
     <dimen name="home_landscapes_icon_size">20dp</dimen>
-    <dimen name="home_landscapes_chip_min_height">42dp</dimen>
 
     <dimen name="home_my_location_altitude_vertical_padding">7dp</dimen>
 
@@ -100,8 +104,6 @@
     <dimen name="map_view_text_stroke_width">3dp</dimen>
 
     <dimen name="place_details_bottom_sheet_image_size">45dp</dimen>
-
-    <dimen name="hiking_routes_bottom_sheet_peek_height">250dp</dimen>
 
     <dimen name="layers_image_stroke_width">3dp</dimen>
     <dimen name="layers_layer_title_bottom_margin">7dp</dimen>
@@ -133,5 +135,10 @@
 
     <dimen name="support_supporter_badge_size">65dp</dimen>
     <dimen name="support_product_icon_size">45dp</dimen>
+
+    <dimen name="place_category_marker_background_size">38dp</dimen>
+    <dimen name="place_category_marker_icon_size">18dp</dimen>
+    <dimen name="place_category_stroke_width">1dp</dimen>
+    <dimen name="place_category_icon_size">@dimen/icon_size_medium</dimen>
 
 </resources>

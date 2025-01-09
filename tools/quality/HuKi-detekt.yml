@@ -585,7 +585,7 @@ style:
     active: false
     maxChainedCalls: 5
   MaxLineLength:
-    excludes: [ '**/constants/**', '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
+    excludes: [ '**/*Constants.kt', '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
     active: true
     maxLineLength: 120
     excludePackageStatements: true

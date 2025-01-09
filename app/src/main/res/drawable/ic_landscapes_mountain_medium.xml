@@ -1,10 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/icon_size_medium"
-    android:height="@dimen/icon_size_medium"
-    android:viewportWidth="1024"
-    android:viewportHeight="1024">
-    <path
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <group
+        android:pivotX="256"
+        android:pivotY="256"
+        android:scaleX="0.85"
+        android:scaleY="0.85">
+        <path
+            android:fillColor="@color/colorPrimaryIcon"
+            android:pathData="M479.81,437.45 L397.93,295.64a43.16,43.16 0,0 0,-74.63 -0.31l29.83,51.66a17.11,17.11 0,0 1,-29.63 17.11L303.52,329.49l-0.02,0.04 -56.78,-98.35a55.09,55.09 0,0 0,-95.43 0v-0.01L32.19,437.45A17.1,17.1 0,0 0,47 463.1H465a17.1,17.1 0,0 0,14.81 -25.65Z" />
+
+        <path
         android:fillColor="@color/colorPrimaryIcon"
-        android:pathData="M947.7,790.2l-871.4,0l271.1,-440.7l99.5,159.2l0.4,-0.6l8.9,14.3l8.9,14.2l62.4,99.9l17,-10.6l16.9,-10.6l-73.2,-117.2l-8.9,-14.2l-8.9,-14.3l141.4,-235.8z" />
+            android:pathData="M335,123m-74.1,0a74.1,74.1 0,1 1,148.2 0a74.1,74.1 0,1 1,-148.2 0" />
+    </group>
 </vector>

@@ -1,6 +1,11 @@
 package hu.mostoha.mobile.android.huki.overpasser.query;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 import java.util.Set;
+
+import kotlin.Pair;
 
 
 /**
@@ -79,6 +84,51 @@ public class OverpassFilterQuery extends AbstractOverpassSubQuery {
     public OverpassFilterQuery way() {
         applySeparator();
         builder.append("way");
+
+        return this;
+    }
+
+    /**
+     * Appends the string <i>nwr</i> (node, way, relation) to the current query.
+     *
+     * @return the current query object
+     */
+    public OverpassFilterQuery nwr() {
+        applySeparator();
+        builder.append("nwr");
+
+        return this;
+    }
+
+    public OverpassFilterQuery nwrBy(String osmId) {
+        applySeparator();
+        builder.brackets("nwr", osmId);
+        prepareNext();
+
+        return this;
+    }
+
+    /**
+     * Appends the string <i>nwr</i> (node, way, relation) with tags in OR relationship.
+     *
+     * @return the current query object
+     */
+    public OverpassFilterQuery nwrs(@NotNull List<Pair<String, String>> osmTags, double southernLat, double westernLon, double northernLat, double easternLon) {
+        for (Pair<String, String> osmTag : osmTags) {
+            applySeparator();
+
+            builder.append("nwr");
+
+            if (osmTag.getSecond() != null) {
+                tag(osmTag.getFirst(), osmTag.getSecond());
+            } else {
+                tag(osmTag.getFirst());
+            }
+
+            boundingBox(southernLat, westernLon, northernLat, easternLon);
+
+            prepareNext();
+        }
 
         return this;
     }

@@ -17,12 +17,15 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
+import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.resolve
+import hu.mostoha.mobile.android.huki.util.testAppContext
+import hu.mostoha.mobile.android.huki.util.testContext
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.not
@@ -32,6 +35,10 @@ import org.hamcrest.TypeSafeMatcher
 
 fun @receiver:IdRes Int.isDisplayed() {
     onView(withId(this)).check(matches(ViewMatchers.isDisplayed()))
+}
+
+fun @receiver:IdRes Int.isCompletelyDisplayed() {
+    onView(withId(this)).check(matches(ViewMatchers.isCompletelyDisplayed()))
 }
 
 fun @receiver:IdRes Int.isNotDisplayed() {
@@ -70,6 +77,10 @@ fun String.isTextDisplayed() {
     onView(withText(this)).check(matches(isDisplayed()))
 }
 
+fun Message.isTextDisplayed() {
+    this.resolve(testContext).isTextDisplayed()
+}
+
 fun String.isPopupTextDisplayed() {
     onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
@@ -80,6 +91,10 @@ fun @receiver:StringRes Int.isPopupTextDisplayed() {
     onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
         .check(matches(ViewMatchers.isDisplayed()))
+}
+
+fun Message.isPopupTextDisplayed() {
+    this.resolve(testContext).isPopupTextDisplayed()
 }
 
 fun @receiver:StringRes Int.isPopupTextNotDisplayed() {
@@ -115,6 +130,11 @@ fun @receiver:StringRes Int.hasNoFocus() {
 }
 
 fun @receiver:StringRes Int.isSnackbarMessageDisplayed() {
+    onView(withId(com.google.android.material.R.id.snackbar_text))
+        .check(matches(withText(this)))
+}
+
+fun String.isSnackbarMessageDisplayed() {
     onView(withId(com.google.android.material.R.id.snackbar_text))
         .check(matches(withText(this)))
 }
@@ -167,8 +187,18 @@ fun @receiver:StringRes Int.clickWithText() {
         .perform(ViewActions.click())
 }
 
+fun Message.clickWithText() {
+    this.resolve(testAppContext).clickWithText()
+}
+
 fun @receiver:StringRes Int.clickWithTextWithScroll() {
     onView(withText(this))
+        .perform(scrollTo())
+        .perform(ViewActions.click())
+}
+
+fun Message.clickWithTextWithScroll() {
+    onView(withText(this.resolve(testAppContext)))
         .perform(scrollTo())
         .perform(ViewActions.click())
 }
@@ -177,6 +207,10 @@ fun @receiver:StringRes Int.clickWithTextInPopup() {
     onView(withText(this))
         .inRoot(RootMatchers.isPlatformPopup())
         .perform(ViewActions.click())
+}
+
+fun Message.clickWithTextInPopup() {
+    this.resolve(testContext).clickWithTextInPopup()
 }
 
 fun String.clickWithText() {
@@ -225,12 +259,21 @@ fun @receiver:IdRes Int.swipeLeft() {
     onView(withId(this)).perform(ViewActions.swipeLeft())
 }
 
+fun @receiver:IdRes Int.swipeRight() {
+    onView(withId(this)).perform(ViewActions.swipeRight())
+}
+
+
 fun @receiver:IdRes Int.selectTab(tabIndex: Int) {
     onView(withId(this)).perform(selectTabAtPosition(tabIndex))
 }
 
 fun @receiver:IdRes Int.hasDisplayedItemAtPosition(position: Int) {
     onView(withId(this)).check(matches(hasItemAtPosition(position, ViewMatchers.isDisplayed())))
+}
+
+fun @receiver:IdRes Int.setBottomSheetState(@IdRes containerViewId: Int, state: Int) {
+    onView(withId(this)).perform(setBottomSheetStateAction(containerViewId, state))
 }
 
 fun hasItemAtPosition(position: Int, matcher: Matcher<View>): Matcher<View> {
@@ -254,13 +297,13 @@ fun withItemAtPosition(matcher: Matcher<View>, index: Int): Matcher<View> {
         private var currentIndex = 0
 
         override fun describeTo(description: Description?) {
-            description?.appendText("with index: ");
-            description?.appendValue(index);
-            matcher.describeTo(description);
+            description?.appendText("with index: ")
+            description?.appendValue(index)
+            matcher.describeTo(description)
         }
 
         override fun matchesSafely(view: View?): Boolean {
-            return matcher.matches(view) && currentIndex++ == index;
+            return matcher.matches(view) && currentIndex++ == index
         }
     }
 }
@@ -269,6 +312,11 @@ fun @receiver:IdRes Int.hasDescendantWithText(position: Int, text: String) {
     onView(withItemAtPosition(withId(this), position))
         .check(matches(ViewMatchers.hasDescendant(withText(text))))
 }
+
+fun @receiver:IdRes Int.hasDescendantWithText(position: Int, text: Message) {
+    hasDescendantWithText(position, text.resolve(testContext))
+}
+
 
 fun isKeyboardShown(): Boolean {
     val inputMethodManager = InstrumentationRegistry

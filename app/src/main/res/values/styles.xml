@@ -30,6 +30,10 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="DefaultShapeAppearance.VerticalChip">
+        <item name="cornerSize">50dp</item>
+    </style>
+
     <style name="DefaultButton" parent="Widget.MaterialComponents.Button">
         <item name="android:paddingTop">@dimen/default_button_vertical_padding</item>
         <item name="android:paddingBottom">@dimen/default_button_vertical_padding</item>

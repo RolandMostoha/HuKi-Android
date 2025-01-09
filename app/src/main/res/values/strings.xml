@@ -31,16 +31,22 @@
     <string name="accessibility_home_fab_my_location">My location</string>
     <string name="accessibility_home_fab_settings">Settings</string>
     <string name="accessibility_home_fab_history">History</string>
+    <string name="accessibility_home_fab_place_categories">Place Categories</string>
+    <string name="accessibility_home_fab_okt">National Blue trail</string>
     <string name="accessibility_home_fab_hike_mode">Hike mode</string>
     <string name="accessibility_home_fab_hike_mode_compass">Live Compass</string>
+    <string name="accessibility_home_zoom_in">Zoom in</string>
+    <string name="accessibility_home_zoom_out">Zoom out</string>
     <string name="accessibility_okt_routes_action_button">%s action button</string>
 
     <string name="search_bar_hint">Search for places</string>
 
+    <string name="location_formatter_template" translatable="false">(%s)</string>
+
     <string name="place_finder_empty_message">No results found</string>
     <string name="place_finder_my_location_button">My Location</string>
     <string name="place_finder_my_location_error_null_location">No last known location found. Please fix your GPS signal.</string>
-    <string name="place_finder_pick_location_button">Pick location</string>
+    <string name="place_finder_pick_location_button">Map Pick</string>
     <string name="place_finder_pick_location_message">Pick the location with long click!</string>
     <string name="place_finder_show_more_history">Earlier history</string>
 
@@ -49,18 +55,22 @@
     <string name="place_details_pick_location_text">Chosen location</string>
     <string name="place_details_okt_waypoint_text">GPX waypoint</string>
     <string name="place_details_gpx_waypoint_text">OKT waypoint</string>
+    <string name="place_details_finder_button">Finder</string>
+    <string name="place_details_osm_id_template" translatable="false">OSM ID: %s\n</string>
+    <string name="place_details_osm_tag_template" translatable="false">%s: %s\n</string>
+    <string name="place_details_osm_tag_template_end" translatable="false">%s: %s</string>
+    <string name="place_details_osm_tags_template" translatable="false">%s%s%s</string>
 
     <string name="hike_recommender_landscape_title_template">Hiking trails near %s</string>
     <string name="hike_recommender_place_title_template">Hiking trails around %s</string>
     <string name="hike_recommender_hiking_trails_button">National Trails</string>
-    <string name="hike_recommender_termeszetjaro_button">Természetjáró\'s trails</string>
-    <string name="hike_recommender_kirandulastippek_button">Kirándulástippek\'s trails</string>
-    <string name="hike_recommender_info">You can open the downloaded GPX files with the application.</string>
+    <string name="hike_recommender_termeszetjaro_button">Természetjáró</string>
+    <string name="hike_recommender_kirandulastippek_button">Kirándulástippek</string>
 
     <string name="home_bottom_sheet_directions_button">Google Nav</string>
     <string name="home_bottom_sheet_show_points_button">All points</string>
-    <string name="home_bottom_sheet_hike_recommender_button">Hikes</string>
     <string name="home_bottom_sheet_route_plan_button">Route plan</string>
+    <string name="home_bottom_sheet_osm_data_button">OSM Data</string>
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>
 
     <string name="gpx_details_bottom_sheet_start_button">Start</string>
@@ -163,7 +173,6 @@
     <string name="place_history_menu_action_favourite">Favourite</string>
     <string name="place_history_menu_action_delete">Delete</string>
 
-    <string name="okt_routes_chip_label">OKT</string>
     <string name="okt_routes_bottom_sheet_title">OKT - National Blue Trail</string>
     <string name="okt_routes_menu_action_details">Details and GPX</string>
     <string name="okt_routes_menu_action_start_point">Load starting point</string>
@@ -215,5 +224,77 @@
 
     <string name="new_features_title_template">New features (%s)</string>
     <string name="new_features_ok_button">OK</string>
+
+    <string name="place_area_distance_template">Area of %s</string>
+
+    <string name="place_category_landscapes_header_title">Landscapes</string>
+    <string name="place_category_hike_recommendations_header_title">Hike recommendations</string>
+    <string name="place_category_hike_recommendations_info">You can open the downloaded GPX files with the application.</string>
+    <string name="place_category_national_routes_chip_title">National routes</string>
+
+    <string name="place_category_group_travel">Travel</string>
+    <string name="place_category_group_nature">Nature</string>
+    <string name="place_category_group_attractions">Attractions</string>
+    <string name="place_category_group_shops">Shop</string>
+    <string name="place_category_group_useful">Useful</string>
+    <string name="place_category_peak">Peak</string>
+    <string name="place_category_viewpoint">Viewpoint</string>
+    <string name="place_category_historic">Historic</string>
+    <string name="place_category_church">Church</string>
+    <string name="place_category_museum">Museum</string>
+    <string name="place_category_castle">Castle</string>
+    <string name="place_category_river">River</string>
+    <string name="place_category_forest">Forest</string>
+    <string name="place_category_waterfall">Waterfall</string>
+    <string name="place_category_cave">Cave</string>
+    <string name="place_category_rock">Rock</string>
+    <string name="place_category_grocery">Grocery</string>
+    <string name="place_category_restaurant">Restaurant,Coffee</string>
+    <string name="place_category_pharmacy">Pharmacy</string>
+    <string name="place_category_parking">Parking</string>
+    <string name="place_category_public_transport">Public Transport</string>
+    <string name="place_category_drinking_water">Drinking Water</string>
+    <string name="place_category_toilets">Toilets</string>
+    <string name="place_category_camp_site">Camp Site</string>
+    <string name="place_category_fireplace">Fireplace</string>
+
+    <string name="place_category_osm_tag_name">Name</string>
+    <string name="place_category_osm_tag_ele">Elevation</string>
+    <string name="place_category_osm_tag_website">Website</string>
+    <string name="place_category_osm_tag_url">Website</string>
+    <string name="place_category_osm_tag_description">Description</string>
+    <string name="place_category_osm_tag_inscription">Inscription</string>
+    <string name="place_category_osm_tag_opening_hours">Openings</string>
+    <string name="place_category_osm_tag_operator">Operator</string>
+    <string name="place_category_osm_tag_capacity">Capacity</string>
+    <string name="place_category_osm_tag_fee">Paid</string>
+    <string name="place_category_osm_tag_ref">Number</string>
+    <string name="place_category_osm_tag_religion">Religion</string>
+    <string name="place_category_osm_tag_denomination">Denomination</string>
+    <string name="place_category_osm_tag_jel">Hiking sign</string>
+    <string name="place_category_empty_message">%s not found in the area!</string>
+    <string name="place_category_empty_message_category_template" translatable="false">\"%s\"</string>
+    <string name="place_category_too_many_places">Max %s result is displayed, please adjust the area.</string>
+
+    <string name="okt_okt_title">OKT</string>
+    <string name="okt_okt_subtitle">National Blue Trail</string>
+    <string name="okt_rpddk_title">RPDDK</string>
+    <string name="okt_rpddk_subtitle">Dél-dunántúli Blue Trail</string>
+
+    <string name="osm_tag_no">No</string>
+    <string name="osm_tag_yes">Yes</string>
+    <string name="osm_tag_christian">Christian</string>
+    <string name="osm_tag_muslim">Muslim</string>
+    <string name="osm_tag_jewish">Jewish</string>
+    <string name="osm_tag_buddhist">Buddhist</string>
+    <string name="osm_tag_hindu">Hindu</string>
+    <string name="osm_tag_pagan">Pagan</string>
+    <string name="osm_tag_catholic">Catholic</string>
+    <string name="osm_tag_roman_catholic">Roman Catholic</string>
+    <string name="osm_tag_greek_catholic">Greek Catholic</string>
+    <string name="osm_tag_protestant">Protestant</string>
+    <string name="osm_tag_reformed">Reformed</string>
+
+    <string name="osm_data_popup_title">OSM Data</string>
 
 </resources>

@@ -11,6 +11,7 @@ import hu.mostoha.mobile.android.huki.model.network.photon.OsmType
 import hu.mostoha.mobile.android.huki.model.network.photon.PhotonGeometry
 import hu.mostoha.mobile.android.huki.model.network.photon.PhotonQueryResponse
 import hu.mostoha.mobile.android.huki.model.network.photon.Properties
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import org.junit.Test
 
 class PlaceNetworkDomainMapperTest {
@@ -31,13 +32,13 @@ class PlaceNetworkDomainMapperTest {
             listOf(
                 Place(
                     osmId = expectedProperties.osmId.toString(),
-                    name = expectedProperties.name!!,
+                    name = expectedProperties.name!!.toMessage(),
                     placeType = PlaceType.WAY,
                     location = Location(
                         DEFAULT_PHOTON_FEATURE_ITEM.geometry.coordinates[1],
                         DEFAULT_PHOTON_FEATURE_ITEM.geometry.coordinates[0]
                     ),
-                    address = "1155 Budapest Széchenyi út 11",
+                    fullAddress = "1155 Budapest Széchenyi út 11",
                     placeFeature = PlaceFeature.MAP_SEARCH,
                     boundingBox = BoundingBox(
                         north = expectedProperties.extent!![1],
@@ -65,7 +66,7 @@ class PlaceNetworkDomainMapperTest {
 
         val places = mapper.mapPlace(photonQueryResponse, PlaceFeature.MAP_SEARCH)
 
-        assertThat(places.first().name).isEqualTo("Széchenyi út 11")
+        assertThat(places.first().name).isEqualTo("Széchenyi út 11".toMessage())
     }
 
     @Test
@@ -85,7 +86,7 @@ class PlaceNetworkDomainMapperTest {
 
         val places = mapper.mapPlace(photonQueryResponse, PlaceFeature.MAP_SEARCH)
 
-        assertThat(places.first().name).isEqualTo("Budapest")
+        assertThat(places.first().name).isEqualTo("Budapest".toMessage())
     }
 
     @Test

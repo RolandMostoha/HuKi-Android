@@ -54,9 +54,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_extra_small"
+                android:autoLink="web|email|map"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
                 tools:text="2099 Pilisszentkereszt" />
 
@@ -76,9 +77,9 @@
         android:id="@+id/placeDetailsButtonGroupScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/space_extra_large"
-        android:clipToPadding="false"
         android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/space_extra_large"
         android:scrollbars="none">
 
         <LinearLayout
@@ -96,30 +97,40 @@
                 app:icon="@drawable/ic_place_details_route_plan" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/placeDetailsHikingRecommenderButton"
+                android:id="@+id/placeDetailsFinderButton"
                 style="@style/DefaultButton.Contained.Shadowless.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/space_large"
-                android:text="@string/home_bottom_sheet_hike_recommender_button"
-                app:icon="@drawable/ic_place_details_hike_recommender" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/placeDetailsShowAllPointsButton"
-                style="@style/DefaultButton.Contained.Shadowless.Secondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/space_large"
-                android:text="@string/home_bottom_sheet_show_points_button"
-                app:icon="@drawable/ic_place_details_show_points" />
+                android:text="@string/place_details_finder_button"
+                app:icon="@drawable/ic_home_search_bar" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/placeDetailsGoogleNavButton"
                 style="@style/DefaultButton.Contained.Shadowless.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_large"
                 android:text="@string/home_bottom_sheet_directions_button"
                 app:icon="@drawable/ic_google_nav" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/placeDetailsOsmDataButton"
+                style="@style/DefaultButton.Contained.Shadowless.Secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_large"
+                android:text="@string/home_bottom_sheet_osm_data_button"
+                app:icon="@drawable/ic_info_view" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/placeDetailsShowAllPointsButton"
+                style="@style/DefaultButton.Contained.Shadowless.Secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_bottom_sheet_show_points_button"
+                app:icon="@drawable/ic_place_details_show_points" />
+
 
         </LinearLayout>
 

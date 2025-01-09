@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import androidx.core.view.setPadding
 import com.google.android.material.imageview.ShapeableImageView
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.extensions.color
 import hu.mostoha.mobile.android.huki.model.domain.BillingProductType
+import hu.mostoha.mobile.android.huki.util.color
 import hu.mostoha.mobile.android.huki.util.colorStateList
 import hu.mostoha.mobile.android.huki.util.productBackgroundColor
 import hu.mostoha.mobile.android.huki.util.productHighlightColor
@@ -34,6 +34,19 @@ class ProductImageView @JvmOverloads constructor(
         strokeColor = productType.productColorRes
             .color(context)
             .productHighlightColor(context)
+            .colorStateList()
+    }
+
+    fun setAppIcon() {
+        setStrokeWidthResource(R.dimen.default_highlighted_card_stroke_width)
+        setPadding(resources.getDimensionPixelSize(R.dimen.default_highlighted_card_stroke_width))
+        setBackgroundColor(R.color.colorPrimaryExtraLight.color(context))
+        imageTintList = R.color.colorPrimary
+            .color(context)
+            .colorStateList()
+        setImageResource(R.drawable.ic_home_fab_hike_mode)
+        strokeColor = R.color.transparent
+            .color(context)
             .colorStateList()
     }
 

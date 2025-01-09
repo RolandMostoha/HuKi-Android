@@ -48,8 +48,6 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_WAY_GEOMETRY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_WAY_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
@@ -60,7 +58,7 @@ import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.answerDefaults
 import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.runTestDefault
-import hu.mostoha.mobile.android.huki.util.toMockLocation
+import hu.mostoha.mobile.android.huki.util.toTestPlaceArea
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -124,25 +122,12 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Given location, when loadLandscapes, then landscapes are emitted`() =
-        runTestDefault {
-            val landscapes = listOf(DEFAULT_LANDSCAPE)
-
-            every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
-
-            viewModel.landscapes.test {
-                viewModel.loadLandscapes(DEFAULT_MY_LOCATION.toMockLocation())
-
-                assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(homeUiModelMapper.mapLandscapes(landscapes))
-            }
-        }
-
-    @Test
-    fun `Given domain error, when init landscapes, then error message is emitted`() =
+    fun `Given domain error, when load landscape details, then error message is emitted`() =
         runTestDefault {
             val domainException = UnknownException(Exception(""))
             every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(domainException)
+
+            viewModel.loadLandscapeDetails(DEFAULT_LANDSCAPE.osmId)
 
             viewModel.errorMessage.test {
                 assertThat(awaitItem()).isEqualTo(R.string.error_message_unknown.toMessage())
@@ -150,16 +135,16 @@ class HomeViewModelTest {
         }
 
     @Test
-    fun `Given unexpected error, when init landscapes, then exception logger is called`() =
+    fun `Given unexpected error, when load landscape details, then exception logger is called`() =
         runTestDefault {
             val unexpectedException = IllegalStateException(Exception(""))
             every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(unexpectedException)
 
+            viewModel.loadLandscapeDetails(DEFAULT_LANDSCAPE.osmId)
+
             advanceUntilIdle()
 
-            verify {
-                exceptionLogger.recordException(any())
-            }
+            verify { exceptionLogger.recordException(any()) }
         }
 
     @Test
@@ -261,14 +246,15 @@ class HomeViewModelTest {
         runTestDefault {
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
+            val placeArea = placeName.toTestPlaceArea(boundingBox)
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             coEvery { placesRepository.getHikingRoutes(boundingBox) } returns hikingRoutes
 
             viewModel.hikingRoutes.test {
-                viewModel.loadHikingRoutes(placeName, boundingBox)
+                viewModel.loadHikingRoutes(placeArea)
 
                 assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(homeUiModelMapper.mapHikingRoutes(placeName, hikingRoutes))
+                assertThat(awaitItem()).isEqualTo(homeUiModelMapper.mapHikingRoutes(placeArea, hikingRoutes))
             }
         }
 
@@ -281,7 +267,7 @@ class HomeViewModelTest {
             coEvery { placesRepository.getHikingRoutes(boundingBox) } throws DomainException(errorRes)
 
             viewModel.errorMessage.test {
-                viewModel.loadHikingRoutes(placeName, boundingBox)
+                viewModel.loadHikingRoutes(placeName.toTestPlaceArea(boundingBox))
 
                 assertThat(awaitItem()).isEqualTo(R.string.error_message_too_many_requests.toMessage())
             }
@@ -327,6 +313,7 @@ class HomeViewModelTest {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
+            val placeArea = placeName.toTestPlaceArea(boundingBox)
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
@@ -334,9 +321,9 @@ class HomeViewModelTest {
             coEvery { placesRepository.getHikingRoutes(any()) } returns hikingRoutes
 
             viewModel.hikingRoutes.test {
-                viewModel.loadHikingRoutes(placeName, boundingBox)
+                viewModel.loadHikingRoutes(placeArea)
                 assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(homeUiModelMapper.mapHikingRoutes(placeName, hikingRoutes))
+                assertThat(awaitItem()).isEqualTo(homeUiModelMapper.mapHikingRoutes(placeArea, hikingRoutes))
 
                 viewModel.loadHikingRouteDetails(hikingRouteUiModel)
                 assertThat(awaitItem()).isNull()
@@ -458,13 +445,14 @@ class HomeViewModelTest {
         runTestDefault {
             val placeName = DEFAULT_HIKING_ROUTE.name
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
+            val placeArea = placeName.toTestPlaceArea(boundingBox)
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
             coEvery { placesRepository.getHikingRoutes(boundingBox) } returns hikingRoutes
 
             viewModel.hikingRoutes.test {
-                viewModel.loadHikingRoutes(placeName, boundingBox)
+                viewModel.loadHikingRoutes(placeArea)
                 assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(homeUiModelMapper.mapHikingRoutes(placeName, hikingRoutes))
+                assertThat(awaitItem()).isEqualTo(homeUiModelMapper.mapHikingRoutes(placeArea, hikingRoutes))
 
                 viewModel.clearHikingRoutes()
                 assertThat(awaitItem()).isNull()
@@ -482,23 +470,19 @@ class HomeViewModelTest {
     }
 
     companion object {
-        private val DEFAULT_MY_LOCATION = Location(
-            DEFAULT_MY_LOCATION_LATITUDE,
-            DEFAULT_MY_LOCATION_LONGITUDE
-        )
         private val DEFAULT_PLACE = Place(
             osmId = DEFAULT_NODE_OSM_ID,
-            name = DEFAULT_NODE_NAME,
+            name = DEFAULT_NODE_NAME.toMessage(),
             placeType = PlaceType.NODE,
-            address = DEFAULT_NODE_CITY,
+            fullAddress = DEFAULT_NODE_CITY,
             location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
             placeFeature = PlaceFeature.MAP_SEARCH,
         )
         private val DEFAULT_PLACE_UI_MODEL = PlaceUiModel(
             osmId = DEFAULT_PLACE.osmId,
             placeType = DEFAULT_PLACE.placeType,
-            primaryText = DEFAULT_PLACE.name.toMessage(),
-            secondaryText = DEFAULT_PLACE.address.toMessage(),
+            primaryText = DEFAULT_PLACE.name,
+            secondaryText = DEFAULT_PLACE.fullAddress.toMessage(),
             iconRes = R.drawable.ic_place_type_node,
             geoPoint = DEFAULT_PLACE.location.toGeoPoint(),
             placeFeature = PlaceFeature.MAP_SEARCH,
@@ -516,7 +500,7 @@ class HomeViewModelTest {
         private val DEFAULT_HIKING_ROUTE_UI_MODEL = HikingRouteUiModel(
             osmId = DEFAULT_HIKING_ROUTE.osmId,
             name = DEFAULT_HIKING_ROUTE.name,
-            symbolIcon = DEFAULT_HIKING_ROUTE.symbolType.getIconRes()
+            symbolIcon = DEFAULT_HIKING_ROUTE.symbolType.iconRes
         )
         private val DEFAULT_HIKING_ROUTE_GEOMETRY = Geometry.Relation(
             osmId = DEFAULT_HIKING_ROUTE_UI_MODEL.osmId,

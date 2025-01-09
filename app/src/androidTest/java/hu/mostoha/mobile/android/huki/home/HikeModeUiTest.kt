@@ -82,10 +82,10 @@ class HikeModeUiTest {
             R.id.homeRoutePlannerFab.isNotDisplayed()
             R.id.homeCompassFab.isDisplayed()
             R.id.homeHistoryFab.isNotDisplayed()
-            R.id.homeLandscapeContainer.isNotDisplayed()
+            R.id.homePlaceCategoriesFab.isNotDisplayed()
             R.id.homeSearchBarContainer.isNotDisplayed()
-            R.id.mapZoomControllerPlus.isDisplayed()
-            R.id.mapZoomControllerMinus.isDisplayed()
+            R.id.mapZoomInFab.isDisplayed()
+            R.id.mapZoomOutFab.isDisplayed()
             R.id.homeMapView.isFollowLocationEnabled(true)
 
             R.id.homeHikeModeFab.click()
@@ -93,10 +93,10 @@ class HikeModeUiTest {
             R.id.homeRoutePlannerFab.isDisplayed()
             R.id.homeCompassFab.isNotDisplayed()
             R.id.homeHistoryFab.isDisplayed()
-            R.id.homeLandscapeContainer.isDisplayed()
+            R.id.homePlaceCategoriesFab.isDisplayed()
             R.id.homeSearchBarContainer.isDisplayed()
-            R.id.mapZoomControllerPlus.isNotDisplayed()
-            R.id.mapZoomControllerMinus.isNotDisplayed()
+            R.id.mapZoomInFab.isNotDisplayed()
+            R.id.mapZoomOutFab.isNotDisplayed()
             R.id.homeMapView.isFollowLocationEnabled(false)
         }
     }

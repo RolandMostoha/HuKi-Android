@@ -8,6 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
@@ -20,7 +21,6 @@ import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.LocationPickerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
-import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolygon
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LocationPickerMarker
@@ -30,12 +30,14 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.OktMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OktPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceCategoryMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import hu.mostoha.mobile.android.huki.util.MAP_RESET_ORIENTATION_ANIMATION_DURATION
+import hu.mostoha.mobile.android.huki.util.color
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.getGradientColors
 import org.osmdroid.events.MapEventsReceiver
@@ -175,6 +177,11 @@ fun MapView.removeOverlays(overlayTypes: List<OverlayType>) {
     }
 }
 
+fun MapView.removeOverlays(clazz: Class<out Overlay>) {
+    overlays.removeAll { it is OverlayWithIW && it::class.java == clazz }
+    invalidate()
+}
+
 fun MapView.addMarker(
     overlayId: String = UUID.randomUUID().toString(),
     geoPoint: GeoPoint,
@@ -306,8 +313,6 @@ fun MapView.addPolygon(
 
 fun MapView.addLandscapePolyOverlay(
     overlayId: String,
-    center: GeoPoint,
-    centerMarkerDrawable: Drawable,
     way: GeometryUiModel.Way,
     onClick: (OverlayWithIW) -> Unit,
 ): List<OverlayWithIW> {
@@ -362,17 +367,7 @@ fun MapView.addLandscapePolyOverlay(
         }
     }
 
-    val marker = LandscapeMarker(this).apply {
-        id = overlayId
-        position = center
-        icon = centerMarkerDrawable
-        setOnMarkerClickListener { marker, _ ->
-            onClick.invoke(marker)
-            true
-        }
-    }
-
-    addOverlays(listOf(polyOverlay, marker), OverlayComparator)
+    addOverlays(listOf(polyOverlay), OverlayComparator)
 
     return resultOverlays
 }
@@ -787,6 +782,60 @@ fun MapView.addOktPolyline(
     addOverlay(polyline, OverlayComparator)
 }
 
+fun MapView.addPlaceCategoryMarker(
+    overlayId: String = UUID.randomUUID().toString(),
+    placeCategory: PlaceCategory,
+    geoPoint: GeoPoint,
+    iconDrawable: Drawable,
+    infoWindowTitle: String? = null,
+    infoWindowDescription: String? = null,
+    onMarkerClick: (Marker) -> Unit,
+) {
+    if (this.hasOverlay(overlayId)) {
+        return
+    }
+
+    val marker = PlaceCategoryMarker(this, placeCategory).apply {
+        id = overlayId
+        position = geoPoint
+        icon = generateLayerDrawable(
+            layers = listOf(
+                LayerDrawableConfig(
+                    R.drawable.ic_marker_background_stroke.toDrawable(context),
+                    resources.getDimensionPixelSize(R.dimen.place_category_marker_background_size),
+                ),
+                LayerDrawableConfig(
+                    R.drawable.ic_marker_background
+                        .toDrawable(context)
+                        .apply { setTint(placeCategory.categoryColorRes.color(context)) },
+                    resources.getDimensionPixelSize(R.dimen.place_category_marker_background_size),
+                ),
+                LayerDrawableConfig(
+                    iconDrawable.apply { setTint(R.color.colorStrokeMarker.color(context)) },
+                    resources.getDimensionPixelSize(R.dimen.place_category_marker_icon_size),
+                ),
+            ),
+        )
+        setOnMarkerClickListener { marker, mapView ->
+            onMarkerClick.invoke(marker)
+
+//            marker.showInfoWindow()
+//            mapView.controller.animateTo(marker.position)
+
+            true
+        }
+        if (infoWindowTitle != null) {
+            infoWindow = GpxMarkerInfoWindow(
+                mapView = this@addPlaceCategoryMarker,
+                title = infoWindowTitle,
+                description = infoWindowDescription,
+            )
+        }
+    }
+
+    addOverlay(marker, OverlayComparator)
+}
+
 fun MapView.addScaleBarOverlay() {
     val context = this.context
 
@@ -808,6 +857,10 @@ fun MapView.addScaleBarOverlay() {
     }
 
     addOverlay(scaleBarOverlay, OverlayComparator)
+}
+
+fun MapView.center(geoPoint: GeoPoint) {
+    controller.animateTo(geoPoint)
 }
 
 fun MapView.centerAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {

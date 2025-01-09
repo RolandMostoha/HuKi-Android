@@ -9,6 +9,5 @@ data class LandscapeUiModel(
     val osmType: PlaceType,
     val name: Message,
     val geoPoint: GeoPoint,
-    @DrawableRes val iconRes: Int,
-    @DrawableRes val markerRes: Int,
+    @DrawableRes val iconRes: Int
 )

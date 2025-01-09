@@ -9,7 +9,7 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import hu.mostoha.mobile.android.huki.BuildConfig
-import hu.mostoha.mobile.android.huki.constants.GOOGLE_MAPS_DIRECTIONS_URL
+import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import org.osmdroid.util.GeoPoint
 import timber.log.Timber
 

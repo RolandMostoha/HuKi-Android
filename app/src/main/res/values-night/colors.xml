@@ -13,6 +13,7 @@
     <color name="colorBackgroundLight">#212121</color>
     <color name="colorError">#c62828</color>
     <color name="colorStroke">#919191</color>
+    <color name="colorStrokeLight">#DE000000</color>
     <color name="colorStrokeOnMap">#DE000000</color>
     <color name="colorStrokeMarker">#000</color>
     <color name="colorStrokeMarkerDark">@color/colorStrokeMarker</color>

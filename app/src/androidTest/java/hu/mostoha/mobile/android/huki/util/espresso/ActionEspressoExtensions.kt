@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.util.espresso
 
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
@@ -11,6 +12,7 @@ import androidx.test.espresso.action.Tap
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
@@ -70,6 +72,24 @@ fun selectTabAtPosition(tabIndex: Int): ViewAction {
     }
 }
 
+fun setBottomSheetStateAction(viewId: Int, state: Int): ViewAction {
+    return object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return ViewMatchers.isAssignableFrom(CoordinatorLayout::class.java)
+        }
+
+        override fun getDescription(): String {
+            return "Set BottomSheetBehavior state to $state"
+        }
+
+        override fun perform(uiController: UiController, view: View) {
+            val bottomSheet = view.findViewById<View>(viewId)
+            val behavior = BottomSheetBehavior.from(bottomSheet)
+            behavior.state = state
+        }
+    }
+}
+
 fun waitFor(millis: Long) {
     Espresso.onView(ViewMatchers.isRoot()).perform(waitForAction(millis))
 }
@@ -92,4 +112,8 @@ private fun waitForAction(millis: Long): ViewAction {
 
 fun waitForInputFocusGain() {
     waitFor(300)
+}
+
+fun waitForBottomSheetState() {
+    waitFor(500)
 }

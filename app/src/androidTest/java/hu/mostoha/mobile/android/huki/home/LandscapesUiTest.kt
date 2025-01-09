@@ -15,8 +15,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
-import hu.mostoha.mobile.android.huki.constants.KIRANDULASTIPPEK_QUERY_URL
-import hu.mostoha.mobile.android.huki.constants.TERMESZETJARO_AREA_URL
 import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
@@ -25,7 +23,6 @@ import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
-import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolygon
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
@@ -40,6 +37,8 @@ import hu.mostoha.mobile.android.huki.testdata.HikingRoutes.DEFAULT_HIKING_ROUTE
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_GEOMETRY_LANDSCAPE
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_LANDSCAPE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
+import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_QUERY_URL
+import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_AREA_URL
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
@@ -47,6 +46,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -131,12 +131,12 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homeHikeRecommenderBottomSheetContainer.isNotDisplayed()
-            R.id.homeLandscapeChipGroup.isDisplayed()
+            R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
+            R.id.homePlaceCategoriesFab.click()
 
             landscape.nameRes.clickWithText()
 
-            R.id.homeHikeRecommenderBottomSheetContainer.isDisplayed()
+            R.id.homePlaceCategoryBottomSheetContainer.isDisplayed()
         }
     }
 
@@ -147,12 +147,11 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homeHikeRecommenderBottomSheetContainer.isNotDisplayed()
-            R.id.homeLandscapeChipGroup.isDisplayed()
+            R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
+            R.id.homePlaceCategoriesFab.click()
 
             landscape.nameRes.clickWithText()
 
-            R.id.homeMapView.hasOverlay<LandscapeMarker>()
             R.id.homeMapView.hasOverlay<LandscapePolygon>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
@@ -165,8 +164,9 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
+            R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
-            R.id.hikeRecommenderHikingTrailsButton.click()
+            R.string.place_category_national_routes_chip_title.clickWithText()
 
             R.id.homeHikingRoutesBottomSheetContainer.isDisplayed()
         }
@@ -179,8 +179,9 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
+            R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
-            R.id.hikeRecommenderKirandulastippekButton.click()
+            R.string.hike_recommender_kirandulastippek_button.clickWithText()
 
             intended(
                 allOf(
@@ -198,8 +199,10 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
+            R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
-            R.id.hikeRecommenderTermeszetjaroButton.click()
+            R.id.placeCategoryBottomSheetHikeRecommendationsScrollView.swipeLeft()
+            R.string.hike_recommender_termeszetjaro_button.clickWithText()
 
             intended(
                 allOf(
@@ -222,8 +225,9 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> { scenario ->
-            R.id.homeHikeRecommenderBottomSheetContainer.isNotDisplayed()
-            R.id.homeLandscapeChipGroup.isDisplayed()
+            R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
+
+            R.id.homePlaceCategoriesFab.click()
 
             landscape.nameRes.isTextDisplayed()
 
@@ -240,15 +244,14 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> { scenario ->
+            R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
-            R.id.homeHikeRecommenderBottomSheetContainer.isDisplayed()
-            R.id.homeMapView.hasOverlay<LandscapeMarker>()
+            R.id.homePlaceCategoryBottomSheetContainer.isDisplayed()
             R.id.homeMapView.hasOverlay<LandscapePolygon>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
             scenario.recreate()
 
-            R.id.homeMapView.hasOverlay<LandscapeMarker>()
             R.id.homeMapView.hasOverlay<LandscapePolygon>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }

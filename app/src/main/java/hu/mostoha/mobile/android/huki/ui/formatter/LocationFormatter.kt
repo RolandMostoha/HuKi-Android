@@ -19,16 +19,14 @@ object LocationFormatter {
     }
 
     fun formatString(location: Location): String {
-        return LOCATION_DECIMAL_FORMAT.format(location.latitude)
-            .plus(",")
-            .plus(LOCATION_DECIMAL_FORMAT.format(location.longitude))
+        val latitude = LOCATION_DECIMAL_FORMAT.format(location.latitude)
+        val longitude = LOCATION_DECIMAL_FORMAT.format(location.longitude)
+
+        return "($latitude,$longitude)"
     }
 
     fun formatText(location: Location): Message.Text {
-        return LOCATION_DECIMAL_FORMAT.format(location.latitude)
-            .plus(",")
-            .plus(LOCATION_DECIMAL_FORMAT.format(location.longitude))
-            .toMessage()
+        return formatString(location).toMessage()
     }
 
     fun formatText(geoPoint: GeoPoint): Message.Text {

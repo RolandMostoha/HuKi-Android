@@ -76,7 +76,7 @@ class HistoryUiModelMapper @Inject constructor(private val placeMapper: PlaceDom
                 .groupBy { it.historyInfo!!.storeDateTime.toLocalDate() }
                 .flatMap { (date, places) ->
                     val headerItem = PlaceHistoryAdapterModel.Header(date.formatFriendlyDate(actualDate))
-                    val placeItems = places.map { PlaceHistoryAdapterModel.Item(placeMapper.mapHistoryPlace(it)) }
+                    val placeItems = places.map { PlaceHistoryAdapterModel.Item(placeMapper.mapToPlaceUiModel(it)) }
 
                     listOf(headerItem) + placeItems
                 }

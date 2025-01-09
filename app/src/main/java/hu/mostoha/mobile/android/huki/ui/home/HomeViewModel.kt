@@ -1,16 +1,17 @@
 package hu.mostoha.mobile.android.huki.ui.home
 
-import android.location.Location
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
@@ -21,17 +22,20 @@ import hu.mostoha.mobile.android.huki.model.ui.CompassState
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikeModeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.HomeEvents
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MapConfigUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
+import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.OktRepository
+import hu.mostoha.mobile.android.huki.repository.OsmPlacesRepository.Companion.OSM_PLACE_CATEGORY_QUERY_LIMIT
 import hu.mostoha.mobile.android.huki.repository.PlaceHistoryRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -103,10 +107,6 @@ class HomeViewModel @Inject constructor(
     val placeDetails: StateFlow<PlaceDetailsUiModel?> = _placeDetails
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
-    private val _landscapes = MutableStateFlow<List<LandscapeUiModel>?>(null)
-    val landscapes: StateFlow<List<LandscapeUiModel>?> = _landscapes
-        .stateIn(viewModelScope, WhileViewSubscribed, null)
-
     private val _landscapeDetails = MutableStateFlow<LandscapeDetailsUiModel?>(null)
     val landscapeDetails: StateFlow<LandscapeDetailsUiModel?> = _landscapeDetails
         .stateIn(viewModelScope, WhileViewSubscribed, null)
@@ -115,36 +115,29 @@ class HomeViewModel @Inject constructor(
     val hikingRoutes: StateFlow<List<HikingRoutesItem>?> = _hikingRoutes
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
+    private val _placesByCategories = MutableStateFlow<Map<PlaceCategory, List<PlaceUiModel>>>(emptyMap())
+    val placesByCategories: StateFlow<Map<PlaceCategory, List<PlaceUiModel>>> = _placesByCategories
+        .stateIn(viewModelScope, WhileViewSubscribed, emptyMap())
+
     private val _oktRoutes = MutableStateFlow<OktRoutesUiModel?>(null)
     val oktRoutes: StateFlow<OktRoutesUiModel?> = _oktRoutes
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     private val _isLoading = MutableSharedFlow<Boolean>()
-    val loading: SharedFlow<Boolean> = _isLoading.asSharedFlow()
+    val isLoading: SharedFlow<Boolean> = _isLoading.asSharedFlow()
 
-    private val _errorMessage = MutableSharedFlow<Message.Res>()
-    val errorMessage: SharedFlow<Message.Res> = _errorMessage.asSharedFlow()
+    private val _errorMessage = MutableSharedFlow<Message>()
+    val errorMessage: SharedFlow<Message> = _errorMessage.asSharedFlow()
+
+    private val _homeEvents = MutableSharedFlow<HomeEvents>()
+    val homeEvents: SharedFlow<HomeEvents> = _homeEvents.asSharedFlow()
 
     init {
         viewModelScope.launch {
-            landscapeInteractor.requestGetLandscapesFlow()
-                .map { homeUiModelMapper.mapLandscapes(it) }
-                .onEach { _landscapes.emit(it) }
-                .catch { showError(it) }
-                .collect()
-
             placeHistoryRepository.clearOldPlaces()
 
             restoreSavedState()
         }
-    }
-
-    fun loadLandscapes(location: Location) = viewModelScope.launch {
-        landscapeInteractor.requestGetLandscapesFlow(location.toLocation())
-            .map { homeUiModelMapper.mapLandscapes(it) }
-            .onEach { _landscapes.emit(it) }
-            .catch { showError(it) }
-            .collect()
     }
 
     fun loadLandscapeDetails(landscapeUiModel: LandscapeUiModel) = viewModelScope.launch {
@@ -243,15 +236,91 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadHikingRoutes(placeName: String, boundingBox: BoundingBox) = viewModelScope.launch {
+    fun loadHikingRoutes(placeArea: PlaceArea) = viewModelScope.launch {
         flowWithExceptions(
-            request = { placesRepository.getHikingRoutes(boundingBox) },
+            request = { placesRepository.getHikingRoutes(placeArea.boundingBox) },
             exceptionLogger = exceptionLogger
         )
-            .map { homeUiModelMapper.mapHikingRoutes(placeName, it) }
+            .map { homeUiModelMapper.mapHikingRoutes(placeArea, it) }
             .onEach { _hikingRoutes.emit(it) }
             .onStart {
                 clearFollowLocation()
+
+                showLoading(true)
+            }
+            .onCompletion { showLoading(false) }
+            .catch { showError(it) }
+            .collect()
+    }
+
+    fun loadPlaceCategories(
+        placeCategories: Set<PlaceCategory>,
+        boundingBox: BoundingBox,
+        refreshAll: Boolean? = false
+    ) = viewModelScope.launch {
+        flowWithExceptions(
+            request = { placesRepository.getPlacesByCategories(placeCategories, boundingBox) },
+            exceptionLogger = exceptionLogger
+        )
+            .map { placeDomainUiMapper.mapWithCategory(placeCategories, it) }
+            .onEach { placesByCategories ->
+                val numberOfPlaces = placesByCategories.flatMap { it.value }.size
+                val emptyCategories = placesByCategories.filter { it.value.isEmpty() }.keys
+
+                analyticsService.placeCategoryLoaded(numberOfPlaces)
+
+                when {
+                    numberOfPlaces >= OSM_PLACE_CATEGORY_QUERY_LIMIT -> {
+                        _errorMessage.emit(
+                            Message.Res(
+                                res = R.string.place_category_too_many_places,
+                                formatArgs = listOf(OSM_PLACE_CATEGORY_QUERY_LIMIT)
+                            )
+                        )
+                    }
+                    emptyCategories.isNotEmpty() -> {
+                        _homeEvents.emit(HomeEvents.PlaceCategoryEmpty(emptyCategories))
+                    }
+                }
+
+                _placesByCategories.update { actual ->
+                    if (refreshAll == true) {
+                        placesByCategories
+                    } else {
+                        actual.plus(placesByCategories)
+                    }
+                }
+            }
+            .onStart {
+                clearFollowLocation()
+                showLoading(true)
+
+                if (refreshAll == true) {
+                    _placesByCategories.update { it.keys.associateWith { emptyList() } }
+                }
+            }
+            .onCompletion { showLoading(false) }
+            .catch { showError(it) }
+            .collect()
+    }
+
+    fun loadOsmTags(placeUiModel: PlaceUiModel) = viewModelScope.launch {
+        flowWithExceptions(
+            request = { placesRepository.getOsmTags(placeUiModel.osmId, placeUiModel.placeType) },
+            exceptionLogger = exceptionLogger
+        )
+            .onEach { osmTags ->
+                val tags = osmTags
+                    .map { "${it.key}: ${it.value}" }
+                    .joinToString("\n")
+
+                _homeEvents.emit(HomeEvents.OsmTagsLoaded(placeUiModel.osmId, tags))
+            }
+            .onStart {
+                clearFollowLocation()
+                clearHikingRoutes()
+                clearLandscapeDetails()
+                clearOktRoutes()
 
                 showLoading(true)
             }
@@ -419,12 +488,23 @@ class HomeViewModel @Inject constructor(
         updateMyLocationConfig(isFollowLocationEnabled = false)
     }
 
+    fun clearPlaceCategory(placeCategory: PlaceCategory) {
+        _placesByCategories.update { placesForCategories ->
+            placesForCategories.minus(placeCategory)
+        }
+    }
+
+    fun clearPlaceCategories() {
+        _placesByCategories.value = emptyMap()
+    }
+
     fun clearAllOverlay() {
         clearPlaceDetails()
         clearLandscapeDetails()
         clearHikingRoutes()
         clearOktRoutes()
         clearFollowLocation()
+        clearPlaceCategories()
     }
 
     private suspend fun showLoading(isLoading: Boolean) {

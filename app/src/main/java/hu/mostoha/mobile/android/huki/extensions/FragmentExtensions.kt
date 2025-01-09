@@ -1,18 +1,23 @@
 package hu.mostoha.mobile.android.huki.extensions
 
+import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 
-fun <T : Fragment> FragmentManager.addFragment(@IdRes containerId: Int, clazz: Class<T>) {
+fun <T : Fragment> FragmentManager.addFragment(
+    @IdRes containerId: Int,
+    clazz: Class<T>,
+    args: Bundle? = null
+) {
     commit {
         setCustomAnimations(
             android.R.anim.fade_in, android.R.anim.fade_out,
             android.R.anim.fade_in, android.R.anim.fade_out,
         )
         setReorderingAllowed(true)
-        add(containerId, clazz, null)
+        add(containerId, clazz, args)
         addToBackStack(null)
     }
 }

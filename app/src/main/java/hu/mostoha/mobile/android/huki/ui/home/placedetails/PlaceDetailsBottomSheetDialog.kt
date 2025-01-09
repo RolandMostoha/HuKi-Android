@@ -4,13 +4,17 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceDetailsBinding
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.postMain
-import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
+import hu.mostoha.mobile.android.huki.extensions.setMessage
+import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.extensions.startGoogleMapsDirectionsIntent
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
+import hu.mostoha.mobile.android.huki.util.OSM_ID_UNKNOWN_PREFIX
+import hu.mostoha.mobile.android.huki.util.colorStateList
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
 class PlaceDetailsBottomSheetDialog(
@@ -22,7 +26,8 @@ class PlaceDetailsBottomSheetDialog(
         placeUiModel: PlaceUiModel,
         onShowAllPointsClick: () -> Unit,
         onRoutePlanButtonClick: () -> Unit,
-        onHikeRecommenderClick: () -> Unit,
+        onPlaceCategoryFinderClick: () -> Unit,
+        onAllOsmDataClick: () -> Unit,
         onCloseButtonClick: () -> Unit
     ) {
         postMain {
@@ -35,12 +40,39 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsPrimaryText.maxLines = 2
                 placeDetailsPrimaryText.text = placeName
 
-                placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
+                placeDetailsSecondaryText.setMessage(placeUiModel.secondaryText)
+
+                if (placeUiModel.osmId.startsWith(OSM_ID_UNKNOWN_PREFIX)) {
+                    placeDetailsOsmDataButton.gone()
+                } else {
+                    placeDetailsOsmDataButton.visible()
+                    placeDetailsOsmDataButton.setOnClickListener {
+                        if (placeUiModel.osmTags != null) {
+                            context.showPopupMenu(
+                                anchorView = binding.root,
+                                actionItems = emptyList(),
+                                width = R.dimen.default_popup_menu_width_with_header,
+                                showAtCenter = true,
+                                headerTitle = R.string.osm_data_popup_title.toMessage(),
+                                footerMessage = R.string.place_details_osm_id_template
+                                    .toMessage(listOf(placeUiModel.osmId))
+                                    .resolve(context)
+                                    .plus(placeUiModel.osmTags)
+                                    .toMessage()
+                            )
+                        } else {
+                            analyticsService.allOsmDataClicked()
+                            onAllOsmDataClick.invoke()
+                        }
+                    }
+                }
+
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
                 if (placeUiModel.placeType == PlaceType.HIKING_ROUTE) {
                     placeDetailsImage.setBackgroundResource(R.color.transparent)
                 } else {
                     placeDetailsImage.setBackgroundResource(R.drawable.background_badge)
+                    placeDetailsImage.imageTintList = R.color.colorPrimaryIcon.colorStateList(root.context)
                 }
                 placeDetailsGoogleNavButton.visible()
                 placeDetailsGoogleNavButton.setOnClickListener {
@@ -51,8 +83,8 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsRoutePlanButton.setOnClickListener {
                     onRoutePlanButtonClick.invoke()
                 }
-                placeDetailsHikingRecommenderButton.setOnClickListener {
-                    onHikeRecommenderClick.invoke()
+                placeDetailsFinderButton.setOnClickListener {
+                    onPlaceCategoryFinderClick.invoke()
                 }
                 if (placeUiModel.placeType == PlaceType.NODE) {
                     placeDetailsShowAllPointsButton.gone()
@@ -81,7 +113,7 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsPrimaryText.setTextAppearance(R.style.DefaultTextAppearance_SemiBold_Medium)
                 placeDetailsPrimaryText.maxLines = Int.MAX_VALUE
                 placeDetailsPrimaryText.text = placeName
-                placeDetailsSecondaryText.setMessageOrGone(placeUiModel.secondaryText)
+                placeDetailsSecondaryText.setMessage(placeUiModel.secondaryText)
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
                 if (placeUiModel.placeType == PlaceType.HIKING_ROUTE) {
                     placeDetailsImage.setBackgroundResource(R.color.transparent)
