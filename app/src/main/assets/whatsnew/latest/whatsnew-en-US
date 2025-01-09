@@ -1,5 +1,5 @@
-- Fix crash after GPS permission is revoked
-- New layer: Google Satellite
-- New layer: Merretekerjek (Bicycle)
-- GPS is way more accurate with less jumping
-- Hike mode state restoration
+- New: category finder (viewpoint,parking,restaurant...)
+- New: all OSM data can be retrieved for a POI
+- The new finder can be used for landscapes and POIs
+- Frequently used functions have been moved to the right
+- Update of the hiking layer database

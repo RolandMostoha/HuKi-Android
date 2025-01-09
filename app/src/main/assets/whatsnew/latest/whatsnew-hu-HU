@@ -1,5 +1,5 @@
-- Crash javítása GPS engedély megvonása után
-- Új réteg: Google Műhold
-- Új réteg: Merretekerjek (Kerékpáros)
-- Sokkal pontosabb GPS, kevesebb ugrálás
-- Túra mód visszatöltése alvó mód után
+- Új: kategória kereső (kilátó,parkoló,étterem stb.)
+- Új: minden OSM adat lekérhető a POI-khoz
+- Az új kereső használható tájegységekhez és POI-khoz
+- Gyakran használt funkciók jobb oldalra kerültek
+- Túra réteg adatbázisának frissítése
