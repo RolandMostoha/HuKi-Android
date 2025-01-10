@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.util.espresso
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
@@ -79,6 +80,10 @@ fun String.isTextDisplayed() {
 
 fun Message.isTextDisplayed() {
     this.resolve(testContext).isTextDisplayed()
+}
+
+fun Regex.isRegexTextDisplayed() {
+    onView(withPattern(this)).check(matches(isDisplayed()))
 }
 
 fun String.isPopupTextDisplayed() {
@@ -249,18 +254,22 @@ fun String.clickWithContentDescription() {
 
 fun @receiver:IdRes Int.swipeDown() {
     onView(withId(this)).perform(ViewActions.swipeDown())
+    waitForScroll()
 }
 
 fun @receiver:IdRes Int.swipeUp() {
     onView(withId(this)).perform(ViewActions.swipeUp())
+    waitForScroll()
 }
 
 fun @receiver:IdRes Int.swipeLeft() {
     onView(withId(this)).perform(ViewActions.swipeLeft())
+    waitForScroll()
 }
 
 fun @receiver:IdRes Int.swipeRight() {
     onView(withId(this)).perform(ViewActions.swipeRight())
+    waitForScroll()
 }
 
 
@@ -292,22 +301,6 @@ fun hasItemAtPosition(position: Int, matcher: Matcher<View>): Matcher<View> {
     }
 }
 
-fun withItemAtPosition(matcher: Matcher<View>, index: Int): Matcher<View> {
-    return object : TypeSafeMatcher<View>() {
-        private var currentIndex = 0
-
-        override fun describeTo(description: Description?) {
-            description?.appendText("with index: ")
-            description?.appendValue(index)
-            matcher.describeTo(description)
-        }
-
-        override fun matchesSafely(view: View?): Boolean {
-            return matcher.matches(view) && currentIndex++ == index
-        }
-    }
-}
-
 fun @receiver:IdRes Int.hasDescendantWithText(position: Int, text: String) {
     onView(withItemAtPosition(withId(this), position))
         .check(matches(ViewMatchers.hasDescendant(withText(text))))
@@ -325,4 +318,34 @@ fun isKeyboardShown(): Boolean {
         .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
     return inputMethodManager.isAcceptingText
+}
+
+private fun withItemAtPosition(matcher: Matcher<View>, index: Int): Matcher<View> {
+    return object : TypeSafeMatcher<View>() {
+        private var currentIndex = 0
+
+        override fun describeTo(description: Description?) {
+            description?.appendText("with index: ")
+            description?.appendValue(index)
+            matcher.describeTo(description)
+        }
+
+        override fun matchesSafely(view: View?): Boolean {
+            return matcher.matches(view) && currentIndex++ == index
+        }
+    }
+}
+
+private fun withPattern(regex: Regex): Matcher<View> {
+    return object : BoundedMatcher<View, TextView>(TextView::class.java) {
+        override fun describeTo(description: Description) {
+            description.appendText("with text pattern: ")
+            description.appendText(regex.toString())
+        }
+
+        override fun matchesSafely(textView: TextView): Boolean {
+            val text = textView.text
+            return regex.matches(text)
+        }
+    }
 }

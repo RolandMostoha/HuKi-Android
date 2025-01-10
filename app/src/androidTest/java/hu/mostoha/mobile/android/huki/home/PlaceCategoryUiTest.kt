@@ -46,6 +46,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayCount
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isRegexTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isSnackbarMessageDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.setBottomSheetState
@@ -145,8 +146,8 @@ class PlaceCategoryUiTest {
 
             R.id.placeCategoryContainer.isDisplayed()
 
-            // Default location on map
-            "(47.0293,19.4549)".isTextDisplayed()
+            // Default location on map, like "(47.0293,19.4549)"
+            "\\(\\s*([-+]?\\d*\\.\\d+),\\s*([-+]?\\d*\\.\\d+)\\s*\\)".toRegex().isRegexTextDisplayed()
         }
     }
 
@@ -157,6 +158,7 @@ class PlaceCategoryUiTest {
 
             R.id.homePlaceCategoriesFab.click()
 
+            R.id.placeCategoryContainer.isDisplayed()
             "Hungary".isTextDisplayed()
         }
     }

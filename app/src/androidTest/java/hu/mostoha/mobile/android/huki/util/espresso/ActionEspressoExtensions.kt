@@ -117,3 +117,7 @@ fun waitForInputFocusGain() {
 fun waitForBottomSheetState() {
     waitFor(500)
 }
+
+fun waitForScroll() {
+    waitFor(300)
+}

@@ -61,7 +61,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -203,7 +202,6 @@ class PlacesUiTest {
     }
 
     @Test
-    @Ignore("Espresso breaks scroll on API 33, needs dependency update")
     fun givenNodePlace_whenClickOnNavigation_thenGoogleMapsDirectionsIntentIsFired() {
         Intents.init()
         answerTestPlaces()

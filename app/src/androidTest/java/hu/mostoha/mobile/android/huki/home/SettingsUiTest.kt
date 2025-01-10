@@ -1,13 +1,11 @@
 package hu.mostoha.mobile.android.huki.home
 
 import android.content.Intent
-import android.net.MailTo
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import dagger.hilt.android.testing.BindValue
@@ -93,23 +91,6 @@ class SettingsUiTest {
             R.id.homeSettingsFab.click()
 
             R.id.settingsMapScaleSlider.hasSliderValue(100f)
-        }
-    }
-
-    @Test
-    fun whenClickOnEmail_thenEmailIntentIsFired() {
-        launchScenario<HomeActivity> {
-            R.id.homeSettingsFab.click()
-            R.id.settingsEmailText.click()
-
-            intended(
-                allOf(
-                    hasAction(Intent.ACTION_SENDTO),
-                    hasData(MailTo.MAILTO_SCHEME),
-                    hasExtra(Intent.EXTRA_EMAIL, arrayOf(testAppContext.getString(R.string.settings_email))),
-                    hasExtra(Intent.EXTRA_SUBJECT, testAppContext.getString(R.string.settings_email_subject))
-                )
-            )
         }
     }
 

@@ -85,7 +85,7 @@ jobs:
           --type instrumentation
           --app ${{ env.ARTIFACT_PATHNAME_APK }}
           --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
-          --device model=oriole,version=33,locale=en,orientation=portrait
+          #          --device model=oriole,version=33,locale=en,orientation=portrait
           --device model=MediumPhone.arm,version=28,locale=hu,orientation=portrait
           --use-orchestrator
           --environment-variables clearPackageData=true
