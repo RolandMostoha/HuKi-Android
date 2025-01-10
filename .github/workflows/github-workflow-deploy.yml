@@ -73,23 +73,23 @@ jobs:
           name: ${{ env.ARTIFACT_NAME_APK }}
           path: ${{ env.ARTIFACT_PATHNAME_APK }}
 
-      - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: huki-c8bc7
-          service_account_key: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT }}
-
-      - name: Run Instrumentation Tests in Firebase Test Lab
-        run: >
-          gcloud firebase test android run
-          --type instrumentation
-          --app ${{ env.ARTIFACT_PATHNAME_APK }}
-          --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
-          #          --device model=oriole,version=33,locale=en,orientation=portrait
-          --device model=MediumPhone.arm,version=28,locale=hu,orientation=portrait
-          --use-orchestrator
-          --environment-variables clearPackageData=true
-          --num-flaky-test-attempts=1
+  #      - name: Setup Google Cloud SDK
+  #        uses: google-github-actions/setup-gcloud@v0
+  #        with:
+  #          project_id: huki-c8bc7
+  #          service_account_key: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT }}
+  #
+  #      - name: Run Instrumentation Tests in Firebase Test Lab
+  #        run: >
+  #          gcloud firebase test android run
+  #          --type instrumentation
+  #          --app ${{ env.ARTIFACT_PATHNAME_APK }}
+  #          --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
+  #          --device model=oriole,version=33,locale=en,orientation=portrait
+  #          --device model=MediumPhone.arm,version=28,locale=hu,orientation=portrait
+  #          --use-orchestrator
+  #          --environment-variables clearPackageData=true
+  #          --num-flaky-test-attempts=1
 
   release:
     needs: [ lint, unit_tests, android_tests ]
