@@ -14,6 +14,13 @@
     "maxY": 45
   },
   {
+    "zoom": 8,
+    "minX": 139,
+    "maxX": 144,
+    "minY": 88,
+    "maxY": 91
+  },
+  {
     "zoom": 9,
     "minX": 278,
     "maxX": 288,
@@ -37,35 +44,42 @@
   {
     "zoom": 12,
     "minX": 2231,
-    "maxX": 2306,
+    "maxX": 2307,
     "minY": 1413,
     "maxY": 1461
   },
   {
+    "zoom": 13,
+    "minX": 4462,
+    "maxX": 4615,
+    "minY": 2827,
+    "maxY": 2922
+  },
+  {
     "zoom": 14,
     "minX": 8925,
-    "maxX": 9227,
+    "maxX": 9230,
     "minY": 5655,
     "maxY": 5844
   },
   {
     "zoom": 15,
     "minX": 17850,
-    "maxX": 18454,
+    "maxX": 18465,
     "minY": 11310,
     "maxY": 11688
   },
   {
     "zoom": 16,
     "minX": 35700,
-    "maxX": 36908,
+    "maxX": 36930,
     "minY": 22620,
     "maxY": 23376
   },
   {
     "zoom": 17,
     "minX": 71401,
-    "maxX": 73816,
+    "maxX": 73860,
     "minY": 45240,
     "maxY": 46753
   }
