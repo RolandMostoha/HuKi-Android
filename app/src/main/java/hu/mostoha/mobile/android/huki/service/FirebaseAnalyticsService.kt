@@ -86,6 +86,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_SUPPORT_ONE_TIME_LEVEL_2 = "select_support_one_time_level_2"
         private const val EVENT_SELECT_ALL_OSM_DATA = "select_all_osm_data"
         private const val EVENT_VIEW_NEW_FEATURES = "view_new_features"
+        private const val EVENT_SELECT_PLACE_CATEGORY = "select_place_category"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
@@ -410,18 +411,24 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         val isStartupAction = billingAction == BillingAction.START_CONNECTION ||
             billingAction == BillingAction.QUERY_PRODUCTS ||
             billingAction == BillingAction.QUERY_PURCHASES
+        val isOkResponse = BillingClient.BillingResponseCode.OK == billingResponseCode
+        val billingResponseFieldName = billingResponseCode.fieldName()?.lowercase()
 
-        if (isStartupAction && BillingClient.BillingResponseCode.OK == billingResponseCode) {
+        if ((isStartupAction && isOkResponse) || billingResponseFieldName == null) {
             return
         }
 
-        val eventName = "billing_${billingAction.name.lowercase()}_${billingResponseCode.fieldName()?.lowercase()}"
+        val eventName = "billing_${billingAction.name.lowercase()}_$billingResponseFieldName"
 
         firebaseAnalytics.logEvent(eventName, null)
     }
 
+    override fun placeCategoryFabClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_PLACE_CATEGORY, null)
+    }
+
     override fun placeCategoryClicked(placeCategory: PlaceCategory) {
-        firebaseAnalytics.logEvent("select_place_category_${placeCategory.name.lowercase()}", null)
+        firebaseAnalytics.logEvent("${EVENT_SELECT_PLACE_CATEGORY}_${placeCategory.name.lowercase()}", null)
     }
 
     @Suppress("MagicNumber")

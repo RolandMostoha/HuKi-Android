@@ -511,6 +511,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             supportFragmentManager.addFragment(R.id.homeFragmentContainer, HistoryFragment::class.java)
         }
         homePlaceCategoriesFab.setOnClickListener {
+            analyticsService.placeCategoryFabClicked()
             PlaceCategoryFragment.addFragment(
                 supportFragmentManager,
                 R.id.homeFragmentContainer,

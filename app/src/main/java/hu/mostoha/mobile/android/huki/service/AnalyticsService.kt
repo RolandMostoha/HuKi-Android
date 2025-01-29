@@ -137,6 +137,8 @@ interface AnalyticsService {
 
     fun billingEvent(billingAction: BillingAction, billingResponseCode: Int)
 
+    fun placeCategoryFabClicked()
+
     fun placeCategoryClicked(placeCategory: PlaceCategory)
 
     fun placeCategoryLoaded(numberOfPlaces: Int)
