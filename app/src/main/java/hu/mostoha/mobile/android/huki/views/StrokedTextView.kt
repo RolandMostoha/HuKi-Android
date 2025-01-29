@@ -17,6 +17,7 @@ class StrokedTextView @JvmOverloads constructor(
 
     companion object {
         private const val DEFAULT_STROKE_WIDTH = 10f
+        private const val DEFAULT_LETTER_SPACING = 0.025f
     }
 
     private val binding = ViewStrokedTextViewBinding.inflate(context.inflater, this)
@@ -44,8 +45,10 @@ class StrokedTextView @JvmOverloads constructor(
                 strokeWidth = getDimension(R.styleable.StrokedTextView_strokeWidth, DEFAULT_STROKE_WIDTH)
                 style = Paint.Style.STROKE
             }
+            strokeTextView.letterSpacing = DEFAULT_LETTER_SPACING
             textView.setTextColor(getColor(R.styleable.StrokedTextView_textColor, Color.BLACK))
             textView.setTextAppearance(textAppearance)
+            textView.letterSpacing = DEFAULT_LETTER_SPACING
 
             recycle()
         }

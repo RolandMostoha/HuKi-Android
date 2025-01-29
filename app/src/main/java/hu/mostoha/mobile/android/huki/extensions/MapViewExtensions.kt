@@ -21,6 +21,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.LocationPickerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.HukiScaleBarOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolygon
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LocationPickerMarker
@@ -54,7 +55,6 @@ import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.PolyOverlayWithIW
 import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
-import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.advancedpolyline.ColorMappingCycle
 import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList
 import org.osmdroid.views.overlay.advancedpolyline.PolychromaticPaintList
@@ -839,20 +839,19 @@ fun MapView.addPlaceCategoryMarker(
 fun MapView.addScaleBarOverlay() {
     val context = this.context
 
-    val scaleBarOverlay = ScaleBarOverlay(this).apply {
+    val scaleBarOverlay = HukiScaleBarOverlay(this).apply {
         setAlignBottom(true)
         setScaleBarOffset(
             context.resources.getDimensionPixelSize(R.dimen.space_large),
             context.resources.getDimensionPixelSize(R.dimen.space_extra_huge)
         )
         setTextSize(context.resources.getDimensionPixelSize(R.dimen.text_size_extra_small).toFloat())
+        setTextTypeFace(context.resources.getFont(R.font.opensans_bold))
         barPaint.apply {
             color = context.getColor(R.color.colorMapOverlayText)
         }
         textPaint.apply {
-            isAntiAlias = true
             color = context.getColor(R.color.colorMapOverlayText)
-            typeface = context.resources.getFont(R.font.opensans_semibold)
         }
     }
 

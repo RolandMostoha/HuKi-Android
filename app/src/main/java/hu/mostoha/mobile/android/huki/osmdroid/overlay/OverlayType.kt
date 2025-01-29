@@ -6,7 +6,6 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.Polyline
-import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.TilesOverlay
 
 /**
@@ -34,7 +33,7 @@ enum class OverlayType {
  */
 val OVERLAY_TYPE_ORDER_MAP = mapOf(
     OverlayType.LICENCES to listOf(OsmLicencesOverlay::class),
-    OverlayType.SCALE_BAR to listOf(ScaleBarOverlay::class),
+    OverlayType.SCALE_BAR to listOf(HukiScaleBarOverlay::class),
     OverlayType.ROTATION_GESTURE to listOf(RotationGestureOverlay::class),
     OverlayType.HIKING_LAYER to listOf(TilesOverlay::class),
     OverlayType.MY_LOCATION to listOf(MyLocationOverlay::class),

@@ -69,7 +69,6 @@ import hu.mostoha.mobile.android.huki.extensions.removeOverlay
 import hu.mostoha.mobile.android.huki.extensions.removeOverlays
 import hu.mostoha.mobile.android.huki.extensions.resetOrientation
 import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
-import hu.mostoha.mobile.android.huki.extensions.setTextOrInvisible
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
 import hu.mostoha.mobile.android.huki.extensions.showErrorSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showOnly
@@ -246,6 +245,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val placeCategoriesChipGroup by lazy { binding.homePlaceCategoryChipGroup }
     private val homeHikeModeFab by lazy { binding.homeHikeModeFab }
     private val homeCompassFab by lazy { binding.homeCompassFab }
+    private val homeAltitudeContainer by lazy { binding.homeAltitudeContainer }
     private val homeAltitudeText by lazy { binding.homeAltitudeText }
     private val mapZoomInFab by lazy { binding.mapZoomInFab }
     private val mapZoomOutFab by lazy { binding.mapZoomOutFab }
@@ -679,12 +679,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initAltitude(altitude: Double) {
-        val altitudeText = if (altitude >= 1.0) {
-            getString(R.string.default_distance_template_m, altitude.toInt().toString())
+        if (altitude >= 1.0) {
+            homeAltitudeText.text = getString(R.string.default_distance_template_m, altitude.toInt().toString())
+            homeAltitudeContainer.visible()
         } else {
-            null
+            homeAltitudeText.text = null
+            homeAltitudeContainer.gone()
         }
-        homeAltitudeText.setTextOrInvisible(altitudeText)
     }
 
     private fun initFlows() {

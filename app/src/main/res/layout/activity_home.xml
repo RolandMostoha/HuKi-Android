@@ -353,19 +353,34 @@
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_anim_home_fab_my_location_not_fixed" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/homeAltitudeText"
+        <LinearLayout
+            android:id="@+id/homeAltitudeContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_extra_small"
             android:layout_marginBottom="@dimen/home_copyright_bottom_margin"
-            android:drawableStart="@drawable/ic_altitude"
-            android:drawablePadding="@dimen/space_extra_small"
             android:gravity="center_vertical"
-            android:textAppearance="@style/DefaultTextAppearance.SemiBold.ExtraSmall"
-            android:textColor="@color/colorMapOverlayText"
-            android:visibility="invisible"
-            tools:text="500m" />
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_altitude"
+                android:importantForAccessibility="no" />
+
+            <hu.mostoha.mobile.android.huki.views.StrokedTextView
+                android:id="@+id/homeAltitudeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_extra_extra_small"
+                app:strokeColor="@color/colorStrokeMarker"
+                app:strokeWidth="2dp"
+                app:textAppearance="@style/DefaultTextAppearance.Bold.Small"
+                app:textColor="@color/colorMapOverlayText"
+                tools:text="500m" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
