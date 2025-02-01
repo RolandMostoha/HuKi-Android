@@ -21,7 +21,7 @@ fun Context.startGoogleMapsDirectionsIntent(geoPoint: GeoPoint) {
     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl)))
 }
 
-fun Context.startUrlIntent(url: String) {
+fun Context.openUrl(url: String) {
     Timber.d("URL Intent started with URL: $url")
 
     val uri = Uri.parse(url)

@@ -164,8 +164,8 @@ complexity:
     active: true
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
     thresholdInFiles: 50
-    thresholdInClasses: 50
-    thresholdInInterfaces: 50
+    thresholdInClasses: 60
+    thresholdInInterfaces: 60
     thresholdInObjects: 50
     thresholdInEnums: 50
     ignoreDeprecated: false

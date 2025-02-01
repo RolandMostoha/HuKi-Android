@@ -374,10 +374,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_extra_extra_small"
-                app:strokeColor="@color/colorStrokeMarker"
+                app:strokeColor="@color/colorMapOverlayStroke"
                 app:strokeWidth="2dp"
                 app:textAppearance="@style/DefaultTextAppearance.Bold.Small"
-                app:textColor="@color/colorMapOverlayText"
+                app:strokedTextColor="@color/colorMapOverlayText"
                 tools:text="500m" />
 
         </LinearLayout>

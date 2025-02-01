@@ -839,7 +839,7 @@ fun MapView.addPlaceCategoryMarker(
 fun MapView.addScaleBarOverlay() {
     val context = this.context
 
-    val scaleBarOverlay = HukiScaleBarOverlay(this).apply {
+    val scaleBarOverlay = HukiScaleBarOverlay(this, R.color.colorMapOverlayStroke.color(context)).apply {
         setAlignBottom(true)
         setScaleBarOffset(
             context.resources.getDimensionPixelSize(R.dimen.space_large),

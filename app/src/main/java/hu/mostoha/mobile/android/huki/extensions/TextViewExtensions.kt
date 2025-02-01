@@ -5,6 +5,7 @@ import android.text.Spanned
 import android.text.style.URLSpan
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.resolve
@@ -42,6 +43,15 @@ fun TextView.setTextOrGone(text: String?) {
     } else {
         visible()
         this.text = text
+    }
+}
+
+fun TextView.setTextOrGone(@StringRes textId: Int?) {
+    if (textId == null) {
+        gone()
+    } else {
+        visible()
+        this.setText(textId)
     }
 }
 

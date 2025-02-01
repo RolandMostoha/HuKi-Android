@@ -22,10 +22,11 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
 import hu.mostoha.mobile.android.huki.deeplink.DeeplinkHandler
 import hu.mostoha.mobile.android.huki.extensions.OffsetType
+import hu.mostoha.mobile.android.huki.extensions.PopupMenuActionItem
+import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
 import hu.mostoha.mobile.android.huki.extensions.addFragment
 import hu.mostoha.mobile.android.huki.extensions.addGpxMarker
 import hu.mostoha.mobile.android.huki.extensions.addGpxPolyline
@@ -62,6 +63,7 @@ import hu.mostoha.mobile.android.huki.extensions.isGpxFileIntent
 import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
 import hu.mostoha.mobile.android.huki.extensions.locationPermissions
 import hu.mostoha.mobile.android.huki.extensions.openInfoWindows
+import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.postMainDelayed
 import hu.mostoha.mobile.android.huki.extensions.removeMarker
@@ -85,6 +87,7 @@ import hu.mostoha.mobile.android.huki.extensions.withOffset
 import hu.mostoha.mobile.android.huki.extensions.zoomToBoundingBoxPostMain
 import hu.mostoha.mobile.android.huki.model.domain.DeeplinkEvent
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.GPX_WAYPOINT
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.MAP_MY_LOCATION
@@ -159,8 +162,10 @@ import hu.mostoha.mobile.android.huki.ui.home.support.ProductsViewModel
 import hu.mostoha.mobile.android.huki.ui.home.support.SupportFragment
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.HIKE_MODE_INFO_WINDOW_SHOW_DELAY
+import hu.mostoha.mobile.android.huki.util.KEKTURA_URL
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_MAX_ZOOM_LEVEL
+import hu.mostoha.mobile.android.huki.util.OKT_OVERLAY_ID
 import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_FOLLOW_LOCATION
@@ -520,7 +525,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         homeOktFab.setOnClickListener {
             analyticsService.oktClicked()
-            homeViewModel.loadOktRoutes()
+            showOktPopupMenu()
         }
         homeHikeModeFab.setOnClickListener {
             analyticsService.hikeModeClicked()
@@ -528,7 +533,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         homeCompassFab.setOnClickListener {
             analyticsService.liveCompassClicked()
-
             homeViewModel.toggleLiveCompass(homeMapView.mapOrientation)
         }
         mapZoomInFab.setOnClickListener {
@@ -560,6 +564,45 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             .setMessage(R.string.gps_not_available_message)
             .setPositiveButton(R.string.gps_not_available_positive_button, null)
             .show()
+    }
+
+    private fun showOktPopupMenu() {
+        showPopupMenu(
+            anchorView = homeOktFab,
+            actionItems = listOf(
+                PopupMenuActionItem(
+                    popupMenuItem = PopupMenuItem(
+                        titleId = R.string.okt_okt_title,
+                        subTitleId = R.string.okt_okt_subtitle,
+                        iconId = R.drawable.ic_okt_okt
+                    ),
+                    onClick = {
+                        homeViewModel.loadOktRoutes(OktType.OKT)
+                    }
+                ),
+                PopupMenuActionItem(
+                    popupMenuItem = PopupMenuItem(
+                        titleId = R.string.okt_rpddk_title,
+                        subTitleId = R.string.okt_rpddk_subtitle,
+                        iconId = R.drawable.ic_okt_rpddk
+                    ),
+                    onClick = {
+                        homeViewModel.loadOktRoutes(OktType.RPDDK)
+                    }
+                ),
+                PopupMenuActionItem(
+                    popupMenuItem = PopupMenuItem(
+                        titleId = null,
+                        subTitleId = R.string.okt_official_website_subtitle,
+                        iconId = R.drawable.ic_okt_info
+                    ),
+                    onClick = {
+                        openUrl(KEKTURA_URL)
+                    }
+                )
+            ),
+            width = R.dimen.okt_popup_menu_width,
+        )
     }
 
     private fun initBottomSheets() {
@@ -1377,9 +1420,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         homeMapView.removeOverlay(OverlayType.OKT_ROUTES)
 
-        if (homeMapView.hasNoOverlay(OKT_ID_FULL_ROUTE)) {
+        if (homeMapView.hasNoOverlay(OKT_OVERLAY_ID)) {
             homeMapView.addOktBasePolyline(
-                overlayId = OKT_ID_FULL_ROUTE,
+                overlayId = OKT_OVERLAY_ID,
                 geoPoints = oktRoutes.mapGeoPoints,
                 onClick = {
                     homeViewModel.selectOktRoute(it)
@@ -1398,7 +1441,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             oktRouteUiModel = selectedRoute,
             onRouteClick = {
                 InfoWindow.closeAllInfoWindowsOn(homeMapView)
-                initOktRoutesBottomSheet(oktRoutes, selectedRoute.oktId)
+                initOktRoutesBottomSheet(oktRoutes.oktType, oktRoutes, selectedRoute.oktId)
                 homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
             },
             onWaypointClick = {
@@ -1409,7 +1452,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
         )
 
-        initOktRoutesBottomSheet(oktRoutes, selectedRoute.oktId)
+        initOktRoutesBottomSheet(oktRoutes.oktType, oktRoutes, selectedRoute.oktId)
 
         homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
     }
@@ -1471,10 +1514,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initOktRoutesBottomSheet(oktRoutes: OktRoutesUiModel, selectedOktId: String) {
+    private fun initOktRoutesBottomSheet(oktType: OktType, oktRoutes: OktRoutesUiModel, selectedId: String) {
         oktRoutesBottomSheet.init(
+            oktType = oktType,
             oktRoutes = oktRoutes.routes,
-            selectedOktId = selectedOktId,
+            selectedOktId = selectedId,
             onRouteClick = { oktId ->
                 InfoWindow.closeAllInfoWindowsOn(homeMapView)
                 homeViewModel.selectOktRoute(oktId)

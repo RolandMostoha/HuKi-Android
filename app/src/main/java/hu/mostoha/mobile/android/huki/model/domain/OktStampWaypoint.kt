@@ -4,6 +4,5 @@ data class OktStampWaypoint(
     val title: String,
     val description: String,
     val location: Location,
-    val stampTag: String,
-    val stampNumber: Double,
+    val stampTag: OktStampTag,
 )

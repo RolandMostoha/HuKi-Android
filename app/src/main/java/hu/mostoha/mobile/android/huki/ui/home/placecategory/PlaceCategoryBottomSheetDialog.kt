@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.home.placecategory
 
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceCategoryBinding
-import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
+import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommenderMapper
 import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
@@ -42,11 +42,11 @@ class PlaceCategoryBottomSheetDialog(
             },
             onKirandulastippekClick = {
                 analyticsService.hikeRecommenderKirandulastippekClicked()
-                context.startUrlIntent(HikeRecommenderMapper.getKirandulastippekLink(placeArea))
+                context.openUrl(HikeRecommenderMapper.getKirandulastippekLink(placeArea))
             },
             onTermeszetjaroClick = {
                 analyticsService.hikeRecommenderTermeszetjaroClicked()
-                context.startUrlIntent(HikeRecommenderMapper.getTermeszetjaroLink(placeArea))
+                context.openUrl(HikeRecommenderMapper.getTermeszetjaroLink(placeArea))
             }
         )
         adapter.initPlaceCategories(

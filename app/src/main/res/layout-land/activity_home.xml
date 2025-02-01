@@ -391,19 +391,19 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_altitude"
-                android:importantForAccessibility="no" />
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_altitude" />
 
             <hu.mostoha.mobile.android.huki.views.StrokedTextView
                 android:id="@+id/homeAltitudeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_extra_extra_small"
-                app:strokeColor="@color/colorStrokeMarker"
+                app:strokeColor="@color/colorMapOverlayStroke"
                 app:strokeWidth="2dp"
+                app:strokedTextColor="@color/colorMapOverlayText"
                 app:textAppearance="@style/DefaultTextAppearance.Bold.Small"
-                app:textColor="@color/colorMapOverlayText"
-            tools:text="500m" />
+                tools:text="500m" />
 
         </LinearLayout>
 

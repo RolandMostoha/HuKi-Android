@@ -25,7 +25,16 @@ fun Context.showPopupMenu(
     footerMessage: Message? = null,
 ) {
     val powerMenu = CustomPowerMenu.Builder(this, PopupMenuAdapter())
-        .addItemList(actionItems.map { PopupMenuItem(it.popupMenuItem.titleId, it.popupMenuItem.iconId) })
+        .addItemList(
+            actionItems.map { actionItem ->
+                val menuItem = actionItem.popupMenuItem
+                PopupMenuItem(
+                    titleId = menuItem.titleId,
+                    subTitleId = menuItem.subTitleId,
+                    iconId = menuItem.iconId
+                )
+            }
+        )
         .setAnimation(MenuAnimation.FADE)
         .setShowBackground(showBackground)
         .setMenuRadius(resources.getDimensionPixelSize(R.dimen.default_corner_size_surface).toFloat())
@@ -55,13 +64,14 @@ fun Context.showPopupMenu(
     if (showAtCenter) {
         powerMenu.showAtCenter(anchorView)
     } else {
-        powerMenu.showAsAnchorCenter(anchorView)
+        powerMenu.showAsAnchorLeftBottom(anchorView, 0, resources.getDimensionPixelSize(R.dimen.space_small))
     }
 }
 
 class PopupMenuItem(
-    @StringRes val titleId: Int,
-    @DrawableRes val iconId: Int
+    @StringRes val titleId: Int? = null,
+    @StringRes val subTitleId: Int? = null,
+    @DrawableRes val iconId: Int? = null,
 )
 
 data class PopupMenuActionItem(

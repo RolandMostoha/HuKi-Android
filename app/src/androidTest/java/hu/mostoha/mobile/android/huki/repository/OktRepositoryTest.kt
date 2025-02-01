@@ -6,6 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -33,7 +34,7 @@ class OktRepositoryTest {
 
     @Test
     fun givenLocalOktRoutes_whenGetOktFullRoute_thenStartAndEndPositionsArePresent() = runTest {
-        val oktRoutes = repository.getOktRoutes()
+        val oktRoutes = repository.getOktRoutes(OktType.OKT)
 
         LOCAL_OKT_ROUTES.map { it.start to it.end }.forEach { (start, end) ->
             assertThat(oktRoutes.locations).contains(start)

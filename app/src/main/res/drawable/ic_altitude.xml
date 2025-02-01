@@ -7,7 +7,7 @@
 
     <path
         android:fillColor="@color/colorMapOverlayText"
-        android:strokeColor="@color/colorPrimaryTextWhite"
+        android:strokeColor="@color/colorMapOverlayStroke"
         android:strokeWidth="6"
         android:pathData="M 10,80 L 50,20 L 90,80 Z" />
 </vector>

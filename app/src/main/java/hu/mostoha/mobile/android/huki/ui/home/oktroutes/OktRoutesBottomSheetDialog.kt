@@ -1,9 +1,11 @@
 package hu.mostoha.mobile.android.huki.ui.home.oktroutes
 
+import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetOktRoutesBinding
+import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.postMainDelayed
-import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.RECYCLERVIEW_SCROLL_DELAY
@@ -18,6 +20,7 @@ class OktRoutesBottomSheetDialog(
     private var oktRoutesAdapter: OktRoutesAdapter? = null
 
     fun init(
+        oktType: OktType,
         oktRoutes: List<OktRouteUiModel>,
         selectedOktId: String,
         onRouteClick: (String) -> Unit,
@@ -26,6 +29,15 @@ class OktRoutesBottomSheetDialog(
     ) {
         postMain {
             with(binding) {
+                oktRoutesTitle.text = when (oktType) {
+                    OktType.OKT -> context.getString(R.string.okt_okt_title)
+                    OktType.RPDDK -> context.getString(R.string.okt_rpddk_title)
+                }
+                oktRoutesSubtitle.text = when (oktType) {
+                    OktType.OKT -> context.getString(R.string.okt_okt_subtitle)
+                    OktType.RPDDK -> context.getString(R.string.okt_rpddk_subtitle)
+                }
+
                 if (oktRoutesAdapter == null) {
                     oktRoutesAdapter = OktRoutesAdapter(
                         onItemClick = { oktId ->
@@ -34,7 +46,7 @@ class OktRoutesBottomSheetDialog(
                         },
                         onLinkClick = { oktId, link ->
                             analyticsService.oktRouteLinkClicked(oktId)
-                            context.startUrlIntent(link)
+                            context.openUrl(link)
                         },
                         onEdgePointClick = { oktId, geoPoint ->
                             analyticsService.oktRouteEdgePointClicked(oktId)

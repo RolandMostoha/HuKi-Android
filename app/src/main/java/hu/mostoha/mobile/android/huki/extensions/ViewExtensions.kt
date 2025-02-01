@@ -4,6 +4,8 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.view.View
+import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -24,6 +26,15 @@ fun View.invisible() {
 
 fun View.visibleOrGone(visible: Boolean) {
     if (visible) visible() else gone()
+}
+
+fun ImageView.setImageOrGone(@DrawableRes imageResId: Int?) {
+    if (imageResId != null) {
+        setImageResource(imageResId)
+        visible()
+    } else {
+        gone()
+    }
 }
 
 fun FloatingActionButton.showOrHide(visible: Boolean) {

@@ -17,6 +17,7 @@
     <color name="colorPrimaryTextDisabled">#61262626</color>
     <color name="colorSecondaryText">#969696</color>
     <color name="colorMapOverlayText">#404040</color>
+    <color name="colorMapOverlayStroke">#ffffff</color>
     <color name="colorBackground">#ffffff</color>
     <color name="colorBackgroundLight">#f5f7f8</color>
     <color name="colorError">#c62828</color>
@@ -94,6 +95,8 @@
     <color name="colorSymbolGreen">#2A932C</color>
     <color name="colorSymbolYellow">#F3D900</color>
     <color name="colorSymbolPurple">#611a6a</color>
+
+    <color name="colorHungaryMap">#DDDDDD</color>
 
     <color name="colorOktBlue">#015398</color>
     <color name="colorOktSelected">#015398</color>

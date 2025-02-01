@@ -116,7 +116,7 @@ class MyLocationUiTest {
         answerTestLocationProvider()
 
         launchScenario<HomeActivity> {
-            R.id.homeAltitudeText.isDisplayedContainsText("162 m")
+            R.id.strokedTextViewText.isDisplayedContainsText("162 m")
         }
     }
 
@@ -128,7 +128,7 @@ class MyLocationUiTest {
         coEvery { asyncMyLocationProvider.getLocationFlow() } returns flowOf(location)
 
         launchScenario<HomeActivity> {
-            R.id.homeAltitudeText.isDisplayedWithText("")
+            R.id.strokedTextViewText.isDisplayedWithText("")
         }
     }
 

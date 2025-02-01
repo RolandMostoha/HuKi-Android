@@ -95,21 +95,14 @@ public class HukiScaleBarOverlay extends Overlay implements GeoConstants {
     // Constructors
     // ===========================================================
 
-    public HukiScaleBarOverlay(final MapView mapView) {
-        this(mapView, mapView.getContext(), 0, 0);
+    public HukiScaleBarOverlay(final MapView mapView, final int strokeColor) {
+        this(mapView, mapView.getContext(), 0, 0, strokeColor);
     }
 
     /**
      * @since 6.1.0
      */
-    public HukiScaleBarOverlay(final Context pContext, final int pMapWidth, final int pMapHeight) {
-        this(null, pContext, pMapWidth, pMapHeight);
-    }
-
-    /**
-     * @since 6.1.0
-     */
-    private HukiScaleBarOverlay(final MapView pMapView, final Context pContext, final int pMapWidth, final int pMapHeight) {
+    private HukiScaleBarOverlay(final MapView pMapView, final Context pContext, final int pMapWidth, final int pMapHeight, final int strokeColor) {
         super();
         mMapView = pMapView;
         context = pContext;
@@ -127,7 +120,7 @@ public class HukiScaleBarOverlay extends Overlay implements GeoConstants {
 
         this.barStrokePaint = new Paint(barPaint);
         this.barStrokePaint.setStyle(Style.STROKE);
-        this.barStrokePaint.setColor(Color.WHITE);
+        this.barStrokePaint.setColor(strokeColor);
         this.barStrokePaint.setStrokeWidth(12f);
         this.barStrokePaint.setStrokeMiter(10f);
 
@@ -142,7 +135,7 @@ public class HukiScaleBarOverlay extends Overlay implements GeoConstants {
         this.textPaint.setTextSize(10 * dm.density);
 
         this.textStrokePaint = new Paint(textPaint);
-        this.textStrokePaint.setColor(Color.WHITE);
+        this.textStrokePaint.setColor(strokeColor);
         this.textStrokePaint.setStyle(Paint.Style.STROKE);
         this.textStrokePaint.setStrokeWidth(6f);
         this.textStrokePaint.setLetterSpacing(textLetterSpacing);

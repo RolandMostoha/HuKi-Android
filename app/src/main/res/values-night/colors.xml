@@ -15,6 +15,8 @@
     <color name="colorStroke">#919191</color>
     <color name="colorStrokeLight">#DE000000</color>
     <color name="colorStrokeOnMap">#DE000000</color>
+    <color name="colorMapOverlayText">@color/colorSecondaryText</color>
+    <color name="colorMapOverlayStroke">@color/colorStrokeMarker</color>
     <color name="colorStrokeMarker">#000</color>
     <color name="colorStrokeMarkerDark">@color/colorStrokeMarker</color>
     <color name="colorDivider">#61919191</color>

@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
+import hu.mostoha.mobile.android.huki.data.LOCAL_RPDDK_ROUTES
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
@@ -353,14 +355,20 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadOktRoutes() = viewModelScope.launch {
+    fun loadOktRoutes(oktType: OktType) = viewModelScope.launch {
         flowWithExceptions(
-            request = { oktRepository.getOktRoutes() },
+            request = { oktRepository.getOktRoutes(oktType) },
             exceptionLogger = exceptionLogger
         )
-            .map { oktRoutesMapper.map(it, LOCAL_OKT_ROUTES) }
+            .map { routes ->
+                when (oktType) {
+                    OktType.OKT -> oktRoutesMapper.map(oktType, routes, LOCAL_OKT_ROUTES)
+                    OktType.RPDDK -> oktRoutesMapper.map(oktType, routes, LOCAL_RPDDK_ROUTES)
+                }
+            }
             .onEach { _oktRoutes.emit(it) }
             .onStart {
+                clearOktRoutes()
                 clearFollowLocation()
                 clearHikingRoutes()
                 clearPlaceDetails()

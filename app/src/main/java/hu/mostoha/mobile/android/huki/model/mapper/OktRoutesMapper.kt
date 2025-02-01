@@ -2,33 +2,42 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import androidx.core.util.toRange
 import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
+import hu.mostoha.mobile.android.huki.data.RPDDK_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.OktRoute
 import hu.mostoha.mobile.android.huki.model.domain.OktRoutes
+import hu.mostoha.mobile.android.huki.model.domain.OktStampTag
 import hu.mostoha.mobile.android.huki.model.domain.OktStampWaypoint
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
-import hu.mostoha.mobile.android.huki.util.KEKTURA_ROUTE_URL_TEMPLATE
-import hu.mostoha.mobile.android.huki.util.KEKTURA_URL
+import hu.mostoha.mobile.android.huki.util.KEKTURA_OKT_URL
+import hu.mostoha.mobile.android.huki.util.KEKTURA_OKT_URL_TEMPLATE
+import hu.mostoha.mobile.android.huki.util.KEKTURA_RPDDK_URL
+import hu.mostoha.mobile.android.huki.util.KEKTURA_RPDDK_URL_TEMPLATE
 import io.ticofab.androidgpxparser.parser.domain.WayPoint
 import javax.inject.Inject
 
 class OktRoutesMapper @Inject constructor() {
 
-    fun map(oktRoutes: OktRoutes, oktRouteList: List<OktRoute>): OktRoutesUiModel {
+    fun map(oktType: OktType, oktRoutes: OktRoutes, oktRouteList: List<OktRoute>): OktRoutesUiModel {
         val oktFullGeoPoints = oktRoutes.locations.toGeoPoints()
 
         return OktRoutesUiModel(
+            oktType = oktType,
             mapGeoPoints = oktFullGeoPoints,
             routes = oktRouteList.mapNotNull { oktRoute ->
                 val startGeoPoint = oktRoute.start.toGeoPoint()
                 val endGeoPoint = oktRoute.end.toGeoPoint()
-                val isFullRoute = oktRoute.id == OKT_ID_FULL_ROUTE
+                val isFullRoute = when (oktType) {
+                    OktType.OKT -> oktRoute.id == OKT_ID_FULL_ROUTE
+                    OktType.RPDDK -> oktRoute.id == RPDDK_ID_FULL_ROUTE
+                }
 
                 if (!oktFullGeoPoints.contains(startGeoPoint) || !oktFullGeoPoints.contains(endGeoPoint)) {
                     return@mapNotNull null
@@ -46,7 +55,7 @@ class OktRoutesMapper @Inject constructor() {
                 val stampWaypoints = if (isFullRoute) {
                     emptyList()
                 } else {
-                    oktRoutes.stampWaypoints.filter { it.stampNumber in oktRoute.stampTagsRange.toRange() }
+                    oktRoutes.stampWaypoints.filter { it.stampTag.stampNumber in oktRoute.stampTagsRange.toRange() }
                 }
 
                 OktRouteUiModel(
@@ -64,9 +73,15 @@ class OktRoutesMapper @Inject constructor() {
                     declineText = DistanceFormatter.formatSigned(-1 * oktRoute.decline),
                     travelTimeText = oktRoute.travelTime.formatHoursAndMinutes().toMessage(),
                     detailsUrl = if (isFullRoute) {
-                        KEKTURA_URL
+                        when (oktType) {
+                            OktType.OKT -> KEKTURA_OKT_URL
+                            OktType.RPDDK -> KEKTURA_RPDDK_URL
+                        }
                     } else {
-                        KEKTURA_ROUTE_URL_TEMPLATE.format(oktRoute.id.lowercase())
+                        when (oktType) {
+                            OktType.OKT -> KEKTURA_OKT_URL_TEMPLATE.format(oktRoute.id.lowercase())
+                            OktType.RPDDK -> KEKTURA_RPDDK_URL_TEMPLATE.format(oktRoute.id.lowercase())
+                        }
                     },
                     isSelected = isFullRoute,
                 )
@@ -74,39 +89,28 @@ class OktRoutesMapper @Inject constructor() {
         )
     }
 
-    fun map(gpxWaypoints: List<WayPoint>): List<OktStampWaypoint> {
+    fun map(oktType: OktType, gpxWaypoints: List<WayPoint>): List<OktStampWaypoint> {
         return gpxWaypoints
             .map { waypoint ->
                 OktStampWaypoint(
                     title = waypoint.name!!,
                     description = waypoint.desc!!,
                     location = Location(waypoint.latitude, waypoint.longitude, waypoint.elevation),
-                    stampTag = mapStampTag(waypoint.desc!!),
-                    stampNumber = mapStampNumber(waypoint.desc!!),
+                    stampTag = mapStampTag(oktType, waypoint.desc!!),
                 )
             }
-            .sortedBy { it.stampNumber }
+            .sortedBy { it.stampTag.stampNumber }
     }
 
-    private fun mapStampTag(description: String): String {
-        val regex = "\\(OKTPH.*\\)".toRegex()
-        val matchResult = regex.find(description)
-
-        checkNotNull(matchResult) {
-            "Stamp tag not found in description: $description"
-        }
-
-        return matchResult.value
-    }
-
-    private fun mapStampNumber(description: String): Double {
-        val regex = """OKTPH_(\d+)(?:_(\d+))?""".toRegex()
+    private fun mapStampTag(oktType: OktType, description: String): OktStampTag {
+        val regex = """${oktType.stampTag}_(\d+)(?:_(\d+))?""".toRegex()
         val matchResult = regex.find(description)
 
         checkNotNull(matchResult) {
             "Stamp number not found in description: $description"
         }
 
+        val stampTag = matchResult.groups[0]!!.value
         val number1 = matchResult.groups[1]!!.value
         val number2 = matchResult.groups[2]?.value
 
@@ -116,7 +120,7 @@ class OktRoutesMapper @Inject constructor() {
             "$number1.$number2"
         }
 
-        return stampNumber.toDouble()
+        return OktStampTag(stampTag, stampNumber.toDouble())
     }
 
 }

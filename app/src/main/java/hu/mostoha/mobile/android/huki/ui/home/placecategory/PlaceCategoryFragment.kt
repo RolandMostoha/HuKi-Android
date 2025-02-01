@@ -17,7 +17,7 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentPlaceCategoryBinding
 import hu.mostoha.mobile.android.huki.extensions.addFragment
 import hu.mostoha.mobile.android.huki.extensions.gone
-import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
+import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.center
@@ -119,7 +119,7 @@ class PlaceCategoryFragment : Fragment() {
 
                 if (placeArea != null) {
                     val url = HikeRecommenderMapper.getKirandulastippekLink(placeArea)
-                    requireContext().startUrlIntent(url)
+                    requireContext().openUrl(url)
                 }
             },
             onTermeszetjaroClick = {
@@ -129,7 +129,7 @@ class PlaceCategoryFragment : Fragment() {
 
                 if (placeArea != null) {
                     val url = HikeRecommenderMapper.getTermeszetjaroLink(placeArea)
-                    requireContext().startUrlIntent(url)
+                    requireContext().openUrl(url)
                 }
             }
         )

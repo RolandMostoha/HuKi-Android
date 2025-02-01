@@ -173,7 +173,6 @@
     <string name="place_history_menu_action_favourite">Favourite</string>
     <string name="place_history_menu_action_delete">Delete</string>
 
-    <string name="okt_routes_bottom_sheet_title">OKT - National Blue Trail</string>
     <string name="okt_routes_menu_action_details">Details and GPX</string>
     <string name="okt_routes_menu_action_start_point">Load starting point</string>
     <string name="okt_routes_menu_action_end_point">Load ending point</string>
@@ -279,7 +278,8 @@
     <string name="okt_okt_title">OKT</string>
     <string name="okt_okt_subtitle">National Blue Trail</string>
     <string name="okt_rpddk_title">RPDDK</string>
-    <string name="okt_rpddk_subtitle">Dél-dunántúli Blue Trail</string>
+    <string name="okt_rpddk_subtitle">Rockenbauer Pál Dél-dunántúli Blue Trail</string>
+    <string name="okt_official_website_subtitle">Official site of Blue Trail</string>
 
     <string name="osm_tag_no">No</string>
     <string name="osm_tag_yes">Yes</string>

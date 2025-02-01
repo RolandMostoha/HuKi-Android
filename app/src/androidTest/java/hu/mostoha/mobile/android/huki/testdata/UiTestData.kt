@@ -9,6 +9,7 @@ import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.OktStampTag
 import hu.mostoha.mobile.android.huki.model.domain.OktStampWaypoint
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
@@ -174,8 +175,10 @@ object Okt {
         title = "Írott-kő",
         description = "Írott-kői kilátó - (OKTPH_01_DDKPH_01_2)",
         location = Location(47.352921667, 16.434327593),
-        stampTag = "OKTPH_01",
-        stampNumber = 1.0,
+        stampTag = OktStampTag(
+            stampTag = "OKTPH_01",
+            stampNumber = 1.0,
+        ),
     )
 
 }

@@ -25,10 +25,10 @@ import hu.mostoha.mobile.android.huki.databinding.FragmentRoutePlannerBinding
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
+import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
-import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
@@ -141,7 +141,7 @@ class RoutePlannerFragment : Fragment() {
             clearRoutePlanner()
         }
         graphhopperLogo.setOnClickListener {
-            requireContext().startUrlIntent(getString(R.string.route_planner_graphhopper_url))
+            requireContext().openUrl(getString(R.string.route_planner_graphhopper_url))
         }
         routePlannerContainer.setOnClickListener {
             lastEditedWaypointInput?.clearFocus()

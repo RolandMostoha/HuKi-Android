@@ -46,8 +46,8 @@ class StrokedTextView @JvmOverloads constructor(
                 style = Paint.Style.STROKE
             }
             strokeTextView.letterSpacing = DEFAULT_LETTER_SPACING
-            textView.setTextColor(getColor(R.styleable.StrokedTextView_textColor, Color.BLACK))
             textView.setTextAppearance(textAppearance)
+            textView.setTextColor(getColor(R.styleable.StrokedTextView_strokedTextColor, Color.BLACK))
             textView.letterSpacing = DEFAULT_LETTER_SPACING
 
             recycle()

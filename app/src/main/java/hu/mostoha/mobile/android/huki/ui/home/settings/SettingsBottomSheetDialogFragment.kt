@@ -16,8 +16,8 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentSettingsBottomSheetDialogBinding
 import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import hu.mostoha.mobile.android.huki.extensions.hyperlinkStyle
+import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.startEmailIntent
-import hu.mostoha.mobile.android.huki.extensions.startUrlIntent
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.toPercentageFromScale
@@ -134,11 +134,11 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         gitHubText.hyperlinkStyle()
         gitHubText.setOnClickListener {
             analyticsService.settingsGitHubClicked()
-            requireContext().startUrlIntent(getString(R.string.settings_github_repository_url))
+            requireContext().openUrl(getString(R.string.settings_github_repository_url))
         }
         googlePlayReviewButton.setOnClickListener {
             analyticsService.settingsGooglePlayReviewClicked()
-            requireContext().startUrlIntent(getString(R.string.settings_google_play_review_url))
+            requireContext().openUrl(getString(R.string.settings_google_play_review_url))
         }
     }
 

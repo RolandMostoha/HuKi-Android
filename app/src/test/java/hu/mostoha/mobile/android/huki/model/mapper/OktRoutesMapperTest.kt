@@ -6,15 +6,17 @@ import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.OktRoute
 import hu.mostoha.mobile.android.huki.model.domain.OktRoutes
+import hu.mostoha.mobile.android.huki.model.domain.OktStampTag
 import hu.mostoha.mobile.android.huki.model.domain.OktStampWaypoint
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
-import hu.mostoha.mobile.android.huki.util.KEKTURA_ROUTE_URL_TEMPLATE
-import hu.mostoha.mobile.android.huki.util.KEKTURA_URL
+import hu.mostoha.mobile.android.huki.util.KEKTURA_OKT_URL
+import hu.mostoha.mobile.android.huki.util.KEKTURA_OKT_URL_TEMPLATE
 import io.ticofab.androidgpxparser.parser.domain.WayPoint
 import org.junit.Test
 import kotlin.time.Duration.Companion.hours
@@ -31,11 +33,13 @@ class OktRoutesMapperTest {
             stampWaypoints = emptyList(),
         )
         val oktRouteList = emptyList<OktRoute>()
+        val oktType = OktType.OKT
 
-        val oktRoutesUiModel = mapper.map(oktRoutes, oktRouteList)
+        val oktRoutesUiModel = mapper.map(oktType, oktRoutes, oktRouteList)
 
         assertThat(oktRoutesUiModel).isEqualTo(
             OktRoutesUiModel(
+                oktType = oktType,
                 mapGeoPoints = emptyList(),
                 routes = emptyList(),
             )
@@ -51,11 +55,13 @@ class OktRoutesMapperTest {
             stampWaypoints = emptyList(),
         )
         val oktRoute = DEFAULT_OKT_ROUTE
+        val oktType = OktType.OKT
 
-        val oktRoutesUiModel = mapper.map(oktRoutes, listOf(oktRoute))
+        val oktRoutesUiModel = mapper.map(oktType, oktRoutes, listOf(oktRoute))
 
         assertThat(oktRoutesUiModel).isEqualTo(
             OktRoutesUiModel(
+                oktType = oktType,
                 mapGeoPoints = oktFullGeoPoints.toGeoPoints(),
                 routes = listOf(
                     OktRouteUiModel(
@@ -70,7 +76,7 @@ class OktRoutesMapperTest {
                         inclineText = DistanceFormatter.formatSigned(oktRoute.incline),
                         declineText = DistanceFormatter.formatSigned(-1 * oktRoute.decline),
                         travelTimeText = oktRoute.travelTime.formatHoursAndMinutes().toMessage(),
-                        detailsUrl = KEKTURA_URL,
+                        detailsUrl = KEKTURA_OKT_URL,
                         isSelected = true,
                     )
                 ),
@@ -86,11 +92,12 @@ class OktRoutesMapperTest {
             stampWaypoints = emptyList(),
         )
         val oktRoute = DEFAULT_OKT_ROUTE_2
-
-        val oktRoutesUiModel = mapper.map(oktRoutes, listOf(oktRoute))
+        val oktType = OktType.OKT
+        val oktRoutesUiModel = mapper.map(oktType, oktRoutes, listOf(oktRoute))
 
         assertThat(oktRoutesUiModel).isEqualTo(
             OktRoutesUiModel(
+                oktType = oktType,
                 mapGeoPoints = oktFullGeoPoints.toGeoPoints(),
                 routes = listOf(
                     OktRouteUiModel(
@@ -105,7 +112,7 @@ class OktRoutesMapperTest {
                         inclineText = DistanceFormatter.formatSigned(oktRoute.incline),
                         declineText = DistanceFormatter.formatSigned(-1 * oktRoute.decline),
                         travelTimeText = oktRoute.travelTime.formatHoursAndMinutes().toMessage(),
-                        detailsUrl = KEKTURA_ROUTE_URL_TEMPLATE.format("okt-01"),
+                        detailsUrl = KEKTURA_OKT_URL_TEMPLATE.format("okt-01"),
                         isSelected = false,
                     )
                 ),
@@ -131,11 +138,13 @@ class OktRoutesMapperTest {
             end = Location(latitude = 48.0, longitude = 21.0),
             stampTagsRange = 1.0..2.0
         )
+        val oktType = OktType.OKT
 
-        val oktRoutesUiModel = mapper.map(oktRoutes, listOf(invalidOktRoute))
+        val oktRoutesUiModel = mapper.map(oktType, oktRoutes, listOf(invalidOktRoute))
 
         assertThat(oktRoutesUiModel).isEqualTo(
             OktRoutesUiModel(
+                oktType = oktType,
                 mapGeoPoints = oktFullGeoPoints.toGeoPoints(),
                 routes = emptyList(),
             )
@@ -156,8 +165,9 @@ class OktRoutesMapperTest {
             .setLatitude(47.352921667)
             .setLongitude(16.434327593)
             .build() as WayPoint
+        val oktType = OktType.OKT
 
-        val stampWaypoints = mapper.map(listOf(gpxWaypoint1, gpxWaypoint2))
+        val stampWaypoints = mapper.map(oktType, listOf(gpxWaypoint1, gpxWaypoint2))
 
         assertThat(stampWaypoints).isEqualTo(
             listOf(
@@ -165,15 +175,19 @@ class OktRoutesMapperTest {
                     title = "Írott-kő",
                     description = "Írott-kői kilátó - (OKTPH_01)",
                     location = Location(47.352921667, 16.434327593),
-                    stampTag = "(OKTPH_01)",
-                    stampNumber = 1.0,
+                    stampTag = OktStampTag(
+                        stampTag = "OKTPH_01",
+                        stampNumber = 1.0,
+                    ),
                 ),
                 OktStampWaypoint(
                     title = "Írott-kő 2",
                     description = "Írott-kői kilátó 2 - (OKTPH_01_2)",
                     location = Location(47.352921667, 16.434327593),
-                    stampTag = "(OKTPH_01_2)",
-                    stampNumber = 1.2,
+                    stampTag = OktStampTag(
+                        stampTag = "OKTPH_01_2",
+                        stampNumber = 1.2,
+                    ),
                 ),
             )
         )

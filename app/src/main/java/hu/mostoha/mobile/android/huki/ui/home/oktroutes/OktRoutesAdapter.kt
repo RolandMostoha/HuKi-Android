@@ -52,6 +52,7 @@ class OktRoutesAdapter(
                 }
                 oktRoutesItemTitle.text = oktRouteUiModel.routeName
                 oktRoutesItemNumber.visibleOrGone(oktRouteUiModel.routeNumber.isNotBlank())
+                oktRoutesItemNumberPrefix.text = oktRouteUiModel.oktId.split("-").firstOrNull()
                 routeAttributesTimeText.setMessage(oktRouteUiModel.travelTimeText)
                 routeAttributesDistanceText.setMessage(oktRouteUiModel.distanceText)
                 routeAttributesUphillText.setMessage(oktRouteUiModel.inclineText)
@@ -78,8 +79,8 @@ class OktRoutesAdapter(
             actionItems = listOf(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        R.string.okt_routes_menu_action_details,
-                        R.drawable.ic_okt_routes_action_details
+                        titleId = R.string.okt_routes_menu_action_details,
+                        iconId = R.drawable.ic_okt_routes_action_details
                     ),
                     onClick = {
                         onLinkClick.invoke(oktRouteUiModel.oktId, oktRouteUiModel.detailsUrl)
@@ -87,8 +88,8 @@ class OktRoutesAdapter(
                 ),
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        R.string.okt_routes_menu_action_start_point,
-                        R.drawable.ic_okt_routes_action_points
+                        titleId = R.string.okt_routes_menu_action_start_point,
+                        iconId = R.drawable.ic_okt_routes_action_points
                     ),
                     onClick = {
                         onEdgePointClick.invoke(
@@ -99,8 +100,8 @@ class OktRoutesAdapter(
                 ),
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        R.string.okt_routes_menu_action_end_point,
-                        R.drawable.ic_okt_routes_action_points
+                        titleId = R.string.okt_routes_menu_action_end_point,
+                        iconId = R.drawable.ic_okt_routes_action_points
                     ),
                     onClick = {
                         onEdgePointClick.invoke(

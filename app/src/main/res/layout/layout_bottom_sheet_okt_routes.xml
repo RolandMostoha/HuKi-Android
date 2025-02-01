@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/DefaultBottomSheet"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/okt_routes_bottom_sheet_peek_max_height"
+    android:layout_height="@dimen/okt_routes_bottom_sheet_peek_height"
     android:orientation="vertical"
     app:behavior_hideable="true"
     app:behavior_peekHeight="@dimen/okt_routes_bottom_sheet_peek_height"
@@ -24,19 +24,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Title -->
-            <com.google.android.material.textview.MaterialTextView
+            <!-- Title container -->
+            <LinearLayout
+                android:padding="@dimen/space_medium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_medium"
                 android:layout_weight="1"
-                android:paddingStart="@dimen/space_extra_large"
-                android:paddingTop="@dimen/space_medium"
-                android:paddingEnd="@dimen/space_extra_large"
-                android:paddingBottom="@dimen/space_medium"
-                android:text="@string/okt_routes_bottom_sheet_title"
-                android:textAppearance="@style/DefaultTextAppearance.SemiBold.Large" />
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <!-- Title -->
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/oktRoutesTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/DefaultTextAppearance.Bold.Large"
+                    tools:text="OKT" />
+
+                <!-- Subtitle -->
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/oktRoutesSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+                    tools:text="Országos Kéktúra" />
+
+            </LinearLayout>
 
             <!-- Close button -->
             <com.google.android.material.button.MaterialButton

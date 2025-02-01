@@ -120,8 +120,23 @@ class OktRoutesUiTest {
     fun whenClickOnOktChip_thenOktBottomSheetDisplays() {
         launchScenario<HomeActivity> {
             R.id.homeOktFab.click()
+            "OKT".clickWithTextInPopup()
 
-            R.string.okt_routes_bottom_sheet_title.isTextDisplayed()
+            waitForMapClear()
+
+            R.string.okt_okt_subtitle.isTextDisplayed()
+        }
+    }
+
+    @Test
+    fun whenClickOnRpddkChip_thenRpddkBottomSheetDisplays() {
+        launchScenario<HomeActivity> {
+            R.id.homeOktFab.click()
+            "RPDDK".clickWithTextInPopup()
+
+            waitForMapClear()
+
+            R.string.okt_rpddk_subtitle.isTextDisplayed()
         }
     }
 
@@ -129,6 +144,7 @@ class OktRoutesUiTest {
     fun whenClickOnOktChip_thenBaseRouteDisplaysOnMap() {
         launchScenario<HomeActivity> {
             R.id.homeOktFab.click()
+            "OKT".clickWithTextInPopup()
 
             waitForMapClear()
 
@@ -141,6 +157,7 @@ class OktRoutesUiTest {
     fun givenOktRoute_whenSelect_thenOktRouteDisplaysOnMap() {
         launchScenario<HomeActivity> {
             R.id.homeOktFab.click()
+            "OKT".clickWithTextInPopup()
 
             waitForMapClear()
 
@@ -159,6 +176,7 @@ class OktRoutesUiTest {
     fun givenOktRoute_whenClickOnLink_thenOktWebPageRequested() {
         launchScenario<HomeActivity> {
             R.id.homeOktFab.click()
+            "OKT".clickWithTextInPopup()
 
             waitForMapClear()
 
@@ -178,6 +196,7 @@ class OktRoutesUiTest {
     fun givenOktRoute_whenClickOnStartPoint_thenPlaceDetailsDisplays() {
         launchScenario<HomeActivity> {
             R.id.homeOktFab.click()
+            "OKT".clickWithTextInPopup()
 
             waitForMapClear()
 
@@ -199,6 +218,7 @@ class OktRoutesUiTest {
     fun givenOktRoute_whenClickOnEndPoint_thenPlaceDetailsDisplays() {
         launchScenario<HomeActivity> {
             R.id.homeOktFab.click()
+            "OKT".clickWithTextInPopup()
 
             waitForMapClear()
 
@@ -220,6 +240,7 @@ class OktRoutesUiTest {
     fun whenCloseClick_thenBottomSheetHides() {
         launchScenario<HomeActivity> {
             R.id.homeOktFab.click()
+            "OKT".clickWithTextInPopup()
 
             waitForMapClear()
 
@@ -237,11 +258,12 @@ class OktRoutesUiTest {
     fun whenRecreate_thenOktRoutesDisplaysAgain() {
         launchScenario<HomeActivity> { scenario ->
             R.id.homeOktFab.click()
+            "OKT".clickWithTextInPopup()
 
             scenario.recreate()
             waitForMapClear()
 
-            R.string.okt_routes_bottom_sheet_title.isTextDisplayed()
+            R.string.okt_okt_subtitle.isTextDisplayed()
             R.id.homeMapView.hasOverlay<MyLocationOverlay>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }

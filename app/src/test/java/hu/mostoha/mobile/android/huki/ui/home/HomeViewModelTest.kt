@@ -16,6 +16,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.OktRoutes
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
@@ -349,11 +350,11 @@ class HomeViewModelTest {
     fun `Given OKT routes, when loadOktRoutes, then OKT routes are emitted`() =
         runTest {
             viewModel.oktRoutes.test {
-                viewModel.loadOktRoutes()
+                viewModel.loadOktRoutes(OktType.OKT)
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(
-                    oktRoutesMapper.map(DEFAULT_OKT_ROUTES, LOCAL_OKT_ROUTES)
+                    oktRoutesMapper.map(OktType.OKT, DEFAULT_OKT_ROUTES, LOCAL_OKT_ROUTES)
                 )
             }
         }
@@ -362,7 +363,7 @@ class HomeViewModelTest {
     fun `Given OKT routes, when select OKT route by ID, then OKT routes are updated`() =
         runTest {
             viewModel.oktRoutes.test {
-                viewModel.loadOktRoutes()
+                viewModel.loadOktRoutes(OktType.OKT)
 
                 advanceUntilIdle()
 
@@ -378,7 +379,7 @@ class HomeViewModelTest {
     fun `Given OKT routes, when select OKT route by geo point, then OKT routes are updated`() =
         runTest {
             viewModel.oktRoutes.test {
-                viewModel.loadOktRoutes()
+                viewModel.loadOktRoutes(OktType.OKT)
 
                 advanceUntilIdle()
 
@@ -466,7 +467,7 @@ class HomeViewModelTest {
     }
 
     private fun mockOktRoutes() {
-        coEvery { oktRepository.getOktRoutes() } returns DEFAULT_OKT_ROUTES
+        coEvery { oktRepository.getOktRoutes(any()) } returns DEFAULT_OKT_ROUTES
     }
 
     companion object {

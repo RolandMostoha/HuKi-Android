@@ -157,7 +157,6 @@
     <string name="place_history_menu_action_favourite">Kedvenc</string>
     <string name="place_history_menu_action_delete">Törlés</string>
 
-    <string name="okt_routes_bottom_sheet_title">OKT - Országos Kéktúra</string>
     <string name="okt_routes_menu_action_details">Részletek és GPX</string>
     <string name="okt_routes_menu_action_start_point">Kezdőpont betöltése</string>
     <string name="okt_routes_menu_action_end_point">Végpont betöltése</string>
@@ -262,7 +261,8 @@
     <string name="okt_okt_title">OKT</string>
     <string name="okt_okt_subtitle">Országos Kéktúra</string>
     <string name="okt_rpddk_title">RPDDK</string>
-    <string name="okt_rpddk_subtitle">Dél-dunántúli Kéktúra</string>
+    <string name="okt_rpddk_subtitle">Rockenbauer Pál Dél-dunántúli Kéktúra</string>
+    <string name="okt_official_website_subtitle">A Kéktúra hivatalos oldala</string>
 
     <string name="osm_tag_no">Nem</string>
     <string name="osm_tag_yes">Igen</string>

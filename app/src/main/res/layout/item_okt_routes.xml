@@ -31,7 +31,7 @@
             android:duplicateParentState="true"
             android:gravity="center_horizontal"
             android:text="@string/okt_routes_item_prefix"
-            android:textAppearance="@style/DefaultTextAppearance.Bold.Small" />
+            android:textAppearance="@style/DefaultTextAppearance.Bold.ExtraSmall" />
 
         <!-- OKT number -->
         <com.google.android.material.textview.MaterialTextView
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textAppearance="@style/DefaultTextAppearance.Bold.Small"
+            android:textAppearance="@style/DefaultTextAppearance.Bold.ExtraSmall"
             tools:text="01" />
 
     </LinearLayout>
