@@ -165,7 +165,7 @@
 
     <string name="support_title">Támogatás</string>
     <string name="support_greeting">Kedves érdeklődő!</string>
-    <string name="support_message">A HuKi továbbra is ingyenes és reklámmentes, a támogatás önkéntes alapú. Ha neked is segít az app és módodban áll, akkor kérlek fontold meg a támogatását.\n\nAz appot hobbiból fejlesztem és örömmel tölt el, hogy valami hasznosat teszek a túrás közösségnek. Mivel egyre többen használjuk, a fenntartási költségei is emelkednek, és gondolkoznom kell, hogy tudna önfentartó lenni. Kísérleti jelleggel született ez a támógatói oldal. </string>
+    <string name="support_message">A HuKi továbbra is teljesen ingyenes és reklámmentes, a támogatás önkéntes alapú. Ha neked is segít az app és módodban áll, akkor kérlek fontold meg a támogatását.\n\nAz appot hobbiból fejlesztem és örömmel tölt el, hogy valami hasznosat teszek a túrás közösségnek. Mivel egyre többen használjuk, a fenntartási költségei is emelkednek, és gondolkoznom kell, hogy tudna önfentartó lenni. \n\nTovábbra is minden erőmmel azon leszek, hogy az üzemeltetés a lehető legolcsóbb és leghatékonyabb legyen, és a projekt fennmaradjon.</string>
     <string name="support_recurring_title">Rendeszeres támogatás</string>
     <string name="support_one_time_title">Egyszeri támogatás</string>
     <string name="support_contact_message">Ha más módon szeretnéd támogatni a fejlesztést vagy ötleted van, nyugodtan keress:</string>
@@ -212,7 +212,7 @@
 
     <string name="place_category_landscapes_header_title">Tájegységek</string>
     <string name="place_category_hike_recommendations_header_title">Túraajánlók</string>
-    <string name="place_category_hike_recommendations_info">A túraajánlókból letöltött GPX fájlok megnyithatóak az alkalmazással.</string>
+    <string name="place_category_hike_recommendations_info">A túraajánlókból letöltött GPX fájlok megnyithatóak az alkalmazással. A túraajánkókhoz nem fűz semmilyen érdekeltség és a weboldalak nem tartoznak az alkalmazás felügyelete alá, valamint az ott elérhető tartalom felhasználásához az adott weboldal feltételei érvényesek.</string>
     <string name="place_category_national_routes_chip_title">Túraútvonalak</string>
 
     <string name="place_category_group_travel">Közlekedés</string>

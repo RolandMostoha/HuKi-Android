@@ -181,7 +181,7 @@
 
     <string name="support_title">Support</string>
     <string name="support_greeting">Dear future supporter!</string>
-    <string name="support_message">HuKi is still ad-free and all of its functions are free, support is voluntary.\n\nI develop it in my free time and I love that I\'m doing something useful for the hiking community. Since more and more of us are using it, its monthly cost is raising, so I have to think about make it self-sustaining.\n\nThis support page was created as a test, so if you like the app and can afford, please consider supporting the development of HuKi.</string>
+    <string name="support_message">HuKi is still ad-free and all of its functions are free, support is voluntary.\n\nI develop it in my free time and I love that I\'m doing something useful for the hiking community. Since more and more of us are using it, its monthly cost is raising, so I have to think about make it self-sustaining.\n\nI will continue to do everything to ensure that the maintenance is as cheap and efficient as possible for the project tp survive.</string>
     <string name="support_recurring_title">Recurring support</string>
     <string name="support_one_time_title">One-time support</string>
     <string name="support_contact_message">If you want to support the development in other ways, or have an idea, feel free to reach out:</string>
@@ -228,7 +228,7 @@
 
     <string name="place_category_landscapes_header_title">Landscapes</string>
     <string name="place_category_hike_recommendations_header_title">Hike recommendations</string>
-    <string name="place_category_hike_recommendations_info">You can open the downloaded GPX files with the application.</string>
+    <string name="place_category_hike_recommendations_info">You can open the downloaded GPX files with the application. I have no interests in the websites and they are not under the control of the application, the use of the content available there is subject to the terms of the respective website.</string>
     <string name="place_category_national_routes_chip_title">National routes</string>
 
     <string name="place_category_group_travel">Travel</string>
