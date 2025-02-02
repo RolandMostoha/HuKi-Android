@@ -8,6 +8,13 @@ object DataStoreConstants {
 
     const val USER_PREFERENCES = "user_preferences"
 
+    object MapConfig {
+        val BOUNDING_BOX_NORTH = doublePreferencesKey("map_config_bounding_box_north")
+        val BOUNDING_BOX_EAST = doublePreferencesKey("map_config_bounding_box_east")
+        val BOUNDING_BOX_SOUTH = doublePreferencesKey("map_config_bounding_box_south")
+        val BOUNDING_BOX_WEST = doublePreferencesKey("map_config_bounding_box_west")
+    }
+
     object Settings {
         val BASE_LAYER = stringPreferencesKey("settings_base_layer")
         val THEME = intPreferencesKey("settings_theme")

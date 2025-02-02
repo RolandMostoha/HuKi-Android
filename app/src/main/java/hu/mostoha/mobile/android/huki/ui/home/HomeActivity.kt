@@ -84,7 +84,6 @@ import hu.mostoha.mobile.android.huki.extensions.toDrawable
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
-import hu.mostoha.mobile.android.huki.extensions.zoomToBoundingBoxPostMain
 import hu.mostoha.mobile.android.huki.model.domain.DeeplinkEvent
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.OktType
@@ -162,6 +161,7 @@ import hu.mostoha.mobile.android.huki.ui.home.support.ProductsViewModel
 import hu.mostoha.mobile.android.huki.ui.home.support.SupportFragment
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.HIKE_MODE_INFO_WINDOW_SHOW_DELAY
+import hu.mostoha.mobile.android.huki.util.HUNGARY_BOUNDING_BOX
 import hu.mostoha.mobile.android.huki.util.KEKTURA_URL
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_MAX_ZOOM_LEVEL
@@ -343,6 +343,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 overlayManager.tilesOverlay.setColorFilter(getColorScaledMatrix(getColor(R.color.colorScaleDarkMap)))
             }
             addOnFirstLayoutListener { _, _, _, _, _ ->
+                restoreBoundingBox()
+
                 initFlows()
 
                 homeMapView.addScaleBarOverlay()
@@ -364,6 +366,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 clearSearchBarInput()
                 mapTouchEventSharedViewModel.updateEvent(MapTouchEvents.MAP_TOUCHED)
                 false
+            }
+        }
+    }
+
+    private fun restoreBoundingBox() {
+        lifecycleScope.launch {
+            val boundingBox = homeViewModel.getSavedBoundingBox()
+            if (boundingBox != null) {
+                Timber.d("MapConfig: restoring bounding box: $boundingBox")
+                homeMapView.zoomToBoundingBox(boundingBox.toOsm(), false)
+            } else {
+                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toOsm(), false)
             }
         }
     }
@@ -733,8 +747,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initFlows() {
-        initHomeFlows()
         initMapFlows()
+        initHomeFlows()
         initLayersFlows()
         initPlaceFinderFlows()
         initRoutePlannerFlows()
@@ -781,20 +795,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initMapFlows() {
         lifecycleScope.launch {
-            homeViewModel.mapConfigUiModel
-                .flowWithLifecycle(lifecycle)
-                .collect { mapUiModel ->
-                    Timber.d("Restoring map config: $mapUiModel")
-
-                    val boundingBox = mapUiModel.boundingBox.toOsm()
-
-                    if (homeMapView.mapOrientation == 0f) {
-                        homeMapView.zoomToBoundingBoxPostMain(boundingBox, false)
-                    }
-                }
-        }
-        lifecycleScope.launch {
-            homeViewModel.myLocationUiModel
+            homeViewModel.myLocationConfigUiModel
                 .map { it.isLocationPermissionEnabled }
                 .distinctUntilChanged()
                 .onStart { delay(TURN_ON_DELAY_MY_LOCATION) }
@@ -802,7 +803,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .collect { isEnabled ->
                     if (isLocationPermissionGranted()) {
                         if (isEnabled) {
-                            val isFollowingEnabled = homeViewModel.myLocationUiModel.value.isFollowLocationEnabled
+                            val isFollowingEnabled = homeViewModel.myLocationConfigUiModel.value.isFollowLocationEnabled
 
                             enableMyLocationMonitoring()
                             enableFollowingLocation(isFollowingEnabled)
@@ -813,7 +814,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
         }
         lifecycleScope.launch {
-            homeViewModel.myLocationUiModel
+            homeViewModel.myLocationConfigUiModel
                 .map { it.isFollowLocationEnabled }
                 .distinctUntilChanged()
                 .onStart { delay(TURN_ON_DELAY_FOLLOW_LOCATION) }

@@ -28,14 +28,14 @@ import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
-import hu.mostoha.mobile.android.huki.model.ui.MapConfigUiModel
-import hu.mostoha.mobile.android.huki.model.ui.MyLocationUiModel
+import hu.mostoha.mobile.android.huki.model.ui.MyLocationConfigUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.MapConfigRepository
 import hu.mostoha.mobile.android.huki.repository.OktRepository
 import hu.mostoha.mobile.android.huki.repository.PlaceHistoryRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
@@ -84,6 +84,7 @@ class HomeViewModelTest {
     private val placesRepository = mockk<PlacesRepository>()
     private val placeHistoryRepository = mockk<PlaceHistoryRepository>()
     private val geocodingRepository = mockk<GeocodingRepository>()
+    private val mapConfigRepository = mockk<MapConfigRepository>()
     private val landscapeInteractor = mockk<LandscapeInteractor>()
     private val oktRepository = mockk<OktRepository>()
     private val myLocationProvider = mockk<AsyncMyLocationProvider>()
@@ -114,6 +115,7 @@ class HomeViewModelTest {
             placeHistoryRepository,
             geocodingRepository,
             oktRepository,
+            mapConfigRepository,
             landscapeInteractor,
             homeUiModelMapper,
             placeDomainUiMapper,
@@ -168,11 +170,11 @@ class HomeViewModelTest {
         runTestDefault {
             val placeUiModel = DEFAULT_PLACE_UI_MODEL
 
-            viewModel.myLocationUiModel.test {
+            viewModel.myLocationConfigUiModel.test {
                 viewModel.loadPlaceDetails(placeUiModel)
 
-                assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
-                assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
+                assertThat(awaitItem()).isEqualTo(MyLocationConfigUiModel())
+                assertThat(awaitItem()).isEqualTo(MyLocationConfigUiModel(isFollowLocationEnabled = false))
             }
         }
 
@@ -218,11 +220,11 @@ class HomeViewModelTest {
             val geometry = Geometry.Node(osmId, Location(47.7193842, 18.8962014))
             coEvery { placesRepository.getGeometry(osmId, PlaceType.NODE) } returns geometry
 
-            viewModel.myLocationUiModel.test {
+            viewModel.myLocationConfigUiModel.test {
                 viewModel.loadPlaceDetailsWithGeometry(placeUiModel)
 
-                assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
-                assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
+                assertThat(awaitItem()).isEqualTo(MyLocationConfigUiModel())
+                assertThat(awaitItem()).isEqualTo(MyLocationConfigUiModel(isFollowLocationEnabled = false))
             }
         }
 
@@ -300,11 +302,11 @@ class HomeViewModelTest {
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             coEvery { placesRepository.getGeometry(osmId, any()) } returns geometry
 
-            viewModel.myLocationUiModel.test {
+            viewModel.myLocationConfigUiModel.test {
                 viewModel.loadHikingRouteDetails(hikingRouteUiModel)
 
-                assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
-                assertThat(awaitItem()).isEqualTo(MyLocationUiModel(isFollowLocationEnabled = false))
+                assertThat(awaitItem()).isEqualTo(MyLocationConfigUiModel())
+                assertThat(awaitItem()).isEqualTo(MyLocationConfigUiModel(isFollowLocationEnabled = false))
             }
         }
 
@@ -394,32 +396,19 @@ class HomeViewModelTest {
     @Test
     fun `When updateMyLocationConfig, then my location UI model should be updated`() =
         runTestDefault {
-            viewModel.myLocationUiModel.test {
+            viewModel.myLocationConfigUiModel.test {
                 viewModel.updateMyLocationConfig(
                     isLocationPermissionEnabled = true,
                     isFollowLocationEnabled = false,
                 )
 
-                assertThat(awaitItem()).isEqualTo(MyLocationUiModel())
+                assertThat(awaitItem()).isEqualTo(MyLocationConfigUiModel())
                 assertThat(awaitItem()).isEqualTo(
-                    MyLocationUiModel(
+                    MyLocationConfigUiModel(
                         isLocationPermissionEnabled = true,
                         isFollowLocationEnabled = false,
                     )
                 )
-            }
-        }
-
-    @Test
-    fun `When saveBoundingBox, then map UI model should be updated with the given bounding box with the default offset`() =
-        runTestDefault {
-            val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
-
-            viewModel.mapConfigUiModel.test {
-                viewModel.saveMapBoundingBox(boundingBox)
-
-                assertThat(awaitItem()).isEqualTo(MapConfigUiModel())
-                assertThat(awaitItem()).isEqualTo(MapConfigUiModel(boundingBox))
             }
         }
 
