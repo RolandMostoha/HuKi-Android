@@ -1,5 +1,3 @@
-- New: category finder (viewpoint,parking,restaurant...)
-- New: all OSM data can be retrieved for a POI
-- New finder for landscapes and POIs
-- Frequently used functions have been moved to the right
-- Update of the hiking layer database
+- New: RPDDK - Dél-dunántúli Blue Trail (OKT)
+- Scale and altitude indicator are more visible on the map
+- Fixes in map and my location restoration
