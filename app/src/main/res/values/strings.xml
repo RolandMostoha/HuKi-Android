@@ -279,6 +279,8 @@
     <string name="okt_okt_subtitle">National Blue Trail</string>
     <string name="okt_rpddk_title">RPDDK</string>
     <string name="okt_rpddk_subtitle">Rockenbauer Pál Dél-dunántúli Blue Trail</string>
+    <string name="okt_akt_title">AKT</string>
+    <string name="okt_akt_subtitle">Alföldi Blue Trail</string>
     <string name="okt_official_website_subtitle">Official site of Blue Trail</string>
 
     <string name="osm_tag_no">No</string>

@@ -9,6 +9,7 @@ import hu.mostoha.mobile.android.huki.billing.fieldName
 import hu.mostoha.mobile.android.huki.extensions.removeFileExtension
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
@@ -317,8 +318,9 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_DELETE_PLACE_HISTORY_ITEM, null)
     }
 
-    override fun oktClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_OKT, null)
+    override fun oktClicked(oktType: OktType) {
+        val eventName = "${EVENT_SELECT_OKT}_${oktType.name.lowercase()}"
+        firebaseAnalytics.logEvent(eventName, null)
     }
 
     override fun oktRouteClicked(oktId: String) {

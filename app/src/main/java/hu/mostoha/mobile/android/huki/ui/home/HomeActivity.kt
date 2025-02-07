@@ -538,7 +538,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             )
         }
         homeOktFab.setOnClickListener {
-            analyticsService.oktClicked()
             showOktPopupMenu()
         }
         homeHikeModeFab.setOnClickListener {
@@ -591,7 +590,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         iconId = R.drawable.ic_okt_okt
                     ),
                     onClick = {
-                        homeViewModel.loadOktRoutes(OktType.OKT)
+                        val oktType = OktType.OKT
+                        analyticsService.oktClicked(oktType)
+                        homeViewModel.loadOktRoutes(oktType)
                     }
                 ),
                 PopupMenuActionItem(
@@ -601,7 +602,21 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         iconId = R.drawable.ic_okt_rpddk
                     ),
                     onClick = {
-                        homeViewModel.loadOktRoutes(OktType.RPDDK)
+                        val oktType = OktType.RPDDK
+                        analyticsService.oktClicked(oktType)
+                        homeViewModel.loadOktRoutes(oktType)
+                    }
+                ),
+                PopupMenuActionItem(
+                    popupMenuItem = PopupMenuItem(
+                        titleId = R.string.okt_akt_title,
+                        subTitleId = R.string.okt_akt_subtitle,
+                        iconId = R.drawable.ic_okt_akt
+                    ),
+                    onClick = {
+                        val oktType = OktType.AKT
+                        analyticsService.oktClicked(oktType)
+                        homeViewModel.loadOktRoutes(oktType)
                     }
                 ),
                 PopupMenuActionItem(

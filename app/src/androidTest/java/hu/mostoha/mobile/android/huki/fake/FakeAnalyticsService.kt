@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.fake
 
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
@@ -96,7 +97,7 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun placeHistoryItemDelete() = Unit
 
-    override fun oktClicked() = Unit
+    override fun oktClicked(oktType: OktType) = Unit
 
     override fun oktRouteClicked(oktId: String) = Unit
 

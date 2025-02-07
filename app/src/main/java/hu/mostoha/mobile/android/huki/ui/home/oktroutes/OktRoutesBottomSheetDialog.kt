@@ -32,10 +32,12 @@ class OktRoutesBottomSheetDialog(
                 oktRoutesTitle.text = when (oktType) {
                     OktType.OKT -> context.getString(R.string.okt_okt_title)
                     OktType.RPDDK -> context.getString(R.string.okt_rpddk_title)
+                    OktType.AKT -> context.getString(R.string.okt_akt_title)
                 }
                 oktRoutesSubtitle.text = when (oktType) {
                     OktType.OKT -> context.getString(R.string.okt_okt_subtitle)
                     OktType.RPDDK -> context.getString(R.string.okt_rpddk_subtitle)
+                    OktType.AKT -> context.getString(R.string.okt_akt_subtitle)
                 }
 
                 if (oktRoutesAdapter == null) {

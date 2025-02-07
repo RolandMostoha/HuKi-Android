@@ -19,10 +19,10 @@ class OktRepository @Inject constructor(
         val inputStream = when (oktType) {
             OktType.OKT -> context.resources.openRawResource(R.raw.okt_teljes_bh_20241115)
             OktType.RPDDK -> context.resources.openRawResource(R.raw.rpddk_teljes_bh_20241217)
+            OktType.AKT -> context.resources.openRawResource(R.raw.ak_teljes_bh_20250107)
         }
 
         val gpx = GPXParser().parse(inputStream)
-
         val gpxWaypoints = gpx.wayPoints
         val stampWaypoints = oktRoutesMapper.map(oktType, gpxWaypoints)
         check(gpxWaypoints.count() == stampWaypoints.map { it.stampTag }.count()) {

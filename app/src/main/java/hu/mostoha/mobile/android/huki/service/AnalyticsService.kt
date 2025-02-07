@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.service
 
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
+import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
@@ -95,7 +96,7 @@ interface AnalyticsService {
 
     fun placeHistoryItemDelete()
 
-    fun oktClicked()
+    fun oktClicked(oktType: OktType)
 
     fun oktRouteClicked(oktId: String)
 

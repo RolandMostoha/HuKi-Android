@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.model.mapper
 
 import androidx.core.util.toRange
+import hu.mostoha.mobile.android.huki.data.AKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.data.RPDDK_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
@@ -16,6 +17,8 @@ import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.util.KEKTURA_AKT_URL
+import hu.mostoha.mobile.android.huki.util.KEKTURA_AKT_URL_TEMPLATE
 import hu.mostoha.mobile.android.huki.util.KEKTURA_OKT_URL
 import hu.mostoha.mobile.android.huki.util.KEKTURA_OKT_URL_TEMPLATE
 import hu.mostoha.mobile.android.huki.util.KEKTURA_RPDDK_URL
@@ -37,9 +40,12 @@ class OktRoutesMapper @Inject constructor() {
                 val isFullRoute = when (oktType) {
                     OktType.OKT -> oktRoute.id == OKT_ID_FULL_ROUTE
                     OktType.RPDDK -> oktRoute.id == RPDDK_ID_FULL_ROUTE
+                    OktType.AKT -> oktRoute.id == AKT_ID_FULL_ROUTE
                 }
 
-                if (!oktFullGeoPoints.contains(startGeoPoint) || !oktFullGeoPoints.contains(endGeoPoint)) {
+                check(oktFullGeoPoints.contains(startGeoPoint) && oktFullGeoPoints.contains(endGeoPoint)) {
+                    "${oktRoute.id}: start or end point not found in full route"
+
                     return@mapNotNull null
                 }
 
@@ -76,11 +82,13 @@ class OktRoutesMapper @Inject constructor() {
                         when (oktType) {
                             OktType.OKT -> KEKTURA_OKT_URL
                             OktType.RPDDK -> KEKTURA_RPDDK_URL
+                            OktType.AKT -> KEKTURA_AKT_URL
                         }
                     } else {
                         when (oktType) {
                             OktType.OKT -> KEKTURA_OKT_URL_TEMPLATE.format(oktRoute.id.lowercase())
                             OktType.RPDDK -> KEKTURA_RPDDK_URL_TEMPLATE.format(oktRoute.id.lowercase())
+                            OktType.AKT -> KEKTURA_AKT_URL_TEMPLATE.format(oktRoute.id.lowercase())
                         }
                     },
                     isSelected = isFullRoute,

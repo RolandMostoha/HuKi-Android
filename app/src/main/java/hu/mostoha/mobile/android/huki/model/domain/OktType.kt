@@ -9,5 +9,10 @@ enum class OktType(val stampTag: String) {
     /**
      * Rockenbauer Pál Dél-dunántúli Kéktúra
      */
-    RPDDK("DDKPH")
+    RPDDK("DDKPH"),
+
+    /**
+     * Alföldi Kéktúra
+     */
+    AKT("AKPH")
 }

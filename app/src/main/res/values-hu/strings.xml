@@ -262,6 +262,8 @@
     <string name="okt_okt_subtitle">Országos Kéktúra</string>
     <string name="okt_rpddk_title">RPDDK</string>
     <string name="okt_rpddk_subtitle">Rockenbauer Pál Dél-dunántúli Kéktúra</string>
+    <string name="okt_akt_title">AKT</string>
+    <string name="okt_akt_subtitle">Alföldi Kétúra</string>
     <string name="okt_official_website_subtitle">A Kéktúra hivatalos oldala</string>
 
     <string name="osm_tag_no">Nem</string>
