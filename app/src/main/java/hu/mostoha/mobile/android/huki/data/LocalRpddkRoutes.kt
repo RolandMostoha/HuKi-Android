@@ -49,8 +49,8 @@ val LOCAL_RPDDK_ROUTES = listOf(
         incline = 670,
         decline = 710,
         travelTime = 14.hours.plus(40.minutes),
-        start = Location(latitude = 46.981292481, longitude = 17.271265176, altitude = 167.3507),
-        end = Location(latitude = 46.759963612, longitude = 17.249656386, altitude = 105.3006),
+        start = Location(latitude = 46.838755712, longitude = 16.420923278, altitude = 225.1731),
+        end = Location(latitude = 46.84275891, longitude = 16.584466368, altitude = 187.3539),
         stampTagsRange = 11.0..15.2,
     ),
     OktRoute(
