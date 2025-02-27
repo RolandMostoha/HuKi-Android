@@ -19,6 +19,7 @@ android {
         versionCode gitVersionCode
         versionName gitVersionName
         buildConfigField("String", "GRAPHHOPPER_API_KEY", getGraphhopperApiKey())
+        buildConfigField("String", "LOCATION_IQ_API_KEY", getLocationIqApiKey())
         resourceConfigurations += ["en", "hu"]
 
         testInstrumentationRunner "hu.mostoha.mobile.android.huki.HiltTestRunner"
@@ -225,3 +226,11 @@ String getGraphhopperApiKey() {
     properties.load(new FileInputStream(propFile))
     return properties['GRAPHHOPPER_API_KEY']
 }
+
+String getLocationIqApiKey() {
+    def propFile = rootProject.file("./local.properties")
+    def properties = new Properties()
+    properties.load(new FileInputStream(propFile))
+    return properties['LOCATION_IQ_API_KEY']
+}
+

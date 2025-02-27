@@ -43,7 +43,9 @@ import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.Gpx.TEST_GPX_NAME
 import hu.mostoha.mobile.android.huki.testdata.Gpx.getTestGpxFileResult
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_NODE
-import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_RELATION
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_RELATION
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
 import hu.mostoha.mobile.android.huki.testdata.RoutePlanner.DEFAULT_ROUTE_PLAN
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
@@ -128,10 +130,10 @@ class GpxHistoryUiTest {
         osmConfiguration.init()
         Intents.init()
 
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
-            DEFAULT_PLACE_NODE,
-            DEFAULT_PLACE_WAY,
-            DEFAULT_PLACE_RELATION
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns listOf(
+            DEFAULT_PLACE_PROFILE_NODE,
+            DEFAULT_PLACE_PROFILE_WAY,
+            DEFAULT_PLACE_PROFILE_RELATION
         )
         coEvery { routPlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
         coEvery { routPlannerRepository.saveRoutePlan(any()) } returns getTestRoutePlannerGpxUri()

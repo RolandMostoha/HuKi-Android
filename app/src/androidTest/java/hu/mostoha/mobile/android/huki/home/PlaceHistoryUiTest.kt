@@ -23,7 +23,9 @@ import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceAddress
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
@@ -44,6 +46,9 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_RELATION
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_RELATION
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
@@ -132,7 +137,7 @@ class PlaceHistoryUiTest {
         osmConfiguration.init()
         Intents.init()
 
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(DEFAULT_PLACE_NODE)
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns listOf(DEFAULT_PLACE_PROFILE_NODE)
         answerTestLocationProvider()
         answerTestPlaces()
     }
@@ -173,8 +178,8 @@ class PlaceHistoryUiTest {
             val searchText = DEFAULT_SEARCH_TEXT
             val landscapeSearchText = "Bukk"
 
-            coEvery { geocodingRepository.getPlacesBy(landscapeSearchText, any(), any()) } returns listOf(
-                DEFAULT_PLACE_LANDSCAPE
+            coEvery { geocodingRepository.getAutocompletePlaces(landscapeSearchText, any()) } returns listOf(
+                DEFAULT_PLACE_PROFILE_LANDSCAPE
             )
 
             // Map search 1
@@ -207,13 +212,13 @@ class PlaceHistoryUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
-            DEFAULT_PLACE_NODE,
-            DEFAULT_PLACE_WAY,
-            DEFAULT_PLACE_RELATION,
-            DEFAULT_PLACE_LANDSCAPE
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns listOf(
+            DEFAULT_PLACE_PROFILE_NODE,
+            DEFAULT_PLACE_PROFILE_WAY,
+            DEFAULT_PLACE_PROFILE_RELATION,
+            DEFAULT_PLACE_PROFILE_LANDSCAPE
         )
-        coEvery { geocodingRepository.getPlace(any(), any()) } returns null
+        coEvery { geocodingRepository.getPlaceProfile(any()) } returns null
     }
 
     private fun answerTestLocationProvider() {
@@ -230,6 +235,19 @@ class PlaceHistoryUiTest {
             fullAddress = DEFAULT_LANDSCAPE_ADDRESS,
             placeFeature = PlaceFeature.ROUTE_PLANNER_SEARCH,
             location = Location(DEFAULT_LANDSCAPE_LATITUDE, DEFAULT_LANDSCAPE_LONGITUDE)
+        )
+        private val DEFAULT_PLACE_PROFILE_LANDSCAPE = PlaceProfile(
+            osmId = DEFAULT_PLACE_LANDSCAPE.osmId,
+            placeType = DEFAULT_PLACE_LANDSCAPE.placeType,
+            location = DEFAULT_PLACE_LANDSCAPE.location,
+            displayName = DEFAULT_LANDSCAPE_NAME,
+            displayAddress = DEFAULT_LANDSCAPE_ADDRESS,
+            address = PlaceAddress(
+                houseNumber = null,
+                street = null,
+                city = DEFAULT_LANDSCAPE_ADDRESS,
+                country = null
+            )
         )
     }
 

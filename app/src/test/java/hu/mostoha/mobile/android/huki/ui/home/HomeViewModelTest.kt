@@ -184,7 +184,7 @@ class HomeViewModelTest {
             val geoPoint = DEFAULT_PLACE_UI_MODEL.geoPoint
             val placeFeature = PlaceFeature.MAP_SEARCH
 
-            coEvery { geocodingRepository.getPlace(any(), placeFeature) } returns null
+            coEvery { geocodingRepository.getPlaceProfile(any()) } returns null
 
             viewModel.placeDetails.test {
                 viewModel.loadPlaceDetailsWithGeocoding(geoPoint, placeFeature)

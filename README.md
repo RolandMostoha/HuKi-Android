@@ -16,8 +16,6 @@ The inspiration of the project was [turistautak.openstreetmap.hu](https://turist
 ## Screenshots
 
 ![Screenshot HuKi 1](assets/GitHub/github_screenshot_1.png "Screenshot HuKi 1")
-![Screenshot HuKi 2](assets/GitHub/github_screenshot_2.png "Screenshot HuKi 2")
-![Screenshot HuKi 3](assets/GitHub/github_screenshot_3.png "Screenshot HuKi 3")
 
 ## Graphhopper support
 
@@ -34,6 +32,7 @@ Huge thanks to the Graphhopper team for the opportunity!
 - Current location monitoring with elevation support
 - Route planner
 - Importing and displaying routes from GPX files
+- Search for OSM place categories like "restaurant", "parking" etc.
 - Dark mode support
 
 ### What is it NOT good for
@@ -54,7 +53,7 @@ Huge thanks to the Graphhopper team for the opportunity!
   - [Google Satellite](https://developers.google.com/maps/documentation/tile/satellite)
 - Hiking tiles - [TuraReteg.sqlitedb](https://data2.openstreetmap.hu/) privately hosted in an AWS S3 bucket
 - OpenStreetMap data provider - [Overpass API](https://wiki.openstreetmap.org/wiki/Overpass_API)
-- Search engine - [Photon](https://photon.komoot.io/)
+- Search engine - [LocationIQ](https://locationiq.com/)
 - Route planner - [Graphhopper Routing API](https://docs.graphhopper.com/#tag/Routing-API)
 - Location service
   - [Google Fused Location Provider](https://developers.google.com/location-context/fused-location-provider)
@@ -158,7 +157,7 @@ The app is built upon many `OpenStreetMap` related services. There is an in-app 
 
 - OpenStreetMap - https://www.openstreetmap.org/copyright
 - Hungarian Hiking Layer (turistautak.openstreetmap.hu) - https://data2.openstreetmap.hu/
-- Komoot - Photon (Search engine) - https://photon.komoot.io/
+- Location IQ - Search engine -  https://locationiq.com/
 - OsmDroid - Tile render - https://github.com/osmdroid/osmdroid
 - Graphhopper - Routing API - https://www.graphhopper.com/
 - Kirándulástippek - Hike recommendation -  https://kirandulastippek.hu/
@@ -173,7 +172,7 @@ The app is built upon many `OpenStreetMap` related services. There is an in-app 
 ```
 MIT License
 
-Copyright (c) 2020-2023 Roland Mostoha
+Copyright (c) 2020-2025 Roland Mostoha
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

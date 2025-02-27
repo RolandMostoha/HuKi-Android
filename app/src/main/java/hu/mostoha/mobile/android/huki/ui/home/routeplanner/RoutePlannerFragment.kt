@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.IdRes
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -22,6 +24,7 @@ import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentRoutePlannerBinding
+import hu.mostoha.mobile.android.huki.extensions.addFragment
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
@@ -31,6 +34,7 @@ import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
+import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
@@ -56,6 +60,20 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class RoutePlannerFragment : Fragment() {
 
+    companion object {
+        private val ARG_BOUNDING_BOX = this::class.java.simpleName + "ARG_BOUNDING_BOX"
+
+        fun addFragment(fragmentManager: FragmentManager, @IdRes containerId: Int, boundingBox: BoundingBox) {
+            fragmentManager.addFragment(
+                containerId,
+                RoutePlannerFragment::class.java,
+                Bundle().apply {
+                    putParcelable(ARG_BOUNDING_BOX, boundingBox)
+                }
+            )
+        }
+    }
+
     @Inject
     lateinit var analyticsService: AnalyticsService
 
@@ -69,6 +87,8 @@ class RoutePlannerFragment : Fragment() {
 
     private var _binding: FragmentRoutePlannerBinding? = null
     private val binding get() = _binding!!
+
+    private val boundingBox by lazy { requireArguments().getParcelable<BoundingBox>(ARG_BOUNDING_BOX)!! }
 
     private lateinit var waypointAdapter: WaypointAdapter
     private lateinit var placeFinderPopup: PlaceFinderPopup
@@ -163,7 +183,7 @@ class RoutePlannerFragment : Fragment() {
 
                 if (waypointInput.hasFocus() && text.isNotEmpty()) {
                     if (text.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
-                        placeFinderViewModel.loadPlaces(text, PlaceFeature.ROUTE_PLANNER_SEARCH)
+                        placeFinderViewModel.loadPlaces(text, boundingBox, PlaceFeature.ROUTE_PLANNER_SEARCH)
                     } else {
                         placeFinderViewModel.initPlaceFinder(PlaceFinderFeature.ROUTE_PLANNER)
                     }

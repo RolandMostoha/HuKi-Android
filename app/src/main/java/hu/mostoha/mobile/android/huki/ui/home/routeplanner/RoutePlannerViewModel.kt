@@ -180,12 +180,12 @@ class RoutePlannerViewModel @Inject constructor(
             }
 
             val defaultPrimaryText = R.string.place_finder_my_location_button.toMessage()
-            val place = geocodingRepository.getPlace(lastKnownLocation, PlaceFeature.ROUTE_PLANNER_MY_LOCATION)
+            val place = geocodingRepository.getPlaceProfile(lastKnownLocation)
 
             _wayPointItems.update { wayPointItemList ->
                 wayPointItemList.update(waypointItem) { wayPointItem ->
                     wayPointItem.copy(
-                        primaryText = place?.name ?: defaultPrimaryText,
+                        primaryText = place?.displayName?.toMessage() ?: defaultPrimaryText,
                         location = lastKnownLocation,
                         searchText = null
                     )
@@ -205,12 +205,12 @@ class RoutePlannerViewModel @Inject constructor(
         viewModelScope.launch {
             val defaultPrimaryText = LocationFormatter.formatText(location)
 
-            val place = geocodingRepository.getPlace(location, PlaceFeature.ROUTE_PLANNER_PICKED_LOCATION)
+            val place = geocodingRepository.getPlaceProfile(location)
 
             _wayPointItems.update { wayPointItemList ->
                 wayPointItemList.update(waypointItem) { wayPointItem ->
                     wayPointItem.copy(
-                        primaryText = place?.name ?: defaultPrimaryText,
+                        primaryText = place?.displayName?.toMessage() ?: defaultPrimaryText,
                         location = location,
                         searchText = null
                     )

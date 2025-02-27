@@ -86,7 +86,7 @@ class PlaceAreaMapperTest {
                 placeAreaType = PlaceAreaType.MAP_SEARCH,
                 location = location,
                 boundingBox = boundingBox,
-                addressMessage = DEFAULT_PLACE_PROFILE.address.name.toMessage(),
+                addressMessage = DEFAULT_PLACE_PROFILE.displayName.toMessage(),
                 distanceMessage = boundingBox.areaDistanceMessage(),
                 iconRes = R.drawable.ic_place_category_city
             )

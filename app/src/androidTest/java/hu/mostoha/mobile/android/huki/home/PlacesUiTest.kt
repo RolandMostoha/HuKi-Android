@@ -32,11 +32,15 @@ import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_GEOMETRY_NODE
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_GEOMETRY_RELATION
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_GEOMETRY_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_RELATION
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_RELATION
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
+import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_PROFILE
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
@@ -393,7 +397,7 @@ class PlacesUiTest {
         answerTestGeometries()
         answerTestLocationProvider()
 
-        coEvery { geocodingRepository.getPlace(any(), any()) } returns null
+        coEvery { geocodingRepository.getPlaceProfile(any()) } returns null
 
         launchScenario<HomeActivity> {
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -416,7 +420,7 @@ class PlacesUiTest {
         answerTestGeometries()
         answerTestLocationProvider()
 
-        coEvery { geocodingRepository.getPlace(any(), any()) } returns DEFAULT_PLACE_NODE
+        coEvery { geocodingRepository.getPlaceProfile(any()) } returns DEFAULT_PLACE_PROFILE
 
         launchScenario<HomeActivity> {
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
@@ -453,10 +457,10 @@ class PlacesUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
-            DEFAULT_PLACE_WAY,
-            DEFAULT_PLACE_NODE,
-            DEFAULT_PLACE_RELATION
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns listOf(
+            DEFAULT_PLACE_PROFILE_WAY,
+            DEFAULT_PLACE_PROFILE_NODE,
+            DEFAULT_PLACE_PROFILE_RELATION
         )
     }
 

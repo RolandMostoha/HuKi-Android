@@ -8,15 +8,17 @@ sealed class PlaceFinderItem {
 
     data class Place(val placeUiModel: PlaceUiModel) : PlaceFinderItem()
 
-    object StaticActions : PlaceFinderItem()
+    data object StaticActions : PlaceFinderItem()
 
-    object ShowMoreHistory : PlaceFinderItem()
+    data object ShowMoreHistory : PlaceFinderItem()
 
-    object Loading : PlaceFinderItem()
+    data object Loading : PlaceFinderItem()
 
     data class Info(
         @DrawableRes val drawableRes: Int,
         val messageRes: Message.Res
     ) : PlaceFinderItem()
+
+    data object Attribution : PlaceFinderItem()
 
 }

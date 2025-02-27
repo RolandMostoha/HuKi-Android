@@ -73,7 +73,11 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_RELATION
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_WAY
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
+import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_PROFILE
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithContentDescription
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
@@ -168,10 +172,10 @@ class RoutePlannerUiTest {
         Intents.init()
 
         answerTestLocationProvider()
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
-            DEFAULT_PLACE_NODE,
-            DEFAULT_PLACE_WAY,
-            DEFAULT_PLACE_RELATION
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns listOf(
+            DEFAULT_PLACE_PROFILE_NODE,
+            DEFAULT_PLACE_PROFILE_WAY,
+            DEFAULT_PLACE_PROFILE_RELATION
         )
         coEvery {
             routPlannerRepository.getRoutePlan(
@@ -360,7 +364,7 @@ class RoutePlannerUiTest {
     @Test
     fun givenMyLocation_whenAddMyLocationWaypoint_thenRoutePlanUpdates() {
         launchScenario<HomeActivity> {
-            coEvery { geocodingRepository.getPlace(any(), any()) } returns null
+            coEvery { geocodingRepository.getPlaceProfile(any()) } returns null
 
             val waypointName1 = "Dobogoko"
 
@@ -385,7 +389,7 @@ class RoutePlannerUiTest {
     @Test
     fun givenMyLocationWithGeocoding_whenAddMyLocationWaypoint_thenRoutePlanUpdates() {
         launchScenario<HomeActivity> {
-            coEvery { geocodingRepository.getPlace(any(), any()) } returns DEFAULT_PLACE_NODE
+            coEvery { geocodingRepository.getPlaceProfile(any()) } returns DEFAULT_PLACE_PROFILE
             coEvery { routPlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
 
             val waypointName1 = "Dobogoko"

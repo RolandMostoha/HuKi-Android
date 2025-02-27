@@ -64,7 +64,6 @@ class GpxHistoryViewModelTest {
     fun `When init, then gpx history file names return GPX file names without file extension`() {
         runTestDefault {
             viewModel.gpxHistoryFileNames.test {
-                assertThat(awaitItem()).isEqualTo(emptyList<String>())
                 assertThat(awaitItem()).isEqualTo(listOf("route_plan_HuKi938", "dera_szurdok"))
             }
         }

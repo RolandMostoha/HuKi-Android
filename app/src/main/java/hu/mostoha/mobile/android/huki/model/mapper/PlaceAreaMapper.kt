@@ -26,7 +26,7 @@ object PlaceAreaMapper {
 
         val address = when {
             placeProfile == null -> null
-            areaDistance < PLACE_CITY_THRESHOLD -> placeProfile.address.name
+            areaDistance < PLACE_CITY_THRESHOLD -> placeProfile.displayName
             areaDistance in PLACE_CITY_THRESHOLD..PLACE_COUNTRY_THRESHOLD -> placeProfile.address.city
             else -> placeProfile.address.country
         }

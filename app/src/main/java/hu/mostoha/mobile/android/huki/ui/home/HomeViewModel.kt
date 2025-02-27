@@ -187,7 +187,7 @@ class HomeViewModel @Inject constructor(
             }
 
             flowWithExceptions(
-                request = { geocodingRepository.getPlace(geoPoint.toLocation(), placeFeature) },
+                request = { geocodingRepository.getPlaceProfile(geoPoint.toLocation()) },
                 exceptionLogger = exceptionLogger
             )
                 .map { place ->

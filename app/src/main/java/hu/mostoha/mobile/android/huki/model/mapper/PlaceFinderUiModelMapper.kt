@@ -4,6 +4,8 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
 import hu.mostoha.mobile.android.huki.model.ui.PlaceFinderFeature
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderItem
 import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MAX_HISTORY_ITEM
@@ -15,6 +17,14 @@ class PlaceFinderUiModelMapper @Inject constructor(
 
     fun mapPlaceFinderItems(places: List<Place>, myLocation: Location? = null): List<PlaceFinderItem> {
         return places.map { PlaceFinderItem.Place(placeMapper.mapToPlaceUiModel(it, myLocation)) }
+    }
+
+    fun mapPlaceFinderItems(
+        places: List<PlaceProfile>,
+        placeFeature: PlaceFeature,
+        myLocation: Location?
+    ): List<PlaceFinderItem> {
+        return places.map { PlaceFinderItem.Place(placeMapper.mapToPlaceUiModel(it, placeFeature, myLocation)) }
     }
 
     fun mapHistoryItems(

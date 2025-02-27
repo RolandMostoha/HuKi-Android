@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 
 class PlaceFinderPopup(
@@ -35,6 +36,10 @@ class PlaceFinderPopup(
             },
             onShowMoreHistoryClick = {
                 onShowMoreHistoryClick?.invoke()
+                dismiss()
+            },
+            onAttributionClick = {
+                context.openUrl(context.getString(R.string.location_iq_attribution_url))
                 dismiss()
             }
         )

@@ -12,7 +12,9 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.OktStampTag
 import hu.mostoha.mobile.android.huki.model.domain.OktStampWaypoint
 import hu.mostoha.mobile.android.huki.model.domain.Place
+import hu.mostoha.mobile.android.huki.model.domain.PlaceAddress
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
@@ -63,6 +65,20 @@ object Places {
         location = Location(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE)
     )
 
+    val DEFAULT_PLACE_PROFILE_NODE = PlaceProfile(
+        osmId = DEFAULT_PLACE_NODE.osmId,
+        placeType = DEFAULT_PLACE_NODE.placeType,
+        location = DEFAULT_PLACE_NODE.location,
+        displayName = DEFAULT_NODE_NAME,
+        displayAddress = DEFAULT_NODE_CITY,
+        address = PlaceAddress(
+            houseNumber = null,
+            street = null,
+            city = DEFAULT_NODE_CITY,
+            country = null
+        )
+    )
+
     val DEFAULT_GEOMETRY_NODE = Geometry.Node(
         osmId = DEFAULT_PLACE_NODE.osmId,
         location = DEFAULT_PLACE_NODE.location
@@ -75,6 +91,20 @@ object Places {
         fullAddress = DEFAULT_WAY_CITY,
         placeFeature = PlaceFeature.MAP_SEARCH,
         location = Location(DEFAULT_WAY_LATITUDE, DEFAULT_WAY_LONGITUDE)
+    )
+
+    val DEFAULT_PLACE_PROFILE_WAY = PlaceProfile(
+        osmId = DEFAULT_PLACE_WAY.osmId,
+        placeType = DEFAULT_PLACE_WAY.placeType,
+        location = DEFAULT_PLACE_WAY.location,
+        displayName = DEFAULT_WAY_NAME,
+        displayAddress = DEFAULT_WAY_CITY,
+        address = PlaceAddress(
+            houseNumber = null,
+            street = null,
+            city = DEFAULT_WAY_CITY,
+            country = null
+        )
     )
 
     val DEFAULT_GEOMETRY_WAY = Geometry.Way(
@@ -90,6 +120,20 @@ object Places {
         fullAddress = DEFAULT_RELATION_ADDRESS,
         placeFeature = PlaceFeature.MAP_SEARCH,
         location = Location(DEFAULT_RELATION_CENTER_LATITUDE, DEFAULT_RELATION_CENTER_LONGITUDE)
+    )
+
+    val DEFAULT_PLACE_PROFILE_RELATION = PlaceProfile(
+        osmId = DEFAULT_PLACE_RELATION.osmId,
+        placeType = DEFAULT_PLACE_RELATION.placeType,
+        location = DEFAULT_PLACE_RELATION.location,
+        displayName = DEFAULT_RELATION_NAME,
+        displayAddress = DEFAULT_RELATION_ADDRESS,
+        address = PlaceAddress(
+            houseNumber = null,
+            street = null,
+            city = DEFAULT_RELATION_ADDRESS,
+            country = null
+        )
     )
 
     val DEFAULT_GEOMETRY_RELATION = Geometry.Relation(

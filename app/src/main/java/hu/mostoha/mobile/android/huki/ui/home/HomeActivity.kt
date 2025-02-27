@@ -395,7 +395,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             val text = editable.toString()
             if (homeSearchBarInput.hasFocus() && text.isNotEmpty()) {
                 if (text.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
-                    placeFinderViewModel.loadPlaces(text, MAP_SEARCH)
+                    placeFinderViewModel.loadPlaces(text, homeMapView.boundingBox.toDomain(), MAP_SEARCH)
                 } else {
                     placeFinderViewModel.initPlaceFinder(PlaceFinderFeature.MAP)
                 }
@@ -509,7 +509,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
             routePlannerViewModel.initWaypoints()
 
-            supportFragmentManager.addFragment(R.id.homeRoutePlannerContainer, RoutePlannerFragment::class.java)
+            RoutePlannerFragment.addFragment(
+                supportFragmentManager,
+                R.id.homeRoutePlannerContainer,
+                homeMapView.boundingBox.toDomain()
+            )
         }
         homeLayersFab.setOnClickListener {
             analyticsService.layersClicked()
@@ -1593,7 +1597,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeMapView.removeMarker(marker)
                 homeViewModel.clearPlaceDetails()
 
-                supportFragmentManager.addFragment(R.id.homeRoutePlannerContainer, RoutePlannerFragment::class.java)
+                RoutePlannerFragment.addFragment(
+                    supportFragmentManager,
+                    R.id.homeRoutePlannerContainer,
+                    homeMapView.boundingBox.toDomain()
+                )
             },
             onCloseButtonClick = {
                 homeMapView.closeInfoWindowsForMarkerType<DistanceInfoWindow, PlaceDetailsMarker>()

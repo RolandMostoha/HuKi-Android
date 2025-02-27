@@ -24,6 +24,8 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
+import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_AREA_BOX
+import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_PROFILE
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.TimberRule
 import hu.mostoha.mobile.android.huki.util.runTestDefault
@@ -75,14 +77,14 @@ class PlaceFinderViewModelTest {
         runTestDefault {
             val searchText = "Mecs"
             val placeFeature = PlaceFeature.MAP_SEARCH
-            coEvery { geocodingRepository.getPlacesBy(searchText, placeFeature, any()) } returns emptyList()
+            coEvery { geocodingRepository.getAutocompletePlaces(searchText, any()) } returns emptyList()
             coEvery { placeHistoryRepository.getPlaces() } returns flowOf(emptyList())
             coEvery { placeHistoryRepository.getPlacesBy(any(), any()) } returns flowOf(emptyList())
 
             viewModel.placeFinderItems.test {
                 viewModel.initPlaceFinder(PlaceFinderFeature.MAP)
                 advanceUntilIdle()
-                viewModel.loadPlaces(searchText, placeFeature)
+                viewModel.loadPlaces(searchText, DEFAULT_PLACE_AREA_BOX, placeFeature)
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.StaticActions))
@@ -91,7 +93,8 @@ class PlaceFinderViewModelTest {
                         PlaceFinderItem.Info(
                             messageRes = R.string.place_finder_empty_message.toMessage(),
                             drawableRes = R.drawable.ic_search_bar_empty_result
-                        )
+                        ),
+                        PlaceFinderItem.Attribution
                     )
                 )
                 assertThat(awaitItem()).isEqualTo(listOf(PlaceFinderItem.Loading))
@@ -100,7 +103,8 @@ class PlaceFinderViewModelTest {
                         PlaceFinderItem.Info(
                             messageRes = R.string.place_finder_empty_message.toMessage(),
                             drawableRes = R.drawable.ic_search_bar_empty_result
-                        )
+                        ),
+                        PlaceFinderItem.Attribution
                     )
                 )
             }
@@ -112,15 +116,16 @@ class PlaceFinderViewModelTest {
         runTestDefault {
             val searchText = "Mecs"
             val places = listOf(DEFAULT_PLACE)
+            val placeProfiles = listOf(DEFAULT_PLACE_PROFILE)
             val placeFeature = PlaceFeature.MAP_SEARCH
-            coEvery { geocodingRepository.getPlacesBy(searchText, placeFeature, any()) } returns places
+            coEvery { geocodingRepository.getAutocompletePlaces(searchText, any()) } returns placeProfiles
             coEvery { placeHistoryRepository.getPlaces() } returns flowOf(places)
             coEvery { placeHistoryRepository.getPlacesBy(any(), any()) } returns flowOf(places)
 
             viewModel.placeFinderItems.test {
                 viewModel.initPlaceFinder(PlaceFinderFeature.MAP)
                 advanceUntilIdle()
-                viewModel.loadPlaces(searchText, placeFeature)
+                viewModel.loadPlaces(searchText, DEFAULT_PLACE_AREA_BOX, placeFeature)
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(
@@ -140,7 +145,14 @@ class PlaceFinderViewModelTest {
                 assertThat(awaitItem()).isEqualTo(
                     emptyList<PlaceFinderItem>()
                         .plus(placeFinderUiModelMapper.mapPlaceFinderItems(places))
-                        .plus(placeFinderUiModelMapper.mapPlaceFinderItems(places))
+                        .plus(
+                            placeFinderUiModelMapper.mapPlaceFinderItems(
+                                placeProfiles,
+                                PlaceFeature.MAP_SEARCH,
+                                null
+                            )
+                        )
+                        .plus(PlaceFinderItem.Attribution)
                 )
             }
         }
@@ -150,10 +162,11 @@ class PlaceFinderViewModelTest {
     fun `Given places with location, when load places, then place finder items are emitted`() {
         runTestDefault {
             val searchText = "Mecs"
+            val placeProfiles = listOf(DEFAULT_PLACE_PROFILE)
             val places = listOf(DEFAULT_PLACE)
             val myLocation = DEFAULT_MY_LOCATION
             val placeFeature = PlaceFeature.MAP_SEARCH
-            coEvery { geocodingRepository.getPlacesBy(searchText, placeFeature, myLocation) } returns places
+            coEvery { geocodingRepository.getAutocompletePlaces(searchText, any()) } returns placeProfiles
             coEvery { placeHistoryRepository.getPlaces() } returns flowOf(places)
             coEvery { placeHistoryRepository.getPlacesBy(any(), any()) } returns flowOf(places)
             coEvery { myLocationProvider.getLastKnownLocationCoroutine() } returns myLocation.toMockLocation()
@@ -161,7 +174,7 @@ class PlaceFinderViewModelTest {
             viewModel.placeFinderItems.test {
                 viewModel.initPlaceFinder(PlaceFinderFeature.MAP)
                 advanceUntilIdle()
-                viewModel.loadPlaces(searchText, placeFeature)
+                viewModel.loadPlaces(searchText, DEFAULT_PLACE_AREA_BOX, placeFeature)
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(
@@ -181,7 +194,14 @@ class PlaceFinderViewModelTest {
                 assertThat(awaitItem()).isEqualTo(
                     emptyList<PlaceFinderItem>()
                         .plus(placeFinderUiModelMapper.mapPlaceFinderItems(places, myLocation))
-                        .plus(placeFinderUiModelMapper.mapPlaceFinderItems(places, myLocation))
+                        .plus(
+                            placeFinderUiModelMapper.mapPlaceFinderItems(
+                                placeProfiles,
+                                PlaceFeature.MAP_SEARCH,
+                                myLocation
+                            )
+                        )
+                        .plus(PlaceFinderItem.Attribution)
                 )
             }
         }

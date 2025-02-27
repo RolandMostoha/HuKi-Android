@@ -108,8 +108,8 @@ class OsmLicencesOverlay(
             )
             .setLibrary(
                 Library(
-                    title = context.getString(R.string.licences_photon_title),
-                    url = "https://photon.komoot.io/",
+                    title = context.getString(R.string.licences_location_iq_title),
+                    url = "https://locationiq.com/",
                     license = License.CREATIVE_COMMONS
                 )
             )

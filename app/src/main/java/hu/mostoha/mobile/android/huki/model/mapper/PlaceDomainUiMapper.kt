@@ -7,6 +7,7 @@ import hu.mostoha.mobile.android.huki.model.domain.OsmTags
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
@@ -50,6 +51,26 @@ class PlaceDomainUiMapper @Inject constructor(
             },
             placeFeature = place.placeFeature,
             historyInfo = place.historyInfo
+        )
+    }
+
+    fun mapToPlaceUiModel(place: PlaceProfile, placeFeature: PlaceFeature, myLocation: Location? = null): PlaceUiModel {
+        return PlaceUiModel(
+            osmId = place.osmId,
+            placeType = place.placeType,
+            primaryText = place.displayName.toMessage(),
+            secondaryText = place.displayAddress.toMessage(),
+            iconRes = when (place.placeType) {
+                PlaceType.NODE -> R.drawable.ic_place_type_node
+                PlaceType.WAY -> R.drawable.ic_place_type_way
+                PlaceType.RELATION, PlaceType.HIKING_ROUTE -> R.drawable.ic_place_type_relation
+            },
+            geoPoint = place.location.toGeoPoint(),
+            boundingBox = place.boundingBox,
+            distanceText = myLocation?.let {
+                DistanceFormatter.formatWithoutScale(place.location.distanceBetween(myLocation))
+            },
+            placeFeature = placeFeature,
         )
     }
 
@@ -182,21 +203,21 @@ class PlaceDomainUiMapper @Inject constructor(
     fun mapToPlaceUiModel(
         geoPoint: GeoPoint,
         placeFeature: PlaceFeature,
-        geocodedPlace: Place? = null
+        geocodedPlace: PlaceProfile? = null
     ): PlaceUiModel {
         return if (geocodedPlace != null) {
             PlaceUiModel(
                 osmId = geocodedPlace.osmId,
                 placeType = geocodedPlace.placeType,
                 geoPoint = geoPoint,
-                primaryText = geocodedPlace.name,
-                secondaryText = geocodedPlace.fullAddress.toMessage(),
+                primaryText = geocodedPlace.displayName.toMessage(),
+                secondaryText = geocodedPlace.displayAddress.toMessage(),
                 iconRes = when (geocodedPlace.placeType) {
                     PlaceType.NODE -> R.drawable.ic_place_type_node
                     PlaceType.WAY -> R.drawable.ic_place_type_way
                     PlaceType.RELATION, PlaceType.HIKING_ROUTE -> R.drawable.ic_place_type_relation
                 },
-                placeFeature = geocodedPlace.placeFeature,
+                placeFeature = placeFeature,
             )
         } else {
             PlaceUiModel(

@@ -4,8 +4,8 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.extensions.getRandomNumberText
 import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.domain.toDomain
@@ -31,20 +31,24 @@ import kotlin.math.min
 
 class RoutePlannerUiModelMapper @Inject constructor() {
 
-    fun mapToHistory(geoPoint: GeoPoint, placeFeature: PlaceFeature, geocodedPlace: Place? = null): PlaceUiModel {
+    fun mapToHistory(
+        geoPoint: GeoPoint,
+        placeFeature: PlaceFeature,
+        geocodedPlace: PlaceProfile? = null
+    ): PlaceUiModel {
         return if (geocodedPlace != null) {
             PlaceUiModel(
                 osmId = geocodedPlace.osmId,
                 placeType = geocodedPlace.placeType,
                 geoPoint = geoPoint,
-                primaryText = geocodedPlace.name,
-                secondaryText = geocodedPlace.fullAddress.toMessage(),
+                primaryText = geocodedPlace.displayName.toMessage(),
+                secondaryText = geocodedPlace.displayAddress.toMessage(),
                 iconRes = when (geocodedPlace.placeType) {
                     PlaceType.NODE -> R.drawable.ic_place_type_node
                     PlaceType.WAY -> R.drawable.ic_place_type_way
                     PlaceType.RELATION, PlaceType.HIKING_ROUTE -> R.drawable.ic_place_type_relation
                 },
-                placeFeature = geocodedPlace.placeFeature,
+                placeFeature = placeFeature,
             )
         } else {
             PlaceUiModel(

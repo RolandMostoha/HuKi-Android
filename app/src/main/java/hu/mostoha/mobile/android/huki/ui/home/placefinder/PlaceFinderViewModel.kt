@@ -11,6 +11,7 @@ import hu.mostoha.mobile.android.huki.interactor.exception.JobCancellationExcept
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.interactor.toDomainException
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
+import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceFinderUiModelMapper
@@ -72,7 +73,13 @@ class PlaceFinderViewModel @Inject constructor(
                 else -> {
                     val combinedPlaces = emptyList<PlaceFinderItem.Place>()
                         .plus(uiModel.historyPlaces)
-                        .plus(uiModel.places)
+                        .plus(
+                            if (uiModel.places.isNotEmpty()) {
+                                uiModel.places.plus(PlaceFinderItem.Attribution)
+                            } else {
+                                emptyList()
+                            }
+                        )
 
                     if (combinedPlaces.isEmpty() && uiModel.searchText.length >= PLACE_FINDER_MIN_TRIGGER_LENGTH) {
                         emptyList<PlaceFinderItem>()
@@ -83,6 +90,7 @@ class PlaceFinderViewModel @Inject constructor(
                                     drawableRes = R.drawable.ic_search_bar_empty_result
                                 )
                             )
+                            .plus(PlaceFinderItem.Attribution)
                     } else {
                         emptyList<PlaceFinderItem>()
                             .plus(uiModel.staticActions)
@@ -134,7 +142,7 @@ class PlaceFinderViewModel @Inject constructor(
         }
     }
 
-    fun loadPlaces(searchText: String, placeFeature: PlaceFeature) {
+    fun loadPlaces(searchText: String, boundingBox: BoundingBox, placeFeature: PlaceFeature) {
         loadPlacesJob?.let { job ->
             if (job.isActive) {
                 job.cancel()
@@ -164,10 +172,12 @@ class PlaceFinderViewModel @Inject constructor(
 
             loadPlacesJob = viewModelScope.launch {
                 flowWithExceptions(
-                    request = { geocodingRepository.getPlacesBy(searchText, placeFeature, myLocation) },
+                    request = { geocodingRepository.getAutocompletePlaces(searchText, boundingBox) },
                     exceptionLogger = exceptionLogger
                 )
-                    .map { placeFinderUiModelMapper.mapPlaceFinderItems(it, myLocation) }
+                    .map { placeProfiles ->
+                        placeFinderUiModelMapper.mapPlaceFinderItems(placeProfiles, placeFeature, myLocation)
+                    }
                     .onEach { places ->
                         placeFinderUiModel.update { uiModel ->
                             uiModel?.copy(

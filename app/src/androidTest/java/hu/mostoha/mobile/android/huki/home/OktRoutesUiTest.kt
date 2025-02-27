@@ -113,7 +113,7 @@ class OktRoutesUiTest {
         osmConfiguration.init()
         Intents.init()
 
-        coEvery { geocodingRepository.getPlace(any(), any()) } returns null
+        coEvery { geocodingRepository.getPlaceProfile(any()) } returns null
     }
 
     @Test

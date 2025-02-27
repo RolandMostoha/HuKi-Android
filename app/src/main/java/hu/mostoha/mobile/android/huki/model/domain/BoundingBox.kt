@@ -6,14 +6,18 @@ import org.osmdroid.util.BoundingBox as OsmBoundingBox
 
 @Parcelize
 data class BoundingBox(
-    val north: Double,
-    val east: Double,
-    val south: Double,
-    val west: Double
+    val north: Double, // maxLat
+    val east: Double, // maxLon
+    val south: Double, // minLat
+    val west: Double // minLon
 ) : Parcelable {
     override fun toString(): String {
         return "north: %.5f, east: %.5f, south: %.5f, west: %.5f".format(north, east, south, west)
     }
+}
+
+fun BoundingBox.toViewBox(): String {
+    return "$east,$north,$west,$south"
 }
 
 fun BoundingBox.toOsm() = OsmBoundingBox(north, east, south, west)

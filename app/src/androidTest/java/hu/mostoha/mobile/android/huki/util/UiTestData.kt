@@ -41,12 +41,12 @@ val DEFAULT_PLACE_AREA_LOCATION = Location(
 
 val DEFAULT_PLACE_PROFILE = PlaceProfile(
     osmId = "369569761",
+    displayName = "Dobogókő",
+    displayAddress = "Dobogókő, Fő utca, Pilisszentkereszt, Hungary",
     address = PlaceAddress(
-        name = "Dobogókő",
         street = "Fő utca",
         city = "Pilisszentkereszt",
         country = "Hungary",
-        fullAddress = "Dobogókő, Fő utca, Pilisszentkereszt, Hungary"
     ),
     placeType = PlaceType.NODE,
     location = DEFAULT_PLACE_AREA_LOCATION

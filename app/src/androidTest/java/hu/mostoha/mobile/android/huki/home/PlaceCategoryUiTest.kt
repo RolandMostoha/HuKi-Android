@@ -35,6 +35,9 @@ import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_GEOMETRY_LANDSCAPE
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_LANDSCAPE
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_RELATION
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_RELATION
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_WAY
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
@@ -281,10 +284,10 @@ class PlaceCategoryUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
-            DEFAULT_PLACE_WAY,
-            DEFAULT_PLACE_NODE,
-            DEFAULT_PLACE_RELATION
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns listOf(
+            DEFAULT_PLACE_PROFILE_WAY,
+            DEFAULT_PLACE_PROFILE_NODE,
+            DEFAULT_PLACE_PROFILE_RELATION
         )
     }
 

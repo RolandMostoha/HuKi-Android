@@ -49,6 +49,8 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_NODE
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_WAY
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.BUDAPEST_LOCATION
@@ -263,7 +265,7 @@ class PlaceFinderUiTest {
 
     @Test
     fun givenEmptyResult_whenTyping_thenEmptyViewDisplays() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns emptyList()
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns emptyList()
 
         launchScenario<HomeActivity> {
             val searchText = "QWER"
@@ -276,7 +278,7 @@ class PlaceFinderUiTest {
 
     @Test
     fun givenHistoryPlaces_whenTyping_thenEmptyViewDisplays() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns emptyList()
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns emptyList()
         coEvery { placeHistoryRepository.getPlaces() } returns flowOf(listOf(DEFAULT_PLACE_HISTORY))
         coEvery { placeHistoryRepository.getPlacesBy(any(), any()) } returns flowOf(listOf(DEFAULT_PLACE_HISTORY))
 
@@ -296,7 +298,7 @@ class PlaceFinderUiTest {
 
     @Test
     fun givenErrorOnHistoryPlaces_whenTyping_thenErrorViewDisplays() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns emptyList()
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns emptyList()
         coEvery { placeHistoryRepository.getPlacesBy(any(), any()) } returns flowOf(listOf(DEFAULT_PLACE_HISTORY))
         every { placeHistoryRepository.getPlaces() } returns flowOfError(IllegalStateException("Error"))
 
@@ -310,7 +312,7 @@ class PlaceFinderUiTest {
 
     @Test
     fun givenIllegalStateException_whenTyping_thenErrorViewDisplaysWithMessageAndDetailsButton() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } throws IllegalStateException("Error")
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } throws IllegalStateException("Error")
 
         launchScenario<HomeActivity> {
             val searchText = "QWER"
@@ -324,7 +326,7 @@ class PlaceFinderUiTest {
     @Test
     fun givenTooManyRequestsException_whenTyping_thenErrorViewDisplaysWithMessageOnly() {
         coEvery {
-            geocodingRepository.getPlacesBy(any(), any(), any())
+            geocodingRepository.getAutocompletePlaces(any(), any())
         } throws HttpException(Response.error<Unit>(429, "".toResponseBody()))
 
         launchScenario<HomeActivity> {
@@ -356,9 +358,9 @@ class PlaceFinderUiTest {
     }
 
     private fun answerTestPlaces() {
-        coEvery { geocodingRepository.getPlacesBy(any(), any(), any()) } returns listOf(
-            DEFAULT_PLACE_NODE,
-            DEFAULT_PLACE_WAY
+        coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns listOf(
+            DEFAULT_PLACE_PROFILE_NODE,
+            DEFAULT_PLACE_PROFILE_WAY
         )
     }
 
