@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.network
 object NetworkConfig {
 
     const val BASE_URL_OVERPASS = "https://overpass-api.de"
+    const val BASE_URL_PHOTON = "https://photon.komoot.io"
     const val BASE_URL_LOCATION_IQ = "https://eu1.locationiq.com/v1/"
     const val BASE_URL_GRAPHHOPPER_API = "https://graphhopper.com/api/1/"
 

@@ -14,9 +14,9 @@ import hu.mostoha.mobile.android.huki.network.LocationIqService.Companion.LOCATI
 import hu.mostoha.mobile.android.huki.network.LocationIqService.Companion.LOCATION_IQ_BB_WEST_INDEX
 import org.junit.Test
 
-class PlaceNetworkMapperTest {
+class LocationIqPlaceNetworkMapperTest {
 
-    private val mapper = PlaceNetworkMapper()
+    private val mapper = LocationIqPlaceNetworkMapper()
 
     @Test
     fun `Given LocationIQ response, when mapPlaceProfile, then correct PlaceProfile returns`() {

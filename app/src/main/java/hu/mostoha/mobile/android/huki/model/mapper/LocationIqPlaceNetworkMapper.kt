@@ -14,7 +14,7 @@ import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
 import timber.log.Timber
 import javax.inject.Inject
 
-class PlaceNetworkMapper @Inject constructor() {
+class LocationIqPlaceNetworkMapper @Inject constructor() {
 
     fun mapPlaceProfile(response: LocationIqPlace): PlaceProfile {
         val location = Location(response.lat, response.lon)

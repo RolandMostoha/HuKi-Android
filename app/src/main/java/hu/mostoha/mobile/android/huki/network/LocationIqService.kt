@@ -11,6 +11,7 @@ interface LocationIqService {
 
     companion object {
         private const val REVERSE_GEOCODER_TIMEOUT = 3000
+        private const val AUTOCOMPLETE_ITEM_LIMIT = 20
 
         const val LOCATION_IQ_BB_NORTH_INDEX = 1
         const val LOCATION_IQ_BB_EAST_INDEX = 3
@@ -26,7 +27,7 @@ interface LocationIqService {
         @Query("normalizecity") normalizeCity: Int = 1,
         @Query("countrycodes") countryCodes: String = "hu",
         @Query("accept-language") acceptLanguage: String = "hu",
-        @Query("limit") limit: Int = 20,
+        @Query("limit") limit: Int = AUTOCOMPLETE_ITEM_LIMIT,
         @Query("key") key: String = BuildConfig.LOCATION_IQ_API_KEY,
     ): List<LocationIqPlace>
 

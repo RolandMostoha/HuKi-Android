@@ -14,6 +14,7 @@ import hu.mostoha.mobile.android.huki.network.GraphhopperService
 import hu.mostoha.mobile.android.huki.network.LocationIqService
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
+import hu.mostoha.mobile.android.huki.network.PhotonService
 import hu.mostoha.mobile.android.huki.network.interceptor.TimeoutInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -64,6 +65,17 @@ class NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(OverpassService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providePhotonService(okHttpClient: OkHttpClient, moshi: Moshi): PhotonService {
+        return Retrofit.Builder()
+            .baseUrl(NetworkConfig.BASE_URL_PHOTON)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(PhotonService::class.java)
     }
 
     @Singleton
