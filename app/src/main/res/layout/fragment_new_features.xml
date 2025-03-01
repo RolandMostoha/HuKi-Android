@@ -48,7 +48,7 @@
         android:id="@+id/newFeaturesMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
         android:lineSpacingExtra="2dp"
         android:layout_marginHorizontal="@dimen/space_extra_large"
         android:layout_marginVertical="@dimen/space_small"
