@@ -45,7 +45,7 @@ import hu.mostoha.mobile.android.huki.extensions.addPolyline
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerMarker
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.extensions.addScaleBarOverlay
-import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoom
+import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoomIn
 import hu.mostoha.mobile.android.huki.extensions.areInfoWindowsClosed
 import hu.mostoha.mobile.android.huki.extensions.center
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
@@ -1341,7 +1341,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             .withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
                         homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
                     } else {
-                        homeMapView.animateCenterAndZoom(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
+                        homeMapView.animateCenterAndZoomIn(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
                     }
                 }
             )
@@ -1351,7 +1351,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             if (boundingBox != null) {
                 homeMapView.zoomToBoundingBox(boundingBox.toOsm(), true)
             } else {
-                homeMapView.animateCenterAndZoom(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
+                homeMapView.animateCenterAndZoomIn(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
             }
         }
     }

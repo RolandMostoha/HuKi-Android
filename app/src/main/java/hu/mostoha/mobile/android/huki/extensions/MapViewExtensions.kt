@@ -871,6 +871,14 @@ fun MapView.animateCenterAndZoom(geoPoint: GeoPoint, zoomLevel: Double) {
     controller.animateTo(geoPoint, zoomLevel, MAP_ANIMATION_DURATION)
 }
 
+fun MapView.animateCenterAndZoomIn(geoPoint: GeoPoint, zoomLevel: Double) {
+    if (zoomLevel > this.zoomLevelDouble) {
+        controller.animateTo(geoPoint, zoomLevel, MAP_ANIMATION_DURATION)
+    } else {
+        controller.animateTo(geoPoint, this.zoomLevelDouble, MAP_ANIMATION_DURATION)
+    }
+}
+
 fun MapView.zoomToBoundingBoxPostMain(boundingBox: BoundingBox, animated: Boolean) {
     postMain {
         this.zoomToBoundingBox(boundingBox, animated)

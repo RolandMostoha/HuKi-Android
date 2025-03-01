@@ -4,7 +4,7 @@ import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Location
 
 const val MAP_MAX_ZOOM_LEVEL = 20.0
-const val MAP_DEFAULT_ZOOM_LEVEL = 15.0
+const val MAP_DEFAULT_ZOOM_LEVEL = 16.0
 const val MAP_DEFAULT_SCALE_FACTOR = 1.5
 const val MAP_RESET_ORIENTATION_ANIMATION_DURATION = 300L
 
