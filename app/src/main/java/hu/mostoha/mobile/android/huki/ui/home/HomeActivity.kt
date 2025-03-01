@@ -1304,7 +1304,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeMapView.closeInfoWindowsForMarkerType<DistanceInfoWindow, PlaceDetailsMarker>()
                 homeMapView.removeOverlay(OverlayType.PLACE_DETAILS)
             }
-            homeMapView.hasNoOverlay(placeDetails.placeUiModel.osmId) -> {
+            homeMapView.hasNoOverlay(placeDetails.placeUiModel.overlayId) -> {
                 when (placeDetails.geometryUiModel) {
                     is GeometryUiModel.Node -> initNodeDetails(placeDetails.placeUiModel)
                     is GeometryUiModel.Way -> initWayDetails(placeDetails)
@@ -1326,7 +1326,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             val boundingBox = placeUiModel.boundingBox
 
             val marker = homeMapView.addPlaceDetailsMarker(
-                overlayId = placeUiModel.osmId,
+                overlayId = placeUiModel.overlayId,
                 name = placeUiModel.primaryText,
                 geoPoint = geoPoint,
                 iconDrawable = R.drawable.ic_marker_poi.toDrawable(this@HomeActivity),

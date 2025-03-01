@@ -23,4 +23,6 @@ data class PlaceUiModel(
     val boundingBox: BoundingBox? = null,
     val distanceText: Message? = null,
     val placeCategory: PlaceCategory? = null
-)
+) {
+    val overlayId = "osmId:${osmId}_lat:${geoPoint.latitude}_lon:${geoPoint.longitude}"
+}

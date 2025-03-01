@@ -45,29 +45,23 @@ fun View.visibleOrInvisible(visible: Boolean) {
     if (visible) visible() else invisible()
 }
 
-fun List<View>.showOnly(vararg views: View) {
-    forEach {
-        it.gone()
-    }
-    views.forEach { targetView ->
-        if (!this.contains(targetView)) {
-            error("Exclusive view list does not contain the target view!")
+fun List<View>.showOnly(vararg viewsToShow: View) {
+    this.forEach { view ->
+        if (viewsToShow.contains(view)) {
+            view.visible()
+        } else {
+            view.gone()
         }
-
-        targetView.visible()
     }
 }
 
-fun List<BottomSheetDialog>.showOnly(vararg dialogs: BottomSheetDialog) {
-    forEach { dialog ->
-        dialog.hide()
-    }
-    dialogs.forEach { targetDialog ->
-        if (!this.contains(targetDialog)) {
-            error("Exclusive dialog list does not contain the target dialog!")
+fun List<BottomSheetDialog>.showOnly(vararg dialogsToShow: BottomSheetDialog) {
+    this.forEach { dialog ->
+        if (dialogsToShow.contains(dialog)) {
+            dialog.show()
+        } else {
+            dialog.hide()
         }
-
-        targetDialog.show()
     }
 }
 
