@@ -1,2 +1,7 @@
-- Új: AKT - Alföldi kéktúra (OKT)
-- Javítva az RPDDK 3. szakasza
+Új keresőmotor (LocationIQ)
+- Gyorsabb, pontosabb és stabilabb helység kereső
+- A keresőt mostmár a térkép helyzete is befolyásolja
+- Helységkereső hibák, késleltetések javítása
+Hosszú klikkes POI lerakás
+- Több POI lerakása összeköthető az útvonaltervezővel
+- Több POI esetén egy szám jelzi a tervezésbe bevont állomásokat

@@ -1,2 +1,7 @@
-- New: AKT - Alföldi Blue Trail (OKT)
-- Fix for RPDDK 3. section
+New search engine (LocationIQ)
+- Faster, more accurate and stable location search
+- Search is now influenced by the position of the map
+- Place finder errors, delays fixed
+Long click POI placement
+- Multiple POIs can be connected with route planner
+- POI counter for Multiple POIs for route planning

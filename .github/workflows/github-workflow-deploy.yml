@@ -79,16 +79,16 @@ jobs:
           project_id: huki-c8bc7
           service_account_key: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT }}
 
-  #      - name: Run Instrumentation Tests in Firebase Test Lab
-  #        run: >
-  #          gcloud firebase test android run
-  #          --type instrumentation
-  #          --app ${{ env.ARTIFACT_PATHNAME_APK }}
-  #          --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
-  #          --device model=MediumPhone.arm,version=28,locale=hu,orientation=portrait
-  #          --use-orchestrator
-  #          --environment-variables clearPackageData=true
-  #          --num-flaky-test-attempts=1
+      - name: Run Instrumentation Tests in Firebase Test Lab
+        run: >
+          gcloud firebase test android run
+          --type instrumentation
+          --app ${{ env.ARTIFACT_PATHNAME_APK }}
+          --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
+          --device model=a52sxq,version=34,locale=hu,orientation=portrait
+          --use-orchestrator
+          --environment-variables clearPackageData=true
+          --num-flaky-test-attempts=1
 
   release:
     needs: [ lint, unit_tests, android_tests ]
@@ -142,6 +142,6 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_PUBLISHER_SERVICE_ACCOUNT }}
           packageName: hu.mostoha.mobile.android.huki
           releaseFiles: ${{ env.ARTIFACT_PATHNAME_AAB }}
-          track: production
+          track: internal
           whatsNewDirectory: app/src/main/assets/whatsnew/latest
           mappingFile: app/build/outputs/mapping/release/mapping.txt
