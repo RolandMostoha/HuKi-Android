@@ -13,6 +13,9 @@ inputs:
   graphhopper-api-key:
     description: "The Graphhopper API key"
     required: true
+  location-iq-api-key:
+    description: "The Location IQ API key"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -51,3 +54,7 @@ runs:
     - name: Copy Graphhopper API key to local.properties
       shell: bash
       run: echo GRAPHHOPPER_API_KEY=\"${{ inputs.graphhopper-api-key }}\" > ./local.properties
+
+    - name: Copy Location IQ API key to local.properties
+      shell: bash
+      run: echo LOCATION_IQ_API_KEY=\"${{ inputs.location-iq-api-key }}\" >> ./local.properties
