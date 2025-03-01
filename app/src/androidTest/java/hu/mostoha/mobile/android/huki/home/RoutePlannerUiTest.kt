@@ -73,9 +73,11 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
+import hu.mostoha.mobile.android.huki.testdata.Places
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_NODE
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_RELATION
 import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_PLACE_PROFILE_WAY
+import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_PROFILE
 import hu.mostoha.mobile.android.huki.util.espresso.click
@@ -87,6 +89,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
@@ -529,6 +532,34 @@ class RoutePlannerUiTest {
             R.id.routePlannerDoneButton.click()
 
             R.id.homeMapView.hasOverlay<GpxPolyline>()
+        }
+    }
+
+    @Test
+    fun givenTwoMarkersInMap_whenRoutePlanButtonIsClicked_thenRoutePlanOpens() {
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            Places.DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
+            Places.DEFAULT_PLACE_NODE.name.isTextDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            Places.DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
+            Places.DEFAULT_PLACE_WAY.name.isTextDisplayed()
+
+            R.id.placeDetailsRoutePlanButton.click()
+
+            R.id.routePlannerRouteAttributesContainer.isDisplayed()
+            "13 km".isTextDisplayed()
+            "500 m".isTextDisplayed()
+            "200 m".isTextDisplayed()
+            "01:40".isTextDisplayed()
         }
     }
 

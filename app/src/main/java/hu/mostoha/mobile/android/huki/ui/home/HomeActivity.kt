@@ -1569,8 +1569,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initNodeBottomSheet(placeUiModel: PlaceUiModel, marker: Marker) {
+        val routePlanMarkers = homeMapView.overlays
+            .filterIsInstance<PlaceDetailsMarker>()
+            .map { it.name to it.position }
+            .takeLast(ROUTE_PLANNER_MAX_WAYPOINT_COUNT)
+
         placeDetailsBottomSheet.initNodeBottomSheet(
             placeUiModel = placeUiModel,
+            routePlanMarkerCount = routePlanMarkers.size,
             onShowAllPointsClick = {
                 homeMapView.closeInfoWindowsForMarkerType<DistanceInfoWindow, PlaceDetailsMarker>()
                 placeDetailsBottomSheet.hide()
@@ -1583,15 +1589,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
                 placeDetailsBottomSheet.hide()
 
-                val markers = homeMapView.overlays
-                    .filterIsInstance<PlaceDetailsMarker>()
-                    .map { it.name to it.position }
-                    .takeLast(ROUTE_PLANNER_MAX_WAYPOINT_COUNT)
-
-                if (markers.size <= 1) {
+                if (routePlanMarkers.size <= 1) {
                     routePlannerViewModel.initWaypoint(placeUiModel)
                 } else {
-                    routePlannerViewModel.initWaypoints(markers)
+                    routePlannerViewModel.initWaypoints(routePlanMarkers)
                 }
 
                 homeMapView.removeMarker(marker)

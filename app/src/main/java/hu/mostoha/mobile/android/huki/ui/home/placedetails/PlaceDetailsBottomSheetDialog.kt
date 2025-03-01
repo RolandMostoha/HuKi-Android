@@ -24,6 +24,7 @@ class PlaceDetailsBottomSheetDialog(
 
     fun initNodeBottomSheet(
         placeUiModel: PlaceUiModel,
+        routePlanMarkerCount: Int,
         onShowAllPointsClick: () -> Unit,
         onRoutePlanButtonClick: () -> Unit,
         onPlaceCategoryFinderClick: () -> Unit,
@@ -78,6 +79,11 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsGoogleNavButton.setOnClickListener {
                     analyticsService.googleMapsClicked()
                     context.startGoogleMapsDirectionsIntent(placeUiModel.geoPoint)
+                }
+                placeDetailsRoutePlanButton.text = if (routePlanMarkerCount > 1) {
+                    context.getString(R.string.home_bottom_sheet_route_plan_button_template, routePlanMarkerCount)
+                } else {
+                    context.getString(R.string.home_bottom_sheet_route_plan_button)
                 }
                 placeDetailsRoutePlanButton.visible()
                 placeDetailsRoutePlanButton.setOnClickListener {

@@ -70,6 +70,7 @@
     <string name="home_bottom_sheet_directions_button">Google Nav</string>
     <string name="home_bottom_sheet_show_points_button">All points</string>
     <string name="home_bottom_sheet_route_plan_button">Route plan</string>
+    <string name="home_bottom_sheet_route_plan_button_template">Route plan (%d)</string>
     <string name="home_bottom_sheet_osm_data_button">OSM Data</string>
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>
 

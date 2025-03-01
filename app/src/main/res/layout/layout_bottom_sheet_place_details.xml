@@ -93,8 +93,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/space_large"
-                android:text="@string/home_bottom_sheet_route_plan_button"
-                app:icon="@drawable/ic_place_details_route_plan" />
+                app:icon="@drawable/ic_place_details_route_plan"
+                tools:text="@string/home_bottom_sheet_route_plan_button" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/placeDetailsFinderButton"

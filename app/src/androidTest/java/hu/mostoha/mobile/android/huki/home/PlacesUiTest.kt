@@ -198,10 +198,66 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
             R.id.placeDetailsCloseButton.click()
 
             R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
             R.id.homeMapView.hasNoOverlay<Marker>()
+        }
+    }
+
+    @Test
+    fun givenSecondPlace_whenCloseClickOnBottomSheet_thenAllMarkersAreRemoved() {
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
+            DEFAULT_PLACE_NODE.name.isTextDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
+            DEFAULT_PLACE_WAY.name.isTextDisplayed()
+
+            R.id.placeDetailsCloseButton.click()
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+            R.id.homeMapView.hasNoOverlay<Marker>()
+        }
+    }
+
+    @Test
+    fun givenSecondPlace_whenPlaceDetailsOpen_thenRoutePlanCounterDisplays() {
+        answerTestPlaces()
+        answerTestGeometries()
+
+        launchScenario<HomeActivity> {
+            val searchText = DEFAULT_SEARCH_TEXT
+
+            R.id.homePlaceDetailsBottomSheetContainer.isNotDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
+            DEFAULT_PLACE_NODE.name.isTextDisplayed()
+
+            R.id.homeSearchBarInput.typeText(searchText)
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            R.id.homePlaceDetailsBottomSheetContainer.isDisplayed()
+            DEFAULT_PLACE_WAY.name.isTextDisplayed()
+
+            testAppContext.getString(R.string.home_bottom_sheet_route_plan_button_template)
+                .format(2)
+                .isTextDisplayed()
         }
     }
 
