@@ -29,7 +29,7 @@ class LocationIqPlaceNetworkMapperTest {
                 osmId = locationIqPlace.osmId,
                 placeType = PlaceType.WAY,
                 location = Location(locationIqPlace.lat, locationIqPlace.lon),
-                displayName = "Téry Ödön út  Pilisszentkereszt",
+                displayName = "Téry Ödön út Pilisszentkereszt",
                 displayAddress = "2099 Pilisszentkereszt Téry Ödön út",
                 address = PlaceAddress(
                     houseNumber = locationIqPlace.address?.houseNumber,

@@ -33,7 +33,7 @@ class LocationIqPlaceNetworkMapper @Inject constructor() {
         val displayNameFallback = response.displayName
             .split(",")
             .take(2)
-            .joinToString(" ")
+            .joinToString(" ") { it.trim() }
         val displayName = response.displayPlace ?: response.address?.name ?: displayNameFallback
         val displayAddress = address ?: response.displayAddress ?: LocationFormatter.formatString(location)
 
