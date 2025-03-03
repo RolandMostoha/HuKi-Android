@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.repository
 
+import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class LocationIqGeocodingRepository @Inject constructor(
     private val locationIqService: LocationIqService,
     private val photonGeocodingRepository: PhotonGeocodingRepository,
-    private val placeMapper: LocationIqPlaceNetworkMapper
+    private val placeMapper: LocationIqPlaceNetworkMapper,
+    private val exceptionLogger: ExceptionLogger,
 ) : GeocodingRepository {
 
     companion object {
@@ -25,7 +27,7 @@ class LocationIqGeocodingRepository @Inject constructor(
         val response = try {
             locationIqService.autocomplete(searchText, boundingBox.toViewBox())
         } catch (httpException: HttpException) {
-            Timber.e(httpException, "LocationIQ: Network error during geocoding")
+            Timber.e(httpException, "LocationIQ: HttpException during geocoding")
 
             when (httpException.code()) {
                 HttpURLConnection.HTTP_NOT_FOUND -> {
@@ -57,12 +59,22 @@ class LocationIqGeocodingRepository @Inject constructor(
                     return photonGeocodingRepository.getPlaceProfile(location)
                 }
                 else -> {
-                    throw httpException
+                    recordException(httpException)
+                    return null
                 }
             }
+        } catch (exception: Exception) {
+            recordException(exception)
+            return null
         }
 
         return placeMapper.mapPlaceProfile(response)
+    }
+
+    private fun recordException(exception: Exception) {
+        Timber.e(exception, "LocationIQ: Network error during reverse geocoding")
+
+        exceptionLogger.recordException(exception)
     }
 
 }

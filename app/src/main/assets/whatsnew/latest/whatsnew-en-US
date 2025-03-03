@@ -2,6 +2,7 @@ New search engine (LocationIQ)
 - Faster, more accurate and stable location search
 - Search is now influenced by the position of the map
 - Place finder errors, delays fixed
+- Crash fix in route planner
 Long click POI placement
 - Multiple POIs can be connected with route planner
 - POI counter for Multiple POIs for route planning
