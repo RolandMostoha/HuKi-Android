@@ -96,7 +96,7 @@
 
     <string name="route_planner_waypoint_hint">Helység vagy pozíció</string>
     <string name="route_planner_done_button">Mentés</string>
-    <string name="route_planner_general_error_message">Hiba történt. Kérlek frissítsd a terved!</string>
+    <string name="route_planner_general_error_message">Hiba történt. Kérlek ellenőrizd az internetkapcsolatot és frissítsd a terved!</string>
     <string name="route_planner_error_file_save_unsuccsessful">Hiba történt a GPX fájl mentése közben!</string>
     <string name="route_planner_accessibility_add_waypoint">Új állomás hozzáadása</string>
     <string name="route_planner_accessibility_remove_waypoint">Állomás törlése</string>

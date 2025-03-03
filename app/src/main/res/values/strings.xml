@@ -104,7 +104,7 @@
 
     <string name="route_planner_waypoint_hint">Place or location</string>
     <string name="route_planner_done_button">Save</string>
-    <string name="route_planner_general_error_message">Error occurred. Please update your plan!</string>
+    <string name="route_planner_general_error_message">Error occurred. Please check the internet connection and update your plan!</string>
     <string name="route_planner_error_file_save_unsuccsessful">Error occurred during saving your plan to GPX file!</string>
     <string name="route_planner_powered_by" translatable="false">Powered by</string>
     <string name="route_planner_graphhopper_url" translatable="false">https://www.graphhopper.com/</string>
