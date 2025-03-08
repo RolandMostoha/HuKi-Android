@@ -46,6 +46,8 @@
         android:layout_weight="1"
         android:hint="@string/route_planner_waypoint_hint"
         android:textColorHint="@color/colorSecondaryText"
+        app:boxBackgroundColor="@color/colorBackground"
+        app:boxStrokeColor="@color/selector_route_planner_search_bar_box"
         app:endIconDrawable="@drawable/ic_route_planner_drag"
         app:endIconMode="custom"
         app:endIconTint="@color/colorPrimaryIcon"

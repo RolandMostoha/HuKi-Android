@@ -47,9 +47,9 @@
     <color name="colorBadgeBackground">#f1f3f5</color>
     <color name="colorBadgeStroke">#80919191</color>
     <color name="colorPlaceHistoryIcon">@color/colorPrimaryIcon</color>
-    <color name="colorRoutePlannerWaypointStroke">@color/colorPrimaryIcon</color>
-    <color name="colorRoutePlannerWaypointBackground">@color/colorBackground</color>
-    <color name="colorRoutePlannerWaypointIcon">@color/colorPrimaryIcon</color>
+    <color name="colorRoutePlannerWaypointStroke">@color/colorPrimary</color>
+    <color name="colorRoutePlannerWaypointBackground">@color/colorPrimary</color>
+    <color name="colorRoutePlannerWaypointIcon">@color/colorBackground</color>
     <color name="colorRouteAttributesText">@color/colorPrimaryText</color>
     <color name="colorRouteAttributesIcon">@color/colorPrimary</color>
     <color name="colorPaymentsSquirrelIcon">#d45500</color>

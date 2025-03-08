@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.extensions.swap
 import hu.mostoha.mobile.android.huki.extensions.update
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
@@ -246,11 +245,9 @@ class RoutePlannerViewModel @Inject constructor(
         }
     }
 
-    fun swapWaypoints(fromWaypoint: WaypointItem, toWaypoint: WaypointItem) {
-        _wayPointItems.update { wayPointItemList ->
-            wayPointItemList
-                .swap(fromWaypoint, toWaypoint)
-                .reOrder()
+    fun swapWaypoints(currentList: List<WaypointItem>) {
+        viewModelScope.launch {
+            _wayPointItems.emit(currentList.reOrder())
         }
     }
 

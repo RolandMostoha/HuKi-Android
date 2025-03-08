@@ -15,8 +15,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.DOWN
-import androidx.recyclerview.widget.ItemTouchHelper.END
-import androidx.recyclerview.widget.ItemTouchHelper.START
 import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
@@ -55,6 +53,7 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
 import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import kotlinx.coroutines.launch
+import java.util.Collections
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -205,40 +204,41 @@ class RoutePlannerFragment : Fragment() {
                 routePlannerViewModel.removeWaypoint(waypointItem)
             },
         )
+        waypointAdapter.setHasStableIds(true)
         itemTouchHelper.attachToRecyclerView(waypointList)
-        waypointList.setHasFixedSize(true)
         waypointList.adapter = waypointAdapter
     }
 
     private val itemTouchHelper by lazy {
-        val itemTouchCallback = object : SimpleCallback(UP or DOWN or START or END, 0) {
+        val itemTouchCallback = object : SimpleCallback(UP or DOWN, 0) {
 
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                val recyclerviewAdapter = recyclerView.adapter as WaypointAdapter
+                val adapter = recyclerView.adapter as WaypointAdapter
+                val currentList = adapter.currentList.toMutableList()
                 val fromPosition = viewHolder.adapterPosition
                 val toPosition = target.adapterPosition
 
-                return if (fromPosition >= 0 && toPosition >= 0) {
-                    recyclerviewAdapter.notifyItemMoved(fromPosition, toPosition)
+                Collections.swap(currentList, fromPosition, toPosition)
 
-                    val fromWaypoint = recyclerviewAdapter.currentList[fromPosition]
-                    val toWaypoint = recyclerviewAdapter.currentList[toPosition]
+                adapter.submitList(currentList)
 
-                    routePlannerViewModel.swapWaypoints(fromWaypoint, toWaypoint)
-
-                    true
-                } else {
-                    false
-                }
+                return true
             }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                // no-op
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+
+                val adapter = recyclerView.adapter as WaypointAdapter
+                routePlannerViewModel.swapWaypoints(adapter.currentList)
             }
+
+            override fun isLongPressDragEnabled(): Boolean = true
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
 
         }
         ItemTouchHelper(itemTouchCallback)

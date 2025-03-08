@@ -42,6 +42,10 @@ class WaypointAdapter(
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        return getItem(position).id
+    }
+
     override fun submitList(list: List<WaypointItem>?) {
         super.submitList(list)
 

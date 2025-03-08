@@ -6,7 +6,7 @@
     android:viewportHeight="24">
     <path
         android:fillColor="@color/colorRoutePlannerWaypointBackground"
-        android:strokeColor="@color/colorRoutePlannerWaypointStroke"
+        android:strokeColor="@color/colorBackground"
         android:strokeWidth="1"
         android:pathData="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
 </vector>

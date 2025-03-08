@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/routePlannerContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/default_elevation"
     android:animateLayoutChanges="true"
     android:background="@drawable/background_route_planner"
@@ -29,7 +29,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_small"
-        android:fadeScrollbars="false"
+        android:requiresFadingEdge="vertical"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
@@ -128,13 +128,13 @@
             android:layout_marginStart="@dimen/space_small"
             android:gravity="center_vertical"
             android:text="@string/route_planner_powered_by"
-            android:textAppearance="@style/DefaultTextAppearance.Light.ExtraSmall" />
+            android:textAppearance="@style/DefaultTextAppearance.Light.ExtraExtraSmall" />
 
         <ImageView
             android:id="@+id/routePlannerGraphhopperLogo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_small_medium"
+            android:layout_height="13dp"
+            android:layout_marginStart="@dimen/space_small"
             android:background="?selectableItemBackground"
             android:contentDescription="@null"
             android:src="@drawable/img_graphhopper_logo" />

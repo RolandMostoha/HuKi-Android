@@ -293,7 +293,7 @@ class RoutePlannerViewModelTest {
                 viewModel.updateWaypoint(viewModel.waypointItems.value[1], DEFAULT_PLACE_UI_MODEL_1, searchText)
                 skipItems(1)
 
-                viewModel.swapWaypoints(viewModel.waypointItems.value[0], viewModel.waypointItems.value[1])
+                viewModel.swapWaypoints(viewModel.waypointItems.value.reversed())
 
                 assertThat(awaitItem()).isEqualTo(
                     listOf(

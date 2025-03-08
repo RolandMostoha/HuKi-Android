@@ -5,7 +5,7 @@ import hu.mostoha.mobile.android.huki.model.ui.Message
 import java.util.UUID
 
 data class WaypointItem(
-    val id: String = UUID.randomUUID().toString(),
+    val id: Long = UUID.randomUUID().mostSignificantBits,
     val order: Int,
     val waypointType: WaypointType,
     val primaryText: Message? = null,
