@@ -30,3 +30,7 @@ fun BoundingBox.center(): Location {
 
     return Location(centerLat, centerLon)
 }
+
+fun BoundingBox.isZero(): Boolean {
+    return north == 0.0 && east == 0.0 && south == 0.0 && west == 0.0
+}

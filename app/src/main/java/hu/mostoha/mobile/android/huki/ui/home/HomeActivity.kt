@@ -94,6 +94,7 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.MAP_PICKED_LOCAT
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.MAP_SEARCH
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature.OKT_WAYPOINT
 import hu.mostoha.mobile.android.huki.model.domain.Theme
+import hu.mostoha.mobile.android.huki.model.domain.isZero
 import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
@@ -373,11 +374,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun restoreBoundingBox() {
         lifecycleScope.launch {
             val boundingBox = homeViewModel.getSavedBoundingBox()
-            if (boundingBox != null) {
+            if (boundingBox == null || boundingBox.isZero()) {
+                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toOsm(), false)
+            } else {
                 Timber.d("MapConfig: restoring bounding box: $boundingBox")
                 homeMapView.zoomToBoundingBox(boundingBox.toOsm(), false)
-            } else {
-                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toOsm(), false)
             }
         }
     }
