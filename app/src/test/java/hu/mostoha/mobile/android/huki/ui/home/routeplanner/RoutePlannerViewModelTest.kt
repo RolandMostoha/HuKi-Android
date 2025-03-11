@@ -14,6 +14,8 @@ import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.model.ui.WaypointComment
+import hu.mostoha.mobile.android.huki.model.ui.WaypointCommentResult
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
@@ -322,7 +324,7 @@ class RoutePlannerViewModelTest {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
             coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
-            coEvery { routePlannerRepository.saveRoutePlan(any()) } returns null
+            coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns null
 
             viewModel.routePlanUiModel.test {
                 viewModel.initWaypoints()
@@ -341,12 +343,41 @@ class RoutePlannerViewModelTest {
     }
 
     @Test
+    fun `Given waypoint result, when addWaypointComment, then waypoint items are updated`() {
+        runTestDefault {
+            val waypointComment = WaypointComment(
+                name = "Comment name",
+                comment = "Comment"
+            )
+
+            viewModel.waypointItems.test {
+                viewModel.initWaypoints()
+                skipItems(2)
+
+                val waypointItems = viewModel.waypointItems.value
+                val commentResult = WaypointCommentResult(waypointItems[0].id, waypointComment)
+
+                viewModel.addWaypointComment(commentResult)
+
+                assertThat(awaitItem()).isEqualTo(
+                    listOf(
+                        waypointItems[0].copy(
+                            waypointComment = waypointComment
+                        ),
+                        waypointItems[1]
+                    )
+                )
+            }
+        }
+    }
+
+    @Test
     fun `Given two not empty waypoints, when createRoundTrip, then route plan is updated`() {
         runTestDefault {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
             coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
-            coEvery { routePlannerRepository.saveRoutePlan(any()) } returns null
+            coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns null
 
             viewModel.routePlanUiModel.test {
                 viewModel.initWaypoints()
@@ -371,7 +402,7 @@ class RoutePlannerViewModelTest {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
             coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
-            coEvery { routePlannerRepository.saveRoutePlan(any()) } returns gpxFileUri
+            coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns gpxFileUri
 
             viewModel.initWaypoints()
             advanceUntilIdle()
@@ -393,7 +424,7 @@ class RoutePlannerViewModelTest {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
             coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
-            coEvery { routePlannerRepository.saveRoutePlan(any()) } returns null
+            coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns null
 
             viewModel.initWaypoints()
             advanceUntilIdle()
@@ -415,7 +446,7 @@ class RoutePlannerViewModelTest {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
             coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
-            coEvery { routePlannerRepository.saveRoutePlan(any()) } returns null
+            coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns null
 
             viewModel.waypointItems.test {
                 viewModel.initWaypoints()

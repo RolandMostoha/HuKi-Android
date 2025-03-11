@@ -10,6 +10,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ItemRoutePlannerWaypointBinding
+import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.invisible
 import hu.mostoha.mobile.android.huki.extensions.visible
@@ -22,6 +23,7 @@ class WaypointAdapter(
     private val onSearchTextDoneAction: (TextInputEditText) -> Unit,
     private val onWaypointsSizeChanged: (Int) -> Unit,
     private val onRemoveWaypointClicked: (WaypointItem) -> Unit,
+    private val onCommentClicked: (WaypointItem) -> Unit,
 ) : ListAdapter<WaypointItem, RecyclerView.ViewHolder>(DefaultDiffUtilCallback()) {
 
     companion object {
@@ -106,17 +108,41 @@ class WaypointAdapter(
         }
 
         private fun ItemRoutePlannerWaypointBinding.initActionButton(wayPointItem: WaypointItem) {
+            val isCommentVisible = wayPointItem.primaryText != null
+
             if (wayPointItem.order >= FIRST_REMOVAL_POSITION) {
-                routePlannerWaypointActionButton.visible()
-                routePlannerWaypointActionButton.setIconResource(R.drawable.ic_route_planner_remove)
-                routePlannerWaypointActionButton.contentDescription = context.getString(
+                routePlannerWaypointRemoveButton.visible()
+                routePlannerWaypointRemoveButton.contentDescription = context.getString(
                     R.string.route_planner_accessibility_remove_waypoint
                 )
-                routePlannerWaypointActionButton.setOnClickListener {
+                routePlannerWaypointRemoveButton.setOnClickListener {
                     onRemoveWaypointClicked.invoke(wayPointItem)
                 }
             } else {
-                routePlannerWaypointActionButton.invisible()
+                if (isCommentVisible) {
+                    routePlannerWaypointRemoveButton.gone()
+                } else {
+                    routePlannerWaypointRemoveButton.invisible()
+                }
+            }
+
+            if (isCommentVisible) {
+                routePlannerWaypointCommentButton.visible()
+                routePlannerWaypointCommentButton.contentDescription = context.getString(
+                    R.string.route_planner_accessibility_comment
+                )
+                routePlannerWaypointCommentButton.setOnClickListener {
+                    onCommentClicked.invoke(wayPointItem)
+                }
+                if (wayPointItem.waypointComment != null) {
+                    routePlannerWaypointCommentButton.setIconResource(R.drawable.ic_route_planner_comment_done)
+                    routePlannerWaypointCommentButton.setIconTintResource(R.color.colorPrimary)
+                } else {
+                    routePlannerWaypointCommentButton.setIconResource(R.drawable.ic_route_planner_comment)
+                    routePlannerWaypointCommentButton.setIconTintResource(R.color.colorPrimaryIcon)
+                }
+            } else {
+                routePlannerWaypointCommentButton.gone()
             }
         }
     }

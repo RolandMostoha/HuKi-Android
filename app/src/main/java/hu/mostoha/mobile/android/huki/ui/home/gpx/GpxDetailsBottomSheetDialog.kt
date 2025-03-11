@@ -29,9 +29,12 @@ class GpxDetailsBottomSheetDialog(
         onCloseClick: () -> Unit,
         onStartClick: () -> Unit,
         onHideClick: () -> Unit,
+        onCommentsButtonClick: () -> Unit,
     ) {
         with(binding) {
             val hasAltitudeValues = gpxDetails.altitudeUiModel != null
+            val hasWaypointsOnly = gpxDetails.geoPoints.isEmpty() && gpxDetails.waypoints.isNotEmpty()
+            val hasWaypointsComments = gpxDetails.waypoints.any { it.name != null || it.description != null }
 
             gpxDetailsPrimaryText.text = gpxDetails.name
 
@@ -42,8 +45,6 @@ class GpxDetailsBottomSheetDialog(
                 routeAttributesUphillText.setMessageOrGone(gpxDetails.altitudeUiModel?.uphillText)
                 routeAttributesDownhillText.setMessageOrGone(gpxDetails.altitudeUiModel?.downhillText)
             }
-
-            val hasWaypointsOnly = gpxDetails.geoPoints.isEmpty() && gpxDetails.waypoints.isNotEmpty()
 
             gpxDetailsRouteAttributesContainer.routeAttributesWaypointCountText.visibleOrGone(hasWaypointsOnly)
             gpxDetailsActionButtonContainer.visibleOrGone(!hasWaypointsOnly)
@@ -73,6 +74,10 @@ class GpxDetailsBottomSheetDialog(
             gpxDetailsVisibilityButton.setOnClickListener {
                 analyticsService.gpxDetailsVisibilityClicked()
                 onHideClick.invoke()
+            }
+            gpxDetailsCommentsButton.visibleOrGone(hasWaypointsComments)
+            gpxDetailsCommentsButton.setOnClickListener {
+                onCommentsButtonClick.invoke()
             }
             gpxDetailsGoogleMapsButton.setOnClickListener {
                 val startWaypoint = gpxDetails.waypoints.find { it.waypointType == WaypointType.START }

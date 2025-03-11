@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.google.android.material.slider.Slider
+import hu.mostoha.mobile.android.huki.extensions.areInfoWindowsClosed
 import hu.mostoha.mobile.android.huki.util.equalsDelta
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
@@ -18,6 +19,7 @@ import org.osmdroid.tileprovider.tilesource.ITileSource
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Overlay
+import org.osmdroid.views.overlay.infowindow.InfoWindow
 
 inline fun <reified T : Overlay> @receiver:IdRes Int.hasOverlay() {
     onView(withId(this)).check(matches(hasOverlayMatcher<T>()))
@@ -102,6 +104,24 @@ fun @receiver:IdRes Int.hasOverlaysInOrder(comparator: Comparator<Overlay>) {
 
                 override fun describeTo(description: Description) {
                     description.appendText("Has overlays in order ${comparator::class.java}")
+                }
+            })
+        )
+}
+
+inline fun <reified T : InfoWindow> @receiver:IdRes Int.areInfoWindowsClosed(areClosed: Boolean) {
+    onView(withId(this))
+        .check(
+            matches(object : BoundedMatcher<View, MapView>(MapView::class.java) {
+                override fun matchesSafely(mapView: MapView?): Boolean {
+                    if (mapView == null) return false
+
+                    return areClosed == mapView.areInfoWindowsClosed<T>()
+
+                }
+
+                override fun describeTo(description: Description) {
+                    description.appendText("Are info windows closed for ${T::class.java}")
                 }
             })
         )

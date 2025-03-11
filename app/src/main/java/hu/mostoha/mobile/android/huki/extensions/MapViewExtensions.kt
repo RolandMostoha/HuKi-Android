@@ -127,6 +127,18 @@ inline fun <reified T : InfoWindow> MapView.closeInfoWindows() {
         }
 }
 
+inline fun <reified T : InfoWindow> MapView.toggleInfoWindows() {
+    val isAnyInfoWindowOpen = overlays.filterIsInstance<Marker>()
+        .filter { it.infoWindow != null && it.infoWindow is T }
+        .any { it.isInfoWindowOpen }
+
+    if (isAnyInfoWindowOpen) {
+        closeInfoWindows<T>()
+    } else {
+        openInfoWindows<T>()
+    }
+}
+
 inline fun <reified I : InfoWindow, reified M : Marker> MapView.openInfoWindowsForMarkerType() {
     overlays.filterIsInstance<M>()
         .filter { it.infoWindow != null && it.infoWindow is I }

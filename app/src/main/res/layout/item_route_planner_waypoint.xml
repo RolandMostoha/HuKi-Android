@@ -25,6 +25,7 @@
             android:id="@+id/routePlannerWaypointImage"
             android:layout_width="@dimen/icon_size_large"
             android:layout_height="@dimen/icon_size_large"
+            android:importantForAccessibility="no"
             tools:src="@drawable/ic_marker_gpx_start" />
 
         <hu.mostoha.mobile.android.huki.views.DashedDividerView
@@ -65,10 +66,16 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/routePlannerWaypointActionButton"
-        style="@style/DefaultButton.IconOnly"
+        android:id="@+id/routePlannerWaypointCommentButton"
+        style="@style/DefaultButton.IconOnly.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/routePlannerWaypointRemoveButton"
+        style="@style/DefaultButton.IconOnly.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:icon="@drawable/ic_input_clear" />
+        app:icon="@drawable/ic_input_clear" />
 
 </LinearLayout>

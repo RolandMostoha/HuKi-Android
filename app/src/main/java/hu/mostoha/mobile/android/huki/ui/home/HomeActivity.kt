@@ -81,6 +81,7 @@ import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
 import hu.mostoha.mobile.android.huki.extensions.switchOverlayVisibility
 import hu.mostoha.mobile.android.huki.extensions.toDrawable
+import hu.mostoha.mobile.android.huki.extensions.toggleInfoWindows
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
@@ -120,6 +121,7 @@ import hu.mostoha.mobile.android.huki.model.ui.selectedRoute
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmLicencesOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.DistanceInfoWindow
+import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
@@ -1733,6 +1735,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         },
                         onHideClick = {
                             homeMapView.switchOverlayVisibility<GpxPolyline>(gpxDetailsUiModel.id)
+                        },
+                        onCommentsButtonClick = {
+                            homeMapView.toggleInfoWindows<GpxMarkerInfoWindow>()
                         }
                     )
                     bottomSheets.showOnly(gpxDetailsBottomSheet)

@@ -38,12 +38,16 @@ import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.PlaceFinderFeature
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
+import hu.mostoha.mobile.android.huki.model.ui.WaypointComment
+import hu.mostoha.mobile.android.huki.model.ui.WaypointCommentResult
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
+import hu.mostoha.mobile.android.huki.ui.home.routeplanner.comment.WaypointCommentBottomSheetDialogFragment
+import hu.mostoha.mobile.android.huki.ui.home.routeplanner.comment.WaypointCommentResultViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEventSharedViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.MapTouchEvents
@@ -52,6 +56,7 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedView
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
 import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.util.Collections
 import javax.inject.Inject
@@ -83,6 +88,7 @@ class RoutePlannerFragment : Fragment() {
     private val permissionSharedViewModel: PermissionSharedViewModel by activityViewModels()
     private val mapTouchEventSharedViewModel: MapTouchEventSharedViewModel by activityViewModels()
     private val pickLocationEventViewModel: PickLocationEventSharedViewModel by activityViewModels()
+    private val commentResultViewModel: WaypointCommentResultViewModel by activityViewModels()
 
     private var _binding: FragmentRoutePlannerBinding? = null
     private val binding get() = _binding!!
@@ -199,6 +205,20 @@ class RoutePlannerFragment : Fragment() {
                 } else {
                     addWaypointButton.visible()
                 }
+            },
+            onCommentClicked = { waypointItem ->
+                val waypointPrimaryText = waypointItem.primaryText?.resolve(requireContext()) ?: return@WaypointAdapter
+
+                WaypointCommentBottomSheetDialogFragment.showDialog(
+                    requireActivity(),
+                    WaypointCommentResult(
+                        waypointId = waypointItem.id,
+                        waypointComment = WaypointComment(
+                            name = waypointItem.waypointComment?.name ?: waypointPrimaryText,
+                            comment = waypointItem.waypointComment?.comment
+                        ),
+                    )
+                )
             },
             onRemoveWaypointClicked = { waypointItem ->
                 routePlannerViewModel.removeWaypoint(waypointItem)
@@ -402,6 +422,14 @@ class RoutePlannerFragment : Fragment() {
                     }
                 }
         }
+        lifecycleScope.launch {
+            commentResultViewModel.result
+                .flowWithLifecycle(lifecycle)
+                .filterNotNull()
+                .collect { result ->
+                    routePlannerViewModel.addWaypointComment(result)
+                }
+        }
     }
 
     private fun initRoutePlan(routePlanUiModel: RoutePlanUiModel?) {
@@ -425,6 +453,7 @@ class RoutePlannerFragment : Fragment() {
     private fun clearRoutePlanner() {
         pickLocationEventViewModel.updateEvent(PickLocationEvents.LocationPickEnabled)
         routePlannerViewModel.clearRoutePlanner()
+        commentResultViewModel.clearResult()
         parentFragmentManager.popBackStack()
     }
 

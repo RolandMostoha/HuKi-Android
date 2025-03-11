@@ -17,6 +17,8 @@ import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
+import hu.mostoha.mobile.android.huki.model.ui.WaypointComment
+import hu.mostoha.mobile.android.huki.model.ui.WaypointCommentResult
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
@@ -251,6 +253,23 @@ class RoutePlannerViewModel @Inject constructor(
         }
     }
 
+    fun addWaypointComment(commentResult: WaypointCommentResult) {
+        viewModelScope.launch {
+            _wayPointItems.update { wayPointItems ->
+                val actualWaypoint = wayPointItems.firstOrNull { it.id == commentResult.waypointId } ?: return@launch
+
+                wayPointItems.update(actualWaypoint) { wayPointItem ->
+                    wayPointItem.copy(
+                        waypointComment = WaypointComment(
+                            name = commentResult.waypointComment.name,
+                            comment = commentResult.waypointComment.comment
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     fun createRoundTrip() {
         if (waypointItems.value.size >= 2) {
             _wayPointItems.update { wayPointItemList ->
@@ -264,10 +283,11 @@ class RoutePlannerViewModel @Inject constructor(
     fun saveRoutePlan() {
         viewModelScope.launch {
             val routePlan = _routePlanUiModel.value ?: return@launch
+            val waypoints = waypointItems.value
 
             analyticsService.routePlanSaved(routePlan)
 
-            val fileUri = routePlannerRepository.saveRoutePlan(routePlan)
+            val fileUri = routePlannerRepository.saveRoutePlan(routePlan, waypoints)
 
             if (fileUri != null) {
                 _routePlanGpxFileUri.emit(fileUri)

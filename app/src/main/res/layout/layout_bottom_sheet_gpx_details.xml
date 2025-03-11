@@ -117,7 +117,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/space_large"
+                android:contentDescription="@string/gpx_details_accessibility_visibility"
                 app:icon="@drawable/ic_gpx_details_visibility" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/gpxDetailsCommentsButton"
+                style="@style/DefaultButton.IconOnly.Stroked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_large"
+                android:contentDescription="@string/gpx_details_accessibility_comments"
+                app:icon="@drawable/ic_gpx_details_show_comments" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/gpxDetailsGoogleMapsButton"
@@ -125,6 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/space_large"
+                android:contentDescription="@string/gpx_details_accessibility_google_maps"
                 app:icon="@drawable/ic_google_nav" />
 
             <com.google.android.material.button.MaterialButton
@@ -132,6 +143,7 @@
                 style="@style/DefaultButton.IconOnly.Stroked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/gpx_details_accessibility_share"
                 app:icon="@drawable/ic_gpx_share" />
 
         </LinearLayout>

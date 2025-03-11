@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.ui.home.routeplanner
 
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.WaypointComment
 import java.util.UUID
 
 data class WaypointItem(
@@ -10,5 +11,6 @@ data class WaypointItem(
     val waypointType: WaypointType,
     val primaryText: Message? = null,
     val location: Location? = null,
-    val searchText: String? = null
+    val searchText: String? = null,
+    val waypointComment: WaypointComment? = null
 )

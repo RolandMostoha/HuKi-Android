@@ -28,6 +28,7 @@ import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
+import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
@@ -43,6 +44,7 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_ALTITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
+import hu.mostoha.mobile.android.huki.util.espresso.areInfoWindowsClosed
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithSibling
 import hu.mostoha.mobile.android.huki.util.espresso.hasInvisibleOverlay
@@ -175,6 +177,7 @@ class GpxDetailsUiTest {
             R.id.gpxDetailsRouteAttributesContainer.isDisplayed()
             R.id.gpxDetailsGoogleMapsButton.isDisplayed()
             R.id.gpxDetailsShareButton.isDisplayed()
+            R.id.gpxDetailsCommentsButton.isNotDisplayed()
             TEST_GPX_NAME.isTextDisplayed()
         }
     }
@@ -319,6 +322,22 @@ class GpxDetailsUiTest {
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
             R.id.homeMapView.hasOverlayCount<GpxMarker>(6)
             R.id.homeMapView.hasOverlayCount<GpxPolyline>(1)
+        }
+    }
+
+    @Test
+    fun givenGpxFileWithWaypoints_whenGpxIsOpened_thenInfoWindowsAreClosed() {
+        launchScenario<HomeActivity> {
+            R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
+
+            val activityResult = getTestGpxFileResult(TEST_GPX_NAME_WITH_WAYPOINTS)
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(activityResult)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            // Open info windows cannot be tested, because infinite animation is running from MapView
+            R.id.homeMapView.areInfoWindowsClosed<GpxMarkerInfoWindow>(true)
         }
     }
 

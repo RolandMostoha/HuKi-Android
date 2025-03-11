@@ -25,6 +25,8 @@
     <string name="default_date_friday">Friday</string>
     <string name="default_date_saturday">Saturday</string>
     <string name="default_date_sunday">Sunday</string>
+    <string name="default_save_button">Save</string>
+    <string name="default_cancel_button">Cancel</string>
 
     <string name="accessibility_home_fab_layers">Layers</string>
     <string name="accessibility_home_fab_route_planner">Route planner</string>
@@ -79,6 +81,10 @@
     <string name="gpx_details_bottom_sheet_google_maps_start">To start point</string>
     <string name="gpx_details_bottom_sheet_google_maps_end">To end point</string>
     <string name="gpx_details_bottom_sheet_waypoints_only_counter_template">%d waypoints</string>
+    <string name="gpx_details_accessibility_visibility">Show GPX</string>
+    <string name="gpx_details_accessibility_comments">Show comments</string>
+    <string name="gpx_details_accessibility_google_maps">Navigate with Google Maps</string>
+    <string name="gpx_details_accessibility_share">Share GPX</string>
 
     <string name="my_location_rationale_title">Location permission</string>
     <string name="my_location_rationale_message">Device\'s location is needed for current location function!</string>
@@ -110,7 +116,13 @@
     <string name="route_planner_graphhopper_url" translatable="false">https://www.graphhopper.com/</string>
     <string name="route_planner_accessibility_add_waypoint">Add new waypoint</string>
     <string name="route_planner_accessibility_remove_waypoint">Remove waypoint</string>
+    <string name="route_planner_accessibility_comment">Add comment</string>
     <string name="route_planner_accessibility_return_waypoint">Return to start position</string>
+
+    <string name="waypoint_comment_title">Destination comments</string>
+    <string name="waypoint_comment_name_hint">Destination name</string>
+    <string name="waypoint_comment_hint">Comment</string>
+    <string name="waypoint_comment_info_button">The destination name and comment are included in the saved GPX file, so it can be retrieved at any time.</string>
 
     <string name="licences_osm_copyright_notice">© OpenStreetMap contributors</string>
     <string name="licences_title">Licenses</string>
@@ -160,8 +172,6 @@
     <string name="gpx_history_menu_action_delete">Delete</string>
     <string name="gpx_history_menu_action_share">Share</string>
     <string name="gpx_history_rename_input_hint">Rename GPX</string>
-    <string name="gpx_history_rename_save_button">Save</string>
-    <string name="gpx_history_rename_cancel_button">Cancel</string>
     <string name="gpx_history_rename_error_empty">File name cannot be empty!</string>
     <string name="gpx_history_rename_error_already_exists">The GPX file already exists!</string>
     <string name="gpx_history_rename_error_invalid_chars">The file name contains invalid characters!</string>

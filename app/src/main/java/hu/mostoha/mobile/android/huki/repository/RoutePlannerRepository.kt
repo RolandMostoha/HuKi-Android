@@ -5,6 +5,7 @@ import com.codebutchery.androidgpx.data.GPXDocument
 import com.codebutchery.androidgpx.data.GPXSegment
 import com.codebutchery.androidgpx.data.GPXTrack
 import com.codebutchery.androidgpx.data.GPXTrackPoint
+import com.codebutchery.androidgpx.data.GPXWayPoint
 import com.codebutchery.androidgpx.print.GPXFilePrinter
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.GpxConfiguration
@@ -15,6 +16,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerNetworkModelMappe
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.network.GraphhopperService
+import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointItem
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -36,7 +38,7 @@ class RoutePlannerRepository @Inject constructor(
         return routePlannerNetworkModelMapper.mapRouteResponse(routeResponse)
     }
 
-    suspend fun saveRoutePlan(routePlan: RoutePlanUiModel): Uri? {
+    suspend fun saveRoutePlan(routePlan: RoutePlanUiModel, waypoints: List<WaypointItem>): Uri? {
         val routePlannerFilesDirPath = gpxConfiguration.getRoutePlannerGpxDirectory()
         val geoPoints = routePlan.geoPoints
 
@@ -49,10 +51,22 @@ class RoutePlannerRepository @Inject constructor(
 
             gpxSegment.addPoint(gpxTrackPoint)
         }
+        gpxTrack.name = routePlan.name
         gpxTrack.addSegment(gpxSegment)
 
         val gpxTracks = listOf(gpxTrack)
-        val gpxDocument = GPXDocument(emptyList(), gpxTracks, emptyList())
+
+        val gpxWaypoints = waypoints.mapNotNull {
+            val location = it.location ?: return@mapNotNull null
+            val gpxWayPoint = GPXWayPoint(location.latitude.toFloat(), location.longitude.toFloat())
+
+            gpxWayPoint.name = it.waypointComment?.name
+            gpxWayPoint.description = it.waypointComment?.comment
+
+            gpxWayPoint
+        }
+
+        val gpxDocument = GPXDocument(gpxWaypoints, gpxTracks, emptyList())
         val filePath = "$routePlannerFilesDirPath/${routePlan.name}.gpx"
 
         val fileName = saveGpxFile(filePath, gpxDocument)
@@ -63,9 +77,7 @@ class RoutePlannerRepository @Inject constructor(
 
     private suspend fun saveGpxFile(filePath: String, gpxDocument: GPXDocument) = suspendCoroutine {
         val listener = object : GPXFilePrinter.GPXFilePrinterListener {
-            override fun onGPXPrintStarted() {
-                // no-op
-            }
+            override fun onGPXPrintStarted() = Unit
 
             override fun onGPXPrintCompleted() {
                 it.resume(filePath)

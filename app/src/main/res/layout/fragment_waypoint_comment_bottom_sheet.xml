@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_bottom_sheet"
+    android:padding="@dimen/space_medium">
+
+    <!--  Title  -->
+    <LinearLayout
+        android:id="@+id/waypointCommentTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/space_extra_large"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/waypoint_comment_title"
+            android:textAppearance="@style/DefaultTextAppearance.Bold.Medium" />
+
+        <hu.mostoha.mobile.android.huki.views.InfoButtonView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:messageRes="@string/waypoint_comment_info_button" />
+
+    </LinearLayout>
+
+    <!--  Waypoint name   -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/waypointCommentNameInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_medium"
+        android:hint="@string/waypoint_comment_name_hint"
+        android:textColorHint="@color/colorSecondaryText"
+        app:boxBackgroundColor="@color/colorBackground"
+        app:boxStrokeColor="@color/selector_route_planner_search_bar_box"
+        app:endIconDrawable="@drawable/ic_input_clear"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/waypointCommentTitle"
+        app:shapeAppearance="@style/DefaultShapeAppearance.InputField">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/waypointCommentNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="textPostalAddress"
+            android:lines="1"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--  Waypoint comment  -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/waypointCommentInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_medium"
+        android:layout_marginTop="@dimen/space_small"
+        android:hint="@string/waypoint_comment_hint"
+        android:textColorHint="@color/colorSecondaryText"
+        app:boxBackgroundColor="@color/colorBackground"
+        app:boxStrokeColor="@color/selector_route_planner_search_bar_box"
+        app:endIconDrawable="@drawable/ic_input_clear"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/waypointCommentNameInputLayout"
+        app:shapeAppearance="@style/DefaultShapeAppearance.InputField">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/waypointCommentInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="textPostalAddress"
+            android:lines="1"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Cancel button  -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/waypointCommentCancelButton"
+        style="@style/DefaultButton.Contained.Shadowless.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_medium"
+        android:layout_marginTop="@dimen/space_small"
+        android:text="@string/default_cancel_button"
+        app:icon="@drawable/ic_input_clear"
+        app:iconTint="@color/colorError"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/waypointCommentVerticalGuideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/waypointCommentInputLayout" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/waypointCommentVerticalGuideline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <!-- Save button  -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/waypointCommentSaveButton"
+        style="@style/DefaultButton.Contained.Shadowless.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_large"
+        android:layout_marginTop="@dimen/space_small"
+        android:text="@string/default_save_button"
+        app:icon="@drawable/ic_done"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/waypointCommentVerticalGuideline"
+        app:layout_constraintTop_toBottomOf="@id/waypointCommentInputLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

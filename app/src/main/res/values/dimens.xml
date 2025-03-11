@@ -45,6 +45,7 @@
     <dimen name="default_corner_size_button">35dp</dimen>
     <dimen name="default_icon_only_button_size">50dp</dimen>
     <dimen name="default_icon_only_button_size_small">40dp</dimen>
+    <dimen name="default_icon_only_button_size_extra_small">30dp</dimen>
     <dimen name="default_polygon_width">2dp</dimen>
     <dimen name="default_polyline_width">7dp</dimen>
     <dimen name="default_polyline_fill_width">4dp</dimen>

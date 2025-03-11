@@ -14,6 +14,10 @@ data class Location(
 
 fun Location.toGeoPoint() = GeoPoint(latitude, longitude, altitude ?: 0.0)
 
+fun Location.equalsWithoutAlt(other: Location): Boolean {
+    return this.latitude == other.latitude && this.longitude == other.longitude
+}
+
 fun List<Location>.toGeoPoints() = this.map { it.toGeoPoint() }
 
 fun Location.toAndroidLocation() = AndroidLocation(LocationManager.GPS_PROVIDER).apply {

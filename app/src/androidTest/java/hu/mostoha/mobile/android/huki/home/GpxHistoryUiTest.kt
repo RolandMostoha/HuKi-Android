@@ -136,7 +136,7 @@ class GpxHistoryUiTest {
             DEFAULT_PLACE_PROFILE_RELATION
         )
         coEvery { routPlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
-        coEvery { routPlannerRepository.saveRoutePlan(any()) } returns getTestRoutePlannerGpxUri()
+        coEvery { routPlannerRepository.saveRoutePlan(any(), any()) } returns getTestRoutePlannerGpxUri()
     }
 
     @After

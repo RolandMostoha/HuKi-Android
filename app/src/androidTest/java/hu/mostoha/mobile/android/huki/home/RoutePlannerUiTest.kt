@@ -214,7 +214,7 @@ class RoutePlannerUiTest {
                 )
             )
         } returns DEFAULT_ROUTE_PLAN
-        coEvery { routPlannerRepository.saveRoutePlan(any()) } returns getTestGpxFileUri()
+        coEvery { routPlannerRepository.saveRoutePlan(any(), any()) } returns getTestGpxFileUri()
     }
 
     @Test
@@ -576,6 +576,34 @@ class RoutePlannerUiTest {
                     hasData(testAppContext.getString(R.string.route_planner_graphhopper_url))
                 )
             )
+        }
+    }
+
+    @Test
+    fun givenWaypointComment_whenSaveButtonClicked_thenGpxDisplaysOnMap() {
+        launchScenario<HomeActivity> {
+            val waypointName1 = "Dobogoko"
+            val waypointName2 = "Ram-hegy"
+
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.string.route_planner_accessibility_comment.clickWithContentDescription()
+
+            R.id.waypointCommentInput.typeText("Comment")
+            R.id.waypointCommentNameInput.typeText("Name")
+            R.id.waypointCommentSaveButton.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName2)))
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+
+            R.id.routePlannerDoneButton.click()
+
+            R.id.homeMapView.hasOverlay<GpxPolyline>()
         }
     }
 
