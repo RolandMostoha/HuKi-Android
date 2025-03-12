@@ -15,6 +15,7 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.BillingAction
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
+import hu.mostoha.mobile.android.huki.util.toAnalyticsEvent
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -42,6 +43,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_ROUTE_PLANNER_PICK_LOCATION = "select_route_planner_pick_location"
         private const val EVENT_SELECT_ROUTE_PLANNER_MY_LOCATION = "select_route_planner_my_location"
         private const val EVENT_SELECT_ROUTE_PLANNER_DONE = "select_route_planner_done"
+        private const val EVENT_SELECT_ROUTE_PLANNER_COMMENT_DONE = "select_route_planner_comment_done"
         private const val EVENT_SELECT_MAPS_DIRECTIONS = "select_maps_directions"
         private const val EVENT_GPX_IMPORT_CLICKED = "gpx_import_clicked"
         private const val EVENT_GPX_IMPORTED = "gpx_imported"
@@ -100,6 +102,24 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_ROUTE_PLANNER_DISTANCE = "route_planner_distance"
         private const val PARAM_OKT_ID = "okt_id"
         private const val PARAM_NEW_FEATURES_VERSION = "version"
+
+        private val MAP_SCALE_PERCENTAGE = listOf(
+            1..150,
+            151..250,
+            251..300
+        )
+        private val ROUTE_PLANNER_DISTANCE_RANGES = listOf(
+            0.0..2.0,
+            3.0..5.0,
+            6.0..10.0,
+            11.0..20.0,
+            21.0..100.0,
+        )
+        private val ROUTE_PLANNER_WAYPOINT_COUNT_RANGES = listOf(
+            2..3,
+            4..6,
+            7..10
+        )
     }
 
     private var firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
@@ -169,17 +189,24 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_MY_LOCATION, null)
     }
 
+    override fun routePlannerCommentDone() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_COMMENT_DONE, null)
+    }
+
     override fun routePlanSaved(routePlan: RoutePlanUiModel) {
-        val waypointCount = routePlan.wayPoints.size
-        val distance = routePlan.distanceText.formatArgs
+        val waypointCountParam = ROUTE_PLANNER_WAYPOINT_COUNT_RANGES.toAnalyticsEvent(routePlan.wayPoints.size)
+        val distanceParam = routePlan.distanceText.formatArgs
             .firstOrNull()
             ?.toString()
             ?.toDoubleOrNull()
+            ?.let { ROUTE_PLANNER_DISTANCE_RANGES.toAnalyticsEvent(it) }
 
         firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_DONE) {
-            param(PARAM_ROUTE_PLANNER_WAYPOINT_COUNT, waypointCount.toLong())
-            if (distance != null) {
-                param(PARAM_ROUTE_PLANNER_DISTANCE, distance)
+            if (waypointCountParam != null) {
+                param(PARAM_ROUTE_PLANNER_WAYPOINT_COUNT, waypointCountParam)
+            }
+            if (distanceParam != null) {
+                param(PARAM_ROUTE_PLANNER_DISTANCE, distanceParam)
             }
         }
     }
@@ -254,8 +281,12 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
     }
 
     override fun settingsMapScaleSet(mapScalePercentage: Long) {
+        val mapScaleParam = MAP_SCALE_PERCENTAGE.toAnalyticsEvent(mapScalePercentage.toInt())
+
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_MAP_SCALE) {
-            param(PARAM_MAP_SCALE_PERCENTAGE, mapScalePercentage)
+            if (mapScaleParam != null) {
+                param(PARAM_MAP_SCALE_PERCENTAGE, mapScaleParam)
+            }
         }
     }
 

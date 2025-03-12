@@ -38,6 +38,8 @@ interface AnalyticsService {
 
     fun routePlannerMyLocationClicked()
 
+    fun routePlannerCommentDone()
+
     fun routePlanSaved(routePlan: RoutePlanUiModel)
 
     fun googleMapsClicked()

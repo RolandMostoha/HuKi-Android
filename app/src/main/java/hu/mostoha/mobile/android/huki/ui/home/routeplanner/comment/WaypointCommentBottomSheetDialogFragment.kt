@@ -16,7 +16,9 @@ import hu.mostoha.mobile.android.huki.databinding.FragmentWaypointCommentBottomS
 import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import hu.mostoha.mobile.android.huki.model.ui.WaypointComment
 import hu.mostoha.mobile.android.huki.model.ui.WaypointCommentResult
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class WaypointCommentBottomSheetDialogFragment : BottomSheetDialogFragment() {
@@ -38,6 +40,9 @@ class WaypointCommentBottomSheetDialogFragment : BottomSheetDialogFragment() {
             }
         }
     }
+
+    @Inject
+    lateinit var analyticsService: AnalyticsService
 
     private val commentResultViewModel: WaypointCommentResultViewModel by activityViewModels()
 
@@ -84,6 +89,8 @@ class WaypointCommentBottomSheetDialogFragment : BottomSheetDialogFragment() {
         commentNameInput.setText(commentResult.waypointComment.name)
         commentInput.setText(commentResult.waypointComment.comment)
         saveButton.setOnClickListener {
+            analyticsService.routePlannerCommentDone()
+
             lifecycleScope.launch {
                 commentResultViewModel.updateResult(
                     commentResult.copy(
