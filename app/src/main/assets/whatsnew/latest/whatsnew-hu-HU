@@ -1,5 +1,5 @@
-- Új: útvonaltervező állomásokhoz megjegyzést lehet fűzni
-- A mentett GPX-be bekerülnek az állomások és a megjegyzések is
-- A GPX panelen az összes megjegyzés ki-be kapcsolható
-- A tervező panel dinamikusan nő, "kényelmesebb" a tervezés
-- A tervezőben többet átugorva is lehet állomásokat cserélni
+- Új: útvonaltervező állomáshoz megjegyzést lehet fűzni
+- A mentett GPX-be bekerülnek az állomások is
+- A GPX panelen a megjegyzések ki-be kapcsolhatók
+- Útvonaltervező design és használhatósági javítások
+- A tervezőben több állomást átugorva is lehet cserélni
