@@ -70,7 +70,9 @@ class LayersDomainModelMapper @Inject constructor() {
                     ?.split(":")
                     ?.joinToString("\n"),
                 wayPoint.cmt,
-            ).joinToString("\n")
+            )
+                .joinToString("\n")
+                .ifEmpty { null }
 
             GpxWaypoint(
                 name = wayPoint.name,

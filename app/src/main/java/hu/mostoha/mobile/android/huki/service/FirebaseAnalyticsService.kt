@@ -103,8 +103,9 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_OKT_ID = "okt_id"
         private const val PARAM_NEW_FEATURES_VERSION = "version"
 
-        private val MAP_SCALE_PERCENTAGE = listOf(
-            1..150,
+        private val MAP_SCALE_PERCENTAGE_RANGES = listOf(
+            1..99,
+            100..150,
             151..250,
             251..300
         )
@@ -281,7 +282,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
     }
 
     override fun settingsMapScaleSet(mapScalePercentage: Long) {
-        val mapScaleParam = MAP_SCALE_PERCENTAGE.toAnalyticsEvent(mapScalePercentage.toInt())
+        val mapScaleParam = MAP_SCALE_PERCENTAGE_RANGES.toAnalyticsEvent(mapScalePercentage.toInt())
 
         firebaseAnalytics.logEvent(EVENT_SELECT_SETTINGS_MAP_SCALE) {
             if (mapScaleParam != null) {
