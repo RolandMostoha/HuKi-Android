@@ -188,7 +188,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -276,7 +275,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initTheme()
         initWindow()
         initViews()
         initPermissions()
@@ -305,20 +303,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         super.onRestoreInstanceState(savedInstanceState)
 
         bottomSheets.hideAll()
-    }
-
-    private fun initTheme() {
-        lifecycleScope.launch {
-            val theme = settingsRepository.getTheme().firstOrNull()
-            AppCompatDelegate.setDefaultNightMode(
-                when (theme) {
-                    Theme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                    Theme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-                    Theme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
-                    null -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                }
-            )
-        }
     }
 
     private fun initWindow() {
@@ -1031,6 +1015,19 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initSettingsFlows() {
+        lifecycleScope.launch {
+            settingsViewModel.theme
+                .flowWithLifecycle(lifecycle)
+                .collect { theme ->
+                    AppCompatDelegate.setDefaultNightMode(
+                        when (theme) {
+                            Theme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                            Theme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+                            Theme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
+                        }
+                    )
+                }
+        }
         lifecycleScope.launch {
             permissionSharedViewModel.result
                 .flowWithLifecycle(lifecycle)
