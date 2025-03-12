@@ -17,6 +17,7 @@ import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.isZero
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.OktRoutesMapper
@@ -43,6 +44,7 @@ import hu.mostoha.mobile.android.huki.repository.PlaceHistoryRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
+import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_TO_SAVE_BOUNDING_BOX
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -468,10 +470,12 @@ class HomeViewModel @Inject constructor(
         _hikeModeUiModel.update { it.copy(compassState = CompassState.Free(mapOrientation)) }
     }
 
-    fun saveMapBoundingBox(boundingBox: BoundingBox) {
-        Timber.d("MapConfig: saving BoundingBox: $boundingBox")
+    fun saveMapBoundingBox(boundingBox: BoundingBox, zoom: Double) {
         viewModelScope.launch {
-            mapConfigRepository.saveBoundingBox(boundingBox)
+            if (!boundingBox.isZero() && zoom >= MAP_DEFAULT_ZOOM_TO_SAVE_BOUNDING_BOX) {
+                Timber.d("MapConfig: saving BoundingBox: $boundingBox, zoom: $zoom")
+                mapConfigRepository.saveBoundingBox(boundingBox)
+            }
         }
     }
 
