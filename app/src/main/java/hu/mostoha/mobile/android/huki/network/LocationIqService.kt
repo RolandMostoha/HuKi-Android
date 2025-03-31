@@ -25,7 +25,6 @@ interface LocationIqService {
         @Query("viewbox") viewBox: String,
         @Query("importancesort") importanceSort: Int = 0,
         @Query("normalizecity") normalizeCity: Int = 1,
-        @Query("countrycodes") countryCodes: String = "hu",
         @Query("accept-language") acceptLanguage: String = "hu",
         @Query("limit") limit: Int = AUTOCOMPLETE_ITEM_LIMIT,
         @Query("key") key: String = BuildConfig.LOCATION_IQ_API_KEY,
