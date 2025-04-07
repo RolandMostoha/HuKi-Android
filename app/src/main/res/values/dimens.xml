@@ -49,14 +49,14 @@
     <dimen name="default_polygon_width">2dp</dimen>
     <dimen name="default_polyline_width">7dp</dimen>
     <dimen name="default_polyline_fill_width">4dp</dimen>
-    <dimen name="default_gpx_width">10dp</dimen>
-    <dimen name="default_gpx_fill_width">4dp</dimen>
-    <dimen name="default_horizontal_separator_width">1dp</dimen>
+    <dimen name="default_gpx_width">12dp</dimen>
+    <dimen name="default_gpx_fill_width">6dp</dimen>
     <dimen name="default_dashed_divider_width">2dp</dimen>
     <dimen name="default_divider_height">1dp</dimen>
     <dimen name="default_tab_indicator_height">4dp</dimen>
     <dimen name="default_popup_menu_width">195dp</dimen>
     <dimen name="default_popup_menu_width_with_header">250dp</dimen>
+    <dimen name="default_popup_menu_width_wide">290dp</dimen>
     <dimen name="default_bottom_sheet_peek_height">250dp</dimen>
     <dimen name="default_chip_min_height">50dp</dimen>
     <dimen name="default_chip_icon_size">@dimen/icon_size_medium</dimen>
@@ -110,15 +110,13 @@
     <dimen name="layers_image_stroke_width">3dp</dimen>
     <dimen name="layers_layer_title_bottom_margin">7dp</dimen>
 
-    <dimen name="gpx_details_altitude_range_view_height">10dp</dimen>
+    <dimen name="gpx_details_altitude_range_view_height">13dp</dimen>
 
     <dimen name="hiking_routes_marker_background_size">38dp</dimen>
     <dimen name="hiking_routes_marker_icon_size">16dp</dimen>
 
     <dimen name="landscape_details_center_marker_background_size">28dp</dimen>
     <dimen name="landscape_details_center_marker_icon_size">18dp</dimen>
-
-    <dimen name="okt_popup_menu_width">290dp</dimen>
 
     <dimen name="okt_routes_bottom_sheet_peek_height">330dp</dimen>
     <dimen name="okt_routes_base_polyline_width">4dp</dimen>

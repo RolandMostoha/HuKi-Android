@@ -303,7 +303,7 @@ class GpxDetailsUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
-            R.id.gpxDetailsAltitudeRangeContainer.isNotDisplayed()
+            R.id.gpxDetailsSlopeRangeContainer.isNotDisplayed()
             TEST_GPX_NAME_WITHOUT_ALTITUDE.isTextDisplayed()
         }
     }
@@ -375,6 +375,20 @@ class GpxDetailsUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
             R.id.homeMapView.hasOverlayCount<GpxPolyline>(1)
+        }
+    }
+
+    @Test
+    fun givenGpxFile_when_thenGoogleMapsDirectionIsRequested() {
+        launchScenario<HomeActivity> {
+            R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
+
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+
+            R.id.gpxDetailsGoogleMapsButton.click()
         }
     }
 

@@ -15,6 +15,11 @@ fun TextView.setDrawableStart(@DrawableRes drawableRes: Int) {
     setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 }
 
+fun TextView.setDrawableEnd(@DrawableRes drawableRes: Int) {
+    val drawable = ContextCompat.getDrawable(context, drawableRes)
+    setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+}
+
 fun TextView.setDrawableTop(@DrawableRes drawableRes: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableRes)
     setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)

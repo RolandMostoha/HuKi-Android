@@ -58,4 +58,17 @@ class SettingsRepository @Inject constructor(
         }
     }
 
+    fun isGpxSlopeColoringEnabled(): Flow<Boolean> {
+        return dataStore.data
+            .map { preferences ->
+                preferences[DataStoreConstants.Settings.GPX_SLOPE_COLORING_ENABLED] ?: true
+            }
+    }
+
+    suspend fun saveGpxSlopeColoringEnabled(enabled: Boolean) {
+        dataStore.edit { settings ->
+            settings[DataStoreConstants.Settings.GPX_SLOPE_COLORING_ENABLED] = enabled
+        }
+    }
+
 }

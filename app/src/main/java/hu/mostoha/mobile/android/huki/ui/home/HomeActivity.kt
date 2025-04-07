@@ -23,6 +23,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
+import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuFooterBinding
 import hu.mostoha.mobile.android.huki.deeplink.DeeplinkHandler
 import hu.mostoha.mobile.android.huki.extensions.OffsetType
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuActionItem
@@ -57,6 +58,7 @@ import hu.mostoha.mobile.android.huki.extensions.hasNoOverlay
 import hu.mostoha.mobile.android.huki.extensions.hasOverlay
 import hu.mostoha.mobile.android.huki.extensions.hideAll
 import hu.mostoha.mobile.android.huki.extensions.hideOverlay
+import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.isDarkMode
 import hu.mostoha.mobile.android.huki.extensions.isGooglePlayServicesAvailable
 import hu.mostoha.mobile.android.huki.extensions.isGpxFileIntent
@@ -638,7 +640,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     }
                 )
             ),
-            width = R.dimen.okt_popup_menu_width,
+            width = R.dimen.default_popup_menu_width_wide,
         )
     }
 
@@ -1098,11 +1100,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     width = R.dimen.default_popup_menu_width_with_header,
                     showAtCenter = true,
                     headerTitle = R.string.osm_data_popup_title.toMessage(),
-                    footerMessage = R.string.place_details_osm_id_template
-                        .toMessage(listOf(homeEvents.osmId))
-                        .resolve(this@HomeActivity)
-                        .plus(homeEvents.osmTags)
-                        .toMessage()
+                    footerView = ViewPopupMenuFooterBinding.inflate(inflater, null, false).apply {
+                        popupMenuFooterTitle.text = R.string.place_details_osm_id_template
+                            .toMessage(listOf(homeEvents.osmId))
+                            .resolve(this@HomeActivity)
+                            .plus(homeEvents.osmTags)
+                            .toMessage()
+                            .resolve(this@HomeActivity)
+                    }.root,
                 )
             }
             is HomeEvents.PlaceCategoryEmpty -> {
@@ -1667,6 +1672,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 return
             }
             homeMapView.hasOverlay(gpxDetailsUiModel.id) -> {
+                val offsetBoundingBox = gpxDetailsUiModel.boundingBox.withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
+                addGpxPolyline(gpxDetailsUiModel, offsetBoundingBox)
+
                 if (gpxDetailsUiModel.isVisible) {
                     homeMapView.showOverlay(gpxDetailsUiModel.id)
                 } else {
@@ -1674,40 +1682,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
             }
             homeMapView.hasNoOverlay(gpxDetailsUiModel.id) -> {
-                homeMapView.removeOverlay(OverlayType.GPX)
-
                 val offsetBoundingBox = gpxDetailsUiModel.boundingBox.withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
-
-                homeMapView.addGpxPolyline(
-                    overlayId = gpxDetailsUiModel.id,
-                    geoPoints = gpxDetailsUiModel.geoPoints,
-                    useAltitudeColors = gpxDetailsUiModel.altitudeUiModel != null,
-                    onClick = {
-                        gpxDetailsBottomSheet.show()
-                        homeViewModel.clearFollowLocation()
-                        homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
-                    }
-                )
-                gpxDetailsUiModel.waypoints.forEach { waypointItem ->
-                    homeMapView.addGpxMarker(
-                        overlayId = gpxDetailsUiModel.id,
-                        geoPoint = waypointItem.geoPoint,
-                        waypointType = waypointItem.waypointType,
-                        infoWindowTitle = waypointItem.name?.resolve(this),
-                        infoWindowDescription = waypointItem.description?.resolve(this),
-                        onMarkerClick = {
-                            gpxDetailsBottomSheet.show()
-                            homeViewModel.clearFollowLocation()
-                            homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
-                        },
-                        onWaypointClick = {
-                            analyticsService.gpxImportClicked()
-                        },
-                        onWaypointNavigationClick = { geoPoint ->
-                            homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, GPX_WAYPOINT)
-                        }
-                    )
-                }
+                addGpxPolyline(gpxDetailsUiModel, offsetBoundingBox)
 
                 postMain {
                     gpxDetailsBottomSheet.initBottomSheet(
@@ -1739,6 +1715,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         },
                         onCommentsButtonClick = {
                             homeMapView.toggleInfoWindows<GpxMarkerInfoWindow>()
+                        },
+                        onSlopeColorSwitched = { isChecked ->
+                            layersViewModel.updateGpxSlopeColors(isChecked)
+                            settingsViewModel.updateIsGpxSlopeColoringEnabled(isChecked)
+                        },
+                        onReverseSwitched = {
+                            layersViewModel.reverseGpx()
                         }
                     )
                     bottomSheets.showOnly(gpxDetailsBottomSheet)
@@ -1746,6 +1729,44 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeMapView.zoomToBoundingBox(offsetBoundingBox, false)
                 }
             }
+        }
+    }
+
+    private fun addGpxPolyline(gpxDetailsUiModel: GpxDetailsUiModel, boundingBox: BoundingBox) {
+        homeMapView.removeOverlay(OverlayType.GPX)
+
+        val useAltitudeColors = gpxDetailsUiModel.altitudeUiModel != null && gpxDetailsUiModel.useSlopeColors
+
+        homeMapView.addGpxPolyline(
+            overlayId = gpxDetailsUiModel.id,
+            geoPoints = gpxDetailsUiModel.geoPoints,
+            arrowGeoPoints = gpxDetailsUiModel.arrowGeoPoints,
+            useAltitudeColors = useAltitudeColors,
+            onClick = {
+                gpxDetailsBottomSheet.show()
+                homeViewModel.clearFollowLocation()
+                homeMapView.zoomToBoundingBox(boundingBox, true)
+            }
+        )
+        gpxDetailsUiModel.waypoints.forEach { waypointItem ->
+            homeMapView.addGpxMarker(
+                overlayId = gpxDetailsUiModel.id,
+                geoPoint = waypointItem.geoPoint,
+                waypointType = waypointItem.waypointType,
+                infoWindowTitle = waypointItem.name?.resolve(this),
+                infoWindowDescription = waypointItem.description?.resolve(this),
+                onMarkerClick = {
+                    gpxDetailsBottomSheet.show()
+                    homeViewModel.clearFollowLocation()
+                    homeMapView.zoomToBoundingBox(boundingBox, true)
+                },
+                onWaypointClick = {
+                    analyticsService.gpxImportClicked()
+                },
+                onWaypointNavigationClick = { geoPoint ->
+                    homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, GPX_WAYPOINT)
+                }
+            )
         }
     }
 

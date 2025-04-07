@@ -4,6 +4,8 @@
     style="@style/DefaultBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical"
     android:paddingBottom="@dimen/space_large"
     app:behavior_hideable="true"

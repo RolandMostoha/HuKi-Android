@@ -77,14 +77,32 @@
     <string name="home_bottom_sheet_landscape_secondary">Landscape</string>
 
     <string name="gpx_details_bottom_sheet_start_button">Start</string>
-    <string name="gpx_details_bottom_sheet_google_maps_header">Google Maps Navigation</string>
+    <string name="gpx_details_bottom_sheet_google_maps_header">Google Maps</string>
     <string name="gpx_details_bottom_sheet_google_maps_start">To start point</string>
     <string name="gpx_details_bottom_sheet_google_maps_end">To end point</string>
     <string name="gpx_details_bottom_sheet_waypoints_only_counter_template">%d waypoints</string>
+    <string name="gpx_details_slope_range_min" translatable="false">-25%</string>
+    <string name="gpx_details_slope_range_max" translatable="false">+25%</string>
+    <string name="gpx_details_settings_slope_coloring">Slope coloring</string>
+    <string name="gpx_details_settings_reverse_direction">GPX reversed direction</string>
     <string name="gpx_details_accessibility_visibility">Show GPX</string>
     <string name="gpx_details_accessibility_comments">Show comments</string>
     <string name="gpx_details_accessibility_google_maps">Navigate with Google Maps</string>
     <string name="gpx_details_accessibility_share">Share GPX</string>
+    <string name="gpx_details_accessibility_settings">Settings</string>
+
+    <string name="gpx_slope_explanation_title">Slope</string>
+    <string name="gpx_slope_explanation_message">A 25% incline means that the terrain rises 25 meters over a horizontal distance of 100 meters.</string>
+    <string name="gpx_slope_explanation_slope_column_title">Level</string>
+    <string name="gpx_slope_explanation_desc_column_title">Difficulty</string>
+    <string name="gpx_slope_explanation_zero" translatable="false">&#177;5%%</string>
+    <string name="gpx_slope_explanation_negative_template" translatable="false">-%d%%</string>
+    <string name="gpx_slope_explanation_positive_template" translatable="false">+%d%%</string>
+    <string name="gpx_slope_explanation_negative_high_desc">Steep slope</string>
+    <string name="gpx_slope_explanation_negative_mid_desc">Moderate slope</string>
+    <string name="gpx_slope_explanation_zero_desc">Near flat area</string>
+    <string name="gpx_slope_explanation_positive_mid_desc">Moderate climb</string>
+    <string name="gpx_slope_explanation_positive_high_desc">Steep climb</string>
 
     <string name="my_location_rationale_title">Location permission</string>
     <string name="my_location_rationale_message">Device\'s location is needed for current location function!</string>

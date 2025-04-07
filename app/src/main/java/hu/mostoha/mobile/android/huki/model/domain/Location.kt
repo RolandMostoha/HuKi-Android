@@ -27,7 +27,11 @@ fun Location.toAndroidLocation() = AndroidLocation(LocationManager.GPS_PROVIDER)
 
 fun IGeoPoint.toLocation() = Location(latitude, longitude)
 
+fun GeoPoint.toLocationWithAlt() = Location(latitude, longitude, altitude)
+
 fun List<GeoPoint>.toLocations() = this.map { it.toLocation() }
+
+fun List<GeoPoint>.toLocationsWithAlt() = this.map { it.toLocationWithAlt() }
 
 fun AndroidLocation.toLocation() = Location(latitude, longitude)
 

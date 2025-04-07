@@ -12,7 +12,7 @@ import kotlin.math.roundToInt
  * @param value The value to map
  * @return The mapped value between [0.0..1.0]
  */
-fun linearInterpolation(min: Float, max: Float, offset: Float, value: Float): Float {
+fun linearInterpolation(min: Float, max: Float, value: Float, offset: Float = 0f): Float {
     return offset + ((1 - offset) / (max - min) * (value - min))
 }
 

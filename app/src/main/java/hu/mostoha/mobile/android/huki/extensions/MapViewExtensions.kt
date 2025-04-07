@@ -11,6 +11,7 @@ import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
+import hu.mostoha.mobile.android.huki.model.domain.toLocationsWithAlt
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
@@ -19,6 +20,7 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.DistanceInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.LocationPickerInfoWindow
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxArrowMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.HukiScaleBarOverlay
@@ -38,9 +40,11 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import hu.mostoha.mobile.android.huki.util.MAP_RESET_ORIENTATION_ANIMATION_DURATION
+import hu.mostoha.mobile.android.huki.util.SLOPE_PERCENTAGE_HIGH
+import hu.mostoha.mobile.android.huki.util.SLOPE_PERCENTAGE_MID
 import hu.mostoha.mobile.android.huki.util.color
 import hu.mostoha.mobile.android.huki.util.distanceBetween
-import hu.mostoha.mobile.android.huki.util.getGradientColors
+import hu.mostoha.mobile.android.huki.util.getSlopeGradientColors
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
@@ -62,6 +66,7 @@ import org.osmdroid.views.overlay.infowindow.InfoWindow
 import java.util.UUID
 
 private const val MAP_ANIMATION_DURATION = 1000L
+private const val DIRECTION_ARROW_ICON_ANCHOR = 0.5f
 
 fun MapView.addOverlay(overlay: Overlay, comparator: Comparator<Overlay>) {
     overlays.add(overlay)
@@ -398,6 +403,7 @@ fun MapView.addGpxMarker(
         WaypointType.START -> R.drawable.ic_marker_gpx_start.toDrawable(this.context)
         WaypointType.INTERMEDIATE -> R.drawable.ic_marker_gpx_intermediate.toDrawable(this.context)
         WaypointType.END -> R.drawable.ic_marker_gpx_end.toDrawable(this.context)
+        WaypointType.ROUND_TRIP -> R.drawable.ic_marker_gpx_round_trip.toDrawable(this.context)
     }
     val marker = GpxMarker(this).apply {
         id = overlayId
@@ -437,6 +443,7 @@ fun MapView.addGpxMarker(
 fun MapView.addGpxPolyline(
     overlayId: String,
     geoPoints: List<GeoPoint>,
+    arrowGeoPoints: List<Pair<GeoPoint, Int>>,
     useAltitudeColors: Boolean,
     onClick: (PolyOverlayWithIW) -> Unit
 ): Polyline {
@@ -447,11 +454,7 @@ fun MapView.addGpxPolyline(
         setPoints(geoPoints)
 
         val borderPaint = Paint().apply {
-            color = if (useAltitudeColors) {
-                ContextCompat.getColor(context, R.color.colorPolylineBorder)
-            } else {
-                ContextCompat.getColor(context, R.color.colorPolyline)
-            }
+            color = ContextCompat.getColor(context, R.color.colorPolylineBorder)
             isAntiAlias = true
             strokeWidth = context.resources.getDimension(R.dimen.default_gpx_width)
             style = Paint.Style.STROKE
@@ -461,22 +464,31 @@ fun MapView.addGpxPolyline(
         }
         outlinePaintLists.add(MonochromaticPaintList(borderPaint))
 
+        val fillPaint = Paint().apply {
+            isAntiAlias = true
+            strokeWidth = context.resources.getDimension(R.dimen.default_gpx_fill_width)
+            style = Paint.Style.FILL_AND_STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+            color = ContextCompat.getColor(context, R.color.colorPolyline)
+        }
+
         if (useAltitudeColors) {
-            val fillPaint = Paint().apply {
-                isAntiAlias = true
-                strokeWidth = context.resources.getDimension(R.dimen.default_gpx_fill_width)
-                style = Paint.Style.FILL_AND_STROKE
-                strokeJoin = Paint.Join.ROUND
-                strokeCap = Paint.Cap.ROUND
-                isAntiAlias = true
-            }
-            val gradientColors = getGradientColors(
-                ContextCompat.getColor(context, R.color.colorPolyline),
-                ContextCompat.getColor(context, R.color.colorPolylineHigh),
-                geoPoints.map { it.altitude.toFloat() }
+            val gradientColors = getSlopeGradientColors(
+                locations = geoPoints.toLocationsWithAlt(),
+                midSlope = SLOPE_PERCENTAGE_MID.toDouble(),
+                highSlope = SLOPE_PERCENTAGE_HIGH.toDouble(),
+                negativeSlopeColorHigh = ContextCompat.getColor(context, R.color.colorSlopeNegativeHigh),
+                negativeSlopeColorMid = ContextCompat.getColor(context, R.color.colorSlopeNegativeMid),
+                zeroSlopeColor = ContextCompat.getColor(context, R.color.colorSlopeZero),
+                positiveSlopeColorMid = ContextCompat.getColor(context, R.color.colorSlopePositiveMid),
+                positiveSlopeColorHigh = ContextCompat.getColor(context, R.color.colorSlopePositiveHigh),
             )
             val colorMapping = ColorMappingCycle(gradientColors)
             outlinePaintLists.add(PolychromaticPaintList(fillPaint, colorMapping, false))
+        } else {
+            outlinePaintLists.add(MonochromaticPaintList(fillPaint))
         }
 
         setOnClickListener { polygon, _, _ ->
@@ -486,6 +498,21 @@ fun MapView.addGpxPolyline(
     }
 
     addOverlay(polyline, OverlayComparator)
+
+    arrowGeoPoints.forEach { (geoPoint, bearing) ->
+        val directionMarker = GpxArrowMarker(this@addGpxPolyline).apply {
+            id = overlayId
+            position = geoPoint
+            icon = R.drawable.ic_gpx_direction_arrow.toDrawable(context)
+            rotation = -bearing.toFloat()
+            setAnchor(DIRECTION_ARROW_ICON_ANCHOR, DIRECTION_ARROW_ICON_ANCHOR)
+            isFlingEnabled = false
+            isFlat = true
+            isClickable = false
+            infoWindow = null
+        }
+        addOverlay(directionMarker, OverlayComparator)
+    }
 
     return polyline
 }
@@ -500,6 +527,7 @@ fun MapView.addRoutePlannerMarker(
         WaypointType.START -> R.drawable.ic_marker_gpx_start.toDrawable(this.context)
         WaypointType.INTERMEDIATE -> R.drawable.ic_marker_gpx_intermediate.toDrawable(this.context)
         WaypointType.END -> R.drawable.ic_marker_gpx_end.toDrawable(this.context)
+        WaypointType.ROUND_TRIP -> R.drawable.ic_marker_gpx_round_trip.toDrawable(this.context)
     }
     val marker = RoutePlannerMarker(this).apply {
         id = overlayId
@@ -828,12 +856,8 @@ fun MapView.addPlaceCategoryMarker(
                 ),
             ),
         )
-        setOnMarkerClickListener { marker, mapView ->
+        setOnMarkerClickListener { marker, _ ->
             onMarkerClick.invoke(marker)
-
-//            marker.showInfoWindow()
-//            mapView.controller.animateTo(marker.position)
-
             true
         }
         if (infoWindowTitle != null) {

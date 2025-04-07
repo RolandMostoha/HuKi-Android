@@ -5,6 +5,8 @@
     style="@style/DefaultBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="@dimen/okt_routes_bottom_sheet_peek_height"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical"
     app:behavior_hideable="true"
     app:behavior_peekHeight="@dimen/okt_routes_bottom_sheet_peek_height"

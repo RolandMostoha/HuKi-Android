@@ -139,12 +139,13 @@ class LayersViewModelTest {
     fun `Given file URI, when loadGpx, then gpx details UI model is emitted`() =
         runTestDefault {
             coEvery { layersRepository.getGpxDetails(gpxFileUri) } returns DEFAULT_GPX_DETAILS
+            coEvery { settingsRepository.isGpxSlopeColoringEnabled() } returns flowOf(true)
 
             viewModel.loadGpx(gpxFileUri)
 
             viewModel.gpxDetailsUiModel.test {
                 assertThat(awaitItem()).isNull()
-                assertThat(awaitItem()).isEqualTo(layersUiModelMapper.mapGpxDetails(DEFAULT_GPX_DETAILS))
+                assertThat(awaitItem()).isEqualTo(layersUiModelMapper.mapGpxDetails(DEFAULT_GPX_DETAILS, true))
             }
         }
 

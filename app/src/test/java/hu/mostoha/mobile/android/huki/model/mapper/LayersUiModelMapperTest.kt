@@ -24,6 +24,7 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_OPEN
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
+import hu.mostoha.mobile.android.huki.util.calculateDirectionArrows
 import io.mockk.mockk
 import org.junit.Test
 import org.osmdroid.util.BoundingBox
@@ -360,8 +361,9 @@ class LayersUiModelMapperTest {
     @Test
     fun `Given GPX details, when mapGpxDetails, then GPX Details UI model returns`() {
         val gpxDetails = DEFAULT_GPX_DETAILS
+        val useSlopeColors = true
 
-        val gpxDetailsUiModel = mapper.mapGpxDetails(gpxDetails)
+        val gpxDetailsUiModel = mapper.mapGpxDetails(gpxDetails, useSlopeColors)
 
         assertThat(gpxDetailsUiModel).isEqualTo(
             GpxDetailsUiModel(
@@ -376,9 +378,10 @@ class LayersUiModelMapperTest {
                     ),
                     WaypointUiModel(
                         geoPoint = gpxDetails.locations.first().toGeoPoint(),
-                        waypointType = WaypointType.END,
+                        waypointType = WaypointType.ROUND_TRIP,
                     )
                 ),
+                arrowGeoPoints = calculateDirectionArrows(gpxDetailsUiModel.geoPoints),
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomain(),
@@ -390,7 +393,8 @@ class LayersUiModelMapperTest {
                     uphillText = DistanceFormatter.format(gpxDetails.incline),
                     downhillText = DistanceFormatter.format(gpxDetails.decline),
                 ),
-                isVisible = true
+                isVisible = true,
+                useSlopeColors = useSlopeColors,
             )
         )
     }
@@ -398,8 +402,9 @@ class LayersUiModelMapperTest {
     @Test
     fun `Given GPX details with open route, when mapGpxDetails, then GPX Details UI model returns`() {
         val gpxDetails = DEFAULT_GPX_DETAILS_OPEN
+        val useSlopeColors = false
 
-        val gpxDetailsUiModel = mapper.mapGpxDetails(gpxDetails)
+        val gpxDetailsUiModel = mapper.mapGpxDetails(gpxDetails, useSlopeColors)
 
         assertThat(gpxDetailsUiModel).isEqualTo(
             GpxDetailsUiModel(
@@ -421,6 +426,7 @@ class LayersUiModelMapperTest {
                         waypointType = WaypointType.END,
                     )
                 ),
+                arrowGeoPoints = calculateDirectionArrows(gpxDetailsUiModel.geoPoints),
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomain(),
@@ -432,7 +438,8 @@ class LayersUiModelMapperTest {
                     uphillText = DistanceFormatter.format(gpxDetails.incline),
                     downhillText = DistanceFormatter.format(gpxDetails.decline),
                 ),
-                isVisible = true
+                isVisible = true,
+                useSlopeColors = useSlopeColors
             )
         )
     }
@@ -440,8 +447,9 @@ class LayersUiModelMapperTest {
     @Test
     fun `Given GPX details without altitude range, when mapGpxDetails, then GPX Details UI model with null altitude UI model returns`() {
         val gpxDetails = DEFAULT_GPX_DETAILS.copy(altitudeRange = 0 to 0)
+        val useSlopeColors = true
 
-        val gpxDetailsUiModel = mapper.mapGpxDetails(gpxDetails)
+        val gpxDetailsUiModel = mapper.mapGpxDetails(gpxDetails, useSlopeColors)
 
         assertThat(gpxDetailsUiModel).isEqualTo(
             GpxDetailsUiModel(
@@ -456,16 +464,18 @@ class LayersUiModelMapperTest {
                     ),
                     WaypointUiModel(
                         geoPoint = gpxDetails.locations.first().toGeoPoint(),
-                        waypointType = WaypointType.END,
+                        waypointType = WaypointType.ROUND_TRIP,
                     )
                 ),
+                arrowGeoPoints = calculateDirectionArrows(gpxDetailsUiModel.geoPoints),
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomain(),
                 travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
                 altitudeUiModel = null,
-                isVisible = true
+                isVisible = true,
+                useSlopeColors = useSlopeColors
             )
         )
     }
@@ -505,6 +515,7 @@ class LayersUiModelMapperTest {
                     waypointType = WaypointType.INTERMEDIATE
                 )
             ),
+            arrowGeoPoints = emptyList(),
             geoPoints = DEFAULT_GPX_WAY_CLOSED.map { GeoPoint(it.first, it.second) },
             boundingBox = BoundingBox
                 .fromGeoPoints(DEFAULT_GPX_WAY_CLOSED.map { GeoPoint(it.first, it.second) })
@@ -512,7 +523,8 @@ class LayersUiModelMapperTest {
             travelTimeText = Message.Text("02:00"),
             distanceText = Message.Res(R.string.default_distance_template_m, listOf(5)),
             altitudeUiModel = null,
-            isVisible = true
+            isVisible = true,
+            useSlopeColors = true,
         )
     }
 

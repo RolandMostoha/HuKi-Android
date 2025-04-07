@@ -42,7 +42,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mapInfoWindowNavigationButton"
-            style="@style/DefaultButton.IconOnly.ExtraSmall"
+            style="@style/DefaultButton.IconOnly.ExtraTiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_gpx_info_window_navigation"

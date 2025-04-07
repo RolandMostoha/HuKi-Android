@@ -1,22 +1,34 @@
 package hu.mostoha.mobile.android.huki.ui.home.gpx
 
-import android.net.Uri
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.net.toUri
+import androidx.core.widget.TextViewCompat
+import androidx.transition.TransitionManager
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.databinding.ItemGpxDetailsSlopeRowBinding
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetGpxDetailsBinding
+import hu.mostoha.mobile.android.huki.databinding.ViewGpxDetailsSlopePopupBinding
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuActionItem
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
+import hu.mostoha.mobile.android.huki.extensions.inflater
+import hu.mostoha.mobile.android.huki.extensions.setDrawableStart
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.shareFile
 import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.extensions.startGoogleMapsDirectionsIntent
+import hu.mostoha.mobile.android.huki.extensions.switchVisibility
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
+import hu.mostoha.mobile.android.huki.util.SLOPE_ROWS
+import hu.mostoha.mobile.android.huki.util.color
+import hu.mostoha.mobile.android.huki.util.colorStateList
+import hu.mostoha.mobile.android.huki.util.getSlopeGradientDrawable
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
 class GpxDetailsBottomSheetDialog(
@@ -30,15 +42,25 @@ class GpxDetailsBottomSheetDialog(
         onStartClick: () -> Unit,
         onHideClick: () -> Unit,
         onCommentsButtonClick: () -> Unit,
+        onReverseSwitched: (Boolean) -> Unit,
+        onSlopeColorSwitched: (Boolean) -> Unit,
     ) {
         with(binding) {
             val hasAltitudeValues = gpxDetails.altitudeUiModel != null
             val hasWaypointsOnly = gpxDetails.geoPoints.isEmpty() && gpxDetails.waypoints.isNotEmpty()
             val hasWaypointsComments = gpxDetails.waypoints.any { it.name != null || it.description != null }
+            val useSlopeColors = gpxDetails.useSlopeColors
 
             gpxDetailsPrimaryText.text = gpxDetails.name
 
-            gpxDetailsAltitudeRangeContainer.visibleOrGone(hasAltitudeValues)
+            gpxDetailsSlopeRangeContainer.visibleOrGone(hasAltitudeValues && useSlopeColors && !hasWaypointsOnly)
+            gpxDetailsSlopeRangeContainer.setOnClickListener {
+                showSlopeExplanationPopup()
+            }
+
+            gpxDetailsSettingsSlopeSwitch.visibleOrGone(hasAltitudeValues)
+            gpxDetailsSettingsSlopeSwitch.isChecked = useSlopeColors
+
             with(gpxDetailsRouteAttributesContainer) {
                 routeAttributesTimeText.setMessageOrGone(gpxDetails.travelTimeText)
                 routeAttributesDistanceText.setMessageOrGone(gpxDetails.distanceText)
@@ -59,8 +81,21 @@ class GpxDetailsBottomSheetDialog(
                 )
             }
 
-            gpxDetailsAltitudeRangeStartText.setMessageOrGone(gpxDetails.altitudeUiModel?.minAltitudeText)
-            gpxDetailsAltitudeRangeEndText.setMessageOrGone(gpxDetails.altitudeUiModel?.maxAltitudeText)
+            gpxDetailsSettingsButton.setOnClickListener {
+                TransitionManager.beginDelayedTransition(binding.root.parent as ViewGroup)
+                gpxDetailsSettingsContainer.switchVisibility()
+            }
+
+            gpxDetailsSettingsSlopeSwitch.setOnCheckedChangeListener { _, isChecked ->
+                TransitionManager.beginDelayedTransition(binding.root.parent as ViewGroup)
+                gpxDetailsSlopeRangeContainer.switchVisibility()
+                onSlopeColorSwitched.invoke(isChecked)
+            }
+            gpxDetailsSettingsReverseSwitch.setOnCheckedChangeListener { _, isChecked ->
+                onReverseSwitched.invoke(isChecked)
+            }
+
+            gpxDetailsAltitudeRangeView.background = getSlopeGradientDrawable(context)
 
             gpxDetailsCloseButton.setOnClickListener {
                 onCloseClick.invoke()
@@ -90,9 +125,33 @@ class GpxDetailsBottomSheetDialog(
             }
             gpxDetailsShareButton.setOnClickListener {
                 analyticsService.gpxDetailsShareClicked()
-                context.shareFile(Uri.parse(gpxDetails.fileUri))
+                context.shareFile(gpxDetails.fileUri.toUri())
             }
         }
+    }
+
+    private fun showSlopeExplanationPopup() {
+        context.showPopupMenu(
+            anchorView = binding.root,
+            actionItems = emptyList(),
+            width = R.dimen.default_popup_menu_width_with_header,
+            showAtCenter = true,
+            headerTitle = R.string.gpx_slope_explanation_title.toMessage(),
+            footerView = ViewGpxDetailsSlopePopupBinding.inflate(context.inflater, null, false).apply {
+                SLOPE_ROWS.forEach {
+                    gpxDetailsSlopeTable.addView(
+                        ItemGpxDetailsSlopeRowBinding.inflate(context.inflater, this.root, false).apply {
+                            TextViewCompat.setCompoundDrawableTintList(
+                                gpxDetailsSlopeTitle, it.color.color(context).colorStateList()
+                            )
+                            gpxDetailsSlopeTitle.setDrawableStart(R.drawable.ic_slope_explanation_color)
+                            gpxDetailsSlopeTitle.setMessage(it.title)
+                            gpxDetailsSlopeDescription.setMessage(it.description)
+                        }.root
+                    )
+                }
+            }.root
+        )
     }
 
     private fun showNavigationPopupMenu(anchorView: View, gpxDetails: GpxDetailsUiModel) {

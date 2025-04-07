@@ -49,6 +49,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun updateIsGpxSlopeColoringEnabled(isEnabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.saveGpxSlopeColoringEnabled(isEnabled)
+        }
+    }
+
     fun updateNewFeaturesSeen(version: String) {
         viewModelScope.launch {
             versionConfiguration.saveNewFeaturesSeen(version)

@@ -13,6 +13,8 @@ import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import hu.mostoha.mobile.android.huki.extensions.isDarkMode
+import hu.mostoha.mobile.android.huki.model.domain.Location
+import kotlin.math.absoluteValue
 
 const val DARK_MODE_HIKING_LAYER_BRIGHTNESS = 0.85f
 
@@ -115,10 +117,68 @@ fun getGradientColors(
     val max = scalars.max()
 
     return scalars.map { scalar ->
-        val weight = linearInterpolation(min, max, 0f, scalar)
+        val weight = linearInterpolation(min, max, scalar)
 
         ColorUtils.blendARGB(startColor, endColor, weight)
     }
+}
+
+fun getSlopeGradientColors(
+    locations: List<Location>,
+    midSlope: Double,
+    highSlope: Double,
+    @ColorInt negativeSlopeColorHigh: Int,
+    @ColorInt negativeSlopeColorMid: Int,
+    @ColorInt zeroSlopeColor: Int,
+    @ColorInt positiveSlopeColorMid: Int,
+    @ColorInt positiveSlopeColorHigh: Int,
+): List<Int> {
+    val colors = mutableListOf<Int>()
+
+    for (i in 0 until locations.size - 1) {
+        val slope = calculateSlope(locations[i], locations[i + 1])
+        colors.add(
+            when {
+                slope in 0.0..midSlope -> {
+                    ColorUtils.blendARGB(
+                        zeroSlopeColor,
+                        positiveSlopeColorMid,
+                        linearInterpolation(0f, midSlope.toFloat(), slope.toFloat())
+                    )
+                }
+                slope in midSlope..highSlope -> {
+                    ColorUtils.blendARGB(
+                        positiveSlopeColorMid,
+                        positiveSlopeColorHigh,
+                        linearInterpolation(midSlope.toFloat(), highSlope.toFloat(), slope.toFloat())
+                    )
+                }
+                slope > highSlope -> {
+                    positiveSlopeColorHigh
+                }
+                slope in (-1 * midSlope)..0.0 -> {
+                    ColorUtils.blendARGB(
+                        zeroSlopeColor,
+                        negativeSlopeColorMid,
+                        linearInterpolation(0f, midSlope.toFloat(), slope.toFloat().absoluteValue)
+                    )
+                }
+                slope in (-1 * highSlope)..(-1 * midSlope) -> {
+                    ColorUtils.blendARGB(
+                        negativeSlopeColorMid,
+                        negativeSlopeColorHigh,
+                        linearInterpolation(midSlope.toFloat(), highSlope.toFloat(), slope.toFloat().absoluteValue)
+                    )
+                }
+                slope < (-1 * highSlope) -> {
+                    negativeSlopeColorHigh
+                }
+                else -> zeroSlopeColor
+            }
+        )
+    }
+
+    return colors
 }
 
 @Suppress("MagicNumber")

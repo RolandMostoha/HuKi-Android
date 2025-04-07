@@ -16,6 +16,7 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
+import hu.mostoha.mobile.android.huki.util.calculateDirectionArrows
 import hu.mostoha.mobile.android.huki.util.isCloseWithThreshold
 import org.osmdroid.util.BoundingBox
 import javax.inject.Inject
@@ -81,7 +82,7 @@ class LayersUiModelMapper @Inject constructor() {
         )
     }
 
-    fun mapGpxDetails(gpxDetails: GpxDetails): GpxDetailsUiModel {
+    fun mapGpxDetails(gpxDetails: GpxDetails, useSlopeColors: Boolean): GpxDetailsUiModel {
         val geoPoints = gpxDetails.locations.map { it.toGeoPoint() }
 
         val edgeWaypoints = if (geoPoints.size >= 2) {
@@ -91,7 +92,7 @@ class LayersUiModelMapper @Inject constructor() {
                 listOf(
                     WaypointUiModel(
                         startLocation.toGeoPoint(),
-                        waypointType = WaypointType.END,
+                        waypointType = WaypointType.ROUND_TRIP,
                     )
                 )
             } else {
@@ -125,6 +126,7 @@ class LayersUiModelMapper @Inject constructor() {
             name = gpxDetails.fileName,
             geoPoints = geoPoints,
             waypoints = gpxWaypoints + edgeWaypoints,
+            arrowGeoPoints = calculateDirectionArrows(geoPoints),
             boundingBox = if (geoPoints.size >= 2) {
                 BoundingBox.fromGeoPoints(geoPoints).toDomain()
             } else {
@@ -150,6 +152,7 @@ class LayersUiModelMapper @Inject constructor() {
             } else {
                 null
             },
+            useSlopeColors = useSlopeColors,
             isVisible = true
         )
     }

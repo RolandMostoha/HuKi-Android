@@ -92,13 +92,19 @@
         <item name="iconSize">@dimen/icon_size_medium</item>
     </style>
 
-    <style name="DefaultButton.IconOnly.Small">
+    <style name="DefaultButton.IconOnly.ExtraSmall">
+        <item name="android:minWidth">@dimen/default_icon_only_button_size_small</item>
+        <item name="android:minHeight">@dimen/default_icon_only_button_size_small</item>
+        <item name="iconSize">@dimen/icon_size_extra_small</item>
+    </style>
+
+    <style name="DefaultButton.IconOnly.Tiny">
         <item name="android:minWidth">@dimen/default_icon_only_button_size_small</item>
         <item name="android:minHeight">@dimen/default_icon_only_button_size_small</item>
         <item name="iconSize">@dimen/icon_size_tiny</item>
     </style>
 
-    <style name="DefaultButton.IconOnly.ExtraSmall">
+    <style name="DefaultButton.IconOnly.ExtraTiny">
         <item name="android:minWidth">@dimen/default_icon_only_button_size_extra_small</item>
         <item name="android:minHeight">@dimen/default_icon_only_button_size_extra_small</item>
         <item name="iconSize">@dimen/icon_size_extra_tiny</item>
@@ -190,6 +196,12 @@
         <item name="android:layout_width">28dp</item>
         <item name="android:layout_height">5dp</item>
         <item name="android:background">@drawable/background_drag_view</item>
+    </style>
+
+    <style name="DefaultSeparatorStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/colorStroke</item>
     </style>
 
     <style name="DefaultDashedDivider">

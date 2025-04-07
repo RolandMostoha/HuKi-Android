@@ -6,6 +6,7 @@
     <color name="colorLauncherDebug">#e64a19</color>
 
     <color name="colorPrimaryExtraLight">#EAF9E6</color>
+    <color name="colorPrimaryLight">#89dd72</color>
     <color name="colorPrimary">#2e7d32</color>
     <color name="colorPrimaryStrong">#2c7730</color>
     <color name="colorOnPrimary">#ffffff</color>
@@ -34,12 +35,19 @@
     <color name="colorPolyline">#DE296b2c</color>
     <color name="colorPolylineBorder">#fff</color>
     <color name="colorPolygonFill">#DE296b2c</color>
-    <color name="colorPolylineHigh">#ee6002</color>
+    <color name="colorSlopeZero">#3e9a25</color>
+    <color name="colorSlopePositiveMid">#f0b800</color>
+    <color name="colorSlopePositiveHigh">#D50001</color>
+    <color name="colorSlopeNegativeMid">#2096F3</color>
+    <color name="colorSlopeNegativeHigh">#063d68</color>
+    <color name="colorPopupMenuIcon">@color/colorPrimary</color>
     <color name="colorCopyright">#B3262626</color>
     <color name="colorScaleDarkMap">#2A2A2A</color>
     <color name="colorStrokeGpxMarker">@color/colorStrokeMarker</color>
     <color name="colorFillGpxStartMarker">@color/colorPrimary</color>
     <color name="colorIconGpxStartMarker">@color/colorStrokeMarker</color>
+    <color name="colorIconGpxDirectionStroke">@android:color/black</color>
+    <color name="colorIconGpxDirectionFill">@color/colorStrokeMarker</color>
     <color name="colorStrokeHikingRouteMarker">@color/colorPrimaryIcon</color>
     <color name="colorFillHikingRouteMarker">@color/colorStrokeMarker</color>
     <color name="colorIconLandscapeMarker">@color/colorStrokeMarker</color>

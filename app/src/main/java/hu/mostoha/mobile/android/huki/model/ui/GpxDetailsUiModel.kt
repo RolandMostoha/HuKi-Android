@@ -9,9 +9,11 @@ data class GpxDetailsUiModel(
     val name: String,
     val geoPoints: List<GeoPoint>,
     val waypoints: List<WaypointUiModel>,
+    val arrowGeoPoints: List<Pair<GeoPoint, Int>>,
     val boundingBox: BoundingBox,
     val travelTimeText: Message.Text?,
     val distanceText: Message.Res?,
     val altitudeUiModel: AltitudeUiModel?,
+    val useSlopeColors: Boolean,
     val isVisible: Boolean
 )

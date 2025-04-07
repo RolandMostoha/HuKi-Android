@@ -89,7 +89,7 @@ class OktRoutesAdapter(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.okt_routes_menu_action_start_point,
-                        iconId = R.drawable.ic_okt_routes_action_points
+                        iconId = R.drawable.ic_popup_menu_google_maps_start
                     ),
                     onClick = {
                         onEdgePointClick.invoke(
@@ -101,7 +101,7 @@ class OktRoutesAdapter(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.okt_routes_menu_action_end_point,
-                        iconId = R.drawable.ic_okt_routes_action_points
+                        iconId = R.drawable.ic_popup_menu_google_maps_end
                     ),
                     onClick = {
                         onEdgePointClick.invoke(

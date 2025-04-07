@@ -104,6 +104,7 @@ class WaypointAdapter(
                     routePlannerDashedDividerBottom.invisible()
                     routePlannerWaypointImage.setImageResource(R.drawable.ic_route_planner_waypoint_end)
                 }
+                else -> Unit
             }
         }
 

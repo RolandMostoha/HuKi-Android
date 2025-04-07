@@ -47,7 +47,7 @@ val OVERLAY_TYPE_ORDER_MAP = mapOf(
         Polyline::class,
         Polygon::class
     ),
-    OverlayType.GPX to listOf(GpxMarker::class, GpxPolyline::class),
+    OverlayType.GPX to listOf(GpxMarker::class, GpxPolyline::class, GpxArrowMarker::class),
     OverlayType.ROUTE_PLANNER to listOf(RoutePlannerMarker::class, RoutePlannerPolyline::class),
     OverlayType.MAP_TOUCH_EVENTS to listOf(MapEventsOverlay::class),
     OverlayType.LOCATION_PICKER to listOf(LocationPickerMarker::class),

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackground"
+    android:descendantFocusability="beforeDescendants"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/space_large"
+    android:paddingVertical="@dimen/space_medium">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/popupMenuFooterTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/gpx_slope_explanation_message"
+        android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall" />
+
+    <TableLayout
+        android:id="@+id/gpxDetailsSlopeTable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_large"
+        android:stretchColumns="1">
+
+        <TableRow>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/space_small"
+                android:text="@string/gpx_slope_explanation_slope_column_title"
+                android:textAppearance="@style/DefaultTextAppearance.Bold.ExtraSmall" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/space_small"
+                android:text="@string/gpx_slope_explanation_desc_column_title"
+                android:textAppearance="@style/DefaultTextAppearance.Bold.ExtraSmall" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <View
+                style="@style/DefaultSeparatorStyle"
+                android:layout_marginTop="@dimen/space_medium"
+                android:layout_marginBottom="@dimen/space_small"
+                android:layout_span="2" />
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

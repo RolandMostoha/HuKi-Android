@@ -69,14 +69,27 @@
     <string name="home_bottom_sheet_landscape_secondary">Tájegység</string>
 
     <string name="gpx_details_bottom_sheet_start_button">Indulás</string>
-    <string name="gpx_details_bottom_sheet_google_maps_header">Google Maps Navigáció</string>
+    <string name="gpx_details_bottom_sheet_google_maps_header">Google Maps</string>
     <string name="gpx_details_bottom_sheet_google_maps_start">Kezdőponthoz</string>
     <string name="gpx_details_bottom_sheet_google_maps_end">Végponthoz</string>
     <string name="gpx_details_bottom_sheet_waypoints_only_counter_template">%d állomás</string>
+    <string name="gpx_details_settings_slope_coloring">Meredekségi színezés</string>
+    <string name="gpx_details_settings_reverse_direction">GPX irány megfordítása</string>
     <string name="gpx_details_accessibility_visibility">GPX elrejtése</string>
     <string name="gpx_details_accessibility_comments">Megjegyzések</string>
     <string name="gpx_details_accessibility_google_maps">Google Maps Navigáció</string>
     <string name="gpx_details_accessibility_share">GPX megosztása</string>
+    <string name="gpx_details_accessibility_settings">Beállítások</string>
+
+    <string name="gpx_slope_explanation_title">Meredekség</string>
+    <string name="gpx_slope_explanation_message">Egy 25%%-os emelkedő azt jelenti, hogy 100 méteren 25 métert emelkedik a terep.</string>
+    <string name="gpx_slope_explanation_slope_column_title">Szint</string>
+    <string name="gpx_slope_explanation_desc_column_title">Nehézség</string>
+    <string name="gpx_slope_explanation_negative_high_desc">Meredek lejtő</string>
+    <string name="gpx_slope_explanation_negative_mid_desc">Közepes lejtő</string>
+    <string name="gpx_slope_explanation_zero_desc">Közel sík terep</string>
+    <string name="gpx_slope_explanation_positive_mid_desc">Közepes emelkedő</string>
+    <string name="gpx_slope_explanation_positive_high_desc">Meredek emelkedő</string>
 
     <string name="my_location_rationale_title">Helyadatok engedélyezése</string>
     <string name="my_location_rationale_message">Az aktuális pozíció megjelenítéséhez szükséges az engedély!</string>

@@ -19,12 +19,12 @@
     <color name="colorMapOverlayStroke">@color/colorStrokeMarker</color>
     <color name="colorStrokeMarker">#000</color>
     <color name="colorStrokeMarkerDark">@color/colorStrokeMarker</color>
+    <color name="colorIconGpxDirectionFill">@color/colorFillGpxStartMarker</color>
     <color name="colorDivider">#61919191</color>
     <color name="colorMarker">@color/colorPrimary</color>
     <color name="colorPolyline">@color/colorPrimary</color>
     <color name="colorPolylineBorder">#000</color>
     <color name="colorPolygonFill">#DE6BBA6F</color>
-    <color name="colorPolylineHigh">#ee6002</color>
     <color name="colorCopyright">#61ffffff</color>
     <color name="colorStrokeGpxMarker">#000</color>
     <color name="colorFillGpxStartMarker">#DEDEDE</color>

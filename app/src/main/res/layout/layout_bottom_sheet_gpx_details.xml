@@ -5,8 +5,9 @@
     style="@style/DefaultBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/space_medium"
     app:behavior_hideable="true"
     app:layout_insetEdge="bottom">
 
@@ -51,38 +52,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/space_small" />
+        android:layout_marginTop="@dimen/space_small"
+        android:layout_marginBottom="@dimen/space_small" />
 
     <LinearLayout
-        android:id="@+id/gpxDetailsAltitudeRangeContainer"
+        android:id="@+id/gpxDetailsSlopeRangeContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/space_large"
-        android:layout_marginTop="@dimen/space_large"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_extra_large"
+        android:paddingVertical="@dimen/space_medium">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gpxDetailsAltitudeRangeStartText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
-            tools:text="300 m" />
+            android:text="@string/gpx_details_slope_range_min"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small" />
 
         <View
             android:id="@+id/gpxDetailsAltitudeRangeView"
             android:layout_width="0dp"
             android:layout_height="@dimen/gpx_details_altitude_range_view_height"
             android:layout_marginHorizontal="@dimen/space_medium"
-            android:layout_weight="1"
-            android:background="@drawable/background_gpx_details_altitude_range" />
+            android:layout_weight="1" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gpxDetailsAltitudeRangeEndText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
-            tools:text="800 m" />
+            android:text="@string/gpx_details_slope_range_max"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small" />
 
     </LinearLayout>
 
@@ -91,7 +93,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginTop="@dimen/space_small"
+        android:layout_marginBottom="@dimen/space_medium"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:paddingHorizontal="@dimen/space_extra_large"
@@ -143,11 +146,48 @@
                 style="@style/DefaultButton.IconOnly.Stroked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_large"
                 android:contentDescription="@string/gpx_details_accessibility_share"
                 app:icon="@drawable/ic_gpx_share" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/gpxDetailsSettingsButton"
+                style="@style/DefaultButton.IconOnly.Stroked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/gpx_details_accessibility_share"
+                app:icon="@drawable/ic_home_fab_settings" />
 
         </LinearLayout>
 
     </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/gpxDetailsSettingsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBackgroundLight"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_extra_extra_large"
+        android:paddingVertical="@dimen/space_small"
+        android:visibility="gone">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/gpxDetailsSettingsSlopeSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/gpx_details_settings_slope_coloring"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/gpxDetailsSettingsReverseSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/gpx_details_settings_reverse_direction"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+    </LinearLayout>
 
 </LinearLayout>

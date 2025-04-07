@@ -23,6 +23,10 @@ open class BottomSheetDialog(binding: ViewBinding) {
         bottomSheetBehavior.collapse()
     }
 
+    fun isExpanded(): Boolean {
+        return bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
+    }
+
     fun addStateListener(onExpanded: (Int) -> Unit) {
         bottomSheetBehavior.addBottomSheetCallback(
             object : BottomSheetBehavior.BottomSheetCallback() {

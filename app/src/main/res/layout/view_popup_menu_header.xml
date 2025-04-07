@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@color/colorBackgroundLight"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <!-- Header text -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/popupMenuHeaderTitle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:layout_weight="1"
         android:paddingHorizontal="@dimen/space_extra_large"
         android:paddingVertical="@dimen/space_large"
         android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
-        android:textColor="@color/colorOnPrimary"
         tools:text="Google Maps Navigation" />
+
+    <!-- Close button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/popupMenuHeaderCloseButton"
+        style="@style/DefaultButton.IconOnly.Tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_small"
+        app:icon="@drawable/ic_bottom_sheet_clear"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </LinearLayout>

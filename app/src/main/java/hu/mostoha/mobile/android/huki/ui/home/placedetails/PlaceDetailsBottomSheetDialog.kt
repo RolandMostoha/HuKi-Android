@@ -2,7 +2,9 @@ package hu.mostoha.mobile.android.huki.ui.home.placedetails
 
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceDetailsBinding
+import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuFooterBinding
 import hu.mostoha.mobile.android.huki.extensions.gone
+import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
@@ -55,11 +57,14 @@ class PlaceDetailsBottomSheetDialog(
                                 width = R.dimen.default_popup_menu_width_with_header,
                                 showAtCenter = true,
                                 headerTitle = R.string.osm_data_popup_title.toMessage(),
-                                footerMessage = R.string.place_details_osm_id_template
-                                    .toMessage(listOf(placeUiModel.osmId))
-                                    .resolve(context)
-                                    .plus(placeUiModel.osmTags)
-                                    .toMessage()
+                                footerView = ViewPopupMenuFooterBinding.inflate(context.inflater, null, false).apply {
+                                    popupMenuFooterTitle.text = R.string.place_details_osm_id_template
+                                        .toMessage(listOf(placeUiModel.osmId))
+                                        .resolve(context)
+                                        .plus(placeUiModel.osmTags)
+                                        .toMessage()
+                                        .resolve(context)
+                                }.root,
                             )
                         } else {
                             analyticsService.allOsmDataClicked()

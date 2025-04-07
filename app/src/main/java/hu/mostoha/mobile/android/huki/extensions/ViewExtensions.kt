@@ -25,7 +25,19 @@ fun View.invisible() {
 }
 
 fun View.visibleOrGone(visible: Boolean) {
-    if (visible) visible() else gone()
+    if (visible) {
+        visible()
+    } else {
+        gone()
+    }
+}
+
+fun View.switchVisibility() {
+    if (this.isVisible) {
+        gone()
+    } else {
+        visible()
+    }
 }
 
 fun ImageView.setImageOrGone(@DrawableRes imageResId: Int?) {

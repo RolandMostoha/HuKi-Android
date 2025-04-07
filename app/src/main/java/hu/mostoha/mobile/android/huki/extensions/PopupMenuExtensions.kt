@@ -9,7 +9,6 @@ import com.skydoves.powermenu.CustomPowerMenu
 import com.skydoves.powermenu.MenuAnimation
 import com.skydoves.powermenu.OnMenuItemClickListener
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuFooterBinding
 import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuHeaderBinding
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.resolve
@@ -22,7 +21,7 @@ fun Context.showPopupMenu(
     showBackground: Boolean = true,
     showAtCenter: Boolean = false,
     headerTitle: Message? = null,
-    footerMessage: Message? = null,
+    footerView: View? = null,
 ) {
     val powerMenu = CustomPowerMenu.Builder(this, PopupMenuAdapter())
         .addItemList(
@@ -52,13 +51,14 @@ fun Context.showPopupMenu(
     if (headerTitle != null) {
         val headerView = ViewPopupMenuHeaderBinding.inflate(inflater, null, false)
         headerView.popupMenuHeaderTitle.text = headerTitle.resolve(this)
+        headerView.popupMenuHeaderCloseButton.setOnClickListener {
+            powerMenu.dismiss()
+        }
         powerMenu.headerView = headerView.root
     }
 
-    if (footerMessage != null) {
-        val footerView = ViewPopupMenuFooterBinding.inflate(inflater, null, false)
-        footerView.popupMenuFooterTitle.text = footerMessage.resolve(this)
-        powerMenu.footerView = footerView.root
+    if (footerView != null) {
+        powerMenu.footerView = footerView
     }
 
     if (showAtCenter) {

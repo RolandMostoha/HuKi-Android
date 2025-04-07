@@ -67,13 +67,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/routePlannerWaypointCommentButton"
-        style="@style/DefaultButton.IconOnly.Small"
+        style="@style/DefaultButton.IconOnly.Tiny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/routePlannerWaypointRemoveButton"
-        style="@style/DefaultButton.IconOnly.Small"
+        style="@style/DefaultButton.IconOnly.Tiny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:icon="@drawable/ic_input_clear" />
