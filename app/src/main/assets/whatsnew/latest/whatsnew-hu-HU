@@ -1,5 +1,6 @@
-- Új: útvonaltervező állomáshoz megjegyzést lehet fűzni
-- A mentett GPX-be bekerülnek az állomások is
-- A GPX panelen a megjegyzések ki-be kapcsolhatók
-- Útvonaltervező design és használhatósági javítások
-- A tervezőben több állomást átugorva is lehet cserélni
+A GPX színezése mostmár meredekség alapján történik, így jobban becsülhető a túra nehézsége.
+Piros: emelkedő
+Zöld: közel sík terep
+Kék: lejtő
+- A GPX track irányát mostmár nyilak jelzik
+- A GPX track iránya megfordítható

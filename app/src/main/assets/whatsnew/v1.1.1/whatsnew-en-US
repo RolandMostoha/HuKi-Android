@@ -1,0 +1,5 @@
+- New: add comments to route planner waypoints
+- Waypoints and comments are included in the saved GPX
+- All comments can be turned on and off in the GPX panel
+- The planner panel grows dynamically
+- You can now switch multiple waypoints in the planner
