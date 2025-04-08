@@ -510,6 +510,10 @@ fun MapView.addGpxPolyline(
             isFlat = true
             isClickable = false
             infoWindow = null
+            setOnMarkerClickListener { _, _ ->
+                onClick.invoke(polyline)
+                true
+            }
         }
         addOverlay(directionMarker, OverlayComparator)
     }

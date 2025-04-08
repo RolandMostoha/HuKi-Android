@@ -30,6 +30,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxArrowMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
@@ -56,6 +57,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
@@ -322,6 +324,7 @@ class GpxDetailsUiTest {
             R.id.homeGpxDetailsBottomSheetContainer.isDisplayed()
             R.id.homeMapView.hasOverlayCount<GpxMarker>(6)
             R.id.homeMapView.hasOverlayCount<GpxPolyline>(1)
+            R.id.homeMapView.hasOverlay<GpxArrowMarker>()
         }
     }
 
@@ -389,6 +392,31 @@ class GpxDetailsUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
             R.id.gpxDetailsGoogleMapsButton.click()
+        }
+    }
+
+    @Test
+    fun givenGpxFile_whenGpxSettingsClickedWithChanges_thenGpxUpdates() {
+        launchScenario<HomeActivity> {
+            R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
+
+            val activityResult = getTestGpxFileResult(TEST_GPX_NAME)
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(activityResult)
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+            R.id.gpxDetailsActionButtonContainer.swipeLeft()
+
+            R.id.gpxDetailsSettingsButton.click()
+
+            R.id.gpxDetailsSettingsContainer.isDisplayed()
+            R.id.gpxDetailsSettingsSlopeSwitch.isDisplayed()
+            R.id.gpxDetailsSettingsReverseSwitch.isDisplayed()
+
+            R.id.gpxDetailsSettingsSlopeSwitch.click()
+            R.id.gpxDetailsSettingsReverseSwitch.click()
+            R.id.homeMapView.hasOverlayCount<GpxPolyline>(1)
+            R.id.homeMapView.hasOverlayCount<GpxArrowMarker>(13)
         }
     }
 

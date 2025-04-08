@@ -46,8 +46,8 @@
     <color name="colorStrokeGpxMarker">@color/colorStrokeMarker</color>
     <color name="colorFillGpxStartMarker">@color/colorPrimary</color>
     <color name="colorIconGpxStartMarker">@color/colorStrokeMarker</color>
-    <color name="colorIconGpxDirectionStroke">@android:color/black</color>
-    <color name="colorIconGpxDirectionFill">@color/colorStrokeMarker</color>
+    <color name="colorIconGpxDirectionStroke">@color/colorStrokeMarker</color>
+    <color name="colorIconGpxDirectionFill">@android:color/black</color>
     <color name="colorStrokeHikingRouteMarker">@color/colorPrimaryIcon</color>
     <color name="colorFillHikingRouteMarker">@color/colorStrokeMarker</color>
     <color name="colorIconLandscapeMarker">@color/colorStrokeMarker</color>

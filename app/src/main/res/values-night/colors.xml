@@ -19,6 +19,7 @@
     <color name="colorMapOverlayStroke">@color/colorStrokeMarker</color>
     <color name="colorStrokeMarker">#000</color>
     <color name="colorStrokeMarkerDark">@color/colorStrokeMarker</color>
+    <color name="colorIconGpxDirectionStroke">@android:color/black</color>
     <color name="colorIconGpxDirectionFill">@color/colorFillGpxStartMarker</color>
     <color name="colorDivider">#61919191</color>
     <color name="colorMarker">@color/colorPrimary</color>

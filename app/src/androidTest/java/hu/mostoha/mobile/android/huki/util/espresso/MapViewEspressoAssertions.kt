@@ -79,9 +79,11 @@ inline fun <reified T : Overlay> hasOverlayCountMatcher(count: Int): BoundedMatc
         override fun matchesSafely(mapView: MapView?): Boolean {
             if (mapView == null) return false
 
-            return mapView.overlays
+            val overlayCount = mapView.overlays
                 .filterIsInstance<T>()
-                .size == count
+                .size
+
+            return overlayCount == count
         }
 
         override fun describeTo(description: Description) {

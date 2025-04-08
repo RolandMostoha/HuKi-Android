@@ -76,12 +76,12 @@ fun calculateDirectionArrows(geoPoints: List<GeoPoint>): List<Pair<GeoPoint, Int
 
     val totalDistance = geoPoints.toLocations().calculateDistance()
     val arrowDistance = when {
-        totalDistance < 2_000 -> 50
-        totalDistance < 5_000 -> 100
-        totalDistance < 10_000 -> 300
-        totalDistance < 20_000 -> 500
-        totalDistance < 50_000 -> 1_000
-        else -> 2_000
+        totalDistance < 2_000 -> 200
+        totalDistance < 5_000 -> 400
+        totalDistance < 10_000 -> 800
+        totalDistance < 20_000 -> 1_000
+        totalDistance < 50_000 -> 2_000
+        else -> 3_000
     }
 
     val arrows = geoPoints.mapIndexedNotNull { index, geoPoint ->
@@ -96,6 +96,10 @@ fun calculateDirectionArrows(geoPoints: List<GeoPoint>): List<Pair<GeoPoint, Int
         Triple(geoPoint, bearing, distance)
     }
 
+    if (arrows.isEmpty()) {
+        return emptyList()
+    }
+
     val distributedArrows = mutableListOf<Pair<GeoPoint, Int>>()
     var accumulatedDistance = 0
 
@@ -104,10 +108,13 @@ fun calculateDirectionArrows(geoPoints: List<GeoPoint>): List<Pair<GeoPoint, Int
 
     for (arrow in arrows) {
         accumulatedDistance += arrow.third
+
         if (accumulatedDistance >= arrowDistance) {
             distributedArrows.add(arrow.first to arrow.second)
+
             accumulatedDistance = 0
         }
+
     }
 
     return distributedArrows
