@@ -8,7 +8,7 @@ import hu.mostoha.mobile.android.huki.ui.home.history.place.PlaceHistoryFragment
 
 class HistoryViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
-    override fun getItemCount(): Int = HistoryTab.values().size
+    override fun getItemCount(): Int = HistoryTab.entries.size
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {

@@ -14,6 +14,8 @@
 
         <item name="materialAlertDialogTheme">@style/DefaultMaterialDialog</item>
 
+
+        <item name="android:windowBackground">@color/colorBackground</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@android:color/white</item>
     </style>

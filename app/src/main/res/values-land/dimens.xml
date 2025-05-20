@@ -10,6 +10,8 @@
     <dimen name="route_planner_waypoint_list_max_height">@null</dimen>
     <dimen name="route_planner_min_width">300dp</dimen>
 
+    <dimen name="home_horizontal_margin">5dp</dimen>
+
     <dimen name="map_view_default_top_offset">130dp</dimen>
     <dimen name="map_view_default_bottom_offset">50dp</dimen>
     <dimen name="map_view_bottom_sheet_bottom_offset">70dp</dimen>

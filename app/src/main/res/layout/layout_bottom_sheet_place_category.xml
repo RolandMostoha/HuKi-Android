@@ -7,7 +7,6 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/space_large"
     app:behavior_hideable="true"
     app:behavior_peekHeight="@dimen/default_bottom_sheet_peek_height"
     app:behavior_saveFlags="all">

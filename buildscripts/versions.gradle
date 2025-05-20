@@ -20,7 +20,7 @@ ext {
     gitVersionCode = git.log().size()
 }
 
-task printVersion() {
+tasks.register('printVersion') {
     println("Version Name: $gitVersionName")
     println("Version Code: $gitVersionCode")
 }

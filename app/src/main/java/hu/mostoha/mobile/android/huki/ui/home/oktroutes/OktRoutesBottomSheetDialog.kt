@@ -1,5 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.home.oktroutes
 
+import androidx.core.graphics.Insets
+import androidx.core.view.updatePadding
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetOktRoutesBinding
 import hu.mostoha.mobile.android.huki.extensions.openUrl
@@ -18,6 +20,12 @@ class OktRoutesBottomSheetDialog(
 ) : BottomSheetDialog(binding) {
 
     private var oktRoutesAdapter: OktRoutesAdapter? = null
+
+    override fun updateInset(insets: Insets) {
+        binding.oktRoutesList.updatePadding(
+            bottom = insets.bottom + resources.getDimensionPixelSize(R.dimen.space_large)
+        )
+    }
 
     fun init(
         oktType: OktType,

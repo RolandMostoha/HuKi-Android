@@ -407,7 +407,7 @@ class RoutePlannerFragment : Fragment() {
                 .collect { result ->
                     if (result != null) {
                         routePlannerContainer.updatePadding(
-                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.topInset,
+                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.insets.top,
                         )
                     }
                 }

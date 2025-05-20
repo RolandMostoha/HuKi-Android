@@ -8,6 +8,7 @@ import android.provider.Browser
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
+import androidx.core.net.toUri
 import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import org.osmdroid.util.GeoPoint
@@ -18,13 +19,13 @@ fun Context.startGoogleMapsDirectionsIntent(geoPoint: GeoPoint) {
 
     Timber.d("Google Maps direction intent started with URL: $mapsUrl")
 
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(mapsUrl)))
+    startActivity(Intent(Intent.ACTION_VIEW, mapsUrl.toUri()))
 }
 
 fun Context.openUrl(url: String) {
     Timber.d("URL Intent started with URL: $url")
 
-    val uri = Uri.parse(url)
+    val uri = url.toUri()
 
     val intent = Intent(Intent.ACTION_VIEW, uri)
     intent.putExtra(Browser.EXTRA_APPLICATION_ID, packageName)
@@ -36,7 +37,7 @@ fun Context.openUrl(url: String) {
 
 fun Context.startEmailIntent(email: String, subject: String) {
     val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = Uri.parse(MailTo.MAILTO_SCHEME)
+        data = MailTo.MAILTO_SCHEME.toUri()
         putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
         putExtra(Intent.EXTRA_SUBJECT, subject)
     }

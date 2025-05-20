@@ -3,7 +3,7 @@
 
     <solid android:color="@color/colorBackground" />
 
-    <corners android:radius="@dimen/default_corner_size_surface" />
+    <corners android:radius="@dimen/default_corner_size_selected" />
 
     <stroke
         android:width="@dimen/home_stroke_width_on_map"

@@ -113,7 +113,10 @@ class SupportFragment : Fragment() {
                 .collect { result ->
                     if (result != null) {
                         container.updatePadding(
-                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.topInset
+                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.insets.top,
+                        )
+                        scrollContainer.updatePadding(
+                            bottom = result.insets.bottom + resources.getDimensionPixelSize(R.dimen.space_medium),
                         )
                     }
                 }

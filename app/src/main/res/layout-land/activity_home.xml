@@ -5,7 +5,6 @@
     android:id="@+id/homeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
     tools:context=".ui.home.HomeActivity">
 
@@ -15,33 +14,34 @@
         android:layout_height="match_parent"
         android:elevation="@dimen/default_elevation_fragments" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/homeRoutePlannerContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:elevation="@dimen/default_elevation_fragments" />
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/homeMapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/homeHeaderContainer"
+        android:id="@+id/homeContentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true">
-
-        <View
-            android:id="@+id/homeHeaderBarrierView"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/space_small"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/homeSearchBarContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginHorizontal="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_small"
-            android:layout_marginEnd="@dimen/space_large"
             app:cardBackgroundColor="@color/colorBackground"
             app:cardElevation="@dimen/default_elevation_map_interactive_views"
             app:layout_constraintEnd_toStartOf="@id/homeLayersFab"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/homeHeaderBarrierView"
+            app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearance="@style/DefaultShapeAppearance.InputField.OnMap"
             app:strokeColor="@color/colorStrokeOnMap"
             app:strokeWidth="@dimen/home_search_bar_stroke_width">
@@ -49,7 +49,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/home_search_bar_height"
-                android:layout_marginStart="@dimen/space_large"
+                android:layout_marginStart="@dimen/home_horizontal_margin"
                 android:animateLayoutChanges="true">
 
                 <hu.mostoha.mobile.android.huki.views.ProductImageView
@@ -125,7 +125,7 @@
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginStart="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
             android:contentDescription="@string/accessibility_home_fab_my_location"
@@ -156,7 +156,7 @@
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginStart="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
             android:contentDescription="@string/accessibility_home_fab_settings"
@@ -167,41 +167,11 @@
             app:layout_constraintTop_toBottomOf="@id/homePlaceCategoryContainer" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mapZoomInFab"
-            style="@style/DefaultFloatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_large"
-            android:layout_marginTop="@dimen/space_medium"
-            android:layout_marginEnd="@dimen/space_large"
-            android:contentDescription="@string/accessibility_home_zoom_in"
-            android:elevation="@dimen/default_elevation_map_interactive_views"
-            android:src="@drawable/ic_map_zoom_controller_plus"
-            app:fabSize="mini"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/homeSettingsFab" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mapZoomOutFab"
-            style="@style/DefaultFloatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_large"
-            android:layout_marginTop="@dimen/space_medium"
-            android:layout_marginEnd="@dimen/space_large"
-            android:contentDescription="@string/accessibility_home_zoom_out"
-            android:elevation="@dimen/default_elevation_map_interactive_views"
-            android:src="@drawable/ic_map_zoom_controller_minus"
-            app:fabSize="mini"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mapZoomInFab" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/homeHistoryFab"
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginStart="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
             android:contentDescription="@string/accessibility_home_fab_history"
@@ -216,7 +186,7 @@
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginStart="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
             android:contentDescription="@string/accessibility_home_fab_place_categories"
@@ -231,7 +201,7 @@
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginStart="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_large"
             android:contentDescription="@string/accessibility_home_fab_okt"
@@ -240,6 +210,36 @@
             app:fabSize="mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homePlaceCategoriesFab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/mapZoomInFab"
+            style="@style/DefaultFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/home_horizontal_margin"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginEnd="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_zoom_in"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
+            android:src="@drawable/ic_map_zoom_controller_plus"
+            app:fabSize="mini"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/homeSettingsFab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/mapZoomOutFab"
+            style="@style/DefaultFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/home_horizontal_margin"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginEnd="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_zoom_out"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
+            android:src="@drawable/ic_map_zoom_controller_minus"
+            app:fabSize="mini"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mapZoomInFab" />
 
         <HorizontalScrollView
             android:id="@+id/homePlaceCategoryContainer"
@@ -284,39 +284,22 @@
 
         </HorizontalScrollView>
 
-        <org.osmdroid.views.MapView
-            android:id="@+id/homeMapView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/homeRoutePlannerContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:elevation="@dimen/default_elevation_fragments"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.constraintlayout.widget.Group
             android:id="@+id/homeRoutePlannerHeaderGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="homeSearchBarContainer, homeLayersFab, homeSettingsFab, homeHistoryFab, homeSupportFab" />
+            app:constraint_referenced_ids="homeSearchBarContainer, homeLayersFab, homeSettingsFab, homeHistoryFab, homeSupportFab, homeOktFab, homePlaceCategoriesFab" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/homeHikeModeHeaderGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="homeSearchBarContainer, homeHistoryFab, homeSupportFab" />
+            app:constraint_referenced_ids="homeSearchBarContainer, homeHistoryFab, homeSupportFab, homeOktFab, homePlaceCategoriesFab" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/homeFabContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

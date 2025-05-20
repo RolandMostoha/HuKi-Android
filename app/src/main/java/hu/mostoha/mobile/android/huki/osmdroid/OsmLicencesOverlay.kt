@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.text.TextPaint
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
 import com.marcoscg.licenser.Library
 import com.marcoscg.licenser.License
 import com.marcoscg.licenser.LicenserDialog
@@ -18,7 +19,8 @@ import org.osmdroid.views.overlay.Overlay
 
 class OsmLicencesOverlay(
     private val context: Context,
-    private val analyticsService: AnalyticsService
+    private val analyticsService: AnalyticsService,
+    insets: Insets,
 ) : Overlay() {
 
     private var textPaint: Paint = TextPaint().apply {
@@ -32,7 +34,7 @@ class OsmLicencesOverlay(
     private val copyrightNotice = context.getString(R.string.licences_osm_copyright_notice)
 
     private val xOffset = context.resources.getDimensionPixelSize(R.dimen.space_medium)
-    private val yOffset = context.resources.getDimensionPixelSize(R.dimen.home_copyright_bottom_margin)
+    private val yOffset = context.resources.getDimensionPixelSize(R.dimen.home_copyright_bottom_margin) + insets.bottom
 
     private val hitRect: Rect = Rect()
     private val textBounds: Rect = Rect()

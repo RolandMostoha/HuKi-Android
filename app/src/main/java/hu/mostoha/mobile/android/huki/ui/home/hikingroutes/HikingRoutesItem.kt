@@ -9,6 +9,6 @@ sealed class HikingRoutesItem {
 
     data class Item(val hikingRouteUiModel: HikingRouteUiModel) : HikingRoutesItem()
 
-    object Empty : HikingRoutesItem()
+    data object Empty : HikingRoutesItem()
 
 }

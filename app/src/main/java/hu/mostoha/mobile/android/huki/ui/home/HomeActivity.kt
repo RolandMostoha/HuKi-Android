@@ -5,17 +5,21 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.Type.displayCutout
+import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.core.view.children
-import androidx.core.view.marginTop
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -236,13 +240,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     private val homeContainer by lazy { binding.homeContainer }
+    private val homeContentContainer by lazy { binding.homeContentContainer }
     private val homeMapView by lazy { binding.homeMapView }
-    private val homeHeaderBarrierView by lazy { binding.homeHeaderBarrierView }
     private val homeSearchBarInputLayout by lazy { binding.homeSearchBarInputLayout }
     private val homeSearchBarInput by lazy { binding.homeSearchBarInput }
     private val homeSearchBarPopupAnchor by lazy { binding.homeSearchBarPopupAnchor }
     private val homeRoutePlannerHeaderGroup by lazy { binding.homeRoutePlannerHeaderGroup }
     private val homeHikeModeHeaderGroup by lazy { binding.homeHikeModeHeaderGroup }
+    private val homeFabContainer by lazy { binding.homeFabContainer }
 
     private val homeMyLocationFab by lazy { binding.homeMyLocationFab }
     private val homeRoutePlannerFab by lazy { binding.homeRoutePlannerFab }
@@ -267,11 +272,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var gpxDetailsBottomSheet: GpxDetailsBottomSheetDialog
     private lateinit var oktRoutesBottomSheet: OktRoutesBottomSheetDialog
     private lateinit var bottomSheets: List<BottomSheetDialog>
+    private lateinit var insets: Insets
 
     private var rotationGestureOverlay: RotationGestureOverlay? = null
     private var myLocationOverlay: MyLocationOverlay? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -310,16 +317,24 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun initWindow() {
         setStatusBarColor(android.R.color.transparent)
 
-        val searchBarTopMargin = homeHeaderBarrierView.marginTop
-
         ViewCompat.setOnApplyWindowInsetsListener(homeContainer) { _, windowInsetsCompat ->
-            val insets = windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars())
+            insets = windowInsetsCompat.getInsets(systemBars() or displayCutout())
 
-            homeHeaderBarrierView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                updateMargins(top = searchBarTopMargin + insets.top)
+            homeContentContainer.updatePadding(
+                top = insets.top,
+                bottom = insets.bottom,
+                left = insets.left,
+                right = insets.right
+            )
+            homeFabContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                updateMargins(
+                    bottom = insets.bottom,
+                    right = insets.right + resources.getDimensionPixelSize(R.dimen.home_horizontal_margin),
+                )
             }
+            bottomSheets.forEach { it.updateInset(insets) }
 
-            insetSharedViewModel.updateResult(InsetResult(insets.top))
+            insetSharedViewModel.updateResult(InsetResult(insets))
 
             WindowInsetsCompat.CONSUMED
         }
@@ -343,7 +358,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeViewModel.clearHikingRoutes()
                 hikingRoutesBottomSheet.hide()
             }
-            addOverlay(OsmLicencesOverlay(this@HomeActivity, analyticsService), OverlayComparator)
             if (isDarkMode()) {
                 overlayManager.tilesOverlay.setColorFilter(getColorScaledMatrix(getColor(R.color.colorScaleDarkMap)))
             }
@@ -352,7 +366,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
                 initFlows()
 
-                homeMapView.addScaleBarOverlay()
+                addOverlay(OsmLicencesOverlay(this@HomeActivity, analyticsService, insets), OverlayComparator)
+                addScaleBarOverlay(insets)
 
                 rotationGestureOverlay = RotationGestureOverlay(homeMapView)
                     .apply {

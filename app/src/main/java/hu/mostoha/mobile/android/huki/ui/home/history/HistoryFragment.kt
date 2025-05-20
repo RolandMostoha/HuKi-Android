@@ -88,7 +88,7 @@ class HistoryFragment : Fragment() {
                 .collect { result ->
                     if (result != null) {
                         historyContainer.updatePadding(
-                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.topInset,
+                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.insets.top,
                         )
                     }
                 }

@@ -5,7 +5,6 @@
     android:id="@+id/homeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
     tools:context=".ui.home.HomeActivity">
 
@@ -15,31 +14,34 @@
         android:layout_height="match_parent"
         android:elevation="@dimen/default_elevation_fragments" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/homeRoutePlannerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/default_elevation_fragments" />
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/homeMapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/homeContentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true">
-
-        <View
-            android:id="@+id/homeHeaderBarrierView"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/space_small"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/homeSearchBarContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/space_extra_large"
+            android:layout_marginHorizontal="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_small"
             app:cardBackgroundColor="@color/colorBackground"
             app:cardElevation="@dimen/default_elevation_map_interactive_views"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/homeHeaderBarrierView"
+            app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearance="@style/DefaultShapeAppearance.InputField.OnMap"
             app:strokeColor="@color/colorStrokeOnMap"
             app:strokeWidth="@dimen/home_search_bar_stroke_width">
@@ -47,7 +49,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/home_search_bar_height"
-                android:layout_marginStart="@dimen/space_extra_large"
+                android:layout_marginStart="@dimen/home_horizontal_margin"
                 android:animateLayoutChanges="true">
 
                 <hu.mostoha.mobile.android.huki.views.ProductImageView
@@ -225,6 +227,7 @@
             android:layout_marginHorizontal="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginBottom="@dimen/space_medium"
+            android:contentDescription="@string/accessibility_home_fab_hike_mode_compass"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_hike_mode_compass"
             android:visibility="gone"
@@ -260,23 +263,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeOktFab" />
 
-        <org.osmdroid.views.MapView
-            android:id="@+id/homeMapView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/homeRoutePlannerContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.constraintlayout.widget.Group
             android:id="@+id/homeRoutePlannerHeaderGroup"
             android:layout_width="wrap_content"
@@ -292,6 +278,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/homeFabContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -316,6 +303,7 @@
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_small"
             android:contentDescription="@string/accessibility_home_zoom_out"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_map_zoom_controller_minus"
@@ -366,8 +354,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_altitude"
-                android:importantForAccessibility="no" />
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_altitude" />
 
             <hu.mostoha.mobile.android.huki.views.StrokedTextView
                 android:id="@+id/homeAltitudeText"
@@ -376,8 +364,8 @@
                 android:layout_marginStart="@dimen/space_extra_extra_small"
                 app:strokeColor="@color/colorMapOverlayStroke"
                 app:strokeWidth="2dp"
-                app:textAppearance="@style/DefaultTextAppearance.Bold.Small"
                 app:strokedTextColor="@color/colorMapOverlayText"
+                app:textAppearance="@style/DefaultTextAppearance.Bold.Small"
                 tools:text="500m" />
 
         </LinearLayout>

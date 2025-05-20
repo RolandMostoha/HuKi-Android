@@ -1,5 +1,7 @@
 package hu.mostoha.mobile.android.huki.model.ui
 
+import androidx.core.graphics.Insets
+
 data class InsetResult(
-    val topInset: Int,
+    val insets: Insets
 )

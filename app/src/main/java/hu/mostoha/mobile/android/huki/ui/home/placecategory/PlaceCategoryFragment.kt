@@ -63,6 +63,7 @@ class PlaceCategoryFragment : Fragment() {
     private val boundingBox by lazy { requireArguments().getParcelable<BoundingBox>(ARG_BOUNDING_BOX) }
 
     private val container by lazy { binding.placeCategoryContainer }
+    private val scrollContainer by lazy { binding.placeCategoryScrollContainer }
     private val placeHeaderContainer by lazy { binding.placeCategoryHeaderContainer }
     private val placeCategoryGroups by lazy { binding.placeCategoryGroups }
 
@@ -152,7 +153,11 @@ class PlaceCategoryFragment : Fragment() {
                 .collect { result ->
                     if (result != null) {
                         container.updatePadding(
-                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.topInset,
+                            top = resources.getDimensionPixelSize(R.dimen.space_small) + result.insets.top
+                        )
+                        scrollContainer.updatePadding(
+                            top = resources.getDimensionPixelSize(R.dimen.space_medium),
+                            bottom = result.insets.bottom + resources.getDimensionPixelSize(R.dimen.space_large)
                         )
                     }
                 }

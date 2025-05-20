@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.OKT_ID_FULL_ROUTE
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
@@ -876,14 +877,14 @@ fun MapView.addPlaceCategoryMarker(
     addOverlay(marker, OverlayComparator)
 }
 
-fun MapView.addScaleBarOverlay() {
+fun MapView.addScaleBarOverlay(insets: Insets) {
     val context = this.context
 
     val scaleBarOverlay = HukiScaleBarOverlay(this, R.color.colorMapOverlayStroke.color(context)).apply {
         setAlignBottom(true)
         setScaleBarOffset(
             context.resources.getDimensionPixelSize(R.dimen.space_large),
-            context.resources.getDimensionPixelSize(R.dimen.space_extra_huge)
+            context.resources.getDimensionPixelSize(R.dimen.space_extra_huge) + insets.bottom
         )
         setTextSize(context.resources.getDimensionPixelSize(R.dimen.text_size_extra_small).toFloat())
         setTextTypeFace(context.resources.getFont(R.font.opensans_bold))

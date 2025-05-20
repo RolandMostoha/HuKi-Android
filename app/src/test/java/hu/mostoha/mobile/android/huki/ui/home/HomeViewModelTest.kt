@@ -69,7 +69,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -350,7 +349,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given OKT routes, when loadOktRoutes, then OKT routes are emitted`() =
-        runTest {
+        runTestDefault {
             viewModel.oktRoutes.test {
                 viewModel.loadOktRoutes(OktType.OKT)
 
@@ -363,7 +362,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given OKT routes, when select OKT route by ID, then OKT routes are updated`() =
-        runTest {
+        runTestDefault {
             viewModel.oktRoutes.test {
                 viewModel.loadOktRoutes(OktType.OKT)
 
@@ -379,7 +378,7 @@ class HomeViewModelTest {
 
     @Test
     fun `Given OKT routes, when select OKT route by geo point, then OKT routes are updated`() =
-        runTest {
+        runTestDefault {
             viewModel.oktRoutes.test {
                 viewModel.loadOktRoutes(OktType.OKT)
 
