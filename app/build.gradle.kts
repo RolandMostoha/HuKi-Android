@@ -200,7 +200,7 @@ dependencies {
 }
 
 fun getVersions(): Map<String, String> {
-    val git = Grgit.open(mapOf("currentDir" to file("${project.rootDir}/buildscripts")))
+    val git = Grgit.open(mapOf("currentDir" to file(project.rootDir)))
 
     val versionName = git.describe().replace(Regex("-\\w+$"), "")
     val versionCode = git.log().size.toString()

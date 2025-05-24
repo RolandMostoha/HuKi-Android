@@ -76,7 +76,6 @@ import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
 import hu.mostoha.mobile.android.huki.extensions.removeOverlays
 import hu.mostoha.mobile.android.huki.extensions.resetOrientation
-import hu.mostoha.mobile.android.huki.extensions.setStatusBarColor
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
 import hu.mostoha.mobile.android.huki.extensions.showErrorSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showOnly
@@ -315,8 +314,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initWindow() {
-        setStatusBarColor(android.R.color.transparent)
-
         ViewCompat.setOnApplyWindowInsetsListener(homeContainer) { _, windowInsetsCompat ->
             insets = windowInsetsCompat.getInsets(systemBars() or displayCutout())
 
