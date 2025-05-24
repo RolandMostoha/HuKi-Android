@@ -1,0 +1,128 @@
+[versions]
+activity-ktx = "1.10.1"
+android-gpx-parser = "2.3.0"
+android-gradle-plugin = "8.9.3"
+appcompat = "1.7.0"
+arch-core-testing = "2.2.0"
+aws-amplify = "2.14.5"
+billing = "7.0.0"
+constraintlayout = "2.1.4"
+core-ktx = "1.13.1"
+core-splashscreen = "1.0.1"
+coroutines = "1.7.3"
+datastore-preferences = "1.1.1"
+desugar-jdk-libs = "2.0.4"
+detekt = "1.23.8"
+firebase-analytics-ktx = "22.0.2"
+firebase-crashlytics-gradle = "2.9.9"
+firebase-crashlytics-ktx = "19.0.3"
+fragment-ktx = "1.8.2"
+google-services = "4.4.1"
+google-truth = "1.1.3"
+grgit-gradle = "5.3.0"
+gpx-lib = "1.0.3"
+hilt = "2.56.1"
+hilt-ext = "1.2.0"
+junit = "4.13.2"
+kotlin = "2.1.20"
+kotlin-ksp = "2.1.20-1.0.32"
+kotlinx-coroutines-test = "1.6.4"
+licenser = "2.0.0"
+lifecycle = "2.8.4"
+lottie = "6.5.0"
+mockk = "1.13.10"
+material = "1.12.0"
+moshi = "1.15.1"
+okhttp-logging-interceptor = "5.0.0-alpha.6"
+osmdroid = "6.1.14"
+play-services-location = "21.3.0"
+powermenu = "2.2.4"
+recyclerview-animators = "4.0.2"
+retrofit = "2.10.0"
+room = "2.6.1"
+shimmer = "0.5.0"
+simple-tooltip = "1.1.0"
+swiperefreshlayout = "1.2.0-alpha01"
+timber = "5.0.1"
+turbine = "0.12.0"
+androidx-test-core = "1.5.0-rc01"
+androidx-test-ext-junit = "1.1.3"
+androidx-test-espresso = "3.4.0"
+androidx-test-orchestrator = "1.5.0"
+
+[libraries]
+amplifyframework-aws-auth-cognito = { group = "com.amplifyframework", name = "aws-auth-cognito", version.ref = "aws-amplify" }
+amplifyframework-aws-storage-s3 = { group = "com.amplifyframework", name = "aws-storage-s3", version.ref = "aws-amplify" }
+amplifyframework-core = { group = "com.amplifyframework", name = "core", version.ref = "aws-amplify" }
+airbnb-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+android-billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
+android-tools-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity-ktx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "arch-core-testing" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "core-splashscreen" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore-preferences" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment-ktx" }
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hilt-ext" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+androidx-test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "androidx-test-core" }
+androidx-test-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version = "3.3.0" }
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
+androidx-test-espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "androidx-test-espresso" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+androidx-test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-ext-junit" }
+androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidx-test-orchestrator" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-core" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-core" }
+cash-turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+codebutchery-gpx-lib = { group = "com.codebutchery.android", name = "gpx_lib", version.ref = "gpx-lib" }
+facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "shimmer" }
+github-douglasjunior-simpleTooltip = { group = "com.github.douglasjunior", name = "android-simple-tooltip", version.ref = "simple-tooltip" }
+github-marcoscgdev-licenser = { group = "com.github.marcoscgdev", name = "Licenser", version.ref = "licenser" }
+github-skydoves-powermenu = { group = "com.github.skydoves", name = "powermenu", version.ref = "powermenu" }
+github-ticofab-gpx-parser = { group = "com.github.ticofab", name = "android-gpx-parser", version.ref = "android-gpx-parser" }
+google-android-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+google-firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebase-analytics-ktx" }
+google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "firebase-crashlytics-ktx" }
+google-play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
+google-truth = { group = "com.google.truth", name = "truth", version.ref = "google-truth" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+jpwasabeef-recyclerview-animators = { group = "jp.wasabeef", name = "recyclerview-animators", version.ref = "recyclerview-animators" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+mockk-core = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+osmdroid-android = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroid" }
+squareup-moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+squareup-moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+squareup-okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp-logging-interceptor" }
+squareup-retrofit2-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+squareup-retrofit2-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-gradle" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+grgit = { id = "org.ajoberstar.grgit", version.ref = "grgit-gradle" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+
+[bundles]
+amplify = ["amplifyframework-core", "amplifyframework-aws-storage-s3", "amplifyframework-aws-auth-cognito"]
+firebase = ["google-firebase-analytics-ktx", "google-firebase-crashlytics-ktx"]
+ktx-lifecycle = ["androidx-lifecycle-viewmodel-ktx", "androidx-lifecycle-runtime-ktx"]
+room = ["androidx-room-runtime", "androidx-room-ktx"]
