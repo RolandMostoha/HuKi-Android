@@ -312,7 +312,7 @@ class RoutePlannerFragment : Fragment() {
                     R.drawable.ic_snackbar_place_finder_pick_location
                 )
 
-                pickLocationEventViewModel.updateEvent(PickLocationEvents.RoutePlannerPickStarted)
+                pickLocationEventViewModel.updateEvent(PickLocationEvents.RoutePlannerPickEnabled)
             }
         )
     }

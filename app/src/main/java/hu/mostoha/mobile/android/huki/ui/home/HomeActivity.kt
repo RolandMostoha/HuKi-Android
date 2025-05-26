@@ -1147,8 +1147,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeMapView.addLongClickHandlerOverlay { geoPoint ->
                     homeMapView.addLocationPickerMarker(
                         geoPoint = geoPoint,
-                        onSaveClick = {
-                            homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, MAP_PICKED_LOCATION)
+                        onSaveClick = { savedGeoPoint ->
+                            homeViewModel.loadPlaceDetailsWithGeocoding(savedGeoPoint, MAP_PICKED_LOCATION)
                         },
                     )
                 }
@@ -1156,7 +1156,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             PickLocationEvents.LocationPickDisabled -> {
                 homeMapView.removeOverlay(OverlayType.MAP_TOUCH_EVENTS)
             }
-            PickLocationEvents.RoutePlannerPickStarted -> {
+            PickLocationEvents.RoutePlannerPickEnabled -> {
                 homeMapView.addLongClickHandlerOverlay { geoPoint ->
                     homeMapView.addLocationPickerMarker(
                         geoPoint = geoPoint,

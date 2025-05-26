@@ -14,7 +14,7 @@ sealed class PickLocationEvents {
 
     data object LocationPickDisabled : PickLocationEvents()
 
-    data object RoutePlannerPickStarted : PickLocationEvents()
+    data object RoutePlannerPickEnabled : PickLocationEvents()
 
     data class RoutePlannerPickEnded(val geoPoint: GeoPoint) : PickLocationEvents()
 
