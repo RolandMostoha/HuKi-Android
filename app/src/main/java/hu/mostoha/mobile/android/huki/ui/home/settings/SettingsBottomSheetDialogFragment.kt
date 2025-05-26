@@ -32,7 +32,7 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val TAG = SettingsBottomSheetDialogFragment::class.java.simpleName + ".TAG"
 
         private const val MAP_SCALE_FACTOR_FROM = 100
-        private const val MAP_SCALE_FACTOR_TO = 300
+        private const val MAP_SCALE_FACTOR_TO = 500
         private const val MAP_SCALE_FACTOR_STEP = 10
     }
 
