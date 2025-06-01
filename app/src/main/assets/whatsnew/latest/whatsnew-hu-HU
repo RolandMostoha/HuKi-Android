@@ -1,6 +1,4 @@
-A GPX színezése mostmár meredekség alapján történik, így jobban becsülhető a túra nehézsége.
-Piros: emelkedő
-Zöld: közel sík terep
-Kék: lejtő
-- A GPX track irányát mostmár nyilak jelzik
-- A GPX track iránya megfordítható
+- Android platform karbantartások
+- Edge-to-edge támogatás
+- Mostmár 500%-ra nagyítható a térkép
+- Hosszú klikkes POI lerakás javítása
