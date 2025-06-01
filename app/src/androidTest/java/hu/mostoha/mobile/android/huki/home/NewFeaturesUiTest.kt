@@ -13,6 +13,7 @@ import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.doesNotExist
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import org.junit.Before
@@ -60,6 +61,7 @@ class NewFeaturesUiTest {
             R.id.newFeaturesOkButton.click()
 
             recreate()
+            waitForRecreate()
 
             R.id.newFeaturesOkButton.doesNotExist()
         }
@@ -75,6 +77,7 @@ class NewFeaturesUiTest {
             R.id.newFeaturesCloseButton.click()
 
             recreate()
+            waitForRecreate()
 
             R.id.newFeaturesCloseButton.doesNotExist()
         }

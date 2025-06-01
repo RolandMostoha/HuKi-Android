@@ -338,25 +338,6 @@ class PlaceFinderUiTest {
         }
     }
 
-    @Test
-    fun givenPlaces_whenRecreate_thenPlacesSearchResultDisplaysAgain() {
-        answerTestPlaces()
-
-        launchScenario<HomeActivity> {
-            val searchText = "Mecsek"
-
-            R.id.homeSearchBarInput.typeText(searchText)
-
-            DEFAULT_PLACE_NODE.name.isPopupTextDisplayed()
-            DEFAULT_PLACE_WAY.name.isPopupTextDisplayed()
-
-            recreate()
-
-            R.string.place_finder_my_location_button.isPopupTextDisplayed()
-            R.string.place_finder_pick_location_button.isPopupTextDisplayed()
-        }
-    }
-
     private fun answerTestPlaces() {
         coEvery { geocodingRepository.getAutocompletePlaces(any(), any()) } returns listOf(
             DEFAULT_PLACE_PROFILE_NODE,

@@ -6,7 +6,6 @@ import android.net.Uri
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
@@ -19,6 +18,10 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
+import androidx.test.runner.lifecycle.Stage
+import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -150,7 +153,7 @@ class GpxHistoryUiTest {
 
         launchScenario<HomeActivity> {
             R.id.homeHistoryFab.click()
-            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(1)
 
             R.id.historyContainer.isDisplayed()
@@ -163,7 +166,7 @@ class GpxHistoryUiTest {
 
         launchScenario<HomeActivity> {
             R.id.homeHistoryFab.click()
-            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyViewPager.registerViewPagerIdlingResource()
 
             R.id.historyTabLayout.selectTab(1)
 
@@ -183,7 +186,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
-            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(2)
 
             R.id.gpxHistoryItemContainer.isDisplayed()
@@ -202,7 +205,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
-            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(2)
             R.id.gpxHistoryItemContainer.click()
 
@@ -231,7 +234,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
-            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(1)
             R.id.gpxHistoryItemContainer.click()
 
@@ -260,7 +263,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
-            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(1)
             R.id.gpxHistoryActionsButton.click()
             R.string.gpx_history_menu_action_delete.clickWithTextInPopup()
@@ -281,7 +284,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
-            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(2)
             R.id.gpxHistoryActionsButton.click()
             R.string.gpx_history_menu_action_rename.clickWithTextInPopup()
@@ -304,7 +307,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
-            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(2)
             R.id.gpxHistoryActionsButton.click()
             R.string.gpx_history_menu_action_share.clickWithTextInPopup()
@@ -317,7 +320,7 @@ class GpxHistoryUiTest {
 
         launchScenario<HomeActivity> {
             R.id.homeHistoryFab.click()
-            R.id.historyViewPager.registerViewPagerIdlingResource(this)
+            R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(1)
 
             onView(
@@ -339,11 +342,22 @@ class GpxHistoryUiTest {
         return Uri.fromFile(file)
     }
 
-    private fun <T : Activity> @receiver:IdRes Int.registerViewPagerIdlingResource(scenario: ActivityScenario<T>) {
-        scenario.onActivity {
-            viewPagerIdlingResource = ViewPagerIdlingResource(it.findViewById(this))
-            IdlingRegistry.getInstance().register(viewPagerIdlingResource)
+    private fun @receiver:IdRes Int.registerViewPagerIdlingResource() {
+        val viewPager = getCurrentActivity()!!.findViewById<ViewPager2>(this)
+        viewPagerIdlingResource = ViewPagerIdlingResource(viewPager)
+        IdlingRegistry.getInstance().register(viewPagerIdlingResource)
+    }
+
+    private fun getCurrentActivity(): Activity? {
+        var currentActivity: Activity? = null
+
+        getInstrumentation().runOnMainSync {
+            currentActivity = ActivityLifecycleMonitorRegistry.getInstance()
+                .getActivitiesInStage(Stage.RESUMED)
+                .elementAtOrNull(0)
         }
+
+        return currentActivity
     }
 
 }

@@ -56,6 +56,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.setBottomSheetState
 import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.espresso.waitForBottomSheetState
+import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import io.mockk.coEvery
@@ -273,11 +274,12 @@ class PlaceCategoryUiTest {
 
     @Test
     fun whenRecreate_thenPlaceCategoryDisplaysAgain() {
-        launchScenario<HomeActivity> { scenario ->
+        launchScenario<HomeActivity> {
             R.id.homePlaceCategoriesFab.click()
             R.id.placeCategoryHeaderContainer.isDisplayed()
 
-            scenario.recreate()
+            recreate()
+            waitForRecreate()
 
             R.id.placeCategoryHeaderContainer.isDisplayed()
         }

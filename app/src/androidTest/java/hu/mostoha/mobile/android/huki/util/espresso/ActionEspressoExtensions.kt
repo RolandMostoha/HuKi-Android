@@ -110,6 +110,10 @@ private fun waitForAction(millis: Long): ViewAction {
     }
 }
 
+fun waitForRecreate() {
+    waitFor(300)
+}
+
 fun waitForInputFocusGain() {
     waitFor(300)
 }

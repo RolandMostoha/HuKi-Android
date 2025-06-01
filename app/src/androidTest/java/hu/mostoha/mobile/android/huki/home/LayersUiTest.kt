@@ -46,6 +46,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
@@ -207,6 +208,7 @@ class LayersUiTest {
             pressBack()
 
             recreate()
+            waitForRecreate()
 
             R.id.homeMapView.hasBaseTileSource(TileSourceFactory.OpenTopo)
         }
