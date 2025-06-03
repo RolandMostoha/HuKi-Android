@@ -11,7 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type.displayCutout
@@ -271,7 +270,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var gpxDetailsBottomSheet: GpxDetailsBottomSheetDialog
     private lateinit var oktRoutesBottomSheet: OktRoutesBottomSheetDialog
     private lateinit var bottomSheets: List<BottomSheetDialog>
-    private lateinit var insets: Insets
 
     private var rotationGestureOverlay: RotationGestureOverlay? = null
     private var myLocationOverlay: MyLocationOverlay? = null
@@ -315,7 +313,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initWindow() {
         ViewCompat.setOnApplyWindowInsetsListener(homeContainer) { _, windowInsetsCompat ->
-            insets = windowInsetsCompat.getInsets(systemBars() or displayCutout())
+            val insets = windowInsetsCompat.getInsets(systemBars() or displayCutout())
 
             homeContentContainer.updatePadding(
                 top = insets.top,
@@ -330,6 +328,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 )
             }
             bottomSheets.forEach { it.updateInset(insets) }
+
+            homeMapView.addOverlay(OsmLicencesOverlay(this@HomeActivity, analyticsService, insets), OverlayComparator)
+            homeMapView.addScaleBarOverlay(insets)
 
             insetSharedViewModel.updateResult(InsetResult(insets))
 
@@ -362,9 +363,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 restoreBoundingBox()
 
                 initFlows()
-
-                addOverlay(OsmLicencesOverlay(this@HomeActivity, analyticsService, insets), OverlayComparator)
-                addScaleBarOverlay(insets)
 
                 rotationGestureOverlay = RotationGestureOverlay(homeMapView)
                     .apply {
