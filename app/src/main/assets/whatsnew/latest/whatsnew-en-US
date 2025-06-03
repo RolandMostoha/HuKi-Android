@@ -1,4 +1,5 @@
-- Android platform maintenance
+- Android 15 platform maintenance
 - Edge-to-edge support
 - Now the map can be zoomed up to 500%
 - Fix for long-click POI placement
+- Landscapes are now sorted by distance
