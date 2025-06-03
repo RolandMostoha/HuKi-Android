@@ -8,6 +8,7 @@ import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.center
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceAreaMapper
 import hu.mostoha.mobile.android.huki.model.ui.PlaceCategoryUiModel
@@ -38,9 +39,14 @@ class PlaceCategoryViewModel @Inject constructor(
     val placeCategoryUiModel: StateFlow<PlaceCategoryUiModel> = _placeCategoryUiModel
         .stateIn(viewModelScope, WhileViewSubscribed, PlaceCategoryUiModel())
 
-    init {
+    fun init(boundingBox: BoundingBox) {
+        loadLandscapes(boundingBox.center())
+        loadPlaceArea(boundingBox.center(), boundingBox)
+    }
+
+    private fun loadLandscapes(location: Location) {
         viewModelScope.launch {
-            landscapeInteractor.requestGetLandscapesFlow()
+            landscapeInteractor.requestGetLandscapesFlow(location)
                 .map { homeUiModelMapper.mapLandscapes(it) }
                 .onEach { landscapes ->
                     _placeCategoryUiModel.update { it.copy(landscapes = landscapes) }
@@ -49,7 +55,7 @@ class PlaceCategoryViewModel @Inject constructor(
         }
     }
 
-    fun loadPlaceArea(location: Location, boundingBox: BoundingBox) = viewModelScope.launch {
+    private fun loadPlaceArea(location: Location, boundingBox: BoundingBox) = viewModelScope.launch {
         flowWithExceptions(
             request = { geocodingRepository.getPlaceProfile(location) },
             exceptionLogger = exceptionLogger

@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
+import hu.mostoha.mobile.android.huki.model.domain.center
 import hu.mostoha.mobile.android.huki.model.mapper.HikingRouteRelationMapper
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceAreaMapper
@@ -12,7 +13,6 @@ import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
 import hu.mostoha.mobile.android.huki.model.ui.PlaceCategoryUiModel
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_AREA_BOX
-import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_AREA_LOCATION
 import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_PROFILE
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.runTestDefault
@@ -51,34 +51,16 @@ class PlaceCategoryViewModelTest {
     }
 
     @Test
-    fun `Given location, when loadPlaceArea, then place area is emitted`() =
+    fun `Given bounding box, when init, then place category UI model is emitted`() {
         runTestDefault {
-            val location = DEFAULT_PLACE_AREA_LOCATION
             val boundingBox = DEFAULT_PLACE_AREA_BOX
-
-            viewModel.loadPlaceArea(location, boundingBox)
-
-            viewModel.placeCategoryUiModel.test {
-                assertThat(awaitItem()).isEqualTo(PlaceCategoryUiModel())
-                assertThat(awaitItem()).isEqualTo(
-                    PlaceCategoryUiModel(
-                        isAreaLoading = false,
-                        placeArea = PlaceAreaMapper.map(location, boundingBox, null),
-                        landscapes = homeUiModelMapper.mapLandscapes(listOf(DEFAULT_LANDSCAPE))
-                    )
-                )
-            }
-        }
-
-    @Test
-    fun `Given place profile, when loadPlaceArea, then place area is emitted`() =
-        runTestDefault {
-            val location = DEFAULT_PLACE_AREA_LOCATION
-            val boundingBox = DEFAULT_PLACE_AREA_BOX
+            val location = boundingBox.center()
+            val landscapes = listOf(DEFAULT_LANDSCAPE)
 
             coEvery { geocodingRepository.getPlaceProfile(location) } returns DEFAULT_PLACE_PROFILE
+            coEvery { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOf(landscapes)
 
-            viewModel.loadPlaceArea(location, boundingBox)
+            viewModel.init(boundingBox)
 
             viewModel.placeCategoryUiModel.test {
                 assertThat(awaitItem()).isEqualTo(PlaceCategoryUiModel())
@@ -86,11 +68,12 @@ class PlaceCategoryViewModelTest {
                     PlaceCategoryUiModel(
                         isAreaLoading = false,
                         placeArea = PlaceAreaMapper.map(location, boundingBox, DEFAULT_PLACE_PROFILE),
-                        landscapes = homeUiModelMapper.mapLandscapes(listOf(DEFAULT_LANDSCAPE))
+                        landscapes = homeUiModelMapper.mapLandscapes(landscapes)
                     )
                 )
             }
         }
+    }
 
     private fun mockLandscapes() {
         val landscapes = listOf(DEFAULT_LANDSCAPE)

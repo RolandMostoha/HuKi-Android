@@ -20,7 +20,6 @@ import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
-import hu.mostoha.mobile.android.huki.model.domain.center
 import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommenderMapper
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
@@ -60,7 +59,7 @@ class PlaceCategoryFragment : Fragment() {
     private var _binding: FragmentPlaceCategoryBinding? = null
     private val binding get() = _binding!!
 
-    private val boundingBox by lazy { requireArguments().getParcelable<BoundingBox>(ARG_BOUNDING_BOX) }
+    private val boundingBox by lazy { requireArguments().getParcelable<BoundingBox>(ARG_BOUNDING_BOX)!! }
 
     private val container by lazy { binding.placeCategoryContainer }
     private val scrollContainer by lazy { binding.placeCategoryScrollContainer }
@@ -79,9 +78,7 @@ class PlaceCategoryFragment : Fragment() {
         initViews()
         initFlows()
 
-        boundingBox?.let { boundingBox ->
-            placeCategoryViewModel.loadPlaceArea(boundingBox.center(), boundingBox)
-        }
+        placeCategoryViewModel.init(boundingBox)
     }
 
     override fun onDestroyView() {
