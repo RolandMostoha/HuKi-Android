@@ -1,6 +1,6 @@
-- Android 15 platform karbantartások
-- Edge-to-edge támogatás
-- Mostmár 500%-ra nagyítható a térkép
-- Hosszú klikkes POI lerakás javítása
-- A tájegységek mostmár távolság szerint vannak rendezve
-- Hibajavítások
+Útvonaltervező fejlesztések:
+- Új: körtúra tervező távolság és kezdőpont alapján
+- Új: legrövidebb út (csapások, erdészeti utak stb.)
+- Új: biciklis útvonaltervező
+- Mostmár az útvonal elrejthető tervezés közben
+- További használhatósági fejlesztések

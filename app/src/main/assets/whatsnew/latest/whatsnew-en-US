@@ -1,6 +1,6 @@
-- Android 15 platform maintenance
-- Edge-to-edge support
-- Now the map can be zoomed up to 500%
-- Fix for long-click POI placement
-- Landscapes are now sorted by distance
-- Bug fixes
+Route planner improvements:
+- New: round trip planner based on distance and POI
+- New: shortest route (small paths, forest roads, etc.)
+- New: bicycle route planner
+- The route can now be hidden while planning
+- Additional usability improvements
