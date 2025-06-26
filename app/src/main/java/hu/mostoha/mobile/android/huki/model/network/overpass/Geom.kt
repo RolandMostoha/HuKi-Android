@@ -5,9 +5,9 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Geom(
-    @field:Json(name = "lat")
+    @Json(name = "lat")
     var lat: Double? = null,
 
-    @field:Json(name = "lon")
+    @Json(name = "lon")
     var lon: Double? = null
 )

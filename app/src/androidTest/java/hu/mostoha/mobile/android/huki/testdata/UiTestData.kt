@@ -17,6 +17,7 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.util.distanceBetween
@@ -198,6 +199,7 @@ object RoutePlanner {
     )
 
     val DEFAULT_ROUTE_PLAN = RoutePlan(
+        planType = RoutePlanType.Hike,
         wayPoints = DEFAULT_WAYPOINTS,
         locations = DEFAULT_WAYPOINTS,
         travelTime = 100L.minutes,

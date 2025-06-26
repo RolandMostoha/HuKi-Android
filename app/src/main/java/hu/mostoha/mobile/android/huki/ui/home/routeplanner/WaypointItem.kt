@@ -14,3 +14,7 @@ data class WaypointItem(
     val searchText: String? = null,
     val waypointComment: WaypointComment? = null
 )
+
+fun WaypointItem.hasLocation(): Boolean {
+    return this.location != null
+}

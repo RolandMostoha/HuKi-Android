@@ -17,4 +17,5 @@ data class RoutePlanUiModel(
     val altitudeUiModel: AltitudeUiModel,
     val isClosed: Boolean,
     val isReturnToHomeAvailable: Boolean,
+    val isRouteVisible: Boolean,
 )

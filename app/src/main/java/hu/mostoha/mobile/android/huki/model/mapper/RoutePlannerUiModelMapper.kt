@@ -3,11 +3,11 @@ package hu.mostoha.mobile.android.huki.model.mapper
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.extensions.getRandomNumberText
-import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.ui.AltitudeUiModel
@@ -63,12 +63,8 @@ class RoutePlannerUiModelMapper @Inject constructor() {
         }
     }
 
-    fun mapToRoutePlanUiModel(
-        waypointItems: List<WaypointItem>,
-        triggerLocations: List<Location>,
-        routePlan: RoutePlan
-    ): RoutePlanUiModel {
-        val routePlanName = mapToRoutePlanName(waypointItems)
+    fun mapToRoutePlanUiModel(waypointItems: List<WaypointItem>, routePlan: RoutePlan): RoutePlanUiModel {
+        val routePlanName = mapToRoutePlanName(routePlan.planType, waypointItems)
         val geoPoints = routePlan.locations.map { it.toGeoPoint() }
         val altitudeRange = routePlan.altitudeRange
         val locations = routePlan.wayPoints
@@ -79,9 +75,10 @@ class RoutePlannerUiModelMapper @Inject constructor() {
 
             WaypointItem(
                 order = index,
-                waypointType = when (index) {
-                    0 -> WaypointType.START
-                    locations.lastIndex -> WaypointType.END
+                waypointType = when {
+                    index == 0 -> WaypointType.START
+                    index == locations.lastIndex && routePlan.isClosed -> WaypointType.ROUND_TRIP
+                    index == locations.lastIndex -> WaypointType.END
                     else -> WaypointType.INTERMEDIATE
                 },
                 location = location,
@@ -91,7 +88,7 @@ class RoutePlannerUiModelMapper @Inject constructor() {
         return RoutePlanUiModel(
             id = routePlan.id,
             name = routePlanName,
-            triggerLocations = triggerLocations,
+            triggerLocations = waypointItems.mapNotNull { it.location },
             wayPoints = wayPointItems,
             geoPoints = geoPoints,
             boundingBox = BoundingBox.fromGeoPoints(geoPoints).toDomain(),
@@ -105,22 +102,35 @@ class RoutePlannerUiModelMapper @Inject constructor() {
             ),
             isClosed = routePlan.isClosed,
             isReturnToHomeAvailable = !routePlan.isClosed,
+            isRouteVisible = true
         )
     }
 
     @VisibleForTesting
-    fun mapToRoutePlanName(waypointItems: List<WaypointItem>): String {
-        val waypointsWithLocation = waypointItems.filter { it.location != null }
+    fun mapToRoutePlanName(planType: RoutePlanType, waypointItems: List<WaypointItem>): String {
+        when (planType) {
+            is RoutePlanType.Hike, RoutePlanType.Foot, RoutePlanType.Bike -> {
+                val waypointsWithLocation = waypointItems.filter { it.location != null }
 
-        check(waypointsWithLocation.size >= 2) {
-            "At lease two waypoints are needed to create route plan name"
+                check(waypointsWithLocation.size >= 2) {
+                    "At lease two waypoints are needed to create route plan name"
+                }
+
+                val firstWaypointName = getWaypointName(waypointsWithLocation.first())
+                val lastWaypointName = getWaypointName(waypointsWithLocation.last { it.location != null })
+                val id = getRandomNumberText(MAX_CHAR_ID)
+
+                return "${firstWaypointName}_${lastWaypointName}_HuKi$id"
+            }
+            is RoutePlanType.RoundTrip -> {
+                val waypointWithLocation = waypointItems.first { it.location != null }
+
+                val firstWaypointName = getWaypointName(waypointWithLocation)
+                val id = getRandomNumberText(MAX_CHAR_ID)
+
+                return "${firstWaypointName}_roundtrip_HuKi$id"
+            }
         }
-
-        val firstWaypointName = getWaypointName(waypointsWithLocation.first())
-        val lastWaypointName = getWaypointName(waypointsWithLocation.last { it.location != null })
-        val id = getRandomNumberText(MAX_CHAR_ID)
-
-        return "${firstWaypointName}_${lastWaypointName}_HuKi$id"
     }
 
     private fun getWaypointName(waypointItem: WaypointItem): String {

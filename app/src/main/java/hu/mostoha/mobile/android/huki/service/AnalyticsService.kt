@@ -5,6 +5,7 @@ import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.BillingAction
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
@@ -39,6 +40,8 @@ interface AnalyticsService {
     fun routePlannerMyLocationClicked()
 
     fun routePlannerCommentDone()
+
+    fun routePlannerTypeClicked(planType: RoutePlanType)
 
     fun routePlanSaved(routePlan: RoutePlanUiModel)
 

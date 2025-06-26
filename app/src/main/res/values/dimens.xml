@@ -37,6 +37,7 @@
     <dimen name="default_elevation_fragments">11dp</dimen>
     <dimen name="default_text_size">@dimen/text_size_medium</dimen>
     <dimen name="default_corner_size_surface">10dp</dimen>
+    <dimen name="default_corner_size_popup_menu">15dp</dimen>
     <dimen name="default_corner_size_info_card">20dp</dimen>
     <dimen name="default_corner_size_selected">20dp</dimen>
     <dimen name="default_corner_size_input">25dp</dimen>

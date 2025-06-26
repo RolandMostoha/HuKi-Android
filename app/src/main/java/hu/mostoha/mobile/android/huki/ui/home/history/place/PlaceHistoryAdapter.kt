@@ -89,7 +89,7 @@ class PlaceHistoryAdapter(
                             PopupMenuActionItem(
                                 popupMenuItem = PopupMenuItem(
                                     titleId = R.string.place_history_menu_action_delete,
-                                    iconId = R.drawable.ic_gpx_history_action_delete
+                                    startIconId = R.drawable.ic_gpx_history_action_delete
                                 ),
                                 onClick = { onPlaceDelete.invoke(item) }
                             ),

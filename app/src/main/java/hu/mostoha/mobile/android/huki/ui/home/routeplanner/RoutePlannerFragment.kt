@@ -18,10 +18,15 @@ import androidx.recyclerview.widget.ItemTouchHelper.DOWN
 import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.slider.LabelFormatter.LABEL_GONE
+import com.google.android.material.slider.LabelFormatter.LABEL_VISIBLE
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
+import hu.mostoha.mobile.android.huki.configuration.AppConfiguration
 import hu.mostoha.mobile.android.huki.databinding.FragmentRoutePlannerBinding
+import hu.mostoha.mobile.android.huki.extensions.PopupMenuActionItem
+import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
 import hu.mostoha.mobile.android.huki.extensions.addFragment
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
 import hu.mostoha.mobile.android.huki.extensions.gone
@@ -29,11 +34,13 @@ import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
 import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
+import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.PlaceFinderFeature
@@ -43,6 +50,8 @@ import hu.mostoha.mobile.android.huki.model.ui.WaypointCommentResult
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
+import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter.toMetersFromKm
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
@@ -56,11 +65,19 @@ import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEventSharedView
 import hu.mostoha.mobile.android.huki.ui.home.shared.PickLocationEvents
 import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.debounce
 import java.util.Collections
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.toJavaDuration
 
+@OptIn(FlowPreview::class)
 @AndroidEntryPoint
 class RoutePlannerFragment : Fragment() {
 
@@ -80,6 +97,9 @@ class RoutePlannerFragment : Fragment() {
 
     @Inject
     lateinit var analyticsService: AnalyticsService
+
+    @Inject
+    lateinit var appConfiguration: AppConfiguration
 
     private val routePlannerViewModel: RoutePlannerViewModel by activityViewModels()
     private val layersViewModel: LayersViewModel by activityViewModels()
@@ -106,10 +126,14 @@ class RoutePlannerFragment : Fragment() {
         binding.routePlannerRouteAttributesContainer.routeAttributesContainer
     }
     private val routePlannerContainer by lazy { binding.routePlannerContainer }
+    private val visibilityButton by lazy { binding.routePlannerVisibilityButton }
     private val doneButton by lazy { binding.routePlannerDoneButton }
     private val addWaypointButton by lazy { binding.routePlannerAddWaypointButton }
     private val returnToHomeButton by lazy { binding.routePlannerReturnToHomeButton }
     private val backButton by lazy { binding.routePlannerBackButton }
+    private val settingsButton by lazy { binding.routePlannerSettingsButton }
+    private val roundTripGroup by lazy { binding.homeRoutePlannerRoundTripGroup }
+    private val distanceSlider by lazy { binding.routePlannerDistanceSlider }
     private val graphhopperLogo by lazy { binding.routePlannerGraphhopperLogo }
     private val errorText by lazy { binding.routePlannerErrorText }
 
@@ -153,6 +177,23 @@ class RoutePlannerFragment : Fragment() {
         initWaypoints()
         initPlaceFinderPopup()
 
+        distanceSlider.setLabelFormatter { value: Float ->
+            DistanceFormatter.formatKm(value.toInt()).resolve(requireContext())
+        }
+        lifecycleScope.launch {
+            callbackFlow {
+                distanceSlider.addOnChangeListener { _, value, fromUser ->
+                    if (fromUser) {
+                        this.trySend(value)
+                    }
+                }
+                awaitClose { }
+            }
+                .debounce(appConfiguration.getNetworkDebounceDelay().milliseconds.toJavaDuration())
+                .collect { distanceKm ->
+                    routePlannerViewModel.switchPlanType(RoutePlanType.RoundTrip(distanceKm.toInt().toMetersFromKm()))
+                }
+        }
         doneButton.setOnClickListener {
             routePlannerViewModel.saveRoutePlan()
         }
@@ -160,10 +201,16 @@ class RoutePlannerFragment : Fragment() {
             routePlannerViewModel.addEmptyWaypoint()
         }
         returnToHomeButton.setOnClickListener {
-            routePlannerViewModel.createRoundTrip()
+            routePlannerViewModel.returnToHome()
+        }
+        visibilityButton.setOnClickListener {
+            routePlannerViewModel.switchVisibility()
         }
         backButton.setOnClickListener {
             clearRoutePlanner()
+        }
+        settingsButton.setOnClickListener {
+            showPlanTypePopupMenu()
         }
         graphhopperLogo.setOnClickListener {
             requireContext().openUrl(getString(R.string.route_planner_graphhopper_url))
@@ -171,6 +218,103 @@ class RoutePlannerFragment : Fragment() {
         routePlannerContainer.setOnClickListener {
             lastEditedWaypointInput?.clearFocus()
             placeFinderViewModel.cancelSearch()
+        }
+    }
+
+    private fun showPlanTypePopupMenu() {
+        lifecycleScope.launch {
+            val planType = routePlannerViewModel.routePlanType.first()
+
+            requireContext().showPopupMenu(
+                anchorView = settingsButton,
+                actionItems = listOf(
+                    PopupMenuActionItem(
+                        popupMenuItem = PopupMenuItem(
+                            titleId = R.string.route_planner_type_hike,
+                            subTitleId = R.string.route_planner_type_hike_subtitle,
+                            startIconId = R.drawable.ic_route_planner_plan_type_hike,
+                            endIconId = if (planType == RoutePlanType.Hike) {
+                                R.drawable.ic_route_planner_plan_type_selected
+                            } else {
+                                R.drawable.ic_route_planner_plan_type_unselected
+                            },
+                            backgroundColor = if (planType == RoutePlanType.Hike) {
+                                R.color.colorBackgroundLight
+                            } else {
+                                android.R.color.transparent
+                            },
+                        ),
+                        onClick = {
+                            analyticsService.routePlannerTypeClicked(RoutePlanType.Hike)
+                            routePlannerViewModel.switchPlanType(RoutePlanType.Hike)
+                        }
+                    ),
+                    PopupMenuActionItem(
+                        popupMenuItem = PopupMenuItem(
+                            titleId = R.string.route_planner_type_foot,
+                            subTitleId = R.string.route_planner_type_foot_subtitle,
+                            startIconId = R.drawable.ic_route_planner_plan_type_foot,
+                            endIconId = if (planType == RoutePlanType.Foot) {
+                                R.drawable.ic_route_planner_plan_type_selected
+                            } else {
+                                R.drawable.ic_route_planner_plan_type_unselected
+                            },
+                            backgroundColor = if (planType == RoutePlanType.Foot) {
+                                R.color.colorBackgroundLight
+                            } else {
+                                android.R.color.transparent
+                            },
+                        ),
+                        onClick = {
+                            analyticsService.routePlannerTypeClicked(RoutePlanType.Foot)
+                            routePlannerViewModel.switchPlanType(RoutePlanType.Foot)
+                        }
+                    ),
+                    PopupMenuActionItem(
+                        popupMenuItem = PopupMenuItem(
+                            titleId = R.string.route_planner_type_bike,
+                            subTitleId = R.string.route_planner_type_bike_subtitle,
+                            startIconId = R.drawable.ic_route_planner_plan_type_bike,
+                            endIconId = if (planType == RoutePlanType.Bike) {
+                                R.drawable.ic_route_planner_plan_type_selected
+                            } else {
+                                R.drawable.ic_route_planner_plan_type_unselected
+                            },
+                            backgroundColor = if (planType == RoutePlanType.Bike) {
+                                R.color.colorBackgroundLight
+                            } else {
+                                android.R.color.transparent
+                            },
+                        ),
+                        onClick = {
+                            analyticsService.routePlannerTypeClicked(RoutePlanType.Bike)
+                            routePlannerViewModel.switchPlanType(RoutePlanType.Bike)
+                        }
+                    ),
+                    PopupMenuActionItem(
+                        popupMenuItem = PopupMenuItem(
+                            titleId = R.string.route_planner_type_round_trip,
+                            subTitleId = R.string.route_planner_type_round_trip_subtitle,
+                            startIconId = R.drawable.ic_route_planner_plan_type_round_trip,
+                            endIconId = if (planType is RoutePlanType.RoundTrip) {
+                                R.drawable.ic_route_planner_plan_type_selected
+                            } else {
+                                R.drawable.ic_route_planner_plan_type_unselected
+                            },
+                            backgroundColor = if (planType is RoutePlanType.RoundTrip) {
+                                R.color.colorBackgroundLight
+                            } else {
+                                android.R.color.transparent
+                            },
+                        ),
+                        onClick = {
+                            analyticsService.routePlannerTypeClicked(RoutePlanType.RoundTrip())
+                            routePlannerViewModel.switchPlanType(RoutePlanType.RoundTrip())
+                        }
+                    ),
+                ),
+                width = R.dimen.default_popup_menu_width_wide,
+            )
         }
     }
 
@@ -200,10 +344,13 @@ class RoutePlannerFragment : Fragment() {
                 placeFinderViewModel.cancelSearch()
             },
             onWaypointsSizeChanged = { size ->
-                if (size >= ROUTE_PLANNER_MAX_WAYPOINT_COUNT) {
-                    addWaypointButton.gone()
-                } else {
-                    addWaypointButton.visible()
+                when {
+                    size < 2 || size >= ROUTE_PLANNER_MAX_WAYPOINT_COUNT -> {
+                        addWaypointButton.gone()
+                    }
+                    else -> {
+                        addWaypointButton.visible()
+                    }
                 }
             },
             onCommentClicked = { waypointItem ->
@@ -325,6 +472,22 @@ class RoutePlannerFragment : Fragment() {
 
     private fun initRoutePlannerFlows() {
         lifecycleScope.launch {
+            routePlannerViewModel.routePlanType
+                .flowWithLifecycle(lifecycle)
+                .collect { planType ->
+                    when (planType) {
+                        RoutePlanType.Hike, RoutePlanType.Foot, RoutePlanType.Bike -> {
+                            distanceSlider.labelBehavior = LABEL_GONE
+                            roundTripGroup.gone()
+                        }
+                        is RoutePlanType.RoundTrip -> {
+                            distanceSlider.labelBehavior = LABEL_VISIBLE
+                            roundTripGroup.visible()
+                        }
+                    }
+                }
+        }
+        lifecycleScope.launch {
             routePlannerViewModel.waypointItems
                 .flowWithLifecycle(lifecycle)
                 .collect { wayPointItems ->
@@ -443,10 +606,12 @@ class RoutePlannerFragment : Fragment() {
             }
             doneButton.disabled = false
             returnToHomeButton.visibleOrGone(routePlanUiModel.isReturnToHomeAvailable)
+            visibilityButton.visible()
         } else {
             routeAttributesContainer.gone()
             doneButton.disabled = true
             returnToHomeButton.gone()
+            visibilityButton.gone()
         }
     }
 

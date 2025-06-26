@@ -6,28 +6,28 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class RouteRequest(
 
-    @field:Json(name = "profile")
-    val profile: String,
+    @Json(name = "profile")
+    val profile: Profile,
 
-    @field:Json(name = "points_encoded")
+    @Json(name = "points_encoded")
     val pointsEncoded: Boolean,
 
-    @field:Json(name = "elevation")
+    @Json(name = "elevation")
     val elevation: Boolean,
 
-    @field:Json(name = "instructions")
+    @Json(name = "instructions")
     val instructions: Boolean,
 
-    @field:Json(name = "points")
+    @Json(name = "points")
     val points: List<List<Double>>,
 
-    @field:Json(name = "custom_model")
+    @Json(name = "custom_model")
     val customModel: CustomModel? = null,
 
-    @field:Json(name = "ch.disable")
+    @Json(name = "ch.disable")
     val chDisabled: Boolean? = null,
 
-    @field:Json(name = "algorithm")
+    @Json(name = "algorithm")
     val algorithm: Algorithm? = null,
 
     /**
@@ -35,7 +35,7 @@ data class RouteRequest(
      * If algorithm=alternative_route, this parameter sets the number of maximum paths which should be
      * calculated. Increasing can lead to worse alternatives.
      */
-    @field:Json(name = "alternative_route.max_paths")
+    @Json(name = "alternative_route.max_paths")
     val alternativeMaxPaths: Int? = null,
 
     /**
@@ -43,20 +43,20 @@ data class RouteRequest(
      * If algorithm=alternative_route, this parameter sets the factor by which the alternatives routes can be
      * longer than the optimal route. Increasing can lead to worse alternatives.
      */
-    @field:Json(name = "alternative_route.max_weight_factor")
+    @Json(name = "alternative_route.max_weight_factor")
     val alternativeMaxWeightFactor: Double? = null,
 
     /**
      * Default: 10000
      * If algorithm=round_trip, this parameter configures approximative length of the resulting round trip.
      */
-    @field:Json(name = "round_trip.distance")
+    @Json(name = "round_trip.distance")
     val roundTripDistance: Int? = null,
 
     /**
      * If algorithm=round_trip, this sets the random seed. Change this to get a different tour for each value.
      */
-    @field:Json(name = "round_trip.seed")
+    @Json(name = "round_trip.seed")
     val roundTripSeed: Int? = null,
 
     /**
@@ -66,7 +66,20 @@ data class RouteRequest(
      * This parameter also influences the tour generated with algorithm=round_trip and forces the initial
      * direction. Requires ch.disable=true.
      */
-    @field:Json(name = "heading")
-    val heading: Int? = null
+    @Json(name = "heading")
+    val heading: List<Int>? = null,
 
-)
+    /**
+     * Penalty for omitting a specified heading.
+     * The penalty corresponds to the accepted time delay in seconds in comparison to the route without a heading.
+     */
+    @Json(name = "heading_penalty")
+    val headingPenalty: Int? = null,
+
+    /**
+     * If true u-turns are avoided at via-points with regard to the heading_penalty.
+     */
+    @Json(name = "pass_through")
+    val passThrough: Boolean? = null,
+
+    )

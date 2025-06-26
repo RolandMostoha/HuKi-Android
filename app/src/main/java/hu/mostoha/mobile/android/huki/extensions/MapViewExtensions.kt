@@ -89,24 +89,24 @@ fun MapView.hasNoOverlay(overlayId: String): Boolean {
     return !hasOverlay(overlayId)
 }
 
-fun MapView.hideOverlay(overlayId: String) {
-    overlays.filterIsInstance<OverlayWithIW>()
-        .filter { it.id == overlayId }
-        .forEach { it.isEnabled = false }
-    invalidate()
-}
-
-fun MapView.showOverlay(overlayId: String) {
-    overlays.filterIsInstance<OverlayWithIW>()
-        .filter { it.id == overlayId }
-        .forEach { it.isEnabled = true }
-    invalidate()
-}
-
 inline fun <reified T : OverlayWithIW> MapView.switchOverlayVisibility(overlayId: String) {
     overlays.filterIsInstance<T>()
         .filter { it.id == overlayId }
         .forEach { it.isEnabled = !it.isEnabled }
+    invalidate()
+}
+
+fun MapView.updateOverlayVisibility(overlayId: String, isVisible: Boolean) {
+    overlays.filterIsInstance<OverlayWithIW>()
+        .filter { it.id == overlayId }
+        .forEach { it.isEnabled = isVisible }
+    invalidate()
+}
+
+inline fun <reified T : OverlayWithIW> MapView.updateOverlayVisibilityBy(overlayId: String, isVisible: Boolean) {
+    overlays.filterIsInstance<T>()
+        .filter { it.id == overlayId }
+        .forEach { it.isEnabled = isVisible }
     invalidate()
 }
 

@@ -83,21 +83,21 @@ class GpxHistoryAdapter(
                             PopupMenuActionItem(
                                 popupMenuItem = PopupMenuItem(
                                     titleId = R.string.gpx_history_menu_action_share,
-                                    iconId = R.drawable.ic_gpx_share
+                                    startIconId = R.drawable.ic_gpx_share
                                 ),
                                 onClick = { onGpxShare.invoke(item) }
                             ),
                             PopupMenuActionItem(
                                 popupMenuItem = PopupMenuItem(
                                     titleId = R.string.gpx_history_menu_action_rename,
-                                    iconId = R.drawable.ic_gpx_history_action_rename
+                                    startIconId = R.drawable.ic_gpx_history_action_rename
                                 ),
                                 onClick = { onGpxRename.invoke(item) }
                             ),
                             PopupMenuActionItem(
                                 popupMenuItem = PopupMenuItem(
                                     titleId = R.string.gpx_history_menu_action_delete,
-                                    iconId = R.drawable.ic_gpx_history_action_delete
+                                    startIconId = R.drawable.ic_gpx_history_action_delete
                                 ),
                                 onClick = { onGpxDelete.invoke(item) }
                             ),

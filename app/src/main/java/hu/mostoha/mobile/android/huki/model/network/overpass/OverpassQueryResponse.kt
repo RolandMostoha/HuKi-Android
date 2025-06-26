@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class OverpassQueryResponse(
-    @field:Json(name = "elements")
+    @Json(name = "elements")
     var elements: List<Element>
 )

@@ -5,6 +5,7 @@ import kotlin.time.Duration
 
 data class RoutePlan(
     val id: String = UUID.randomUUID().toString(),
+    val planType: RoutePlanType,
     val wayPoints: List<Location>,
     val locations: List<Location>,
     val travelTime: Duration,

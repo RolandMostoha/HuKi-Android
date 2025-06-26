@@ -6,6 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_ALTITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_1_LONGITUDE
@@ -41,7 +42,7 @@ class RoutePlannerRepositoryTest {
     fun whenGetRouteResponse_thenResultIsNotNull() = runTest {
         val waypoints = listOf(DEFAULT_WAYPOINT_1, DEFAULT_WAYPOINT_2)
 
-        val routeResponse = repository.getRoutePlan(waypoints)
+        val routeResponse = repository.getRoutePlan(RoutePlanType.Hike, waypoints)
 
         assertThat(routeResponse).isNotNull()
     }

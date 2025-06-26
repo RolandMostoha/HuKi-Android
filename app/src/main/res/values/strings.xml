@@ -126,7 +126,16 @@
     <string name="layers_gpx_title">GPX Layer</string>
     <string name="layers_gpx_import_button_title">Import GPX</string>
 
-    <string name="route_planner_waypoint_hint">Place or location</string>
+    <string name="route_planner_type_hike">On hiking routes</string>
+    <string name="route_planner_type_hike_subtitle">Hiking routes are always preferred</string>
+    <string name="route_planner_type_foot">Shortest route</string>
+    <string name="route_planner_type_foot_subtitle">On any road (small paths, forest roads, etc.)</string>
+    <string name="route_planner_type_bike">On bike routes</string>
+    <string name="route_planner_type_bike_subtitle">Biking routes are always preferred</string>
+    <string name="route_planner_type_round_trip">Round trip (beta)</string>
+    <string name="route_planner_type_round_trip_subtitle">Plans a round trip based on starting point and distance</string>
+    <string name="route_planner_round_trip_distance_title">Distance:</string>
+    <string name="route_planner_waypoint_hint">Place finder</string>
     <string name="route_planner_done_button">Save</string>
     <string name="route_planner_general_error_message">Error occurred. Please check the internet connection and update your plan!</string>
     <string name="route_planner_error_file_save_unsuccsessful">Error occurred during saving your plan to GPX file!</string>
@@ -136,6 +145,7 @@
     <string name="route_planner_accessibility_remove_waypoint">Remove waypoint</string>
     <string name="route_planner_accessibility_comment">Add comment</string>
     <string name="route_planner_accessibility_return_waypoint">Return to start position</string>
+    <string name="route_planner_accessibility_visibility">Show or Hide route</string>
 
     <string name="waypoint_comment_title">Destination comments</string>
     <string name="waypoint_comment_name_hint">Destination name</string>

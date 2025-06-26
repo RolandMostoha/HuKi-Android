@@ -11,6 +11,9 @@ import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType.Hike
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType.RoundTrip
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerUiModelMapper
@@ -36,6 +39,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -70,6 +74,9 @@ class RoutePlannerViewModel @Inject constructor(
     val waypointItems: StateFlow<List<WaypointItem>> = _wayPointItems
         .stateIn(viewModelScope, WhileViewSubscribed, emptyList())
 
+    private val _routePlanType = MutableStateFlow<RoutePlanType>(Hike)
+    val routePlanType: SharedFlow<RoutePlanType> = _routePlanType.asSharedFlow()
+
     private val _routePlanGpxFileUri = MutableSharedFlow<Uri>()
     val routePlanGpxFileUri: SharedFlow<Uri> = _routePlanGpxFileUri.asSharedFlow()
 
@@ -81,23 +88,30 @@ class RoutePlannerViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            waypointItems
-                .flatMapLatest { waypoints ->
+            routePlanType
+                .combine(waypointItems) { routePlanType, waypoints -> routePlanType to waypoints }
+                .flatMapLatest { (routePlanType, waypoints) ->
                     val triggerLocations = waypoints.mapNotNull { it.location }
-                    if (triggerLocations.size < 2) {
-                        return@flatMapLatest emptyFlow()
-                    }
 
-                    val lastTriggerLocations = routePlanUiModel.value?.triggerLocations
-                    if (lastTriggerLocations != null && triggerLocations == lastTriggerLocations) {
-                        return@flatMapLatest emptyFlow()
+                    if (routePlanType is RoundTrip) {
+                        if (routePlanType.distanceM < 1 || triggerLocations.isEmpty()) {
+                            return@flatMapLatest emptyFlow()
+                        }
+                    } else {
+                        if (triggerLocations.size < 2) {
+                            return@flatMapLatest emptyFlow()
+                        }
+                        val lastTriggerLocations = routePlanUiModel.value?.triggerLocations
+                        if (lastTriggerLocations != null && triggerLocations == lastTriggerLocations) {
+                            return@flatMapLatest emptyFlow()
+                        }
                     }
 
                     flowWithExceptions(
-                        request = { routePlannerRepository.getRoutePlan(triggerLocations) },
+                        request = { routePlannerRepository.getRoutePlan(routePlanType, triggerLocations) },
                         exceptionLogger = exceptionLogger
                     )
-                        .map { mapper.mapToRoutePlanUiModel(waypoints, triggerLocations, it) }
+                        .map { mapper.mapToRoutePlanUiModel(waypoints, it) }
                         .onEach { _routePlanUiModel.emit(it) }
                         .onStart {
                             _routePlanErrorMessage.emit(null)
@@ -270,13 +284,42 @@ class RoutePlannerViewModel @Inject constructor(
         }
     }
 
-    fun createRoundTrip() {
+    fun returnToHome() {
         if (waypointItems.value.size >= 2) {
             _wayPointItems.update { wayPointItemList ->
                 wayPointItemList
                     .plus(wayPointItemList.first())
                     .reOrder()
             }
+        }
+    }
+
+    fun switchPlanType(planType: RoutePlanType) {
+        viewModelScope.launch {
+            _routePlanUiModel.value = null
+
+            when {
+                planType is RoundTrip -> {
+                    _wayPointItems.update { wayPointItemList ->
+                        wayPointItemList.take(1)
+                    }
+                }
+                _wayPointItems.value.size < 2 -> {
+                    _wayPointItems.update { wayPointItemList ->
+                        wayPointItemList.plus(
+                            WaypointItem(order = 1, waypointType = WaypointType.END)
+                        )
+                    }
+                }
+            }
+
+            _routePlanType.emit(planType)
+        }
+    }
+
+    fun switchVisibility() {
+        _routePlanUiModel.update { routePlanUiModel ->
+            routePlanUiModel?.copy(isRouteVisible = !routePlanUiModel.isRouteVisible)
         }
     }
 
@@ -299,6 +342,7 @@ class RoutePlannerViewModel @Inject constructor(
 
     fun clearRoutePlanner() {
         _routePlanUiModel.value = null
+        _routePlanType.value = Hike
         _wayPointItems.value = emptyList()
     }
 

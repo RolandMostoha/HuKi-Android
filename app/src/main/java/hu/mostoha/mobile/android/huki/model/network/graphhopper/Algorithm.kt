@@ -4,10 +4,10 @@ import com.squareup.moshi.Json
 
 enum class Algorithm {
 
-    @field:Json(name = "round_trip")
+    @Json(name = "round_trip")
     ROUND_TRIP,
 
-    @field:Json(name = "alternative_route")
+    @Json(name = "alternative_route")
     ALTERNATIVE_ROUTE,
 
 }

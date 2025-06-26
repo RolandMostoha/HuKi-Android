@@ -161,7 +161,7 @@ class GpxDetailsBottomSheetDialog(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.gpx_details_bottom_sheet_google_maps_start,
-                        iconId = R.drawable.ic_popup_menu_google_maps_start
+                        startIconId = R.drawable.ic_popup_menu_google_maps_start
                     ),
                     onClick = {
                         analyticsService.googleMapsClicked()
@@ -171,7 +171,7 @@ class GpxDetailsBottomSheetDialog(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.gpx_details_bottom_sheet_google_maps_end,
-                        iconId = R.drawable.ic_popup_menu_google_maps_end
+                        startIconId = R.drawable.ic_popup_menu_google_maps_end
                     ),
                     onClick = {
                         analyticsService.googleMapsClicked()

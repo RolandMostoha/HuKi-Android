@@ -21,3 +21,10 @@ fun <T> List<T>.swap(fromItem: T, toItem: T): List<T> {
 
     return mutableList.toList()
 }
+
+fun <T> List<T>.second(): T {
+    if (isEmpty() || size != 2) {
+        throw NoSuchElementException("List size must be 2, actual=$size.")
+    }
+    return this[1]
+}

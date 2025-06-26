@@ -211,6 +211,20 @@
         <item name="dashDirection">horizontal</item>
     </style>
 
+    <style name="DefaultTooltip" parent="Widget.MaterialComponents.Tooltip">
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="shapeAppearance">@style/TooltipShapeAppearance</item>
+    </style>
+
+    <style name="DefaultSliderStyle">
+        <item name="labelStyle">@style/DefaultTooltip</item>
+        <item name="trackHeight">16dp</item>
+    </style>
+
+    <style name="TooltipShapeAppearance" parent="ShapeAppearance.MaterialComponents.Tooltip">
+        <item name="cornerSize">15dp</item>
+    </style>
+
     <style name="RoundedSelectableTextStyle">
         <item name="android:background">@drawable/background_rounded_selectable_text</item>
         <item name="android:paddingVertical">@dimen/space_large</item>

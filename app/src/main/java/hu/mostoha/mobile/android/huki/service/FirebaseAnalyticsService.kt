@@ -12,6 +12,7 @@ import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.BillingAction
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
@@ -44,6 +45,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_ROUTE_PLANNER_MY_LOCATION = "select_route_planner_my_location"
         private const val EVENT_SELECT_ROUTE_PLANNER_DONE = "select_route_planner_done"
         private const val EVENT_SELECT_ROUTE_PLANNER_COMMENT_DONE = "select_route_planner_comment_done"
+        private const val EVENT_SELECT_ROUTE_PLANNER_HIKE_TYPE_TEMPLATE = "select_route_planner_%s"
         private const val EVENT_SELECT_MAPS_DIRECTIONS = "select_maps_directions"
         private const val EVENT_GPX_IMPORT_CLICKED = "gpx_import_clicked"
         private const val EVENT_GPX_IMPORTED = "gpx_imported"
@@ -192,6 +194,13 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun routePlannerCommentDone() {
         firebaseAnalytics.logEvent(EVENT_SELECT_ROUTE_PLANNER_COMMENT_DONE, null)
+    }
+
+    override fun routePlannerTypeClicked(planType: RoutePlanType) {
+        val eventName = EVENT_SELECT_ROUTE_PLANNER_HIKE_TYPE_TEMPLATE.format(
+            planType.javaClass.simpleName.lowercase()
+        )
+        firebaseAnalytics.logEvent(eventName, null)
     }
 
     override fun routePlanSaved(routePlan: RoutePlanUiModel) {

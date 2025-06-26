@@ -60,7 +60,6 @@ import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.hasNoOverlay
 import hu.mostoha.mobile.android.huki.extensions.hasOverlay
 import hu.mostoha.mobile.android.huki.extensions.hideAll
-import hu.mostoha.mobile.android.huki.extensions.hideOverlay
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.isDarkMode
 import hu.mostoha.mobile.android.huki.extensions.isGooglePlayServicesAvailable
@@ -75,10 +74,10 @@ import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
 import hu.mostoha.mobile.android.huki.extensions.removeOverlays
 import hu.mostoha.mobile.android.huki.extensions.resetOrientation
+import hu.mostoha.mobile.android.huki.extensions.second
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
 import hu.mostoha.mobile.android.huki.extensions.showErrorSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showOnly
-import hu.mostoha.mobile.android.huki.extensions.showOverlay
 import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showToast
@@ -86,6 +85,8 @@ import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
 import hu.mostoha.mobile.android.huki.extensions.switchOverlayVisibility
 import hu.mostoha.mobile.android.huki.extensions.toDrawable
 import hu.mostoha.mobile.android.huki.extensions.toggleInfoWindows
+import hu.mostoha.mobile.android.huki.extensions.updateOverlayVisibility
+import hu.mostoha.mobile.android.huki.extensions.updateOverlayVisibilityBy
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
@@ -134,6 +135,8 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceCategoryMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RotationGestureOverlay
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -156,6 +159,8 @@ import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderPopup
 import hu.mostoha.mobile.android.huki.ui.home.placefinder.PlaceFinderViewModel
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerFragment
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.RoutePlannerViewModel
+import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
+import hu.mostoha.mobile.android.huki.ui.home.routeplanner.hasLocation
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsViewModel
 import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
@@ -204,6 +209,7 @@ import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 @Suppress("LargeClass")
@@ -607,7 +613,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.okt_okt_title,
                         subTitleId = R.string.okt_okt_subtitle,
-                        iconId = R.drawable.ic_okt_okt
+                        startIconId = R.drawable.ic_okt_okt
                     ),
                     onClick = {
                         val oktType = OktType.OKT
@@ -619,7 +625,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.okt_rpddk_title,
                         subTitleId = R.string.okt_rpddk_subtitle,
-                        iconId = R.drawable.ic_okt_rpddk
+                        startIconId = R.drawable.ic_okt_rpddk
                     ),
                     onClick = {
                         val oktType = OktType.RPDDK
@@ -631,7 +637,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.okt_akt_title,
                         subTitleId = R.string.okt_akt_subtitle,
-                        iconId = R.drawable.ic_okt_akt
+                        startIconId = R.drawable.ic_okt_akt
                     ),
                     onClick = {
                         val oktType = OktType.AKT
@@ -643,7 +649,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     popupMenuItem = PopupMenuItem(
                         titleId = null,
                         subTitleId = R.string.okt_official_website_subtitle,
-                        iconId = R.drawable.ic_okt_info
+                        startIconId = R.drawable.ic_okt_info
                     ),
                     onClick = {
                         openUrl(KEKTURA_URL)
@@ -968,13 +974,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     initGpxDetails(gpxUiModel)
                 }
         }
-        lifecycleScope.launch {
-            routePlannerViewModel.routePlanUiModel
-                .flowWithLifecycle(lifecycle)
-                .collect { routePlanUiModel ->
-                    initRoutePlan(routePlanUiModel)
-                }
-        }
     }
 
     private fun initRoutePlannerFlows() {
@@ -1008,6 +1007,41 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             }
                         }
                     }
+                }
+        }
+        lifecycleScope.launch {
+            routePlannerViewModel.waypointItems
+                .flowWithLifecycle(lifecycle)
+                .collect { waypointItems ->
+                    when {
+                        waypointItems.none { it.hasLocation() } -> {
+                            homeMapView.removeOverlays(RoutePlannerMarker::class.java)
+                        }
+                        waypointItems.size > 2 -> Unit
+                        waypointItems.all { it.hasLocation() } -> Unit
+                        else -> {
+                            // Any of the items contains a location
+                            val waypointToType = if (waypointItems.first().hasLocation()) {
+                                waypointItems.first().location!! to WaypointType.START
+                            } else {
+                                waypointItems.second().location!! to WaypointType.END
+                            }
+                            homeMapView.addRoutePlannerMarker(
+                                overlayId = UUID.randomUUID().toString(),
+                                geoPoint = waypointToType.first.toGeoPoint(),
+                                waypointType = waypointToType.second,
+                                onClick = { homeMapView.center(waypointToType.first.toGeoPoint()) }
+                            )
+                            homeMapView.center(waypointToType.first.toGeoPoint())
+                        }
+                    }
+                }
+        }
+        lifecycleScope.launch {
+            routePlannerViewModel.routePlanUiModel
+                .flowWithLifecycle(lifecycle)
+                .collect { routePlanUiModel ->
+                    initRoutePlan(routePlanUiModel)
                 }
         }
     }
@@ -1679,17 +1713,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             gpxDetailsUiModel == null -> {
                 InfoWindow.closeAllInfoWindowsOn(homeMapView)
                 homeMapView.removeOverlay(OverlayType.GPX)
-                return
             }
             homeMapView.hasOverlay(gpxDetailsUiModel.id) -> {
                 val offsetBoundingBox = gpxDetailsUiModel.boundingBox.withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
                 addGpxPolyline(gpxDetailsUiModel, offsetBoundingBox)
 
-                if (gpxDetailsUiModel.isVisible) {
-                    homeMapView.showOverlay(gpxDetailsUiModel.id)
-                } else {
-                    homeMapView.hideOverlay(gpxDetailsUiModel.id)
-                }
+                homeMapView.updateOverlayVisibility(gpxDetailsUiModel.id, gpxDetailsUiModel.isVisible)
             }
             homeMapView.hasNoOverlay(gpxDetailsUiModel.id) -> {
                 val offsetBoundingBox = gpxDetailsUiModel.boundingBox.withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
@@ -1781,34 +1810,57 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initRoutePlan(routePlanUiModel: RoutePlanUiModel?) {
-        homeMapView.removeOverlay(OverlayType.ROUTE_PLANNER)
+        when {
+            routePlanUiModel == null -> {
+                homeMapView.removeOverlay(OverlayType.ROUTE_PLANNER)
+            }
+            homeMapView.hasOverlay(routePlanUiModel.id) -> {
+                val offsetBoundingBox = routePlanUiModel.boundingBox.withOffset(homeMapView, OffsetType.TOP_SHEET)
+                homeMapView.addRoutePlannerPolyline(
+                    overlayId = routePlanUiModel.id,
+                    geoPoints = routePlanUiModel.geoPoints,
+                    onClick = {
+                        homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+                    }
+                )
+                routePlanUiModel.wayPoints.forEach { waypointItem ->
+                    homeMapView.addRoutePlannerMarker(
+                        overlayId = routePlanUiModel.id,
+                        geoPoint = waypointItem.location!!.toGeoPoint(),
+                        waypointType = waypointItem.waypointType,
+                        onClick = {
+                            homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+                        }
+                    )
+                }
+                homeMapView.updateOverlayVisibilityBy<RoutePlannerPolyline>(
+                    routePlanUiModel.id,
+                    routePlanUiModel.isRouteVisible
+                )
+            }
+            homeMapView.hasNoOverlay(routePlanUiModel.id) -> {
+                val offsetBoundingBox = routePlanUiModel.boundingBox.withOffset(homeMapView, OffsetType.TOP_SHEET)
+                homeMapView.addRoutePlannerPolyline(
+                    overlayId = routePlanUiModel.id,
+                    geoPoints = routePlanUiModel.geoPoints,
+                    onClick = {
+                        homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+                    }
+                )
 
-        if (routePlanUiModel == null) {
-            return
-        }
+                routePlanUiModel.wayPoints.forEach { waypointItem ->
+                    homeMapView.addRoutePlannerMarker(
+                        overlayId = routePlanUiModel.id,
+                        geoPoint = waypointItem.location!!.toGeoPoint(),
+                        waypointType = waypointItem.waypointType,
+                        onClick = {
+                            homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+                        }
+                    )
+                }
 
-        val offsetBoundingBox = routePlanUiModel.boundingBox.withOffset(homeMapView, OffsetType.TOP_SHEET)
-
-        homeMapView.addRoutePlannerPolyline(
-            overlayId = routePlanUiModel.id,
-            geoPoints = routePlanUiModel.geoPoints,
-            onClick = {
                 homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
             }
-        )
-
-        routePlanUiModel.wayPoints.forEach { waypointItem ->
-            homeMapView.addRoutePlannerMarker(
-                overlayId = routePlanUiModel.id,
-                geoPoint = waypointItem.location!!.toGeoPoint(),
-                waypointType = waypointItem.waypointType,
-                onClick = {
-                    homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
-                }
-            )
         }
-
-        homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
     }
-
 }

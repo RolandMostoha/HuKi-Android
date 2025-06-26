@@ -3,12 +3,14 @@ package hu.mostoha.mobile.android.huki.model.mapper
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.CustomModel
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.Hints
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.Info
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.Path
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.Points
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.Priority
+import hu.mostoha.mobile.android.huki.model.network.graphhopper.Profile
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.RouteRequest
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.RouteResponse
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.SnappedWaypoints
@@ -29,11 +31,11 @@ class RoutePlannerNetworkModelMapperTest {
     fun `Given waypoints, when createRouteRequest, then route request returns`() {
         val waypoints = listOf(DEFAULT_WAYPOINT_1, DEFAULT_WAYPOINT_2)
 
-        val routeRequest = mapper.createRouteRequest(waypoints)
+        val routeRequest = mapper.createRouteRequest(RoutePlanType.Hike, waypoints)
 
         assertThat(routeRequest).isEqualTo(
             RouteRequest(
-                profile = "hike",
+                profile = Profile.HIKE,
                 pointsEncoded = false,
                 elevation = true,
                 instructions = false,
@@ -99,13 +101,14 @@ class RoutePlannerNetworkModelMapperTest {
             )
         )
 
-        val routePlan = mapper.mapRouteResponse(routeResponse)
+        val routePlan = mapper.mapRouteResponse(RoutePlanType.Hike, routeResponse)
 
         val expectedLocations = listOf(DEFAULT_WAYPOINT_1, DEFAULT_WAYPOINT_2)
 
         assertThat(routePlan).isEqualTo(
             RoutePlan(
                 id = routePlan.id,
+                planType = RoutePlanType.Hike,
                 wayPoints = expectedLocations,
                 locations = expectedLocations,
                 travelTime = expectedLocations.calculateTravelTime(),

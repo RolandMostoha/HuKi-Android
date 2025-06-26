@@ -45,7 +45,7 @@ class OktRoutesAdapter(
                     oktRoutesItemContainer.setBackgroundResource(R.drawable.background_okt_routes_selected)
                 } else {
                     oktRoutesItemContainer.isSelected = false
-                    oktRoutesItemContainer.setBackgroundResource(R.color.transparent)
+                    oktRoutesItemContainer.setBackgroundResource(R.color.colorBackground)
                 }
                 oktRoutesItemContainer.setOnClickListener {
                     onItemClick.invoke(oktRouteUiModel.oktId)
@@ -80,7 +80,7 @@ class OktRoutesAdapter(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.okt_routes_menu_action_details,
-                        iconId = R.drawable.ic_okt_routes_action_details
+                        startIconId = R.drawable.ic_okt_routes_action_details
                     ),
                     onClick = {
                         onLinkClick.invoke(oktRouteUiModel.oktId, oktRouteUiModel.detailsUrl)
@@ -89,7 +89,7 @@ class OktRoutesAdapter(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.okt_routes_menu_action_start_point,
-                        iconId = R.drawable.ic_popup_menu_google_maps_start
+                        startIconId = R.drawable.ic_popup_menu_google_maps_start
                     ),
                     onClick = {
                         onEdgePointClick.invoke(
@@ -101,7 +101,7 @@ class OktRoutesAdapter(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
                         titleId = R.string.okt_routes_menu_action_end_point,
-                        iconId = R.drawable.ic_popup_menu_google_maps_end
+                        startIconId = R.drawable.ic_popup_menu_google_maps_end
                     ),
                     onClick = {
                         onEdgePointClick.invoke(

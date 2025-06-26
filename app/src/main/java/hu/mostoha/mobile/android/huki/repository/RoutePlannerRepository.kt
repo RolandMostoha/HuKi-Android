@@ -12,6 +12,7 @@ import hu.mostoha.mobile.android.huki.configuration.GpxConfiguration
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerNetworkModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
@@ -30,12 +31,12 @@ class RoutePlannerRepository @Inject constructor(
     private val gpxConfiguration: GpxConfiguration,
 ) {
 
-    suspend fun getRoutePlan(waypoints: List<Location>): RoutePlan {
-        val routeRequest = routePlannerNetworkModelMapper.createRouteRequest(waypoints)
+    suspend fun getRoutePlan(planType: RoutePlanType, waypoints: List<Location>): RoutePlan {
+        val routeRequest = routePlannerNetworkModelMapper.createRouteRequest(planType, waypoints)
 
         val routeResponse = graphhopperService.getRoute(routeRequest)
 
-        return routePlannerNetworkModelMapper.mapRouteResponse(routeResponse)
+        return routePlannerNetworkModelMapper.mapRouteResponse(planType, routeResponse)
     }
 
     suspend fun saveRoutePlan(routePlan: RoutePlanUiModel, waypoints: List<WaypointItem>): Uri? {

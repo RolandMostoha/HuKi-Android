@@ -5,6 +5,7 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.domain.toDomain
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.ui.AltitudeUiModel
@@ -40,7 +41,8 @@ class RoutePlannerUiModelMapperTest {
                 primaryText = DEFAULT_ROUTE_PLAN_WAYPOINT_1_NAME.toMessage(),
                 location = Location(
                     DEFAULT_ROUTE_PLAN_WAYPOINT_1_LATITUDE,
-                    DEFAULT_ROUTE_PLAN_WAYPOINT_1_LONGITUDE
+                    DEFAULT_ROUTE_PLAN_WAYPOINT_1_LONGITUDE,
+                    DEFAULT_ROUTE_PLAN_WAYPOINT_1_ALTITUDE,
                 )
             ),
             WaypointItem(
@@ -50,11 +52,12 @@ class RoutePlannerUiModelMapperTest {
                 location = Location(
                     DEFAULT_ROUTE_PLAN_WAYPOINT_2_LATITUDE,
                     DEFAULT_ROUTE_PLAN_WAYPOINT_2_LONGITUDE,
+                    DEFAULT_ROUTE_PLAN_WAYPOINT_2_ALTITUDE,
                 )
             ),
         )
 
-        val model = mapper.mapToRoutePlanUiModel(waypoints, triggerLocations, routePlan)
+        val model = mapper.mapToRoutePlanUiModel(waypoints, routePlan)
 
         assertThat(model).isEqualTo(
             RoutePlanUiModel(
@@ -94,7 +97,8 @@ class RoutePlannerUiModelMapperTest {
                     downhillText = DistanceFormatter.format(routePlan.decline),
                 ),
                 isClosed = routePlan.isClosed,
-                isReturnToHomeAvailable = !routePlan.isClosed
+                isReturnToHomeAvailable = !routePlan.isClosed,
+                isRouteVisible = true
             )
         )
     }
@@ -128,7 +132,7 @@ class RoutePlannerUiModelMapperTest {
             ),
         )
 
-        val result = mapper.mapToRoutePlanName(waypoints)
+        val result = mapper.mapToRoutePlanName(RoutePlanType.Hike, waypoints)
 
         assertThat(result).contains("Dobogoko_Ram_hegy_HuKi")
     }
@@ -158,7 +162,7 @@ class RoutePlannerUiModelMapperTest {
             ),
         )
 
-        val result = mapper.mapToRoutePlanName(waypoints)
+        val result = mapper.mapToRoutePlanName(RoutePlanType.Hike, waypoints)
 
         assertThat(result).contains("47_72_18_89_Barackos___HuKi")
     }
@@ -187,7 +191,8 @@ class RoutePlannerUiModelMapperTest {
             ),
             incline = 500,
             decline = 200,
-            isClosed = false
+            isClosed = false,
+            planType = RoutePlanType.Hike
         )
     }
 

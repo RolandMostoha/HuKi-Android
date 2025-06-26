@@ -37,11 +37,13 @@ import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
@@ -89,6 +91,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.setSliderValue
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
@@ -184,6 +187,7 @@ class RoutePlannerUiTest {
         )
         coEvery {
             routPlannerRepository.getRoutePlan(
+                RoutePlanType.Hike,
                 listOf(
                     DEFAULT_PLACE_NODE.location,
                     DEFAULT_PLACE_WAY.location
@@ -192,6 +196,7 @@ class RoutePlannerUiTest {
         } returns DEFAULT_ROUTE_PLAN
         coEvery {
             routPlannerRepository.getRoutePlan(
+                RoutePlanType.Hike,
                 listOf(
                     DEFAULT_PLACE_NODE.location,
                     DEFAULT_PLACE_WAY.location,
@@ -201,6 +206,7 @@ class RoutePlannerUiTest {
         } returns DEFAULT_ROUTE_PLAN_2
         coEvery {
             routPlannerRepository.getRoutePlan(
+                RoutePlanType.Hike,
                 listOf(
                     DEFAULT_PLACE_NODE.location,
                     DEFAULT_PLACE_WAY.location,
@@ -210,6 +216,7 @@ class RoutePlannerUiTest {
         } returns DEFAULT_ROUTE_PLAN_2
         coEvery {
             routPlannerRepository.getRoutePlan(
+                RoutePlanType.Hike,
                 listOf(
                     DEFAULT_MY_LOCATION.copy(altitude = null),
                     DEFAULT_PLACE_NODE.location,
@@ -257,6 +264,23 @@ class RoutePlannerUiTest {
             onView(withId(R.id.routePlannerWaypointList))
                 .perform(scrollToPosition<ViewHolder>(0))
                 .check(matches(not(hasFocus())))
+        }
+    }
+
+    @Test
+    fun givenOneWaypoint_thenWaypointDisplayedOnMapWithoutRoutePlan() {
+        launchScenario<HomeActivity> {
+            val waypointName1 = "Dobogoko"
+
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.homeMapView.hasOverlay<RoutePlannerMarker>()
+            R.id.routePlannerRouteAttributesContainer.isNotDisplayed()
+            R.id.homeMapView.hasNoOverlay<RoutePlannerPolyline>()
         }
     }
 
@@ -395,7 +419,7 @@ class RoutePlannerUiTest {
     fun givenMyLocationWithGeocoding_whenAddMyLocationWaypoint_thenRoutePlanUpdates() {
         launchScenario<HomeActivity> {
             coEvery { geocodingRepository.getPlaceProfile(any()) } returns DEFAULT_PLACE_PROFILE
-            coEvery { routPlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
+            coEvery { routPlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
 
             val waypointName1 = "Dobogoko"
 
@@ -473,7 +497,7 @@ class RoutePlannerUiTest {
                 R.string.route_planner_general_error_message.toMessage(),
                 IllegalStateException("")
             )
-            coEvery { routPlannerRepository.getRoutePlan(any()) } throws exception
+            coEvery { routPlannerRepository.getRoutePlan(any(), any()) } throws exception
 
             val waypointName1 = "Dobogoko"
             val waypointName2 = "Ram-hegy"
@@ -566,23 +590,6 @@ class RoutePlannerUiTest {
     }
 
     @Test
-    @Ignore
-    fun whenGraphhopperContainerIsClicked_thenGraphhopperWebsiteDisplays() {
-        launchScenario<HomeActivity> {
-            R.id.homeRoutePlannerFab.click()
-
-            R.id.routePlannerGraphhopperContainer.click()
-
-            intended(
-                allOf(
-                    hasAction(Intent.ACTION_VIEW),
-                    hasData(testAppContext.getString(R.string.route_planner_graphhopper_url))
-                )
-            )
-        }
-    }
-
-    @Test
     fun givenWaypointComment_whenSaveButtonClicked_thenGpxDisplaysOnMap() {
         launchScenario<HomeActivity> {
             val waypointName1 = "Dobogoko"
@@ -607,6 +614,67 @@ class RoutePlannerUiTest {
             R.id.routePlannerDoneButton.click()
 
             R.id.homeMapView.hasOverlay<GpxPolyline>()
+        }
+    }
+
+    @Test
+    fun givenRoutePlan_whenClickOnVisibility_thenRoutePlanHides() {
+        launchScenario<HomeActivity> {
+            val waypointName1 = "Dobogoko"
+
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.homeMapView.hasOverlay<RoutePlannerMarker>()
+            R.id.routePlannerRouteAttributesContainer.isNotDisplayed()
+            R.id.homeMapView.hasNoOverlay<RoutePlannerPolyline>()
+        }
+    }
+
+    @Test
+    @Ignore
+    fun whenClickOnRoundTrip_thenRoutePlanDisplays() {
+        launchScenario<HomeActivity> {
+            coEvery { geocodingRepository.getPlaceProfile(any()) } returns DEFAULT_PLACE_PROFILE
+            coEvery { routPlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
+
+            val waypointName1 = "Dobogoko"
+
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+
+            R.id.routePlannerSettingsButton.click()
+            R.string.route_planner_type_round_trip.clickWithTextInPopup()
+            R.id.routePlannerDistanceSlider.setSliderValue(8f)
+
+            waitFor(3000)
+
+            R.id.routePlannerAddWaypointButton.isNotDisplayed()
+            R.id.routePlannerRouteAttributesContainer.isDisplayed()
+            R.id.homeMapView.hasNoOverlay<RoutePlannerPolyline>()
+        }
+    }
+
+    @Test
+    @Ignore
+    fun whenGraphhopperContainerIsClicked_thenGraphhopperWebsiteDisplays() {
+        launchScenario<HomeActivity> {
+            R.id.homeRoutePlannerFab.click()
+
+            R.id.routePlannerGraphhopperContainer.click()
+
+            intended(
+                allOf(
+                    hasAction(Intent.ACTION_VIEW),
+                    hasData(testAppContext.getString(R.string.route_planner_graphhopper_url))
+                )
+            )
         }
     }
 
@@ -681,6 +749,7 @@ class RoutePlannerUiTest {
             )
         )
         private val DEFAULT_ROUTE_PLAN = RoutePlan(
+            planType = RoutePlanType.Hike,
             wayPoints = DEFAULT_WAYPOINTS,
             locations = DEFAULT_WAYPOINTS,
             travelTime = 100L.minutes,
@@ -694,6 +763,7 @@ class RoutePlannerUiTest {
             isClosed = false
         )
         private val DEFAULT_ROUTE_PLAN_2 = RoutePlan(
+            planType = RoutePlanType.Hike,
             wayPoints = DEFAULT_WAYPOINTS,
             locations = DEFAULT_WAYPOINTS,
             travelTime = 120L.minutes,

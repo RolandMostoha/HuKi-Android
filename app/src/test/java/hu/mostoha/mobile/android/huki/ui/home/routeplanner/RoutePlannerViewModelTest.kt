@@ -10,6 +10,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.RoutePlannerUiModelMapper
@@ -323,7 +324,7 @@ class RoutePlannerViewModelTest {
         runTestDefault {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
-            coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
+            coEvery { routePlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
             coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns null
 
             viewModel.routePlanUiModel.test {
@@ -372,11 +373,11 @@ class RoutePlannerViewModelTest {
     }
 
     @Test
-    fun `Given two not empty waypoints, when createRoundTrip, then route plan is updated`() {
+    fun `Given two not empty waypoints, when returnToHome, then route plan is updated`() {
         runTestDefault {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
-            coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
+            coEvery { routePlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
             coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns null
 
             viewModel.routePlanUiModel.test {
@@ -385,7 +386,7 @@ class RoutePlannerViewModelTest {
                 viewModel.updateWaypoint(viewModel.waypointItems.value[0], DEFAULT_PLACE_UI_MODEL_1, searchText1)
                 viewModel.updateWaypoint(viewModel.waypointItems.value[1], DEFAULT_PLACE_UI_MODEL_2, searchText2)
                 advanceUntilIdle()
-                viewModel.createRoundTrip()
+                viewModel.returnToHome()
                 advanceUntilIdle()
 
                 skipItems(2)
@@ -401,7 +402,7 @@ class RoutePlannerViewModelTest {
         runTestDefault {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
-            coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
+            coEvery { routePlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
             coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns gpxFileUri
 
             viewModel.initWaypoints()
@@ -423,7 +424,7 @@ class RoutePlannerViewModelTest {
         runTestDefault {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
-            coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
+            coEvery { routePlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
             coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns null
 
             viewModel.initWaypoints()
@@ -445,7 +446,7 @@ class RoutePlannerViewModelTest {
         runTestDefault {
             val searchText1 = "Dob"
             val searchText2 = "Szánkó"
-            coEvery { routePlannerRepository.getRoutePlan(any()) } returns DEFAULT_ROUTE_PLAN
+            coEvery { routePlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
             coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns null
 
             viewModel.waypointItems.test {
@@ -506,7 +507,8 @@ class RoutePlannerViewModelTest {
             ),
             incline = 500,
             decline = 200,
-            isClosed = false
+            isClosed = false,
+            planType = RoutePlanType.Hike
         )
     }
 

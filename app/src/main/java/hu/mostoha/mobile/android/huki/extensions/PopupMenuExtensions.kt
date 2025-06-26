@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.extensions
 
 import android.content.Context
 import android.view.View
+import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -30,13 +31,15 @@ fun Context.showPopupMenu(
                 PopupMenuItem(
                     titleId = menuItem.titleId,
                     subTitleId = menuItem.subTitleId,
-                    iconId = menuItem.iconId
+                    startIconId = menuItem.startIconId,
+                    endIconId = menuItem.endIconId,
+                    backgroundColor = menuItem.backgroundColor
                 )
             }
         )
         .setAnimation(MenuAnimation.FADE)
         .setShowBackground(showBackground)
-        .setMenuRadius(resources.getDimensionPixelSize(R.dimen.default_corner_size_surface).toFloat())
+        .setMenuRadius(resources.getDimensionPixelSize(R.dimen.default_corner_size_popup_menu).toFloat())
         .setWidth(resources.getDimensionPixelSize(width))
         .setAutoDismiss(true)
         .setOnMenuItemClickListener(
@@ -71,7 +74,9 @@ fun Context.showPopupMenu(
 class PopupMenuItem(
     @StringRes val titleId: Int? = null,
     @StringRes val subTitleId: Int? = null,
-    @DrawableRes val iconId: Int? = null,
+    @DrawableRes val startIconId: Int? = null,
+    @DrawableRes val endIconId: Int? = null,
+    @ColorRes val backgroundColor: Int? = null,
 )
 
 data class PopupMenuActionItem(

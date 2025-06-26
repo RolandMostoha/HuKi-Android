@@ -12,7 +12,7 @@
         <path
             android:fillColor="@color/transparent"
             android:pathData="M54,63h405v387h-405z"
-            android:strokeWidth="35"
+            android:strokeWidth="45"
             android:strokeColor="@color/colorPrimaryIconStrong" />
         <path
             android:fillColor="@color/colorPrimaryIconStrong"

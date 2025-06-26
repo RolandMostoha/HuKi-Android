@@ -7,16 +7,16 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 
 @JsonClass(generateAdapter = true)
 data class Bounds(
-    @field:Json(name = "minlat")
+    @Json(name = "minlat")
     var minLat: Double,
 
-    @field:Json(name = "minlon")
+    @Json(name = "minlon")
     var minLon: Double,
 
-    @field:Json(name = "maxlat")
+    @Json(name = "maxlat")
     var maxLat: Double,
 
-    @field:Json(name = "maxlon")
+    @Json(name = "maxlon")
     var maxLon: Double
 )
 

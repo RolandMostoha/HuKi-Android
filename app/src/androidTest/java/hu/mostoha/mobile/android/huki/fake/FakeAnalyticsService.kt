@@ -5,6 +5,7 @@ import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.model.ui.BillingAction
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
@@ -40,6 +41,8 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
     override fun routePlannerMyLocationClicked() = Unit
 
     override fun routePlannerCommentDone() = Unit
+
+    override fun routePlannerTypeClicked(planType: RoutePlanType) = Unit
 
     override fun routePlanSaved(routePlan: RoutePlanUiModel) = Unit
 

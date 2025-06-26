@@ -189,7 +189,7 @@ class PlaceFinderViewModel @Inject constructor(
                     .onStart {
                         placeFinderUiModel.update { it?.copy(isLoading = true) }
 
-                        delay(appConfiguration.getSearchQueryDelay())
+                        delay(appConfiguration.getNetworkDebounceDelay())
                     }
                     .catch { throwable ->
                         if (throwable is DomainException && throwable !is JobCancellationException) {

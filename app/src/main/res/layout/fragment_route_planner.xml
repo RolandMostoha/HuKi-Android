@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/default_elevation"
-    android:animateLayoutChanges="true"
     android:background="@drawable/background_route_planner"
     android:clickable="true"
     android:elevation="@dimen/default_elevation"
@@ -24,6 +23,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/routePlannerSettingsButton"
+        style="@style/DefaultButton.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_extra_small"
+        app:icon="@drawable/ic_route_planner_settings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/routePlannerBackButton" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/routePlannerWaypointList"
         android:layout_width="0dp"
@@ -33,13 +42,52 @@
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@id/routePlannerRouteAttributesContainer"
+        app:layout_constraintBottom_toTopOf="@id/homeRoutePlannerRoundTripGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_max="@dimen/route_planner_waypoint_list_max_height"
         app:layout_constraintStart_toEndOf="@id/routePlannerBackButton"
         app:layout_constraintTop_toTopOf="parent"
         tools:itemCount="3"
         tools:listitem="@layout/item_route_planner_waypoint" />
+
+    <LinearLayout
+        android:id="@+id/homeRoutePlannerRoundTripGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/routePlannerBackButton"
+        app:layout_constraintTop_toBottomOf="@id/routePlannerWaypointList">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/routePlannerDistanceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+            android:text="@string/route_planner_round_trip_distance_title"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Small"
+            android:textColor="@color/colorSecondaryText"
+            app:layout_constraintBottom_toBottomOf="@id/routePlannerDistanceSlider"
+            app:layout_constraintStart_toEndOf="@id/routePlannerBackButton" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/routePlannerDistanceSlider"
+            style="@style/DefaultSliderStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_large"
+            android:layout_marginTop="@dimen/space_small"
+            android:layout_weight="1"
+            android:stepSize="1.0"
+            android:value="0.0"
+            android:valueFrom="0.0"
+            android:valueTo="30.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/routePlannerDistanceTitle"
+            app:layout_constraintTop_toBottomOf="@id/routePlannerWaypointList" />
+
+    </LinearLayout>
 
     <include
         android:id="@+id/routePlannerRouteAttributesContainer"
@@ -49,7 +97,7 @@
         android:layout_marginTop="@dimen/space_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/routePlannerWaypointList" />
+        app:layout_constraintTop_toBottomOf="@id/homeRoutePlannerRoundTripGroup" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/routePlannerErrorText"
@@ -63,7 +111,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/routePlannerWaypointList"
+        app:layout_constraintTop_toBottomOf="@id/homeRoutePlannerRoundTripGroup"
         tools:text="Timeout error!" />
 
     <androidx.constraintlayout.widget.Barrier
@@ -72,6 +120,19 @@
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="routePlannerRouteAttributesContainer,routePlannerErrorText" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/routePlannerVisibilityButton"
+        style="@style/DefaultButton.IconOnly.Stroked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_medium"
+        android:visibility="gone"
+        android:contentDescription="@string/route_planner_accessibility_visibility"
+        app:icon="@drawable/ic_gpx_details_visibility"
+        app:layout_constraintBottom_toBottomOf="@id/routePlannerDoneButton"
+        app:layout_constraintEnd_toStartOf="@id/routePlannerReturnToHomeButton"
+        app:layout_constraintTop_toTopOf="@id/routePlannerDoneButton" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/routePlannerReturnToHomeButton"

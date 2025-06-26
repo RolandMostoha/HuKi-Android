@@ -55,4 +55,8 @@ object DistanceFormatter {
         }
     }
 
+    fun Int.toMetersFromKm(): Int {
+        return this * 1000
+    }
+
 }
