@@ -48,7 +48,6 @@ import hu.mostoha.mobile.android.huki.extensions.addPolygon
 import hu.mostoha.mobile.android.huki.extensions.addPolyline
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerMarker
 import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerPolyline
-import hu.mostoha.mobile.android.huki.extensions.addScaleBarOverlay
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoomIn
 import hu.mostoha.mobile.android.huki.extensions.areInfoWindowsClosed
 import hu.mostoha.mobile.android.huki.extensions.center
@@ -73,6 +72,8 @@ import hu.mostoha.mobile.android.huki.extensions.postMainDelayed
 import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
 import hu.mostoha.mobile.android.huki.extensions.removeOverlays
+import hu.mostoha.mobile.android.huki.extensions.replaceOverlay
+import hu.mostoha.mobile.android.huki.extensions.replaceScaleBarOverlay
 import hu.mostoha.mobile.android.huki.extensions.resetOrientation
 import hu.mostoha.mobile.android.huki.extensions.second
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
@@ -335,8 +336,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             }
             bottomSheets.forEach { it.updateInset(insets) }
 
-            homeMapView.addOverlay(OsmLicencesOverlay(this@HomeActivity, analyticsService, insets), OverlayComparator)
-            homeMapView.addScaleBarOverlay(insets)
+            homeMapView.replaceOverlay(OsmLicencesOverlay(this, analyticsService, insets), OverlayComparator)
+            homeMapView.replaceScaleBarOverlay(insets)
 
             insetSharedViewModel.updateResult(InsetResult(insets))
 

@@ -75,6 +75,11 @@ fun MapView.addOverlay(overlay: Overlay, comparator: Comparator<Overlay>) {
     invalidate()
 }
 
+fun MapView.replaceOverlay(overlay: Overlay, comparator: Comparator<Overlay>) {
+    overlays.removeIf { it.javaClass == overlay.javaClass }
+    addOverlay(overlay, comparator)
+}
+
 fun MapView.addOverlays(overlayList: List<Overlay>, comparator: Comparator<Overlay>) {
     overlays.addAll(overlayList)
     overlays.sortWith(comparator)
@@ -167,13 +172,6 @@ inline fun <reified T : InfoWindow> MapView.doOnInfoWindows(block: (Marker, T) -
         .forEach { marker ->
             block.invoke(marker, marker.infoWindow as T)
         }
-}
-
-fun MapView.removeOverlay(overlay: List<Overlay>) {
-    overlay.forEach {
-        overlays.remove(it)
-    }
-    invalidate()
 }
 
 fun MapView.removeOverlay(overlayId: String) {
@@ -385,7 +383,7 @@ fun MapView.addLandscapePolyOverlay(
         }
     }
 
-    addOverlays(listOf(polyOverlay), OverlayComparator)
+    addOverlay(polyOverlay, OverlayComparator)
 
     return resultOverlays
 }
@@ -877,9 +875,8 @@ fun MapView.addPlaceCategoryMarker(
     addOverlay(marker, OverlayComparator)
 }
 
-fun MapView.addScaleBarOverlay(insets: Insets) {
+fun MapView.replaceScaleBarOverlay(insets: Insets) {
     val context = this.context
-
     val scaleBarOverlay = HukiScaleBarOverlay(this, R.color.colorMapOverlayStroke.color(context)).apply {
         setAlignBottom(true)
         setScaleBarOffset(
@@ -896,7 +893,7 @@ fun MapView.addScaleBarOverlay(insets: Insets) {
         }
     }
 
-    addOverlay(scaleBarOverlay, OverlayComparator)
+    replaceOverlay(scaleBarOverlay, OverlayComparator)
 }
 
 fun MapView.center(geoPoint: GeoPoint) {
