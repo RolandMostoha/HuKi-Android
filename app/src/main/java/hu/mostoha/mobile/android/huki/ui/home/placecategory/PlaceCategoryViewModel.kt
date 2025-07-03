@@ -40,13 +40,13 @@ class PlaceCategoryViewModel @Inject constructor(
         .stateIn(viewModelScope, WhileViewSubscribed, PlaceCategoryUiModel())
 
     fun init(boundingBox: BoundingBox) {
-        loadLandscapes(boundingBox.center())
+        loadLandscapes()
         loadPlaceArea(boundingBox.center(), boundingBox)
     }
 
-    private fun loadLandscapes(location: Location) {
+    private fun loadLandscapes() {
         viewModelScope.launch {
-            landscapeInteractor.requestGetLandscapesFlow(location)
+            landscapeInteractor.requestGetLandscapesFlow(null)
                 .map { homeUiModelMapper.mapLandscapes(it) }
                 .onEach { landscapes ->
                     _placeCategoryUiModel.update { it.copy(landscapes = landscapes) }

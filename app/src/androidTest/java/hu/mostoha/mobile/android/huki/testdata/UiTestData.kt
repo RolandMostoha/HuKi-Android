@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
+import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
@@ -20,7 +21,6 @@ import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
-import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
 import java.io.File
@@ -36,8 +36,7 @@ val DEFAULT_MY_LOCATION = Location(
 val DEFAULT_ACTUAL_DATE: LocalDate = LocalDate.of(2023, 1, 1)
 
 object Landscapes {
-    val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.minBy { DEFAULT_MY_LOCATION.distanceBetween(it.center) }
-    val DEFAULT_LANDSCAPE_2 = LOCAL_LANDSCAPES.sortedBy { DEFAULT_MY_LOCATION.distanceBetween(it.center) }[1]
+    val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.first { it.nameRes == R.string.landscape_aggteleki_karszt }
 
     val DEFAULT_GEOMETRY_LANDSCAPE = Geometry.Way(
         osmId = DEFAULT_LANDSCAPE.osmId,

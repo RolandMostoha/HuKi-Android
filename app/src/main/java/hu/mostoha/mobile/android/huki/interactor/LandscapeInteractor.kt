@@ -1,5 +1,7 @@
 package hu.mostoha.mobile.android.huki.interactor
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.model.domain.Location
@@ -10,8 +12,9 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LandscapeInteractor @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val exceptionLogger: ExceptionLogger,
-    private val landscapeRepository: LandscapeRepository
+    private val landscapeRepository: LandscapeRepository,
 ) {
 
     fun requestGetLandscapesFlow(location: Location? = null): Flow<List<Landscape>> {
@@ -21,7 +24,9 @@ class LandscapeInteractor @Inject constructor(
         )
 
         return if (location == null) {
-            landscapesFlow
+            landscapesFlow.map { landscapes ->
+                landscapes.sortedBy { context.getString(it.nameRes) }
+            }
         } else {
             landscapesFlow.map { landscapes ->
                 landscapes.sortedBy { location.distanceBetween(it.center) }

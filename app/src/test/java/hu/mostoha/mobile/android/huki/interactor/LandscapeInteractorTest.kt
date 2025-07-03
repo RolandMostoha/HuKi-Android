@@ -1,5 +1,6 @@
 package hu.mostoha.mobile.android.huki.interactor
 
+import android.content.Context
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
@@ -19,13 +20,13 @@ class LandscapeInteractorTest {
 
     private lateinit var landscapeInteractor: LandscapeInteractor
 
+    private val context = mockk<Context>()
     private val landscapeRepository = mockk<LandscapeRepository>()
-
     private val exceptionLogger = mockk<ExceptionLogger>()
 
     @Before
     fun setUp() {
-        landscapeInteractor = LandscapeInteractor(exceptionLogger, landscapeRepository)
+        landscapeInteractor = LandscapeInteractor(context, exceptionLogger, landscapeRepository)
 
         every { exceptionLogger.recordException(any()) } returns Unit
     }
