@@ -1,6 +1,5 @@
-Route planner improvements:
 - New: round trip planner based on distance and POI
 - New: shortest route (small paths, forest roads, etc.)
 - New: bicycle route planner
 - The route can now be hidden while planning
-- Additional usability improvements
+- Update OKT stamp locations
