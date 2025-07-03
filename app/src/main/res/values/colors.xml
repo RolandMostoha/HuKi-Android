@@ -21,6 +21,7 @@
     <color name="colorMapOverlayStroke">#ffffff</color>
     <color name="colorBackground">#ffffff</color>
     <color name="colorBackgroundLight">#f5f7f8</color>
+    <color name="colorSelected">#f5f7f8</color>
     <color name="colorError">#c62828</color>
     <color name="colorHeart">#f44336</color>
     <color name="colorRipple">#000000</color>

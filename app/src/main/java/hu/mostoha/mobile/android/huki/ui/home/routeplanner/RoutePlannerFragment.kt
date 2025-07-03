@@ -182,10 +182,8 @@ class RoutePlannerFragment : Fragment() {
         }
         lifecycleScope.launch {
             callbackFlow {
-                distanceSlider.addOnChangeListener { _, value, fromUser ->
-                    if (fromUser) {
-                        this.trySend(value)
-                    }
+                distanceSlider.addOnChangeListener { _, value, _ ->
+                    trySend(value)
                 }
                 awaitClose { }
             }
@@ -239,7 +237,7 @@ class RoutePlannerFragment : Fragment() {
                                 R.drawable.ic_route_planner_plan_type_unselected
                             },
                             backgroundColor = if (planType == RoutePlanType.Hike) {
-                                R.color.colorBackgroundLight
+                                R.color.colorSelected
                             } else {
                                 android.R.color.transparent
                             },
@@ -260,7 +258,7 @@ class RoutePlannerFragment : Fragment() {
                                 R.drawable.ic_route_planner_plan_type_unselected
                             },
                             backgroundColor = if (planType == RoutePlanType.Foot) {
-                                R.color.colorBackgroundLight
+                                R.color.colorSelected
                             } else {
                                 android.R.color.transparent
                             },
@@ -281,7 +279,7 @@ class RoutePlannerFragment : Fragment() {
                                 R.drawable.ic_route_planner_plan_type_unselected
                             },
                             backgroundColor = if (planType == RoutePlanType.Bike) {
-                                R.color.colorBackgroundLight
+                                R.color.colorSelected
                             } else {
                                 android.R.color.transparent
                             },
@@ -302,7 +300,7 @@ class RoutePlannerFragment : Fragment() {
                                 R.drawable.ic_route_planner_plan_type_unselected
                             },
                             backgroundColor = if (planType is RoutePlanType.RoundTrip) {
-                                R.color.colorBackgroundLight
+                                R.color.colorSelected
                             } else {
                                 android.R.color.transparent
                             },

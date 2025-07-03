@@ -398,6 +398,29 @@ class RoutePlannerViewModelTest {
     }
 
     @Test
+    fun `Given plan type, when switchPlanType, then route plan is updated`() {
+        runTestDefault {
+            val searchText1 = "Dob"
+            val searchText2 = "Szánkó"
+            coEvery { routePlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
+            coEvery { routePlannerRepository.saveRoutePlan(any(), any()) } returns null
+
+            viewModel.waypointItems.test {
+                viewModel.initWaypoints()
+                advanceUntilIdle()
+                viewModel.updateWaypoint(viewModel.waypointItems.value[0], DEFAULT_PLACE_UI_MODEL_1, searchText1)
+                viewModel.updateWaypoint(viewModel.waypointItems.value[1], DEFAULT_PLACE_UI_MODEL_2, searchText2)
+                advanceUntilIdle()
+                viewModel.switchPlanType(RoutePlanType.RoundTrip())
+
+                skipItems(3)
+
+                assertThat(awaitItem().size).isEqualTo(1)
+            }
+        }
+    }
+
+    @Test
     fun `Given GPX file URI, when saveRoutePlan, then file URI is emitted`() {
         runTestDefault {
             val searchText1 = "Dob"

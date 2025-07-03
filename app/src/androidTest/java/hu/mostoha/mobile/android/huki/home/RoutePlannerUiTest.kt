@@ -53,6 +53,10 @@ import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_2_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_2_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LATITUDE
+import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
@@ -108,7 +112,6 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -635,11 +638,10 @@ class RoutePlannerUiTest {
     }
 
     @Test
-    @Ignore
     fun whenClickOnRoundTrip_thenRoutePlanDisplays() {
         launchScenario<HomeActivity> {
             coEvery { geocodingRepository.getPlaceProfile(any()) } returns DEFAULT_PLACE_PROFILE
-            coEvery { routPlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
+            coEvery { routPlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN_ROUND_TRIP
 
             val waypointName1 = "Dobogoko"
 
@@ -653,16 +655,59 @@ class RoutePlannerUiTest {
             R.string.route_planner_type_round_trip.clickWithTextInPopup()
             R.id.routePlannerDistanceSlider.setSliderValue(8f)
 
-            waitFor(3000)
-
             R.id.routePlannerAddWaypointButton.isNotDisplayed()
             R.id.routePlannerRouteAttributesContainer.isDisplayed()
-            R.id.homeMapView.hasNoOverlay<RoutePlannerPolyline>()
+            R.id.homeMapView.hasOverlay<RoutePlannerPolyline>()
         }
     }
 
     @Test
-    @Ignore
+    fun givenValidRoutePlan_whenSwitchToFootType_thenRoutePlanWaypointsUsed() {
+        coEvery {
+            routPlannerRepository.getRoutePlan(
+                RoutePlanType.Foot,
+                listOf(
+                    DEFAULT_PLACE_NODE.location,
+                    DEFAULT_PLACE_WAY.location,
+                    DEFAULT_PLACE_RELATION.location
+                )
+            )
+        } returns DEFAULT_ROUTE_PLAN_FOOT
+
+        launchScenario<HomeActivity> {
+            val waypointName1 = "Dobogoko"
+            val waypointName2 = "Ram-hegy"
+            val waypointName3 = "Fuzerkomlos"
+
+            R.id.homeRoutePlannerFab.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(0, typeText(waypointName1)))
+            DEFAULT_PLACE_NODE.name.clickWithTextInPopup()
+            waitForPopup()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(1, typeText(waypointName2)))
+            DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
+            waitForPopup()
+
+            R.id.routePlannerAddWaypointButton.click()
+
+            onView(withId(R.id.routePlannerWaypointList))
+                .perform(actionOnItemAtPosition<ViewHolder>(2, typeText(waypointName3)))
+            DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
+            waitForPopup()
+
+            R.id.routePlannerSettingsButton.click()
+            R.string.route_planner_type_foot.clickWithTextInPopup()
+            waitForPopup()
+
+            R.id.routePlannerRouteAttributesContainer.isDisplayed()
+            R.id.homeMapView.hasOverlay<RoutePlannerPolyline>()
+        }
+    }
+
+    @Test
     fun whenGraphhopperContainerIsClicked_thenGraphhopperWebsiteDisplays() {
         launchScenario<HomeActivity> {
             R.id.homeRoutePlannerFab.click()
@@ -748,6 +793,18 @@ class RoutePlannerUiTest {
                 DEFAULT_ROUTE_PLAN_WAYPOINT_2_ALTITUDE
             )
         )
+        private val DEFAULT_WAYPOINTS_2 = listOf(
+            Location(
+                DEFAULT_LANDSCAPE_LATITUDE,
+                DEFAULT_LANDSCAPE_LONGITUDE,
+                300.0
+            ),
+            Location(
+                DEFAULT_LANDSCAPE_2_LATITUDE,
+                DEFAULT_LANDSCAPE_2_LONGITUDE,
+                350.0
+            )
+        )
         private val DEFAULT_ROUTE_PLAN = RoutePlan(
             planType = RoutePlanType.Hike,
             wayPoints = DEFAULT_WAYPOINTS,
@@ -764,6 +821,34 @@ class RoutePlannerUiTest {
         )
         private val DEFAULT_ROUTE_PLAN_2 = RoutePlan(
             planType = RoutePlanType.Hike,
+            wayPoints = DEFAULT_WAYPOINTS,
+            locations = DEFAULT_WAYPOINTS,
+            travelTime = 120L.minutes,
+            distance = 15000,
+            altitudeRange = Pair(
+                DEFAULT_WAYPOINTS.minOf { it.altitude!! }.toInt(),
+                DEFAULT_WAYPOINTS.maxOf { it.altitude!! }.toInt()
+            ),
+            incline = 600,
+            decline = 300,
+            isClosed = true
+        )
+        private val DEFAULT_ROUTE_PLAN_FOOT = RoutePlan(
+            planType = RoutePlanType.Foot,
+            wayPoints = DEFAULT_WAYPOINTS_2,
+            locations = DEFAULT_WAYPOINTS_2,
+            travelTime = 120L.minutes,
+            distance = 15000,
+            altitudeRange = Pair(
+                DEFAULT_WAYPOINTS_2.minOf { it.altitude!! }.toInt(),
+                DEFAULT_WAYPOINTS_2.maxOf { it.altitude!! }.toInt()
+            ),
+            incline = 600,
+            decline = 300,
+            isClosed = true
+        )
+        private val DEFAULT_ROUTE_PLAN_ROUND_TRIP = RoutePlan(
+            planType = RoutePlanType.RoundTrip(10_000),
             wayPoints = DEFAULT_WAYPOINTS,
             locations = DEFAULT_WAYPOINTS,
             travelTime = 120L.minutes,
