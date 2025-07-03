@@ -127,6 +127,8 @@ class OktRoutesUiTest {
             waitForMapClear()
 
             R.string.okt_okt_subtitle.isTextDisplayed()
+            R.id.homeMapView.hasOverlay<OktBasePolyline>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 
@@ -139,17 +141,20 @@ class OktRoutesUiTest {
             waitForMapClear()
 
             R.string.okt_rpddk_subtitle.isTextDisplayed()
+            R.id.homeMapView.hasOverlay<OktBasePolyline>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
 
     @Test
-    fun whenClickOnOktChip_thenBaseRouteDisplaysOnMap() {
+    fun whenClickOnAktChip_thenAktBottomSheetDisplays() {
         launchScenario<HomeActivity> {
             R.id.homeOktFab.click()
-            "OKT".clickWithTextInPopup()
+            "AKT".clickWithTextInPopup()
 
             waitForMapClear()
 
+            R.string.okt_akt_subtitle.isTextDisplayed()
             R.id.homeMapView.hasOverlay<OktBasePolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
