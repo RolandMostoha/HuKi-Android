@@ -5,6 +5,7 @@ import com.amplifyframework.AmplifyException
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.auth.options.AuthFetchSessionOptions
 import com.amplifyframework.core.Amplify
+import com.amplifyframework.core.AmplifyConfiguration
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -42,9 +43,13 @@ class HukiApplication : Application() {
 
     private fun initAmplify() {
         try {
+            val config = AmplifyConfiguration
+                .builder(applicationContext)
+                .devMenuEnabled(false)
+                .build()
             Amplify.addPlugin(AWSCognitoAuthPlugin())
             Amplify.addPlugin(AWSS3StoragePlugin())
-            Amplify.configure(applicationContext)
+            Amplify.configure(config, applicationContext)
 
             forceRefreshToken()
         } catch (exception: AmplifyException) {
