@@ -92,6 +92,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasDisplayedItemAtPosition
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayCount
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
@@ -485,6 +486,7 @@ class RoutePlannerUiTest {
 
             R.string.route_planner_accessibility_remove_waypoint.clickWithContentDescription()
 
+            R.id.homeMapView.hasOverlayCount<RoutePlannerPolyline>(1)
             R.id.routePlannerRouteAttributesContainer.isDisplayed()
             "13 km".isTextDisplayed()
             "500 m".isTextDisplayed()

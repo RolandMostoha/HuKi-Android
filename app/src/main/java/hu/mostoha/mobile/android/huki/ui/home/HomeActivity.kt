@@ -1816,30 +1816,14 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeMapView.removeOverlay(OverlayType.ROUTE_PLANNER)
             }
             homeMapView.hasOverlay(routePlanUiModel.id) -> {
-                val offsetBoundingBox = routePlanUiModel.boundingBox.withOffset(homeMapView, OffsetType.TOP_SHEET)
-                homeMapView.addRoutePlannerPolyline(
-                    overlayId = routePlanUiModel.id,
-                    geoPoints = routePlanUiModel.geoPoints,
-                    onClick = {
-                        homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
-                    }
-                )
-                routePlanUiModel.wayPoints.forEach { waypointItem ->
-                    homeMapView.addRoutePlannerMarker(
-                        overlayId = routePlanUiModel.id,
-                        geoPoint = waypointItem.location!!.toGeoPoint(),
-                        waypointType = waypointItem.waypointType,
-                        onClick = {
-                            homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
-                        }
-                    )
-                }
                 homeMapView.updateOverlayVisibilityBy<RoutePlannerPolyline>(
                     routePlanUiModel.id,
                     routePlanUiModel.isRouteVisible
                 )
             }
             homeMapView.hasNoOverlay(routePlanUiModel.id) -> {
+                homeMapView.removeOverlay(OverlayType.ROUTE_PLANNER)
+
                 val offsetBoundingBox = routePlanUiModel.boundingBox.withOffset(homeMapView, OffsetType.TOP_SHEET)
                 homeMapView.addRoutePlannerPolyline(
                     overlayId = routePlanUiModel.id,
@@ -1848,7 +1832,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
                     }
                 )
-
                 routePlanUiModel.wayPoints.forEach { waypointItem ->
                     homeMapView.addRoutePlannerMarker(
                         overlayId = routePlanUiModel.id,
