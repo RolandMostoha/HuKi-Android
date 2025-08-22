@@ -14,6 +14,7 @@ import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.model.ui.resolve
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
 
 class GpxHistoryAdapter(
@@ -82,21 +83,21 @@ class GpxHistoryAdapter(
                         actionItems = listOf(
                             PopupMenuActionItem(
                                 popupMenuItem = PopupMenuItem(
-                                    titleId = R.string.gpx_history_menu_action_share,
+                                    title = R.string.gpx_history_menu_action_share.toMessage(),
                                     startIconId = R.drawable.ic_gpx_share
                                 ),
                                 onClick = { onGpxShare.invoke(item) }
                             ),
                             PopupMenuActionItem(
                                 popupMenuItem = PopupMenuItem(
-                                    titleId = R.string.gpx_history_menu_action_rename,
+                                    title = R.string.gpx_history_menu_action_rename.toMessage(),
                                     startIconId = R.drawable.ic_gpx_history_action_rename
                                 ),
                                 onClick = { onGpxRename.invoke(item) }
                             ),
                             PopupMenuActionItem(
                                 popupMenuItem = PopupMenuItem(
-                                    titleId = R.string.gpx_history_menu_action_delete,
+                                    title = R.string.gpx_history_menu_action_delete.toMessage(),
                                     startIconId = R.drawable.ic_gpx_history_action_delete
                                 ),
                                 onClick = { onGpxDelete.invoke(item) }

@@ -23,9 +23,11 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.skydoves.powermenu.CustomPowerMenu
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
+import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuActionButtonBinding
 import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuFooterBinding
 import hu.mostoha.mobile.android.huki.deeplink.DeeplinkHandler
 import hu.mostoha.mobile.android.huki.extensions.OffsetType
@@ -192,6 +194,7 @@ import hu.mostoha.mobile.android.huki.util.getBrightnessColorMatrix
 import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.util.productIconColor
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
+import hu.mostoha.mobile.android.huki.views.PopupMenuAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -553,8 +556,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
         homeHistoryFab.setOnClickListener {
             analyticsService.historyClicked()
+
             homeViewModel.clearFollowLocation()
-            supportFragmentManager.addFragment(R.id.homeFragmentContainer, HistoryFragment::class.java)
+            showHistoryPopupMenu()
         }
         homePlaceCategoriesFab.setOnClickListener {
             analyticsService.placeCategoryFabClicked()
@@ -585,6 +589,37 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
+    private fun showHistoryPopupMenu() {
+        lifecycleScope.launch {
+            val actionItems = layersViewModel.getRecentGpxActionItems()
+
+            if (actionItems.isNotEmpty()) {
+                lateinit var popupMenu: CustomPowerMenu<PopupMenuItem, PopupMenuAdapter>
+
+                popupMenu = showPopupMenu(
+                    anchorView = homeHistoryFab,
+                    actionItems = actionItems,
+                    headerTitle = R.string.recent_gpx_history_title.toMessage(),
+                    footerView = ViewPopupMenuActionButtonBinding.inflate(this@HomeActivity.inflater, null, false)
+                        .apply {
+                            popupMenuActionButton.text = this@HomeActivity.getString(R.string.history_all_history)
+                            popupMenuActionButton.icon = R.drawable.ic_home_fab_history.toDrawable(this@HomeActivity)
+                            popupMenuActionButton.setOnClickListener {
+                                popupMenu.dismiss()
+                                supportFragmentManager.addFragment(
+                                    R.id.homeFragmentContainer,
+                                    HistoryFragment::class.java
+                                )
+                            }
+                        }.root,
+                    width = R.dimen.default_popup_menu_width_wide,
+                )
+            } else {
+                supportFragmentManager.addFragment(R.id.homeFragmentContainer, HistoryFragment::class.java)
+            }
+        }
+    }
+
     private fun showLocationRationaleDialog() {
         MaterialAlertDialogBuilder(this@HomeActivity, R.style.DefaultMaterialDialog)
             .setTitle(R.string.my_location_rationale_title)
@@ -609,11 +644,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private fun showOktPopupMenu() {
         showPopupMenu(
             anchorView = homeOktFab,
+            headerTitle = R.string.okt_header_title.toMessage(),
             actionItems = listOf(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        titleId = R.string.okt_okt_title,
-                        subTitleId = R.string.okt_okt_subtitle,
+                        title = R.string.okt_okt_title.toMessage(),
+                        subTitle = R.string.okt_okt_subtitle.toMessage(),
                         startIconId = R.drawable.ic_okt_okt
                     ),
                     onClick = {
@@ -624,8 +660,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 ),
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        titleId = R.string.okt_rpddk_title,
-                        subTitleId = R.string.okt_rpddk_subtitle,
+                        title = R.string.okt_rpddk_title.toMessage(),
+                        subTitle = R.string.okt_rpddk_subtitle.toMessage(),
                         startIconId = R.drawable.ic_okt_rpddk
                     ),
                     onClick = {
@@ -636,8 +672,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 ),
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        titleId = R.string.okt_akt_title,
-                        subTitleId = R.string.okt_akt_subtitle,
+                        title = R.string.okt_akt_title.toMessage(),
+                        subTitle = R.string.okt_akt_subtitle.toMessage(),
                         startIconId = R.drawable.ic_okt_akt
                     ),
                     onClick = {
@@ -645,18 +681,16 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                         analyticsService.oktClicked(oktType)
                         homeViewModel.loadOktRoutes(oktType)
                     }
-                ),
-                PopupMenuActionItem(
-                    popupMenuItem = PopupMenuItem(
-                        titleId = null,
-                        subTitleId = R.string.okt_official_website_subtitle,
-                        startIconId = R.drawable.ic_okt_info
-                    ),
-                    onClick = {
-                        openUrl(KEKTURA_URL)
-                    }
                 )
             ),
+            footerView = ViewPopupMenuActionButtonBinding.inflate(this@HomeActivity.inflater, null, false)
+                .apply {
+                    popupMenuActionButton.text = this@HomeActivity.getString(R.string.okt_official_website_subtitle)
+                    popupMenuActionButton.icon = R.drawable.ic_okt_info.toDrawable(this@HomeActivity)
+                    popupMenuActionButton.setOnClickListener {
+                        openUrl(KEKTURA_URL)
+                    }
+                }.root,
             width = R.dimen.default_popup_menu_width_wide,
         )
     }

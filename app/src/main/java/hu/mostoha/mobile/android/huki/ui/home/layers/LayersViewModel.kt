@@ -6,11 +6,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
+import hu.mostoha.mobile.android.huki.extensions.PopupMenuActionItem
+import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
+import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.LayersConfig
@@ -18,8 +22,10 @@ import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
 import hu.mostoha.mobile.android.huki.model.mapper.LayersUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.repository.GpxRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -46,6 +52,7 @@ import javax.inject.Inject
 class LayersViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val gpxRepository: GpxRepository,
     private val layersRepository: LayersRepository,
     private val settingsRepository: SettingsRepository,
     private val layersUiModelMapper: LayersUiModelMapper,
@@ -86,17 +93,7 @@ class LayersViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            flowWithExceptions(
-                request = { layersRepository.getHikingLayerZoomRanges() },
-                exceptionLogger = exceptionLogger
-            )
-                .onEach { zoomRanges ->
-                    hikingLayerZoomRanges = zoomRanges
-
-                    hikingLayer.emit(getHikingLayerSpec(zoomRanges))
-                }
-                .catch { Timber.e(it) }
-                .collect()
+            loadZoomRanges()
 
             restoreSavedState()
         }
@@ -104,7 +101,7 @@ class LayersViewModel @Inject constructor(
 
     fun loadGpx(uri: Uri?) = viewModelScope.launch(ioDispatcher) {
         flowWithExceptions(
-            request = { layersRepository.getGpxDetails(uri) },
+            request = { gpxRepository.getGpxDetails(uri) },
             exceptionLogger = exceptionLogger
         )
             .onEach { gpxDetails ->
@@ -121,7 +118,7 @@ class LayersViewModel @Inject constructor(
 
     fun loadRoutePlannerGpx(uri: Uri) = viewModelScope.launch(ioDispatcher) {
         flowWithExceptions(
-            request = { layersRepository.getRoutePlannerGpxDetails(uri) },
+            request = { gpxRepository.getRoutePlannerGpxDetails(uri) },
             exceptionLogger = exceptionLogger
         )
             .onEach { gpxDetails ->
@@ -134,6 +131,46 @@ class LayersViewModel @Inject constructor(
             .collect()
     }
 
+    private suspend fun loadZoomRanges() {
+        flowWithExceptions(
+            request = { layersRepository.getHikingLayerZoomRanges() },
+            exceptionLogger = exceptionLogger
+        )
+            .onEach { zoomRanges ->
+                hikingLayerZoomRanges = zoomRanges
+
+                hikingLayer.emit(initHikingLayerSpec(zoomRanges))
+            }
+            .catch { exceptionLogger.recordException(it) }
+            .collect()
+    }
+
+    suspend fun getRecentGpxActionItems(): List<PopupMenuActionItem> {
+        return runCatching {
+            val recentGpxHistory = gpxRepository.getRecentGpxHistory()
+
+            recentGpxHistory.map { historyItem ->
+                PopupMenuActionItem(
+                    popupMenuItem = PopupMenuItem(
+                        startIconId = when (historyItem.type) {
+                            GpxType.EXTERNAL -> R.drawable.ic_gpx
+                            GpxType.ROUTE_PLANNER -> R.drawable.ic_history_route_planner
+                        },
+                        subTitle = historyItem.name.toMessage(),
+                    ),
+                    onClick = {
+                        when (historyItem.type) {
+                            GpxType.EXTERNAL -> loadGpx(historyItem.fileUri)
+                            GpxType.ROUTE_PLANNER -> loadRoutePlannerGpx(historyItem.fileUri)
+                        }
+                    }
+                )
+            }
+        }
+            .onFailure { exceptionLogger.recordException(it) }
+            .getOrDefault(emptyList())
+    }
+
     fun selectBaseLayer(layer: BaseLayer) = viewModelScope.launch(ioDispatcher) {
         settingsRepository.saveBaseLayer(layer)
     }
@@ -141,7 +178,7 @@ class LayersViewModel @Inject constructor(
     fun selectHikingLayer() {
         hikingLayer.update { layerSpec ->
             if (layerSpec == null) {
-                getHikingLayerSpec(hikingLayerZoomRanges)
+                initHikingLayerSpec(hikingLayerZoomRanges)
             } else {
                 null
             }
@@ -189,7 +226,7 @@ class LayersViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    private fun getHikingLayerSpec(zoomRanges: List<TileZoomRange>): HikingLayer {
+    private fun initHikingLayerSpec(zoomRanges: List<TileZoomRange>): HikingLayer {
         return HikingLayer(LayerType.HUNGARIAN_HIKING_LAYER, AwsHikingTileSource(hikingTileUrlProvider, zoomRanges))
     }
 

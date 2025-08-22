@@ -160,7 +160,7 @@ class GpxDetailsBottomSheetDialog(
             actionItems = listOf(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        titleId = R.string.gpx_details_bottom_sheet_google_maps_start,
+                        title = R.string.gpx_details_bottom_sheet_google_maps_start.toMessage(),
                         startIconId = R.drawable.ic_popup_menu_google_maps_start
                     ),
                     onClick = {
@@ -170,7 +170,7 @@ class GpxDetailsBottomSheetDialog(
                 ),
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        titleId = R.string.gpx_details_bottom_sheet_google_maps_end,
+                        title = R.string.gpx_details_bottom_sheet_google_maps_end.toMessage(),
                         startIconId = R.drawable.ic_popup_menu_google_maps_end
                     ),
                     onClick = {

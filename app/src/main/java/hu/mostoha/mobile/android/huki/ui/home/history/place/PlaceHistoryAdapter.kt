@@ -17,6 +17,7 @@ import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.ui.resolve
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
 
 class PlaceHistoryAdapter(
@@ -88,7 +89,7 @@ class PlaceHistoryAdapter(
                         listOf(
                             PopupMenuActionItem(
                                 popupMenuItem = PopupMenuItem(
-                                    titleId = R.string.place_history_menu_action_delete,
+                                    title = R.string.place_history_menu_action_delete.toMessage(),
                                     startIconId = R.drawable.ic_gpx_history_action_delete
                                 ),
                                 onClick = { onPlaceDelete.invoke(item) }

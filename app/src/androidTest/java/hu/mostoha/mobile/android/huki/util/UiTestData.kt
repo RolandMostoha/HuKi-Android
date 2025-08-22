@@ -16,6 +16,10 @@ import io.mockk.mockk
 import kotlin.random.Random
 import android.location.Location as AndroidLocation
 
+fun sleepFor(millis: Long) {
+    Thread.sleep(millis)
+}
+
 fun Location.toMockLocation(): AndroidLocation {
     val mockLocation = mockk<AndroidLocation>(relaxed = true)
 

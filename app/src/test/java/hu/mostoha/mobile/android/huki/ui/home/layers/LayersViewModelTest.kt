@@ -19,6 +19,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.LayersUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.repository.GpxRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -44,6 +45,7 @@ class LayersViewModelTest {
     private lateinit var viewModel: LayersViewModel
 
     private val exceptionLogger = mockk<ExceptionLogger>()
+    private val gpxRepository = mockk<GpxRepository>()
     private val layersRepository = mockk<LayersRepository>()
     private val settingsRepository = mockk<SettingsRepository>()
     private val tileUrlProvider = mockk<HikingTileUrlProvider>()
@@ -63,6 +65,7 @@ class LayersViewModelTest {
         viewModel = LayersViewModel(
             SavedStateHandle(),
             UnconfinedTestDispatcher(),
+            gpxRepository,
             layersRepository,
             settingsRepository,
             layersUiModelMapper,
@@ -138,7 +141,7 @@ class LayersViewModelTest {
     @Test
     fun `Given file URI, when loadGpx, then gpx details UI model is emitted`() =
         runTestDefault {
-            coEvery { layersRepository.getGpxDetails(gpxFileUri) } returns DEFAULT_GPX_DETAILS
+            coEvery { gpxRepository.getGpxDetails(gpxFileUri) } returns DEFAULT_GPX_DETAILS
             coEvery { settingsRepository.isGpxSlopeColoringEnabled() } returns flowOf(true)
 
             viewModel.loadGpx(gpxFileUri)
@@ -153,7 +156,7 @@ class LayersViewModelTest {
     fun `Given error during request gpx, when loadGpx, then error message is emitted`() =
         runTestDefault {
             coEvery {
-                layersRepository.getGpxDetails(gpxFileUri)
+                gpxRepository.getGpxDetails(gpxFileUri)
             } throws GpxParseFailedException(IllegalStateException(""))
 
             viewModel.loadGpx(gpxFileUri)
@@ -168,7 +171,7 @@ class LayersViewModelTest {
     fun `When clear error, then null error message is emitted`() =
         runTestDefault {
             coEvery {
-                layersRepository.getGpxDetails(null)
+                gpxRepository.getGpxDetails(null)
             } throws GpxParseFailedException(IllegalStateException(""))
 
             viewModel.loadGpx(null)

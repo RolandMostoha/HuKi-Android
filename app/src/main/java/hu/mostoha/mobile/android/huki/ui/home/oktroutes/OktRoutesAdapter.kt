@@ -79,7 +79,7 @@ class OktRoutesAdapter(
             actionItems = listOf(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        titleId = R.string.okt_routes_menu_action_details,
+                        title = R.string.okt_routes_menu_action_details.toMessage(),
                         startIconId = R.drawable.ic_okt_routes_action_details
                     ),
                     onClick = {
@@ -88,7 +88,7 @@ class OktRoutesAdapter(
                 ),
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        titleId = R.string.okt_routes_menu_action_start_point,
+                        title = R.string.okt_routes_menu_action_start_point.toMessage(),
                         startIconId = R.drawable.ic_popup_menu_google_maps_start
                     ),
                     onClick = {
@@ -100,7 +100,7 @@ class OktRoutesAdapter(
                 ),
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
-                        titleId = R.string.okt_routes_menu_action_end_point,
+                        title = R.string.okt_routes_menu_action_end_point.toMessage(),
                         startIconId = R.drawable.ic_popup_menu_google_maps_end
                     ),
                     onClick = {

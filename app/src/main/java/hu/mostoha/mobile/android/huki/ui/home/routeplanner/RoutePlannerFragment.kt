@@ -228,8 +228,8 @@ class RoutePlannerFragment : Fragment() {
                 actionItems = listOf(
                     PopupMenuActionItem(
                         popupMenuItem = PopupMenuItem(
-                            titleId = R.string.route_planner_type_hike,
-                            subTitleId = R.string.route_planner_type_hike_subtitle,
+                            title = R.string.route_planner_type_hike.toMessage(),
+                            subTitle = R.string.route_planner_type_hike_subtitle.toMessage(),
                             startIconId = R.drawable.ic_route_planner_plan_type_hike,
                             endIconId = if (planType == RoutePlanType.Hike) {
                                 R.drawable.ic_route_planner_plan_type_selected
@@ -249,8 +249,8 @@ class RoutePlannerFragment : Fragment() {
                     ),
                     PopupMenuActionItem(
                         popupMenuItem = PopupMenuItem(
-                            titleId = R.string.route_planner_type_foot,
-                            subTitleId = R.string.route_planner_type_foot_subtitle,
+                            title = R.string.route_planner_type_foot.toMessage(),
+                            subTitle = R.string.route_planner_type_foot_subtitle.toMessage(),
                             startIconId = R.drawable.ic_route_planner_plan_type_foot,
                             endIconId = if (planType == RoutePlanType.Foot) {
                                 R.drawable.ic_route_planner_plan_type_selected
@@ -270,8 +270,8 @@ class RoutePlannerFragment : Fragment() {
                     ),
                     PopupMenuActionItem(
                         popupMenuItem = PopupMenuItem(
-                            titleId = R.string.route_planner_type_bike,
-                            subTitleId = R.string.route_planner_type_bike_subtitle,
+                            title = R.string.route_planner_type_bike.toMessage(),
+                            subTitle = R.string.route_planner_type_bike_subtitle.toMessage(),
                             startIconId = R.drawable.ic_route_planner_plan_type_bike,
                             endIconId = if (planType == RoutePlanType.Bike) {
                                 R.drawable.ic_route_planner_plan_type_selected
@@ -291,8 +291,8 @@ class RoutePlannerFragment : Fragment() {
                     ),
                     PopupMenuActionItem(
                         popupMenuItem = PopupMenuItem(
-                            titleId = R.string.route_planner_type_round_trip,
-                            subTitleId = R.string.route_planner_type_round_trip_subtitle,
+                            title = R.string.route_planner_type_round_trip.toMessage(),
+                            subTitle = R.string.route_planner_type_round_trip_subtitle.toMessage(),
                             startIconId = R.drawable.ic_route_planner_plan_type_round_trip,
                             endIconId = if (planType is RoutePlanType.RoundTrip) {
                                 R.drawable.ic_route_planner_plan_type_selected

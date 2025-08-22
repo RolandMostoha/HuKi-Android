@@ -173,6 +173,10 @@
     <string name="history_tab_places">Helységek</string>
     <string name="history_tab_route_planner">Tervező</string>
     <string name="history_tab_external_gpx">GPX</string>
+    <string name="history_all_history">Minden előzmény</string>
+
+    <string name="recent_gpx_history_title">Legutóbb megnyitott</string>
+
     <string name="gpx_history_item_route_planner_empty">A létrehozott útvonalterveid itt fognak megjelenni a jövőben.</string>
     <string name="gpx_history_item_external_empty">Az importált GPX fájlok itt is megtekinthetőek majd a jövőben.</string>
     <string name="gpx_history_item_error">Hiba történt GPX fájlok beolvasása közben.</string>
@@ -292,13 +296,14 @@
     <string name="place_category_empty_message">Nem található %s a környéken!</string>
     <string name="place_category_too_many_places">Maximum %s találatot töltünk be, kérlek szűkítsd a keresést.</string>
 
+    <string name="okt_header_title">Országos Kéktúra</string>
     <string name="okt_okt_title">OKT</string>
     <string name="okt_okt_subtitle">Országos Kéktúra</string>
     <string name="okt_rpddk_title">RPDDK</string>
     <string name="okt_rpddk_subtitle">Rockenbauer Pál Dél-dunántúli Kéktúra</string>
     <string name="okt_akt_title">AKT</string>
     <string name="okt_akt_subtitle">Alföldi Kétúra</string>
-    <string name="okt_official_website_subtitle">A Kéktúra hivatalos oldala</string>
+    <string name="okt_official_website_subtitle">OKT hivatalos oldala</string>
 
     <string name="osm_tag_no">Nem</string>
     <string name="osm_tag_yes">Igen</string>

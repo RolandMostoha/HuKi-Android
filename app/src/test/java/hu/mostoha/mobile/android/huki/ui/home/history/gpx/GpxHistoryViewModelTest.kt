@@ -7,13 +7,14 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistory
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistoryItem
+import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.mapper.HikingRouteRelationMapper
 import hu.mostoha.mobile.android.huki.model.mapper.HistoryUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
 import hu.mostoha.mobile.android.huki.model.ui.GpxRenameResult
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
-import hu.mostoha.mobile.android.huki.repository.LayersRepository
+import hu.mostoha.mobile.android.huki.repository.GpxRepository
 import hu.mostoha.mobile.android.huki.util.DEFAULT_LOCAL_DATE
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.TimberRule
@@ -37,7 +38,7 @@ class GpxHistoryViewModelTest {
     private lateinit var viewModel: GpxHistoryViewModel
 
     private val exceptionLogger = mockk<ExceptionLogger>()
-    private val layersRepository = mockk<LayersRepository>()
+    private val gpxRepository = mockk<GpxRepository>()
     private val dateTimeProvider = mockk<DateTimeProvider>()
     private val mapper = HistoryUiModelMapper(PlaceDomainUiMapper(HikingRouteRelationMapper()))
 
@@ -49,11 +50,11 @@ class GpxHistoryViewModelTest {
         dateTimeProvider.answerDefaults()
         every { DEFAULT_ROUTE_PLANNER_GPX_FILE_URI.lastPathSegment } returns "route_plan_HuKi938.gpx"
         every { DEFAULT_EXTERNAL_GPX_FILE_URI.lastPathSegment } returns "dera_szurdok.gpx"
-        coEvery { layersRepository.getGpxHistory() } returns DEFAULT_GPX_HISTORY
+        coEvery { gpxRepository.getGpxHistory() } returns DEFAULT_GPX_HISTORY
 
         viewModel = GpxHistoryViewModel(
             exceptionLogger,
-            layersRepository,
+            gpxRepository,
             mapper,
             dateTimeProvider,
             mainCoroutineRule.testDispatcher,
@@ -82,7 +83,7 @@ class GpxHistoryViewModelTest {
     @Test
     fun `Given error, when delete GPX, then error message is emitted`() {
         runTestDefault {
-            coEvery { layersRepository.deleteGpx(any()) } throws Exception("Error")
+            coEvery { gpxRepository.deleteGpx(any()) } throws Exception("Error")
 
             viewModel.errorMessage.test {
                 viewModel.deleteGpx(DEFAULT_ROUTE_PLANNER_GPX_FILE_URI)
@@ -95,7 +96,7 @@ class GpxHistoryViewModelTest {
     @Test
     fun `Given error, when rename GPX, then error message is emitted`() {
         runTestDefault {
-            coEvery { layersRepository.renameGpx(any(), any()) } throws Exception("Error")
+            coEvery { gpxRepository.renameGpx(any(), any()) } throws Exception("Error")
 
             viewModel.errorMessage.test {
                 viewModel.renameGpx(GpxRenameResult(DEFAULT_ROUTE_PLANNER_GPX_FILE_URI, "new_name"))
@@ -116,6 +117,7 @@ class GpxHistoryViewModelTest {
             routePlannerGpxList = listOf(
                 GpxHistoryItem(
                     name = "route_plan_HuKi938.gpx",
+                    type = GpxType.ROUTE_PLANNER,
                     fileUri = DEFAULT_ROUTE_PLANNER_GPX_FILE_URI,
                     lastModified = LocalDateTime.of(2023, 6, 2, 16, 0),
                     travelTime = 5.hours,
@@ -128,6 +130,7 @@ class GpxHistoryViewModelTest {
             externalGpxList = listOf(
                 GpxHistoryItem(
                     name = "dera_szurdok.gpx",
+                    type = GpxType.EXTERNAL,
                     fileUri = DEFAULT_EXTERNAL_GPX_FILE_URI,
                     lastModified = LocalDateTime.of(2023, 6, 3, 16, 0),
                     travelTime = Duration.ZERO,

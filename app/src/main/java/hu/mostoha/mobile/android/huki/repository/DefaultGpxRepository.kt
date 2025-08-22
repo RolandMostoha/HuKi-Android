@@ -5,22 +5,25 @@ import android.net.Uri
 import androidx.core.net.toFile
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
-import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.GpxConfiguration
+import hu.mostoha.mobile.android.huki.database.GpxHistoryDao
+import hu.mostoha.mobile.android.huki.di.module.DbDispatcher
 import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.extensions.getFileName
-import hu.mostoha.mobile.android.huki.extensions.readRawJson
 import hu.mostoha.mobile.android.huki.extensions.toLocalDateTime
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxUriNullException
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
+import hu.mostoha.mobile.android.huki.model.db.GpxHistoryEntity
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistory
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistoryItem
-import hu.mostoha.mobile.android.huki.model.domain.TileZoomRange
+import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
+import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import io.ticofab.androidgpxparser.parser.GPXParser
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import org.xmlpull.v1.XmlPullParserException
 import timber.log.Timber
@@ -30,18 +33,19 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import javax.inject.Inject
 
-class FileBasedLayersRepository @Inject constructor(
+class DefaultGpxRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @DbDispatcher private val dbDispatcher: CoroutineDispatcher,
     private val layersDomainModelMapper: LayersDomainModelMapper,
     private val gpxConfiguration: GpxConfiguration,
+    private val gpxHistoryDao: GpxHistoryDao,
+    private val dateTimeProvider: DateTimeProvider,
     private val exceptionLogger: ExceptionLogger,
-) : LayersRepository {
+) : GpxRepository {
 
-    override suspend fun getHikingLayerZoomRanges(): List<TileZoomRange> {
-        return withContext(ioDispatcher) {
-            context.resources.readRawJson(R.raw.hiking_layer_tile_zoom_ranges)
-        }
+    companion object {
+        private const val MAX_RECENT_HISTORY_ITEMS = 4
     }
 
     override suspend fun getGpxDetails(fileUri: Uri?): GpxDetails {
@@ -53,23 +57,32 @@ class FileBasedLayersRepository @Inject constructor(
             }
 
             val fileName = "${fileUri.getFileName(context)}.gpx"
-
             var inputStream = context.contentResolver.openInputStream(fileUri)!!
-
             val externalFilePath = Paths.get(gpxConfiguration.getExternalGpxDirectory() + "/$fileName")
+            val externalFile = externalFilePath.toFile()
 
             // Copy file to internal storage if not exists (first time import)
             if (!Files.exists(externalFilePath)) {
                 try {
-                    inputStream = externalFilePath.toFile().apply {
-                        copyFrom(inputStream)
-                    }.inputStream()
+                    inputStream = externalFile
+                        .apply { copyFrom(inputStream) }
+                        .inputStream()
                 } catch (exception: Exception) {
                     Timber.e(exception)
                 }
             }
 
             val gpx = GPXParser().parse(inputStream)
+
+            withContext(dbDispatcher) {
+                gpxHistoryDao.insertAll(
+                    GpxHistoryEntity(
+                        filePath = externalFile.toUri().toString(),
+                        lastOpened = dateTimeProvider.nowInMillis(),
+                        type = GpxType.EXTERNAL
+                    )
+                )
+            }
 
             layersDomainModelMapper.mapGpxDetails(externalFilePath.toUri().toString(), fileName, gpx)
         }
@@ -80,10 +93,18 @@ class FileBasedLayersRepository @Inject constructor(
             Timber.d("Importing route planner GPX by URI: $fileUri")
 
             val fileName = "${fileUri.getFileName(context)}.gpx"
-
             val inputStream = context.contentResolver.openInputStream(fileUri)!!
-
             val gpx = GPXParser().parse(inputStream)
+
+            withContext(dbDispatcher) {
+                gpxHistoryDao.insertAll(
+                    GpxHistoryEntity(
+                        filePath = fileUri.toString(),
+                        lastOpened = dateTimeProvider.nowInMillis(),
+                        type = GpxType.ROUTE_PLANNER
+                    )
+                )
+            }
 
             layersDomainModelMapper.mapGpxDetails(fileUri.toString(), fileName, gpx)
         }
@@ -103,9 +124,11 @@ class FileBasedLayersRepository @Inject constructor(
 
                 routePlannerGpxDirectoryFiles = emptyArray()
             }
-            val routePlannerGpxHistoryItems = routePlannerGpxDirectoryFiles.mapNotNull { file ->
-                getGpxHistoryItem(file)
-            }
+            val routePlannerGpxHistoryItems = routePlannerGpxDirectoryFiles
+                .mapNotNull { file ->
+                    getGpxHistoryItem(file, GpxType.ROUTE_PLANNER)
+                }
+                .sortedByDescending { it.lastModified }
 
             val externalGpxDirectory = File(gpxConfiguration.getExternalGpxDirectory())
             var externalGpxGpxDirectoryFiles = externalGpxDirectory.listFiles()
@@ -118,11 +141,39 @@ class FileBasedLayersRepository @Inject constructor(
 
                 externalGpxGpxDirectoryFiles = emptyArray()
             }
-            val externalGpxGpxHistoryItems = externalGpxGpxDirectoryFiles.mapNotNull { file ->
-                getGpxHistoryItem(file)
-            }
+            val externalGpxGpxHistoryItems = externalGpxGpxDirectoryFiles
+                .mapNotNull { file ->
+                    getGpxHistoryItem(file, GpxType.EXTERNAL)
+                }
+                .sortedByDescending { it.lastModified }
 
             GpxHistory(routePlannerGpxHistoryItems, externalGpxGpxHistoryItems)
+        }
+    }
+
+    override suspend fun getRecentGpxHistory(): List<GpxHistoryItem> {
+        return withContext(ioDispatcher) {
+            val allGpxHistory = getGpxHistory()
+            val allGpxHistoryItems = (allGpxHistory.routePlannerGpxList + allGpxHistory.externalGpxList).toMutableList()
+            val allGpxFilePaths = allGpxHistoryItems.map { it.fileUri.toString() }.toSet()
+            val recentGpxHistory = gpxHistoryDao.getEntities().first()
+            val result = mutableListOf<GpxHistoryItem>()
+
+            // Delete outdated GPX history items from DB
+            recentGpxHistory.onEach { recentItem ->
+                if (recentItem.filePath !in allGpxFilePaths) {
+                    withContext(dbDispatcher) {
+                        gpxHistoryDao.delete(recentItem.filePath)
+                        allGpxHistoryItems.removeIf { it.fileUri.toString() == recentItem.filePath }
+                    }
+                } else {
+                    result.add(allGpxHistoryItems.first { it.fileUri.toString() == recentItem.filePath })
+                }
+            }
+
+            result
+                .plus(allGpxHistoryItems.filterNot { it in result })
+                .take(MAX_RECENT_HISTORY_ITEMS)
         }
     }
 
@@ -149,26 +200,26 @@ class FileBasedLayersRepository @Inject constructor(
         }
     }
 
-    private fun getGpxHistoryItem(file: File): GpxHistoryItem? {
+    private fun getGpxHistoryItem(file: File, type: GpxType): GpxHistoryItem? {
         val fileUri = file.toUri()
         val fileName = "${fileUri.getFileName(context)}.gpx"
-        val lastModified = file.lastModified().toLocalDateTime()
+        val lastModifiedDateTime = file.lastModified().toLocalDateTime()
 
         val inputStream = context.contentResolver.openInputStream(fileUri)!!
 
         val gpx = try {
             GPXParser().parse(inputStream)
         } catch (ioException: IOException) {
-            Timber.w("IOException while parsing GPX History item", ioException)
+            Timber.w(ioException, "IOException while parsing GPX History item")
 
             return null
         } catch (xmlPullParserException: XmlPullParserException) {
-            Timber.w("XmlPullParserException while parsing GPX History item", xmlPullParserException)
+            Timber.w(xmlPullParserException, "XmlPullParserException while parsing GPX History item")
 
             return null
         }
 
-        return layersDomainModelMapper.mapGpxHistoryItem(fileUri, fileName, gpx, lastModified)
+        return layersDomainModelMapper.mapGpxHistoryItem(fileUri, fileName, type, gpx, lastModifiedDateTime)
     }
 
 }

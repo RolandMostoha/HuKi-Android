@@ -11,6 +11,7 @@ data class GpxHistory(
 
 data class GpxHistoryItem(
     val name: String,
+    val type: GpxType,
     val fileUri: Uri,
     val lastModified: LocalDateTime,
     val waypointCount: Int,

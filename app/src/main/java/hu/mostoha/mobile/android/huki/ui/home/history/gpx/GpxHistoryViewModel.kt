@@ -14,7 +14,7 @@ import hu.mostoha.mobile.android.huki.model.ui.GpxHistoryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.GpxRenameResult
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
-import hu.mostoha.mobile.android.huki.repository.LayersRepository
+import hu.mostoha.mobile.android.huki.repository.GpxRepository
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -35,7 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GpxHistoryViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
-    private val layersRepository: LayersRepository,
+    private val gpxRepository: GpxRepository,
     private val historyUiModelMapper: HistoryUiModelMapper,
     private val dateTimeProvider: DateTimeProvider,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
@@ -64,7 +64,7 @@ class GpxHistoryViewModel @Inject constructor(
     fun deleteGpx(fileUri: Uri) {
         viewModelScope.launch(dispatcher) {
             flowWithExceptions(
-                request = { layersRepository.deleteGpx(fileUri) },
+                request = { gpxRepository.deleteGpx(fileUri) },
                 exceptionLogger = exceptionLogger
             )
                 .catch { throwable ->
@@ -80,7 +80,7 @@ class GpxHistoryViewModel @Inject constructor(
     fun renameGpx(result: GpxRenameResult) {
         viewModelScope.launch(dispatcher) {
             flowWithExceptions(
-                request = { layersRepository.renameGpx(result.gpxUri, result.newName) },
+                request = { gpxRepository.renameGpx(result.gpxUri, result.newName) },
                 exceptionLogger = exceptionLogger
             )
                 .catch { throwable ->
@@ -96,7 +96,7 @@ class GpxHistoryViewModel @Inject constructor(
     private fun refreshGpxHistory() {
         viewModelScope.launch {
             flowWithExceptions(
-                request = { layersRepository.getGpxHistory() },
+                request = { gpxRepository.getGpxHistory() },
                 exceptionLogger = exceptionLogger
             )
                 .map { historyUiModelMapper.mapGpxHistory(it, dateTimeProvider.now()) }

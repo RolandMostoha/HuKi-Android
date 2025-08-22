@@ -11,7 +11,7 @@ import hu.mostoha.mobile.android.huki.databinding.ListItemPopupMenuBinding
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setImageOrGone
-import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
+import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
 import hu.mostoha.mobile.android.huki.util.color
 
 class PopupMenuAdapter : MenuBaseAdapter<PopupMenuItem>() {
@@ -31,12 +31,14 @@ class PopupMenuAdapter : MenuBaseAdapter<PopupMenuItem>() {
         val icon = view.findViewById<ImageView>(R.id.popupMenuIcon)
         val endIcon = view.findViewById<ImageView>(R.id.popupMenuEndIcon)
 
-        title.setTextOrGone(item.titleId)
-        subTitle.setTextOrGone(item.subTitleId)
+        title.setMessageOrGone(item.title)
+        subTitle.setMessageOrGone(item.subTitle)
         icon.setImageOrGone(item.startIconId)
         endIcon.setImageOrGone(item.endIconId)
         if (item.backgroundColor != null) {
             container.setBackgroundColor(item.backgroundColor.color(context))
+        } else {
+            container.setBackgroundColor(R.color.transparent.color(context))
         }
 
         return super.getView(index, view, viewGroup)

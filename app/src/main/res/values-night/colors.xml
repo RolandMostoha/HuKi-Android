@@ -14,7 +14,6 @@
     <color name="colorSelected">#2D2D2D</color>
     <color name="colorError">#c62828</color>
     <color name="colorStroke">#919191</color>
-    <color name="colorStrokeLight">#DE000000</color>
     <color name="colorStrokeOnMap">#DE000000</color>
     <color name="colorMapOverlayText">@color/colorSecondaryText</color>
     <color name="colorMapOverlayStroke">@color/colorStrokeMarker</color>

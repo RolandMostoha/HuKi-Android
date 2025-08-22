@@ -4,6 +4,7 @@ import android.net.Uri
 import hu.mostoha.mobile.android.huki.interactor.exception.GpxParseFailedException
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistoryItem
+import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.model.domain.GpxWaypoint
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.util.calculateDecline
@@ -82,7 +83,13 @@ class LayersDomainModelMapper @Inject constructor() {
         }
     }
 
-    fun mapGpxHistoryItem(fileUri: Uri, fileName: String, gpx: Gpx, lastModified: LocalDateTime): GpxHistoryItem {
+    fun mapGpxHistoryItem(
+        fileUri: Uri,
+        fileName: String,
+        type: GpxType,
+        gpx: Gpx,
+        lastModified: LocalDateTime
+    ): GpxHistoryItem {
         if (gpx.tracks.isEmpty() && gpx.routes.isEmpty() && gpx.wayPoints.isEmpty()) {
             throw GpxParseFailedException(IllegalArgumentException("GPX must contain one track, route or waypoint"))
         }
@@ -108,6 +115,7 @@ class LayersDomainModelMapper @Inject constructor() {
 
         return GpxHistoryItem(
             name = fileName,
+            type = type,
             fileUri = fileUri,
             lastModified = lastModified,
             waypointCount = gpx.wayPoints.size,

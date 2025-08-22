@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import hu.mostoha.mobile.android.huki.database.GpxHistoryDao
 import hu.mostoha.mobile.android.huki.database.HukiDatabase
 import hu.mostoha.mobile.android.huki.database.PlaceHistoryDao
 import javax.inject.Singleton
@@ -33,5 +34,8 @@ class DatabaseModule {
 
     @Provides
     fun providePlaceHistoryDao(database: HukiDatabase): PlaceHistoryDao = database.placeHistoryDao()
+
+    @Provides
+    fun provideGpxHistoryDao(database: HukiDatabase): GpxHistoryDao = database.gpxHistoryDao()
 
 }

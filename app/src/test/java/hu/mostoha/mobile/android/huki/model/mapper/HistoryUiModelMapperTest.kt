@@ -169,6 +169,7 @@ class HistoryUiModelMapperTest {
             routePlannerGpxList = listOf(
                 GpxHistoryItem(
                     name = "route_plan_HuKi938.gpx",
+                    type = GpxType.ROUTE_PLANNER,
                     fileUri = DEFAULT_ROUTE_PLANNER_GPX_FILE_URI,
                     lastModified = LocalDateTime.of(2023, 6, 2, 16, 0),
                     travelTime = 5.hours,
@@ -181,6 +182,7 @@ class HistoryUiModelMapperTest {
             externalGpxList = listOf(
                 GpxHistoryItem(
                     name = "dera_szurdok.gpx",
+                    type = GpxType.EXTERNAL,
                     fileUri = DEFAULT_EXTERNAL_GPX_FILE_URI,
                     lastModified = LocalDateTime.of(2023, 6, 3, 16, 0),
                     travelTime = Duration.ZERO,

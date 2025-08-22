@@ -5,7 +5,6 @@ import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import com.skydoves.powermenu.CustomPowerMenu
 import com.skydoves.powermenu.MenuAnimation
 import com.skydoves.powermenu.OnMenuItemClickListener
@@ -23,20 +22,9 @@ fun Context.showPopupMenu(
     showAtCenter: Boolean = false,
     headerTitle: Message? = null,
     footerView: View? = null,
-) {
+): CustomPowerMenu<PopupMenuItem, PopupMenuAdapter> {
     val powerMenu = CustomPowerMenu.Builder(this, PopupMenuAdapter())
-        .addItemList(
-            actionItems.map { actionItem ->
-                val menuItem = actionItem.popupMenuItem
-                PopupMenuItem(
-                    titleId = menuItem.titleId,
-                    subTitleId = menuItem.subTitleId,
-                    startIconId = menuItem.startIconId,
-                    endIconId = menuItem.endIconId,
-                    backgroundColor = menuItem.backgroundColor
-                )
-            }
-        )
+        .addItemList(actionItems.map { it.popupMenuItem })
         .setAnimation(MenuAnimation.FADE)
         .setShowBackground(showBackground)
         .setMenuRadius(resources.getDimensionPixelSize(R.dimen.default_corner_size_popup_menu).toFloat())
@@ -44,7 +32,7 @@ fun Context.showPopupMenu(
         .setAutoDismiss(true)
         .setOnMenuItemClickListener(
             OnMenuItemClickListener<PopupMenuItem> { _, menuItem ->
-                val actionItem = actionItems.first { it.popupMenuItem.titleId == menuItem.titleId }
+                val actionItem = actionItems.first { it.popupMenuItem == menuItem }
 
                 actionItem.onClick.invoke()
             }
@@ -69,11 +57,13 @@ fun Context.showPopupMenu(
     } else {
         powerMenu.showAsAnchorLeftBottom(anchorView, 0, resources.getDimensionPixelSize(R.dimen.space_small))
     }
+
+    return powerMenu
 }
 
 class PopupMenuItem(
-    @StringRes val titleId: Int? = null,
-    @StringRes val subTitleId: Int? = null,
+    val title: Message? = null,
+    val subTitle: Message? = null,
     @DrawableRes val startIconId: Int? = null,
     @DrawableRes val endIconId: Int? = null,
     @ColorRes val backgroundColor: Int? = null,

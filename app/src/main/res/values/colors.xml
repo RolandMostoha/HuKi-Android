@@ -27,7 +27,7 @@
     <color name="colorRipple">#000000</color>
     <color name="colorShimmer">#cecece</color>
     <color name="colorStroke">#DEDEDE</color>
-    <color name="colorStrokeLight">#eeeeee</color>
+    <color name="colorStrokeLight">@color/colorBackgroundLight</color>
     <color name="colorStrokeOnMap">#C4C4C4</color>
     <color name="colorStrokeMarker">#ffffff</color>
     <color name="colorStrokeMarkerDark">@color/colorPrimaryIcon</color>

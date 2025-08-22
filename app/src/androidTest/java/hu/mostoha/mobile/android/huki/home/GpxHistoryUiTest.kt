@@ -27,18 +27,14 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.configuration.HukiGpxConfiguration
+import hu.mostoha.mobile.android.huki.configuration.GpxConfiguration
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
 import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
-import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
-import hu.mostoha.mobile.android.huki.model.mapper.LayersDomainModelMapper
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
-import hu.mostoha.mobile.android.huki.repository.FileBasedLayersRepository
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
@@ -54,19 +50,19 @@ import hu.mostoha.mobile.android.huki.testdata.RoutePlanner.DEFAULT_ROUTE_PLAN
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.ViewPagerIdlingResource
 import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithSibling
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.selectTab
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.launchScenario
-import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.testContext
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.After
@@ -93,21 +89,12 @@ class GpxHistoryUiTest {
     @Inject
     lateinit var osmConfiguration: OsmConfiguration
 
-    private val gpxConfiguration = HukiGpxConfiguration(testAppContext)
+    @Inject
+    lateinit var gpxConfiguration: GpxConfiguration
 
     @BindValue
     @JvmField
     val versionConfiguration: VersionConfiguration = FakeVersionConfiguration()
-
-    @BindValue
-    @JvmField
-    val layersRepository: LayersRepository = FileBasedLayersRepository(
-        testContext,
-        UnconfinedTestDispatcher(),
-        LayersDomainModelMapper(),
-        gpxConfiguration,
-        FakeExceptionLogger(),
-    )
 
     @BindValue
     @JvmField
@@ -125,7 +112,7 @@ class GpxHistoryUiTest {
     @JvmField
     val routPlannerRepository: RoutePlannerRepository = mockk()
 
-    private lateinit var viewPagerIdlingResource: ViewPagerIdlingResource
+    private var viewPagerIdlingResource: ViewPagerIdlingResource? = null
 
     @Before
     fun init() {
@@ -139,12 +126,14 @@ class GpxHistoryUiTest {
             DEFAULT_PLACE_PROFILE_RELATION
         )
         coEvery { routPlannerRepository.getRoutePlan(any(), any()) } returns DEFAULT_ROUTE_PLAN
-        coEvery { routPlannerRepository.saveRoutePlan(any(), any()) } returns getTestRoutePlannerGpxUri()
+        coEvery { routPlannerRepository.saveRoutePlan(any(), any()) } returns saveTestRoutePlannerGpx()
     }
 
     @After
     fun tearDown() {
-        IdlingRegistry.getInstance().unregister(viewPagerIdlingResource)
+        if (viewPagerIdlingResource != null) {
+            IdlingRegistry.getInstance().unregister(viewPagerIdlingResource)
+        }
     }
 
     @Test
@@ -186,6 +175,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
+            R.id.popupMenuActionButton.clickInPopup()
             R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(2)
 
@@ -205,6 +195,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
+            R.id.popupMenuActionButton.clickInPopup()
             R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(2)
             R.id.gpxHistoryItemContainer.click()
@@ -216,7 +207,7 @@ class GpxHistoryUiTest {
     @Test
     fun givenRoutePlannerGpxFileInHistory_whenClickOpen_thenGpxDetailsDisplays() {
         gpxConfiguration.clearAllGpxFiles()
-        getTestRoutePlannerGpxUri()
+        saveTestRoutePlannerGpx()
 
         launchScenario<HomeActivity> {
             val waypointName1 = "Dobogoko"
@@ -234,6 +225,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
+            R.id.popupMenuActionButton.clickInPopup()
             R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(1)
             R.id.gpxHistoryItemContainer.click()
@@ -245,7 +237,7 @@ class GpxHistoryUiTest {
     @Test
     fun givenRoutePlannerGpxFileInHistory_whenClickDelete_thenListItemIsRemoved() {
         gpxConfiguration.clearAllGpxFiles()
-        getTestRoutePlannerGpxUri()
+        saveTestRoutePlannerGpx()
 
         launchScenario<HomeActivity> {
             val waypointName1 = "Dobogoko"
@@ -263,6 +255,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
+            R.id.popupMenuActionButton.clickInPopup()
             R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(1)
             R.id.gpxHistoryActionsButton.click()
@@ -284,6 +277,7 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
+            R.id.popupMenuActionButton.clickInPopup()
             R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(2)
             R.id.gpxHistoryActionsButton.click()
@@ -307,10 +301,35 @@ class GpxHistoryUiTest {
             R.id.gpxDetailsCloseButton.click()
 
             R.id.homeHistoryFab.click()
+            R.id.popupMenuActionButton.clickInPopup()
             R.id.historyViewPager.registerViewPagerIdlingResource()
             R.id.historyTabLayout.selectTab(2)
             R.id.gpxHistoryActionsButton.click()
             R.string.gpx_history_menu_action_share.clickWithTextInPopup()
+        }
+    }
+
+    @Test
+    fun givenGpxFilesInHistory_whenRecentGpxHistoryDialogOpens_thenGpxFilesAreDisplayed() {
+        gpxConfiguration.clearAllGpxFiles()
+        saveTestRoutePlannerGpx()
+        val externalGpxName = "aggtelek_jozsvafo.gpx"
+
+        launchScenario<HomeActivity> {
+            intending(IntentMatchers.hasAction(Intent.ACTION_OPEN_DOCUMENT))
+                .respondWith(getTestGpxFileResult(externalGpxName))
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+            R.id.gpxDetailsCloseButton.click()
+
+            R.id.homeHistoryFab.click()
+
+            TEST_GPX_NAME.isPopupTextDisplayed()
+            externalGpxName.isPopupTextDisplayed()
+            externalGpxName.clickWithTextInPopup()
+
+            R.id.gpxDetailsStartButton.isDisplayed()
         }
     }
 
@@ -333,7 +352,7 @@ class GpxHistoryUiTest {
         }
     }
 
-    private fun getTestRoutePlannerGpxUri(): Uri {
+    private fun saveTestRoutePlannerGpx(): Uri {
         val inputStream = testContext.assets.open(TEST_GPX_NAME)
         val file = File(gpxConfiguration.getRoutePlannerGpxDirectory() + "/$TEST_GPX_NAME").apply {
             copyFrom(inputStream)

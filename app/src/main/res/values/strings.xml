@@ -192,6 +192,9 @@
     <string name="history_tab_places">Places</string>
     <string name="history_tab_route_planner">Planner</string>
     <string name="history_tab_external_gpx">GPX</string>
+    <string name="history_all_history">All history</string>
+
+    <string name="recent_gpx_history_title">Last opened</string>
 
     <string name="gpx_history_item_route_planner_empty">Your created route plans will be listed here in the future.</string>
     <string name="gpx_history_item_external_empty">Your imported GPX files will be listed here in the future.</string>
@@ -314,13 +317,14 @@
     <string name="place_category_empty_message_category_template" translatable="false">\"%s\"</string>
     <string name="place_category_too_many_places">Max %s result is displayed, please adjust the area.</string>
 
+    <string name="okt_header_title">National Blue Trails</string>
     <string name="okt_okt_title">OKT</string>
     <string name="okt_okt_subtitle">National Blue Trail</string>
     <string name="okt_rpddk_title">RPDDK</string>
     <string name="okt_rpddk_subtitle">Rockenbauer Pál Dél-dunántúli Blue Trail</string>
     <string name="okt_akt_title">AKT</string>
     <string name="okt_akt_subtitle">Alföldi Blue Trail</string>
-    <string name="okt_official_website_subtitle">Official site of Blue Trail</string>
+    <string name="okt_official_website_subtitle">Official site of OKT</string>
 
     <string name="osm_tag_no">No</string>
     <string name="osm_tag_yes">Yes</string>
