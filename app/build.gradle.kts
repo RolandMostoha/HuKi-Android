@@ -62,6 +62,7 @@ android {
                 "analyticsDisabled" to true,
             )
             buildConfigField("Boolean", "CRASHLYTICS_ENABLED", "false")
+            kotlin.compilerOptions.freeCompilerArgs.add("-Xdebug")
         }
         getByName("release") {
             manifestPlaceholders += mapOf(
