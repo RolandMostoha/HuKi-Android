@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.MailTo
 import android.net.Uri
-import android.provider.Browser
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
@@ -28,10 +27,17 @@ fun Context.openUrl(url: String) {
     val uri = url.toUri()
 
     val intent = Intent(Intent.ACTION_VIEW, uri)
-    intent.putExtra(Browser.EXTRA_APPLICATION_ID, packageName)
 
     if (intent.resolveActivity(packageManager) != null) {
         startActivity(intent)
+    } else {
+        Timber.e("No resolved activity found to handle URL: $url, trying to open anyways...")
+
+        try {
+            startActivity(intent)
+        } catch (exception: Exception) {
+            Timber.e(exception, "Couldn't open URL: $url")
+        }
     }
 }
 
