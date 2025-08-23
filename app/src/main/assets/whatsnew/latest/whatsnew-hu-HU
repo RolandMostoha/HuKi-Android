@@ -1,6 +1,3 @@
-- Új: körtúra tervező távolság és kezdőpont alapján
-- Új: tervező legrövidebb út (csapások, erdészeti utak stb.)
-- Új: biciklis útvonaltervező
-- Mostmár az útvonal elrejthető tervezés közben
-- OKT útvonalak és bélyegzőhelyek frissítése
-- Hibajavítások
+- Új: GPX gyorsindító
+Az előzményekre kattintva először egy gyorsindító menü ugrik fel a legutóbb megnyitott GPX-ekkel
+- Hibajavítás az OKT 7-8 szakaszán

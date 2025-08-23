@@ -1,6 +1,3 @@
-- New: round trip planner based on distance and POI
-- New: shortest route (small paths, forest roads, etc.)
-- New: bicycle route planner
-- The route can now be hidden while planning
-- Update OKT routes and stamp locations
-- Bugfixes
+- New: GPX quick menu
+When you click on history, a quick launch menu will first pop up with the recently opened GPXs.
+- Bugfixes in OKT 7-8 routes
