@@ -44,7 +44,6 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -164,7 +163,6 @@ class OktRoutesUiTest {
     }
 
     @Test
-    @Ignore
     fun givenOktRoute_whenClickOnLink_thenOktWebPageRequested() {
         launchScenario<HomeActivity> {
             R.id.homeOktFab.click()

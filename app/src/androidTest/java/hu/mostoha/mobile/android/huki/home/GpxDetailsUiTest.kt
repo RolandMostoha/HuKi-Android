@@ -63,7 +63,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -123,7 +122,6 @@ class GpxDetailsUiTest {
     }
 
     @Test
-    @Ignore
     fun whenImportGpxClicked_thenOpenFileIntentIsFired() {
         launchScenario<HomeActivity> {
             R.id.homeLayersFab.click()
@@ -207,7 +205,6 @@ class GpxDetailsUiTest {
     }
 
     @Test
-    @Ignore
     fun givenGpxFile_whenGoogleMapsNavigationClicked_thenGoogleMapsDirectionIsRequested() {
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()
@@ -369,7 +366,6 @@ class GpxDetailsUiTest {
     }
 
     @Test
-    @Ignore
     fun givenGpxFile_when_thenGoogleMapsDirectionIsRequested() {
         launchScenario<HomeActivity> {
             R.id.homeGpxDetailsBottomSheetContainer.isNotDisplayed()

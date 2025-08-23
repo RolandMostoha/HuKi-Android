@@ -30,7 +30,6 @@ import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toPercentageFromScale
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -96,7 +95,6 @@ class SettingsUiTest {
     }
 
     @Test
-    @Ignore
     fun whenClickOnGitHubRepositoryText_thenBrowserIntentIsFired() {
         launchScenario<HomeActivity> {
             R.id.homeSettingsFab.click()

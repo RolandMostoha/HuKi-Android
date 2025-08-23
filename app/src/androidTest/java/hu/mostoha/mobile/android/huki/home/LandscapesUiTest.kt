@@ -52,7 +52,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -158,7 +157,6 @@ class LandscapesUiTest {
     }
 
     @Test
-    @Ignore
     fun givenLandscape_whenClickOnKirandulastippek_thenUrlIntentIsFired() {
         val landscape = DEFAULT_LANDSCAPE
         answerTestLocationProvider()
@@ -179,7 +177,6 @@ class LandscapesUiTest {
     }
 
     @Test
-    @Ignore
     fun givenLandscape_whenClickOnTermeszetjaro_thenUrlIntentIsFired() {
         val landscape = DEFAULT_LANDSCAPE
         answerTestLocationProvider()
