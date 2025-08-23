@@ -153,7 +153,7 @@ class LayersViewModel @Inject constructor(
                 PopupMenuActionItem(
                     popupMenuItem = PopupMenuItem(
                         startIconId = when (historyItem.type) {
-                            GpxType.EXTERNAL -> R.drawable.ic_gpx
+                            GpxType.EXTERNAL -> R.drawable.ic_history_gpx
                             GpxType.ROUTE_PLANNER -> R.drawable.ic_history_route_planner
                         },
                         subTitle = historyItem.name.toMessage(),

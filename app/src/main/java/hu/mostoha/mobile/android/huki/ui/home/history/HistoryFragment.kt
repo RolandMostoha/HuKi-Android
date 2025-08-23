@@ -74,7 +74,7 @@ class HistoryFragment : Fragment() {
                 }
                 HistoryTab.EXTERNAL.ordinal -> {
                     tab.text = getString(R.string.history_tab_external_gpx)
-                    tab.icon = R.drawable.ic_gpx.toDrawable(requireContext())
+                    tab.icon = R.drawable.ic_history_gpx.toDrawable(requireContext())
                 }
                 else -> throw IllegalArgumentException("Not supported history tab")
             }

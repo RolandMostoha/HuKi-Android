@@ -154,7 +154,9 @@ class DefaultGpxRepository @Inject constructor(
     override suspend fun getRecentGpxHistory(): List<GpxHistoryItem> {
         return withContext(ioDispatcher) {
             val allGpxHistory = getGpxHistory()
-            val allGpxHistoryItems = (allGpxHistory.routePlannerGpxList + allGpxHistory.externalGpxList).toMutableList()
+            val allGpxHistoryItems = (allGpxHistory.externalGpxList + allGpxHistory.routePlannerGpxList)
+                .sortedByDescending { it.lastModified }
+                .toMutableList()
             val allGpxFilePaths = allGpxHistoryItems.map { it.fileUri.toString() }.toSet()
             val recentGpxHistory = gpxHistoryDao.getEntities().first()
             val result = mutableListOf<GpxHistoryItem>()
