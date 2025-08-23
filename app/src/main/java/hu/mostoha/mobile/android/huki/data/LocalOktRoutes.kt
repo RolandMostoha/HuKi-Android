@@ -94,7 +94,7 @@ val LOCAL_OKT_ROUTES = listOf(
         decline = 440,
         travelTime = 6.hours.plus(30.minutes),
         start = Location(latitude = 46.984919493, longitude = 17.694656054, altitude = 255.6064),
-        end = Location(latitude = 47.134760357, longitude = 17.631173723, altitude = 285.688),
+        end = Location(latitude = 47.148069823, longitude = 17.653723953, altitude = 298.782),
         stampTagsRange = 35.0..38.9,
     ),
     OktRoute(
@@ -104,7 +104,7 @@ val LOCAL_OKT_ROUTES = listOf(
         incline = 1085,
         decline = 990,
         travelTime = 12.hours.plus(10.minutes),
-        start = Location(latitude = 47.134760357, longitude = 17.631173723, altitude = 285.688),
+        start = Location(latitude = 47.148069823, longitude = 17.653723953, altitude = 298.782),
         end = Location(latitude = 47.264708926, longitude = 17.87862525, altitude = 382.1969),
         stampTagsRange = 38.0..43.9,
     ),
