@@ -3,7 +3,7 @@ package hu.mostoha.mobile.android.huki.ui.home.placecategory
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceCategoryBinding
 import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
-import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommenderMapper
+import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommendationMapper
 import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -21,8 +21,6 @@ class PlaceCategoryBottomSheetDialog(
         onCategoryClick: (PlaceCategory) -> Unit,
         onCloseClick: () -> Unit,
     ) {
-        val adapter = PlaceCategoryAdapter(context)
-
         with(binding.placeCategoryBottomSheetHeaderContainer) {
             placeHeaderTitle.text = placeArea.addressMessage.resolve(context)
             placeHeaderSubTitle.text = placeArea.distanceMessage.resolve(context)
@@ -32,29 +30,31 @@ class PlaceCategoryBottomSheetDialog(
             }
         }
 
+        binding.placeCategoryBottomSheetHikeRecommendationsInfo.setOnClickListener {
+            analyticsService.hikeRecommenderInfoClicked()
+            onHikingTrailsClick.invoke()
+        }
+
+        val adapter = PlaceCategoryAdapter(context)
         adapter.initHikeRecommendations(
             chipGroup = binding.placeCategoryBottomSheetHikeRecommendationsChipGroup,
             isStroked = true,
-            onHikingRoutesClick = {
-                analyticsService.loadHikingRoutesClicked()
-                onHikingTrailsClick.invoke()
-                hide()
+            onRecommendationClick = { hikeRecommendation ->
+                analyticsService.hikeRecommendationClicked(hikeRecommendation)
+                context.openUrl(HikeRecommendationMapper.getNavigationLink(hikeRecommendation, placeArea))
             },
-            onKirandulastippekClick = {
-                analyticsService.hikeRecommenderKirandulastippekClicked()
-                context.openUrl(HikeRecommenderMapper.getKirandulastippekLink(placeArea))
-            },
-            onTermeszetjaroClick = {
-                analyticsService.hikeRecommenderTermeszetjaroClicked()
-                context.openUrl(HikeRecommenderMapper.getTermeszetjaroLink(placeArea))
-            }
         )
         adapter.initPlaceCategories(
             containerView = binding.placeCategoryBottomSheetGroups,
             isStroked = true,
             onCategoryClick = { category ->
-                analyticsService.placeCategoryClicked(category)
-                onCategoryClick.invoke(category)
+                if (category == PlaceCategory.HIKING_ROUTES) {
+                    analyticsService.loadHikingRoutesClicked()
+                    onHikingTrailsClick.invoke()
+                } else {
+                    analyticsService.placeCategoryClicked(category)
+                    onCategoryClick.invoke(category)
+                }
                 hide()
             }
         )

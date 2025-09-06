@@ -12,11 +12,11 @@ import hu.mostoha.mobile.android.huki.databinding.ItemPlaceCategorySelectionChip
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceCategoryVerticalChipBinding
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
+import hu.mostoha.mobile.android.huki.model.domain.HikeRecommendation
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategoryGroup
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.resolve
-import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.util.color
 import hu.mostoha.mobile.android.huki.util.colorStateList
 
@@ -25,34 +25,20 @@ class PlaceCategoryAdapter(val context: Context) {
     fun initHikeRecommendations(
         chipGroup: ChipGroup,
         isStroked: Boolean,
-        onHikingRoutesClick: () -> Unit,
-        onKirandulastippekClick: () -> Unit,
-        onTermeszetjaroClick: () -> Unit
+        onRecommendationClick: (HikeRecommendation) -> Unit,
     ) {
-        chipGroup.addVerticalChip(
-            title = R.string.place_category_national_routes_chip_title.toMessage(),
-            iconRes = R.drawable.ic_place_category_national_trails,
-            isStroked = isStroked,
-            onClick = {
-                onHikingRoutesClick.invoke()
-            }
-        )
-        chipGroup.addVerticalChip(
-            title = R.string.hike_recommender_kirandulastippek_button.toMessage(),
-            iconRes = R.drawable.ic_hike_recommender_kirandulastippek,
-            isStroked = isStroked,
-            onClick = {
-                onKirandulastippekClick.invoke()
-            }
-        )
-        chipGroup.addVerticalChip(
-            title = R.string.hike_recommender_termeszetjaro_button.toMessage(),
-            iconRes = R.drawable.ic_hike_recommender_termeszetjaro,
-            isStroked = isStroked,
-            onClick = {
-                onTermeszetjaroClick.invoke()
-            }
-        )
+        chipGroup.removeAllViews()
+
+        HikeRecommendation.entries.forEach { recommendation ->
+            chipGroup.addVerticalChip(
+                title = recommendation.title,
+                iconRes = recommendation.iconRes,
+                isStroked = isStroked,
+                onClick = {
+                    onRecommendationClick.invoke(recommendation)
+                }
+            )
+        }
     }
 
     fun initPlaceCategories(
@@ -148,14 +134,14 @@ class PlaceCategoryAdapter(val context: Context) {
         fun ChipGroup.addSelectionChip(
             viewTag: String,
             title: Message,
-            @ColorRes backgroundColorRes: Int,
+            @ColorRes backgroundColorRes: Int? = null,
             onClick: () -> Unit
         ) {
             val chipBinding = ItemPlaceCategorySelectionChipBinding.inflate(context.inflater, this, false)
             with(chipBinding.homePlaceCategoryChip) {
                 tag = viewTag
                 text = title.resolve(context)
-                setChipBackgroundColorResource(backgroundColorRes)
+                backgroundColorRes?.let { setChipBackgroundColorResource(it) }
                 setCloseIconTintResource(R.color.colorOnPrimary)
                 setCloseIconSizeResource(R.dimen.icon_size_medium)
                 setOnCloseIconClickListener { onClick.invoke() }

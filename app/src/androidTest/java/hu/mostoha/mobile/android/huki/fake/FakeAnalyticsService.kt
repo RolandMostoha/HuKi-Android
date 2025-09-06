@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.fake
 
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
+import hu.mostoha.mobile.android.huki.model.domain.HikeRecommendation
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
@@ -18,13 +19,9 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun loadLandscapeClicked(placeName: String) = Unit
 
-    override fun placeDetailsFinderClicked() = Unit
+    override fun hikeRecommenderInfoClicked() = Unit
 
-    override fun hikeRecommenderKirandulastippekClicked() = Unit
-
-    override fun hikeRecommenderTermeszetjaroClicked() = Unit
-
-    override fun hikeRecommenderInfoCloseClicked() = Unit
+    override fun hikeRecommendationClicked(hikeRecommendation: HikeRecommendation) = Unit
 
     override fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType) = Unit
 

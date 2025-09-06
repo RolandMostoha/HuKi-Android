@@ -8,6 +8,6 @@ data class Landscape(
     @StringRes val nameRes: Int,
     val landscapeType: LandscapeType,
     val center: Location,
-    val kirandulastippekTag: String? = null,
+    val areaTags: Map<HikeRecommendation, String>,
     val termeszetjaroTag: TermeszetjaroTag? = null,
 )

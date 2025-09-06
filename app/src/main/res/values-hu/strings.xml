@@ -58,8 +58,6 @@
     <string name="hike_recommender_landscape_title_template">%s közelében</string>
     <string name="hike_recommender_place_title_template">%s környékén</string>
     <string name="hike_recommender_hiking_trails_button">Nemzeti túraútvonalak</string>
-    <string name="hike_recommender_termeszetjaro_button">Természetjáró</string>
-    <string name="hike_recommender_kirandulastippek_button">Kirándulástippek</string>
 
     <string name="home_bottom_sheet_directions_button">Google Nav</string>
     <string name="home_bottom_sheet_show_points_button">Összes pont</string>
@@ -147,9 +145,6 @@
     <string name="licences_location_iq_title">LocationIQ (Keresőmotor)</string>
     <string name="licences_osmdroid">OsmDroid - Tile render</string>
     <string name="licences_okt">OKT - Országos Kéktúra</string>
-    <string name="licences_termeszetjaro">Természetjáró</string>
-    <string name="licences_aktiv_magyarorszag">Aktív Magyarország</string>
-    <string name="licences_kirandulastippek">Kirándulástippek</string>
     <string name="licences_tuhu">TuHu (turistautak.hu)</string>
     <string name="licences_google_satellite">Google Satellite</string>
     <string name="licences_merretekerjek">MerreTekerjek (merretekerjek.hu)</string>
@@ -250,7 +245,7 @@
 
     <string name="place_category_landscapes_header_title">Tájegységek</string>
     <string name="place_category_hike_recommendations_header_title">Túraajánlók</string>
-    <string name="place_category_hike_recommendations_info">A túraajánlókból letöltött GPX fájlok megnyithatóak az alkalmazással. A túraajánkókhoz nem fűz semmilyen érdekeltség és a weboldalak nem tartoznak az alkalmazás felügyelete alá, valamint az ott elérhető tartalom felhasználásához az adott weboldal feltételei érvényesek.</string>
+    <string name="place_category_hike_recommendations_info">A túraajánlókból letöltött GPX útvonalak megnyithatóak az alkalmazással.\n\nEzek a személyes kedvenceim, de nem fűz hozzájuk semmilyen érdekeltség.\n\nA HuKi a weboldalak tartalmait semmilyen formában nem használja fel, csak egy navigációs linket nyújt, ami külső böngészőben nyílik meg. \n\nA weboldalakon elérhető tartalom felhasználásához az adott oldal feltételei érvényesek.</string>
     <string name="place_category_national_routes_chip_title">Túraútvonalak</string>
 
     <string name="place_category_group_travel">Közlekedés</string>

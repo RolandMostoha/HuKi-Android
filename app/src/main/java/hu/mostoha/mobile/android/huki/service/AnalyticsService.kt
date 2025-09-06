@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.service
 
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
+import hu.mostoha.mobile.android.huki.model.domain.HikeRecommendation
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
@@ -17,13 +18,9 @@ interface AnalyticsService {
 
     fun loadLandscapeClicked(placeName: String)
 
-    fun placeDetailsFinderClicked()
+    fun hikeRecommenderInfoClicked()
 
-    fun hikeRecommenderKirandulastippekClicked()
-
-    fun hikeRecommenderTermeszetjaroClicked()
-
-    fun hikeRecommenderInfoCloseClicked()
+    fun hikeRecommendationClicked(hikeRecommendation: HikeRecommendation)
 
     fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType)
 

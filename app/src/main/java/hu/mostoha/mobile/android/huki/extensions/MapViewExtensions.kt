@@ -850,7 +850,11 @@ fun MapView.addPlaceCategoryMarker(
                 LayerDrawableConfig(
                     R.drawable.ic_marker_background
                         .toDrawable(context)
-                        .apply { setTint(placeCategory.categoryColorRes.color(context)) },
+                        .apply {
+                            placeCategory.categoryColorRes?.let {
+                                setTint(it.color(context))
+                            }
+                        },
                     resources.getDimensionPixelSize(R.dimen.place_category_marker_background_size),
                 ),
                 LayerDrawableConfig(

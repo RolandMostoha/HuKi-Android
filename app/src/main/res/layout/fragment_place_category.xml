@@ -76,6 +76,7 @@
                     android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
 
                 <hu.mostoha.mobile.android.huki.views.InfoButtonView
+                    android:id="@+id/placeCategoryHikeRecommendationsInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:messageRes="@string/place_category_hike_recommendations_info" />
