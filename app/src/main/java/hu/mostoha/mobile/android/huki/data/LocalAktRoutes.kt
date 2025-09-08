@@ -11,7 +11,7 @@ const val AKT_ID_FULL_ROUTE = "AK"
 val LOCAL_AKT_ROUTES = listOf(
     OktRoute(
         id = AKT_ID_FULL_ROUTE,
-        name = "Írott-kő - Szekszárd",
+        name = "Szekszárd - Sátoraljaújhely",
         distanceKm = 870.0,
         incline = 1550,
         decline = 1525,
