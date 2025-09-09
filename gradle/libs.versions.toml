@@ -6,6 +6,7 @@ appcompat = "1.7.0"
 arch-core-testing = "2.2.0"
 aws-amplify = "2.14.5"
 billing = "7.1.1"
+compose-bom = "2025.08.01"
 constraintlayout = "2.2.1"
 core-ktx = "1.16.0"
 core-splashscreen = "1.0.1"
@@ -49,6 +50,7 @@ androidx-test-core = "1.6.1"
 androidx-test-ext-junit = "1.2.1"
 androidx-test-espresso = "3.6.1"
 androidx-test-orchestrator = "1.5.1"
+ui = "1.9.0"
 
 [libraries]
 amplifyframework-aws-auth-cognito = { group = "com.amplifyframework", name = "aws-auth-cognito", version.ref = "aws-amplify" }
@@ -57,9 +59,14 @@ amplifyframework-core = { group = "com.amplifyframework", name = "core", version
 airbnb-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 android-billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
 android-tools-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-ktx" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity-ktx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "arch-core-testing" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "core-splashscreen" }
@@ -109,6 +116,7 @@ squareup-moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-ko
 squareup-okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp-logging-interceptor" }
 squareup-retrofit2-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 squareup-retrofit2-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
@@ -120,6 +128,7 @@ hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 [bundles]
 amplify = ["amplifyframework-core", "amplifyframework-aws-storage-s3", "amplifyframework-aws-auth-cognito"]
