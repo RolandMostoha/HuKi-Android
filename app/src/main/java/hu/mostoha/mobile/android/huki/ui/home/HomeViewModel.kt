@@ -5,9 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.data.LOCAL_AKT_ROUTES
-import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
-import hu.mostoha.mobile.android.huki.data.LOCAL_RPDDK_ROUTES
 import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
@@ -357,13 +354,7 @@ class HomeViewModel @Inject constructor(
             request = { oktRepository.getOktRoutes(oktType) },
             exceptionLogger = exceptionLogger
         )
-            .map { routes ->
-                when (oktType) {
-                    OktType.OKT -> oktRoutesMapper.map(oktType, routes, LOCAL_OKT_ROUTES)
-                    OktType.RPDDK -> oktRoutesMapper.map(oktType, routes, LOCAL_RPDDK_ROUTES)
-                    OktType.AKT -> oktRoutesMapper.map(oktType, routes, LOCAL_AKT_ROUTES)
-                }
-            }
+            .map { oktRoutesMapper.map(oktType, it) }
             .onEach { _oktRoutes.emit(it) }
             .onStart {
                 clearOktRoutes()

@@ -15,7 +15,6 @@ import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.OktRoutes
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
@@ -55,6 +54,7 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.util.DEFAULT_LOCAL_DATE
+import hu.mostoha.mobile.android.huki.util.DEFAULT_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
 import hu.mostoha.mobile.android.huki.util.answerDefaults
 import hu.mostoha.mobile.android.huki.util.flowOfError
@@ -355,7 +355,7 @@ class HomeViewModelTest {
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(
-                    oktRoutesMapper.map(OktType.OKT, DEFAULT_OKT_ROUTES, LOCAL_OKT_ROUTES)
+                    oktRoutesMapper.map(OktType.OKT, DEFAULT_OKT_ROUTES)
                 )
             }
         }
@@ -508,16 +508,6 @@ class HomeViewModelTest {
             west = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_WEST
         )
         private val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.first()
-        private val DEFAULT_OKT_FULL_GEO_POINTS = listOf(
-            LOCAL_OKT_ROUTES.first().start,
-            LOCAL_OKT_ROUTES.first().end,
-            LOCAL_OKT_ROUTES[1].start,
-            LOCAL_OKT_ROUTES[1].end,
-        )
-        private val DEFAULT_OKT_ROUTES = OktRoutes(
-            locations = DEFAULT_OKT_FULL_GEO_POINTS,
-            stampWaypoints = emptyList(),
-        )
     }
 
 }

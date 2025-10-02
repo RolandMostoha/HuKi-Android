@@ -1,7 +1,7 @@
 package hu.mostoha.mobile.android.huki.model.domain
 
-data class OktRoutes(
+data class OktRouteGeometry(
+    val oktRoute: OktRoute,
     val locations: List<Location>,
     val stampWaypoints: List<OktStampWaypoint>,
-    val oktRoutes: List<OktRouteGeometry>,
 )

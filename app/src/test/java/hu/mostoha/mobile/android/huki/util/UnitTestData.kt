@@ -1,7 +1,10 @@
 package hu.mostoha.mobile.android.huki.util
 
+import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.OktRouteGeometry
+import hu.mostoha.mobile.android.huki.model.domain.OktRoutes
 import hu.mostoha.mobile.android.huki.model.domain.PlaceAddress
 import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
@@ -41,6 +44,30 @@ val DEFAULT_PLACE_PROFILE = PlaceProfile(
     ),
     placeType = PlaceType.NODE,
     location = DEFAULT_PLACE_AREA_LOCATION
+)
+
+private val DEFAULT_OKT_FULL_GEO_POINTS = listOf(
+    LOCAL_OKT_ROUTES[0].start,
+    LOCAL_OKT_ROUTES[0].end,
+    LOCAL_OKT_ROUTES[1].start,
+    LOCAL_OKT_ROUTES[1].end,
+)
+
+val DEFAULT_OKT_ROUTES = OktRoutes(
+    locations = DEFAULT_OKT_FULL_GEO_POINTS,
+    stampWaypoints = emptyList(),
+    oktRoutes = listOf(
+        OktRouteGeometry(
+            LOCAL_OKT_ROUTES[0],
+            DEFAULT_OKT_FULL_GEO_POINTS.subList(0, 2),
+            emptyList()
+        ),
+        OktRouteGeometry(
+            LOCAL_OKT_ROUTES[1],
+            DEFAULT_OKT_FULL_GEO_POINTS.subList(2, 4),
+            emptyList()
+        )
+    )
 )
 
 fun Location.toMockLocation(): AndroidLocation {
