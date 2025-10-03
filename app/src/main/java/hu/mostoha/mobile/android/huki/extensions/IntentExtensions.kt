@@ -58,14 +58,14 @@ fun Intent.isGpxFileIntent(): Boolean {
     val scheme = this.scheme
     val uri = this.data
 
-    if (type.isNullOrEmpty() || scheme.isNullOrEmpty() || uri == null) {
+    if (scheme.isNullOrEmpty() || uri == null) {
         return false
     }
 
-    val isTypeGpx = type.contains("gpx")
+    val isTypeGpx = type?.contains("gpx") ?: false
+    val isOctetStream = type?.contains("application/octet-stream") ?: false
     val isSchemeGpx = scheme.contains("gpx")
     val isUriPathGpx = uri.path?.contains("gpx") ?: false
-    val isOctetStream = type.contains("application/octet-stream")
 
     return isTypeGpx || isOctetStream || isSchemeGpx || isUriPathGpx
 }

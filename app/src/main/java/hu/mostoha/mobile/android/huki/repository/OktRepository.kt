@@ -49,10 +49,10 @@ class OktRepository @Inject constructor(
                 val routeLocations = if (isFullRoute) {
                     allLocations
                 } else {
-                    val closestStartToOktFull = allLocations.minBy { it.distanceBetween(oktRoute.start) }
-                    val closestEndToOktFull = allLocations.minBy { it.distanceBetween(oktRoute.end) }
-                    val fromIndex = allLocations.indexOf(closestStartToOktFull)
-                    val toIndex = allLocations.indexOf(closestEndToOktFull)
+                    val closestStartToFull = allLocations.minBy { it.distanceBetween(oktRoute.start) }
+                    val closestEndToFull = allLocations.minBy { it.distanceBetween(oktRoute.end) }
+                    val fromIndex = allLocations.indexOf(closestStartToFull)
+                    val toIndex = allLocations.indexOf(closestEndToFull)
 
                     allLocations.subList(fromIndex, toIndex + 1)
                 }
