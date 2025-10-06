@@ -71,24 +71,26 @@ class AwsMapTileSqlCacheProvider(
 
     inner class AwsTileLoader : TileLoader() {
 
+        val emptyDrawable = ContextCompat.getDrawable(context, R.drawable.tile_256x256_transparent)!!
+
         @Throws(CantContinueException::class)
         override fun loadTile(pMapTileIndex: Long): Drawable? {
             return try {
                 val tileSource = tileSourceReference.get()
 
-                val result = if (tileWriter.isTileNotAvailable(tileSource, pMapTileIndex)) {
-                    ContextCompat.getDrawable(context, R.drawable.tile_256x256_transparent)!!
+                val tileDrawable = if (tileWriter.isTileNotAvailable(tileSource, pMapTileIndex)) {
+                    emptyDrawable
                 } else {
                     tileWriter.loadTile(tileSource, pMapTileIndex)
                 }
 
-                if (result == null) {
+                if (tileDrawable == null) {
                     Counters.fileCacheMiss++
                 } else {
                     Counters.fileCacheHit++
                 }
 
-                result
+                tileDrawable
             } catch (lowMemoryException: BitmapTileSourceBase.LowMemoryException) {
                 // Low memory so empty the queue
                 Timber.w(lowMemoryException, "LowMemory downloading MapTile: ${MapTileIndex.toString(pMapTileIndex)}")
