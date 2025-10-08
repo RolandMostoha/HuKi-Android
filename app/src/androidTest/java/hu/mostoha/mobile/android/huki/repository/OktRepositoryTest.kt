@@ -5,7 +5,6 @@ import androidx.test.filters.MediumTest
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -33,13 +32,27 @@ class OktRepositoryTest {
     lateinit var repository: OktRepository
 
     @Test
-    fun givenLocalOktRoutes_whenGetOktFullRoute_thenStartAndEndPositionsArePresent() = runTest {
+    fun givenLocalOktRoutes_whenGetOktRoutes_thenStartAndEndPositionsArePresent() = runTest {
         val oktRoutes = repository.getOktRoutes(OktType.OKT)
 
-        LOCAL_OKT_ROUTES.map { it.start to it.end }.forEach { (start, end) ->
-            assertThat(oktRoutes.locations).contains(start)
-            assertThat(oktRoutes.locations).contains(end)
-        }
+        assertThat(oktRoutes.oktRoutes).hasSize(28)
+        assertThat(oktRoutes.stampWaypoints).isNotEmpty()
+    }
+
+    @Test
+    fun givenLocalRpddkRoutes_whenGetOktRoutes_thenStartAndEndPositionsArePresent() = runTest {
+        val oktRoutes = repository.getOktRoutes(OktType.RPDDK)
+
+        assertThat(oktRoutes.oktRoutes).hasSize(12)
+        assertThat(oktRoutes.stampWaypoints).isNotEmpty()
+    }
+
+    @Test
+    fun givenLocalAktRoutes_whenGetOktRoutes_thenStartAndEndPositionsArePresent() = runTest {
+        val oktRoutes = repository.getOktRoutes(OktType.AKT)
+
+        assertThat(oktRoutes.oktRoutes).hasSize(14)
+        assertThat(oktRoutes.stampWaypoints).isNotEmpty()
     }
 
 }

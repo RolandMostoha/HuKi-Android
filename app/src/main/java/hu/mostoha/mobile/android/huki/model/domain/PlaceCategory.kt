@@ -12,8 +12,16 @@ enum class PlaceCategory(
     val categoryGroup: PlaceCategoryGroup,
     val title: Message.Res,
     @DrawableRes val iconRes: Int,
-    @ColorRes val categoryColorRes: Int,
+    @ColorRes val categoryColorRes: Int? = null,
 ) {
+    HIKING_ROUTES(
+        osmQueryTags = emptyList(),
+        importantOsmTags = emptyList(),
+        categoryGroup = PlaceCategoryGroup.NATURE,
+        title = R.string.place_category_national_routes_chip_title.toMessage(),
+        iconRes = R.drawable.ic_place_category_national_trails,
+        categoryColorRes = null,
+    ),
     PEAK(
         osmQueryTags = listOf("natural" to "peak"),
         importantOsmTags = listOf(OsmTags.ELE, OsmTags.WEBSITE, OsmTags.URL),

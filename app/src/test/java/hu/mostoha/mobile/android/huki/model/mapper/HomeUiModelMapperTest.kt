@@ -63,9 +63,9 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given landscape domain model with null kirandulastippek and termeszetjaro tag, when mapLandscapes, then correct LandscapeUiModel returns with default URL`() {
+    fun `Given landscape domain model with null termeszetjaro tag, when mapLandscapes, then correct LandscapeUiModel returns with default URL`() {
         val landscape = DEFAULT_LANDSCAPE.copy(
-            kirandulastippekTag = null,
+            areaTags = emptyMap(),
             termeszetjaroTag = null,
         )
 

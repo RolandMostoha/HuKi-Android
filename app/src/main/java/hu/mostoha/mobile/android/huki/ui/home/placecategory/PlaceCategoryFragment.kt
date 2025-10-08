@@ -20,7 +20,8 @@ import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
-import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommenderMapper
+import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
+import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommendationMapper
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -65,6 +66,7 @@ class PlaceCategoryFragment : Fragment() {
     private val scrollContainer by lazy { binding.placeCategoryScrollContainer }
     private val placeHeaderContainer by lazy { binding.placeCategoryHeaderContainer }
     private val placeCategoryGroups by lazy { binding.placeCategoryGroups }
+    private val hikeRecommendationInfo by lazy { binding.placeCategoryHikeRecommendationsInfo }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPlaceCategoryBinding.inflate(inflater, container, false)
@@ -94,51 +96,41 @@ class PlaceCategoryFragment : Fragment() {
 
         placeHeaderContainer.placeHeaderImage.setImageResource(R.drawable.ic_place_category_city)
 
-        val placeCategoryAdapter = PlaceCategoryAdapter(requireContext())
+        hikeRecommendationInfo.onClick = {
+            analyticsService.hikeRecommenderInfoClicked()
+        }
 
+        val placeCategoryAdapter = PlaceCategoryAdapter(requireContext())
         placeCategoryAdapter.initHikeRecommendations(
             chipGroup = binding.placeCategoryHikeRecommendationsChipGroup,
             isStroked = false,
-            onHikingRoutesClick = {
-                analyticsService.loadHikingRoutesClicked()
+            onRecommendationClick = { hikeRecommendation ->
+                analyticsService.hikeRecommendationClicked(hikeRecommendation)
 
                 val placeArea = placeCategoryViewModel.placeCategoryUiModel.value.placeArea
-                val boundingBox = boundingBox
-
-                if (placeArea != null && boundingBox != null) {
-                    placeCategoryEventViewModel.updateEvent(PlaceCategoryEvent.HikingRouteSelected(placeArea))
-                    requireActivity().supportFragmentManager.popBackStack()
-                }
-            },
-            onKirandulastippekClick = {
-                analyticsService.hikeRecommenderKirandulastippekClicked()
-
-                val placeArea = placeCategoryViewModel.placeCategoryUiModel.value.placeArea
-
                 if (placeArea != null) {
-                    val url = HikeRecommenderMapper.getKirandulastippekLink(placeArea)
+                    val url = HikeRecommendationMapper.getNavigationLink(hikeRecommendation, placeArea)
                     requireContext().openUrl(url)
                 }
             },
-            onTermeszetjaroClick = {
-                analyticsService.hikeRecommenderTermeszetjaroClicked()
-
-                val placeArea = placeCategoryViewModel.placeCategoryUiModel.value.placeArea
-
-                if (placeArea != null) {
-                    val url = HikeRecommenderMapper.getTermeszetjaroLink(placeArea)
-                    requireContext().openUrl(url)
-                }
-            }
         )
-
         placeCategoryAdapter.initPlaceCategories(
             containerView = placeCategoryGroups,
             isStroked = false,
-            onCategoryClick = {
-                analyticsService.placeCategoryClicked(it)
-                placeCategoryEventViewModel.updateEvent(PlaceCategoryEvent.PlaceCategorySelected(it))
-                requireActivity().supportFragmentManager.popBackStack()
+            onCategoryClick = { category ->
+                if (category == PlaceCategory.HIKING_ROUTES) {
+                    analyticsService.loadHikingRoutesClicked()
+
+                    val placeArea = placeCategoryViewModel.placeCategoryUiModel.value.placeArea
+                    if (placeArea != null) {
+                        placeCategoryEventViewModel.updateEvent(PlaceCategoryEvent.HikingRouteSelected(placeArea))
+                        requireActivity().supportFragmentManager.popBackStack()
+                    }
+                } else {
+                    analyticsService.placeCategoryClicked(category)
+                    placeCategoryEventViewModel.updateEvent(PlaceCategoryEvent.PlaceCategorySelected(category))
+                    requireActivity().supportFragmentManager.popBackStack()
+                }
             }
         )
     }

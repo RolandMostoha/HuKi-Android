@@ -145,6 +145,13 @@ class OsmLicencesOverlay(
             )
             .setLibrary(
                 Library(
+                    title = context.getString(R.string.licences_aktiv_kalandor),
+                    url = "https://aktivkalandor.hu/",
+                    license = License.CREATIVE_COMMONS
+                )
+            )
+            .setLibrary(
+                Library(
                     title = context.getString(R.string.licences_tuhu),
                     url = "https://turistautak.hu/",
                     license = License.CREATIVE_COMMONS

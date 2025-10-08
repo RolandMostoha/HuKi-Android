@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.Location
-import hu.mostoha.mobile.android.huki.model.domain.OktRoute
 import hu.mostoha.mobile.android.huki.model.domain.OktRoutes
 import hu.mostoha.mobile.android.huki.model.domain.OktStampTag
 import hu.mostoha.mobile.android.huki.model.domain.OktStampWaypoint
@@ -15,12 +14,11 @@ import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.util.DEFAULT_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.util.KEKTURA_OKT_URL
 import hu.mostoha.mobile.android.huki.util.KEKTURA_OKT_URL_TEMPLATE
 import io.ticofab.androidgpxparser.parser.domain.WayPoint
 import org.junit.Test
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
 
 class OktRoutesMapperTest {
 
@@ -31,11 +29,11 @@ class OktRoutesMapperTest {
         val oktRoutes = OktRoutes(
             locations = emptyList(),
             stampWaypoints = emptyList(),
+            oktRoutes = emptyList()
         )
-        val oktRouteList = emptyList<OktRoute>()
         val oktType = OktType.OKT
 
-        val oktRoutesUiModel = mapper.map(oktType, oktRoutes, oktRouteList)
+        val oktRoutesUiModel = mapper.map(oktType, oktRoutes)
 
         assertThat(oktRoutesUiModel).isEqualTo(
             OktRoutesUiModel(
@@ -53,11 +51,12 @@ class OktRoutesMapperTest {
         val oktRoutes = OktRoutes(
             locations = oktFullGeoPoints,
             stampWaypoints = emptyList(),
+            oktRoutes = listOf(DEFAULT_OKT_ROUTES.oktRoutes.first())
         )
         val oktRoute = DEFAULT_OKT_ROUTE
         val oktType = OktType.OKT
 
-        val oktRoutesUiModel = mapper.map(oktType, oktRoutes, listOf(oktRoute))
+        val oktRoutesUiModel = mapper.map(oktType, oktRoutes)
 
         assertThat(oktRoutesUiModel).isEqualTo(
             OktRoutesUiModel(
@@ -90,10 +89,11 @@ class OktRoutesMapperTest {
         val oktRoutes = OktRoutes(
             locations = oktFullGeoPoints,
             stampWaypoints = emptyList(),
+            oktRoutes = listOf(DEFAULT_OKT_ROUTES.oktRoutes[1])
         )
         val oktRoute = DEFAULT_OKT_ROUTE_2
         val oktType = OktType.OKT
-        val oktRoutesUiModel = mapper.map(oktType, oktRoutes, listOf(oktRoute))
+        val oktRoutesUiModel = mapper.map(oktType, oktRoutes)
 
         assertThat(oktRoutesUiModel).isEqualTo(
             OktRoutesUiModel(
@@ -126,21 +126,11 @@ class OktRoutesMapperTest {
         val oktRoutes = OktRoutes(
             locations = oktFullGeoPoints,
             stampWaypoints = emptyList(),
-        )
-        val invalidOktRoute = OktRoute(
-            id = "okt-fake",
-            name = "OKT fake",
-            distanceKm = 1172.5,
-            incline = 31455,
-            decline = 32035,
-            travelTime = 344.hours.plus(40.minutes),
-            start = Location(latitude = 47.0, longitude = 16.0),
-            end = Location(latitude = 48.0, longitude = 21.0),
-            stampTagsRange = 1.0..2.0
+            oktRoutes = emptyList()
         )
         val oktType = OktType.OKT
 
-        val oktRoutesUiModel = mapper.map(oktType, oktRoutes, listOf(invalidOktRoute))
+        val oktRoutesUiModel = mapper.map(oktType, oktRoutes)
 
         assertThat(oktRoutesUiModel).isEqualTo(
             OktRoutesUiModel(

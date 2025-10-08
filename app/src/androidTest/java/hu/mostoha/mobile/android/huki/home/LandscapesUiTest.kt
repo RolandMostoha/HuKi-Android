@@ -18,6 +18,7 @@ import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
 import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
+import hu.mostoha.mobile.android.huki.model.domain.HikeRecommendation
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolygon
@@ -32,8 +33,6 @@ import hu.mostoha.mobile.android.huki.testdata.HikingRoutes.DEFAULT_HIKING_ROUTE
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_GEOMETRY_LANDSCAPE
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_LANDSCAPE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
-import hu.mostoha.mobile.android.huki.util.KIRANDULASTIPPEK_QUERY_URL
-import hu.mostoha.mobile.android.huki.util.TERMESZETJARO_AREA_URL
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
@@ -42,6 +41,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
+import hu.mostoha.mobile.android.huki.util.espresso.swipeUp
 import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -150,6 +150,8 @@ class LandscapesUiTest {
         launchScenario<HomeActivity> {
             R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
+            R.id.placeCategoryBottomSheetHeaderContainer.swipeUp()
+
             R.string.place_category_national_routes_chip_title.clickWithText()
 
             R.id.homeHikingRoutesBottomSheetContainer.isDisplayed()
@@ -165,12 +167,16 @@ class LandscapesUiTest {
         launchScenario<HomeActivity> {
             R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
-            R.string.hike_recommender_kirandulastippek_button.clickWithText()
+            R.string.hike_recommender_kirandulastippek.clickWithText()
 
             intended(
                 allOf(
                     hasAction(Intent.ACTION_VIEW),
-                    hasData(KIRANDULASTIPPEK_QUERY_URL.format(landscape.kirandulastippekTag!!))
+                    hasData(
+                        HikeRecommendation.KIRANDULASTIPPEK.areaUrl.format(
+                            landscape.areaTags[HikeRecommendation.KIRANDULASTIPPEK]
+                        )
+                    )
                 )
             )
         }
@@ -186,15 +192,15 @@ class LandscapesUiTest {
             R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
             R.id.placeCategoryBottomSheetHikeRecommendationsScrollView.swipeLeft()
-            R.string.hike_recommender_termeszetjaro_button.clickWithText()
+            R.string.hike_recommender_termeszetjaro.clickWithText()
 
             intended(
                 allOf(
                     hasAction(Intent.ACTION_VIEW),
                     hasData(
-                        TERMESZETJARO_AREA_URL.format(
+                        HikeRecommendation.TERMESZETJARO.areaUrl.format(
                             landscape.termeszetjaroTag!!.areaId,
-                            URLEncoder.encode(landscape.termeszetjaroTag!!.areaName, "UTF-8"),
+                            URLEncoder.encode(landscape.termeszetjaroTag.areaName, "UTF-8")
                         )
                     )
                 )

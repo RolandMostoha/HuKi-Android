@@ -14,18 +14,15 @@
     <string name="landscape_keszthelyi_hegység">Keszthelyi-hegység</string>
     <string name="landscape_naszály">Naszály</string>
     <string name="landscape_cserhát">Cserhát</string>
-    <string name="landscape_heves_Borsodi_dombság">Heves-Borsodi-dombság</string>
-    <string name="landscape_gödöllői_dombság">Gödöllői-dombság</string>
-    <string name="landscape_kopasz_hegy">Kopasz-hegy</string>
     <string name="landscape_zempléni_hegység">Zempléni-hegység</string>
-    <string name="landscape_cserehát">Cserehát</string>
+    <string name="landscape_cserehát">Cserehát, Palócföld</string>
     <string name="landscape_vértes">Vértes</string>
     <string name="landscape_velencei_hegység">Velencei-hegység</string>
     <string name="landscape_zselic">Zselic</string>
     <string name="landscape_villányi_hegység">Villányi-hegység</string>
     <string name="landscape_kőszegi_hegység">Kőszegi-hegység</string>
     <string name="landscape_soproni_hegység">Soproni-Hegység</string>
-    <string name="landscape_hortobágy">Hortobágy</string>
+    <string name="landscape_hortobágy">Hortobágy, Tisza Tó</string>
     <string name="landscape_őrség">Őrség</string>
 
 </resources>

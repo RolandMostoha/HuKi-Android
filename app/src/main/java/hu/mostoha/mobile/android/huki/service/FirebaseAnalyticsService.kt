@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import hu.mostoha.mobile.android.huki.billing.fieldName
 import hu.mostoha.mobile.android.huki.extensions.removeFileExtension
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
+import hu.mostoha.mobile.android.huki.model.domain.HikeRecommendation
 import hu.mostoha.mobile.android.huki.model.domain.LayerType
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
@@ -32,10 +33,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_OKT_ROUTE_EDGE_POINT = "select_okt_edge_point"
         private const val EVENT_SELECT_OKT_WAYPOINT = "select_okt_waypoint"
         private const val EVENT_OKT_GPX_IMPORTED = "okt_gpx_imported"
-        private const val EVENT_SELECT_PLACE_DETAILS_HIKE_RECOMMENDER = "select_place_details_hike_recommender"
-        private const val EVENT_SELECT_HIKE_RECOMMENDER_KIRANDULASTIPPEK = "select_kirandulastippek"
-        private const val EVENT_SELECT_HIKE_RECOMMENDER_TERMESZETJARO = "select_termeszetjaro"
-        private const val EVENT_SELECT_HIKE_RECOMMENDER_INFO_CLOSE = "select_hike_recommender_info_close"
+        private const val EVENT_SELECT_HIKE_RECOMMENDATION_TEMPLATE = "select_%s"
+        private const val EVENT_SELECT_HIKE_RECOMMENDATION_INFO = "select_hike_recommendation_info"
         private const val EVENT_SELECT_PLACE_DETAILS = "select_place_details"
         private const val EVENT_SEARCH_HIKING_ROUTES = "search_hiking_routes"
         private const val EVENT_SELECT_HIKING_ROUTE = "select_hiking_route"
@@ -144,20 +143,15 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         }
     }
 
-    override fun placeDetailsFinderClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_PLACE_DETAILS_HIKE_RECOMMENDER, null)
+    override fun hikeRecommenderInfoClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_HIKE_RECOMMENDATION_INFO, null)
     }
 
-    override fun hikeRecommenderKirandulastippekClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_HIKE_RECOMMENDER_KIRANDULASTIPPEK, null)
-    }
-
-    override fun hikeRecommenderTermeszetjaroClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_HIKE_RECOMMENDER_TERMESZETJARO, null)
-    }
-
-    override fun hikeRecommenderInfoCloseClicked() {
-        firebaseAnalytics.logEvent(EVENT_SELECT_HIKE_RECOMMENDER_INFO_CLOSE, null)
+    override fun hikeRecommendationClicked(hikeRecommendation: HikeRecommendation) {
+        firebaseAnalytics.logEvent(
+            EVENT_SELECT_HIKE_RECOMMENDATION_TEMPLATE.format(hikeRecommendation.name.lowercase()),
+            null
+        )
     }
 
     override fun loadPlaceDetailsClicked(placeName: String, placeType: PlaceType) {
