@@ -96,7 +96,7 @@ class PlaceCategoryFragment : Fragment() {
 
         placeHeaderContainer.placeHeaderImage.setImageResource(R.drawable.ic_place_category_city)
 
-        hikeRecommendationInfo.onClick = {
+        hikeRecommendationInfo.onOpen = {
             analyticsService.hikeRecommenderInfoClicked()
         }
 
@@ -197,7 +197,7 @@ class PlaceCategoryFragment : Fragment() {
                 title = landscape.name,
                 isStroked = false,
                 onClick = {
-                    analyticsService.loadLandscapeClicked(landscape.name.resolve(requireContext()))
+                    analyticsService.landscapeClicked(landscape.name.resolve(requireContext()))
                     placeCategoryEventViewModel.updateEvent(PlaceCategoryEvent.LandscapeSelected(landscape))
                     requireActivity().supportFragmentManager.popBackStack()
                 }

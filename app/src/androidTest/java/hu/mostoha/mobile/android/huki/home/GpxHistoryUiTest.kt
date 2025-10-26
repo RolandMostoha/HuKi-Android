@@ -34,8 +34,6 @@ import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
@@ -103,10 +101,6 @@ class GpxHistoryUiTest {
     @BindValue
     @JvmField
     val geocodingRepository: GeocodingRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @BindValue
     @JvmField

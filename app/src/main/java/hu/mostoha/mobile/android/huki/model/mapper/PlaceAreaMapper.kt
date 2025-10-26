@@ -38,7 +38,7 @@ object PlaceAreaMapper {
         }
 
         return PlaceArea(
-            placeAreaType = PlaceAreaType.MAP_SEARCH,
+            placeAreaType = PlaceAreaType.MapSearch,
             location = location,
             boundingBox = boundingBox,
             addressMessage = addressMessage,
@@ -49,7 +49,7 @@ object PlaceAreaMapper {
 
     fun map(landscapeUiModel: LandscapeUiModel, boundingBox: BoundingBox): PlaceArea {
         return PlaceArea(
-            placeAreaType = PlaceAreaType.LANDSCAPE,
+            placeAreaType = PlaceAreaType.Landscape(landscapeUiModel.osmId, landscapeUiModel.destinations),
             location = landscapeUiModel.geoPoint.toLocation(),
             boundingBox = boundingBox.toDomain(),
             addressMessage = landscapeUiModel.name,
@@ -60,7 +60,7 @@ object PlaceAreaMapper {
 
     fun map(placeUiModel: PlaceUiModel, boundingBox: BoundingBox): PlaceArea {
         return PlaceArea(
-            placeAreaType = PlaceAreaType.PLACE_DETAILS,
+            placeAreaType = PlaceAreaType.PlaceDetails,
             location = placeUiModel.geoPoint.toLocation(),
             boundingBox = boundingBox.toDomain(),
             addressMessage = placeUiModel.primaryText,

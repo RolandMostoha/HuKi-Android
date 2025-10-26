@@ -67,7 +67,7 @@ class LayersViewModel @Inject constructor(
 
     private val savedFileUri = savedStateHandle.get<String>(SAVED_STATE_KEY_GPX_FILE_URI)
 
-    private lateinit var hikingLayerZoomRanges: List<TileZoomRange>
+    private var hikingLayerZoomRanges: List<TileZoomRange>? = null
 
     private val baseLayer = settingsRepository.getBaseLayer()
         .stateIn(viewModelScope, WhileViewSubscribed, BaseLayer.MAPNIK)
@@ -175,13 +175,11 @@ class LayersViewModel @Inject constructor(
         settingsRepository.saveBaseLayer(layer)
     }
 
-    fun selectHikingLayer() {
+    fun selectHikingLayer(visible: Boolean? = null) {
         hikingLayer.update { layerSpec ->
-            if (layerSpec == null) {
-                initHikingLayerSpec(hikingLayerZoomRanges)
-            } else {
-                null
-            }
+            layerSpec?.copy(
+                isVisible = visible ?: layerSpec.isVisible.not()
+            ) ?: hikingLayerZoomRanges?.let { initHikingLayerSpec(it) }
         }
     }
 

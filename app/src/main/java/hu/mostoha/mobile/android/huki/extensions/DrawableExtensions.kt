@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.view.Gravity
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.Px
 import androidx.core.content.ContextCompat
@@ -14,8 +15,17 @@ fun @receiver:DrawableRes Int.toBitmap(context: Context): Bitmap {
     return ContextCompat.getDrawable(context, this)!!.toBitmap()
 }
 
-fun @receiver:DrawableRes Int.toDrawable(context: Context): Drawable {
-    return ContextCompat.getDrawable(context, this)!!
+fun @receiver:DrawableRes Int.toDrawable(context: Context, @ColorInt colorInt: Int? = null): Drawable {
+    val drawable = ContextCompat.getDrawable(context, this)!!
+
+    return if (colorInt != null) {
+        drawable.apply {
+            mutate()
+            setTint(colorInt)
+        }
+    } else {
+        drawable
+    }
 }
 
 fun generateLayerDrawable(layers: List<LayerDrawableConfig>): LayerDrawable {

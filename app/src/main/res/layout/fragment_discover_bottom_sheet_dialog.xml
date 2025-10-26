@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_bottom_sheet"
+    android:orientation="vertical">
+
+    <!-- Header -->
+    <include
+        android:id="@+id/discoverHeaderContainer"
+        layout="@layout/view_bottom_sheet_header" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/placeCategoryScrollContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--  Landscapes Header -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/space_extra_large">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/landscapes_header_title"
+                    android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+                <hu.mostoha.mobile.android.huki.views.InfoButtonView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:messageRes="@string/destinations_info" />
+
+            </LinearLayout>
+
+            <!--  Landscapes -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/discoverLandscapesChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:clipToPadding="false"
+                android:paddingStart="@dimen/space_large"
+                android:paddingEnd="@dimen/space_large" />
+
+            <!--  Hike recommendations Header -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/space_extra_large">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/place_category_hike_recommendations_header_title"
+                    android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+                <hu.mostoha.mobile.android.huki.views.InfoButtonView
+                    android:id="@+id/discoverHikeRecommendationsInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:messageRes="@string/place_category_hike_recommendations_info" />
+
+            </LinearLayout>
+
+            <!--  Hike recommendations -->
+            <HorizontalScrollView
+                android:id="@+id/discoverHikeRecommendationsScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/discoverHikeRecommendationsChipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingStart="@dimen/space_large"
+                    android:paddingEnd="@dimen/space_large" />
+
+            </HorizontalScrollView>
+
+            <!--  OKT Routes Header -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/space_extra_large">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/okt_header_title"
+                    android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+                <hu.mostoha.mobile.android.huki.views.InfoButtonView
+                    android:id="@+id/discoverOktRoutesInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:messageRes="@string/okt_official_info" />
+
+            </LinearLayout>
+
+            <!--  OKT routes -->
+            <HorizontalScrollView
+                android:id="@+id/discoverOktRoutesScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_extra_large"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/discoverOktRoutesChipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingStart="@dimen/space_large"
+                    android:paddingEnd="@dimen/space_large" />
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

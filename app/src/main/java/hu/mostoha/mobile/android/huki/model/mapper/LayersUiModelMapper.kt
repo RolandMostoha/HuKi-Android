@@ -71,7 +71,7 @@ class LayersUiModelMapper @Inject constructor() {
                 layerType = LayerType.HUNGARIAN_HIKING_LAYER,
                 titleRes = R.string.layers_hiking_hungarian_title,
                 drawableRes = R.drawable.ic_layers_hiking,
-                isSelected = hikingLayer?.layerType == LayerType.HUNGARIAN_HIKING_LAYER
+                isSelected = hikingLayer?.layerType == LayerType.HUNGARIAN_HIKING_LAYER && hikingLayer.isVisible
             ),
             LayersAdapterItem.Layer(
                 layerType = LayerType.GPX,

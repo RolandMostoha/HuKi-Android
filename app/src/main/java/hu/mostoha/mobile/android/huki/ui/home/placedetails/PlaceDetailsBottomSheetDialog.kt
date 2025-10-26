@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.ui.home.placedetails
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceDetailsBinding
 import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuFooterBinding
+import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.postMain
@@ -76,6 +77,7 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsImage.setImageResource(placeUiModel.iconRes)
                 if (placeUiModel.placeType == PlaceType.HIKING_ROUTE) {
                     placeDetailsImage.setBackgroundResource(R.color.transparent)
+                    placeDetailsImage.imageTintList = null
                 } else {
                     placeDetailsImage.setBackgroundResource(R.drawable.background_badge)
                     placeDetailsImage.imageTintList = R.color.colorPrimaryIcon.colorStateList(root.context)
@@ -125,11 +127,14 @@ class PlaceDetailsBottomSheetDialog(
                 placeDetailsPrimaryText.maxLines = Int.MAX_VALUE
                 placeDetailsPrimaryText.text = placeName
                 placeDetailsSecondaryText.setMessage(placeUiModel.secondaryText)
-                placeDetailsImage.setImageResource(placeUiModel.iconRes)
+                placeDetailsImage.imageTintList = null
+
                 if (placeUiModel.placeType == PlaceType.HIKING_ROUTE) {
-                    placeDetailsImage.setBackgroundResource(R.color.transparent)
+                    placeDetailsImage.clearBackground()
+                    placeDetailsImage.setImageResource(placeUiModel.iconRes)
                 } else {
                     placeDetailsImage.setBackgroundResource(R.drawable.background_badge)
+                    placeDetailsImage.setImageResource(placeUiModel.iconRes)
                 }
 
                 placeDetailsCloseButton.setOnClickListener {

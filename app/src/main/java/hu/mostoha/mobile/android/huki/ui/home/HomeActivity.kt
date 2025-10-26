@@ -30,33 +30,22 @@ import hu.mostoha.mobile.android.huki.databinding.ActivityHomeBinding
 import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuActionButtonBinding
 import hu.mostoha.mobile.android.huki.databinding.ViewPopupMenuFooterBinding
 import hu.mostoha.mobile.android.huki.deeplink.DeeplinkHandler
-import hu.mostoha.mobile.android.huki.extensions.OffsetType
-import hu.mostoha.mobile.android.huki.extensions.PopupMenuActionItem
 import hu.mostoha.mobile.android.huki.extensions.PopupMenuItem
 import hu.mostoha.mobile.android.huki.extensions.addFragment
-import hu.mostoha.mobile.android.huki.extensions.addGpxMarker
-import hu.mostoha.mobile.android.huki.extensions.addGpxPolyline
-import hu.mostoha.mobile.android.huki.extensions.addHikingRouteDetails
-import hu.mostoha.mobile.android.huki.extensions.addLandscapePolyOverlay
-import hu.mostoha.mobile.android.huki.extensions.addLocationPickerMarker
 import hu.mostoha.mobile.android.huki.extensions.addLongClickHandlerOverlay
 import hu.mostoha.mobile.android.huki.extensions.addMapMovedListener
-import hu.mostoha.mobile.android.huki.extensions.addOktBasePolyline
-import hu.mostoha.mobile.android.huki.extensions.addOktRoute
 import hu.mostoha.mobile.android.huki.extensions.addOverlay
-import hu.mostoha.mobile.android.huki.extensions.addPlaceCategoryMarker
 import hu.mostoha.mobile.android.huki.extensions.addPlaceDetailsMarker
-import hu.mostoha.mobile.android.huki.extensions.addPolygon
-import hu.mostoha.mobile.android.huki.extensions.addPolyline
-import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerMarker
-import hu.mostoha.mobile.android.huki.extensions.addRoutePlannerPolyline
+import hu.mostoha.mobile.android.huki.extensions.allLandscapesBoundingBox
 import hu.mostoha.mobile.android.huki.extensions.animateCenterAndZoomIn
 import hu.mostoha.mobile.android.huki.extensions.areInfoWindowsClosed
 import hu.mostoha.mobile.android.huki.extensions.center
 import hu.mostoha.mobile.android.huki.extensions.clearFocusAndHideKeyboard
+import hu.mostoha.mobile.android.huki.extensions.closeAllInfoWindowsForMarkers
 import hu.mostoha.mobile.android.huki.extensions.closeInfoWindows
-import hu.mostoha.mobile.android.huki.extensions.closeInfoWindowsForMarkerType
+import hu.mostoha.mobile.android.huki.extensions.closeInfoWindowsForMarkers
 import hu.mostoha.mobile.android.huki.extensions.doOnInfoWindows
+import hu.mostoha.mobile.android.huki.extensions.findMarker
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.hasNoOverlay
 import hu.mostoha.mobile.android.huki.extensions.hasOverlay
@@ -66,16 +55,15 @@ import hu.mostoha.mobile.android.huki.extensions.isDarkMode
 import hu.mostoha.mobile.android.huki.extensions.isGooglePlayServicesAvailable
 import hu.mostoha.mobile.android.huki.extensions.isGpxFileIntent
 import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
+import hu.mostoha.mobile.android.huki.extensions.landscapeBoundingBox
 import hu.mostoha.mobile.android.huki.extensions.locationPermissions
 import hu.mostoha.mobile.android.huki.extensions.openInfoWindows
-import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.postMainDelayed
 import hu.mostoha.mobile.android.huki.extensions.removeMarker
 import hu.mostoha.mobile.android.huki.extensions.removeOverlay
 import hu.mostoha.mobile.android.huki.extensions.removeOverlays
 import hu.mostoha.mobile.android.huki.extensions.replaceOverlay
-import hu.mostoha.mobile.android.huki.extensions.replaceScaleBarOverlay
 import hu.mostoha.mobile.android.huki.extensions.resetOrientation
 import hu.mostoha.mobile.android.huki.extensions.second
 import hu.mostoha.mobile.android.huki.extensions.shouldShowLocationRationale
@@ -116,7 +104,10 @@ import hu.mostoha.mobile.android.huki.model.ui.HikeModeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HomeEvents
 import hu.mostoha.mobile.android.huki.model.ui.InsetResult
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
+import hu.mostoha.mobile.android.huki.model.ui.LandscapeMapUiModel
+import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
+import hu.mostoha.mobile.android.huki.model.ui.OffsetType
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
@@ -129,10 +120,13 @@ import hu.mostoha.mobile.android.huki.model.ui.selectedRoute
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmLicencesOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.DistanceInfoWindow
-import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
+import hu.mostoha.mobile.android.huki.osmdroid.infowindow.NavigationMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.location.MyLocationOverlay
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.DestinationMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeDetailsDestinationMarker
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.OVERLAY_ID_OKT
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceCategoryMarker
@@ -145,10 +139,12 @@ import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.adapter.PlaceCategoryAdapter.Companion.addSelectionChip
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.ui.home.discover.DiscoverBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.gpx.GpxDetailsBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.ui.home.history.HistoryFragment
+import hu.mostoha.mobile.android.huki.ui.home.landscapes.LandscapesBottomSheetDialog
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersBottomSheetDialogFragment
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersViewModel
 import hu.mostoha.mobile.android.huki.ui.home.newfeatures.NewFeaturesBottomSheetDialogFragment
@@ -177,10 +173,9 @@ import hu.mostoha.mobile.android.huki.ui.home.support.SupportFragment
 import hu.mostoha.mobile.android.huki.util.DARK_MODE_HIKING_LAYER_BRIGHTNESS
 import hu.mostoha.mobile.android.huki.util.HIKE_MODE_INFO_WINDOW_SHOW_DELAY
 import hu.mostoha.mobile.android.huki.util.HUNGARY_BOUNDING_BOX
-import hu.mostoha.mobile.android.huki.util.KEKTURA_URL
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_LEVEL
 import hu.mostoha.mobile.android.huki.util.MAP_MAX_ZOOM_LEVEL
-import hu.mostoha.mobile.android.huki.util.OKT_OVERLAY_ID
+import hu.mostoha.mobile.android.huki.util.OSM_ID_LANDSCAPES_ALL
 import hu.mostoha.mobile.android.huki.util.PLACE_FINDER_MIN_TRIGGER_LENGTH
 import hu.mostoha.mobile.android.huki.util.ROUTE_PLANNER_MAX_WAYPOINT_COUNT
 import hu.mostoha.mobile.android.huki.util.TURN_ON_DELAY_FOLLOW_LOCATION
@@ -209,7 +204,6 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.OverlayWithIW
 import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 import timber.log.Timber
@@ -264,7 +258,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeSettingsFab by lazy { binding.homeSettingsFab }
     private val homeHistoryFab by lazy { binding.homeHistoryFab }
     private val homePlaceCategoriesFab by lazy { binding.homePlaceCategoriesFab }
-    private val homeOktFab by lazy { binding.homeOktFab }
+    private val homeDiscoverFab by lazy { binding.homeDiscoverFab }
     private val placeCategoriesChipGroup by lazy { binding.homePlaceCategoryChipGroup }
     private val homeHikeModeFab by lazy { binding.homeHikeModeFab }
     private val homeCompassFab by lazy { binding.homeCompassFab }
@@ -279,6 +273,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private lateinit var hikingRoutesBottomSheet: HikingRoutesBottomSheetDialog
     private lateinit var gpxDetailsBottomSheet: GpxDetailsBottomSheetDialog
     private lateinit var oktRoutesBottomSheet: OktRoutesBottomSheetDialog
+    private lateinit var landscapesBottomSheet: LandscapesBottomSheetDialog
     private lateinit var bottomSheets: List<BottomSheetDialog>
 
     private var rotationGestureOverlay: RotationGestureOverlay? = null
@@ -568,8 +563,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 homeMapView.boundingBox.toDomain()
             )
         }
-        homeOktFab.setOnClickListener {
-            showOktPopupMenu()
+        homeDiscoverFab.setOnClickListener {
+            analyticsService.discoverClicked()
+            DiscoverBottomSheetDialogFragment().show(supportFragmentManager, DiscoverBottomSheetDialogFragment.TAG)
         }
         homeHikeModeFab.setOnClickListener {
             analyticsService.hikeModeClicked()
@@ -641,60 +637,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             .show()
     }
 
-    private fun showOktPopupMenu() {
-        showPopupMenu(
-            anchorView = homeOktFab,
-            headerTitle = R.string.okt_header_title.toMessage(),
-            actionItems = listOf(
-                PopupMenuActionItem(
-                    popupMenuItem = PopupMenuItem(
-                        title = R.string.okt_okt_title.toMessage(),
-                        subTitle = R.string.okt_okt_subtitle.toMessage(),
-                        startIconId = R.drawable.ic_okt_okt
-                    ),
-                    onClick = {
-                        val oktType = OktType.OKT
-                        analyticsService.oktClicked(oktType)
-                        homeViewModel.loadOktRoutes(oktType)
-                    }
-                ),
-                PopupMenuActionItem(
-                    popupMenuItem = PopupMenuItem(
-                        title = R.string.okt_rpddk_title.toMessage(),
-                        subTitle = R.string.okt_rpddk_subtitle.toMessage(),
-                        startIconId = R.drawable.ic_okt_rpddk
-                    ),
-                    onClick = {
-                        val oktType = OktType.RPDDK
-                        analyticsService.oktClicked(oktType)
-                        homeViewModel.loadOktRoutes(oktType)
-                    }
-                ),
-                PopupMenuActionItem(
-                    popupMenuItem = PopupMenuItem(
-                        title = R.string.okt_akt_title.toMessage(),
-                        subTitle = R.string.okt_akt_subtitle.toMessage(),
-                        startIconId = R.drawable.ic_okt_akt
-                    ),
-                    onClick = {
-                        val oktType = OktType.AKT
-                        analyticsService.oktClicked(oktType)
-                        homeViewModel.loadOktRoutes(oktType)
-                    }
-                )
-            ),
-            footerView = ViewPopupMenuActionButtonBinding.inflate(this@HomeActivity.inflater, null, false)
-                .apply {
-                    popupMenuActionButton.text = this@HomeActivity.getString(R.string.okt_official_website_subtitle)
-                    popupMenuActionButton.icon = R.drawable.ic_okt_info.toDrawable(this@HomeActivity)
-                    popupMenuActionButton.setOnClickListener {
-                        openUrl(KEKTURA_URL)
-                    }
-                }.root,
-            width = R.dimen.default_popup_menu_width_wide,
-        )
-    }
-
     private fun initBottomSheets() {
         hikingRoutesBottomSheet = HikingRoutesBottomSheetDialog(binding.homeHikingRoutesBottomSheetContainer)
         gpxDetailsBottomSheet = GpxDetailsBottomSheetDialog(
@@ -713,12 +655,18 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             binding.homeOktRoutesBottomSheetContainer,
             analyticsService
         )
+        landscapesBottomSheet = LandscapesBottomSheetDialog(
+            binding.homeLandscapesBottomSheetContainer,
+            analyticsService
+        )
+
         bottomSheets = listOf(
             placeDetailsBottomSheet,
             hikingRoutesBottomSheet,
             gpxDetailsBottomSheet,
             placeCategoryBottomSheetDialog,
             oktRoutesBottomSheet,
+            landscapesBottomSheet,
         )
 
         placeDetailsBottomSheet.hide()
@@ -726,6 +674,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         gpxDetailsBottomSheet.hide()
         placeCategoryBottomSheetDialog.hide()
         oktRoutesBottomSheet.hide()
+        landscapesBottomSheet.hide()
     }
 
     private fun initPermissions() {
@@ -858,7 +807,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             homeViewModel.loadPlaceCategories(setOf(event.placeCategory), boundingBox)
                         }
                         is PlaceCategoryEvent.LandscapeSelected -> {
-                            homeViewModel.loadLandscapeDetails(event.landscape)
+                            homeViewModel.loadLandscapeDetails(event.landscape.osmId)
                         }
                         is PlaceCategoryEvent.HikingRouteSelected -> {
                             homeViewModel.loadHikingRoutes(event.placeArea)
@@ -935,9 +884,25 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .collect { initPlaceDetails(it) }
         }
         lifecycleScope.launch {
+            homeViewModel.landscapeMap
+                .flowWithLifecycle(lifecycle)
+                .collect { landscapeMap ->
+                    initLandscapeMap(landscapeMap)
+
+                    if (landscapeMap != null) {
+                        initLandscapesBottomSheet(landscapeMap)
+                        layersViewModel.selectHikingLayer(false)
+                    } else {
+                        layersViewModel.selectHikingLayer(true)
+                    }
+                }
+        }
+        lifecycleScope.launch {
             homeViewModel.landscapeDetails
                 .flowWithLifecycle(lifecycle)
-                .collect { initLandscapeDetails(it) }
+                .collect {
+                    initLandscapeDetails(it)
+                }
         }
         lifecycleScope.launch {
             homeViewModel.hikingRoutes
@@ -1268,9 +1233,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initHikingLayer(hikingLayer: HikingLayer?) {
-        removeHikingLayer()
+        if (hikingLayer == null) {
+            removeHikingLayer()
+            return
+        }
 
-        if (hikingLayer != null) {
+        if (hikingLayer.isVisible) {
             val tileProvider = AwsMapTileProviderBasic(this, hikingLayer.tileSource)
             val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {
                 if (this@HomeActivity.isDarkMode()) {
@@ -1285,7 +1253,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 clear()
                 add(homeMapView.tileRequestCompleteHandler)
             }
-            homeMapView.addOverlay(tilesOverlay, OverlayComparator)
+            homeMapView.replaceOverlay(tilesOverlay, OverlayComparator)
+        } else {
+            homeMapView.updateOverlayVisibility(OverlayType.HIKING_LAYER, false)
         }
     }
 
@@ -1351,45 +1321,149 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
+    private fun initLandscapeMap(landscapeMap: LandscapeMapUiModel?) {
+        homeMapView.closeAllInfoWindowsForMarkers<DestinationMarker>()
+
+        when {
+            landscapeMap == null -> {
+                homeMapView.removeOverlay(OverlayType.LANDSCAPE_MAP)
+                landscapesBottomSheet.hide()
+            }
+            homeMapView.hasNoOverlay(OverlayType.LANDSCAPE_MAP) -> {
+                landscapeMap.landscapes.forEach { landscapeDetails ->
+                    val landscapeUiModel = landscapeDetails.landscapeUiModel
+                    val geometryUiModel = landscapeDetails.geometryUiModel
+
+                    geometryUiModel.ways.forEach { way ->
+                        homeMapView.addLandscapePolygon(
+                            overlayId = landscapeUiModel.osmId,
+                            way = way,
+                            fillColor = landscapeUiModel.color.color(this),
+                            onClick = {
+                                homeViewModel.selectLandscape(landscapeUiModel.osmId)
+                            }
+                        )
+                    }
+                }
+                homeMapView.zoomToBoundingBox(homeMapView.allLandscapesBoundingBox(), true)
+            }
+            else -> {
+                val selectedLandscape = landscapeMap.selectedLandscape
+                val lastSelectedLandscape = landscapeMap.lastSelectedLandscape
+
+                if (selectedLandscape == null) {
+                    homeMapView.zoomToBoundingBox(homeMapView.allLandscapesBoundingBox(), true)
+                }
+
+                // Redraw the last selected landscape to original
+                lastSelectedLandscape?.let { lastSelectedLandscape ->
+                    val landscapeUiModel = lastSelectedLandscape.landscapeUiModel
+
+                    homeMapView.removeOverlay(landscapeUiModel.osmId)
+                    lastSelectedLandscape.geometryUiModel.ways.forEach { way ->
+                        homeMapView.addLandscapePolygon(
+                            overlayId = landscapeUiModel.osmId,
+                            way = way,
+                            fillColor = landscapeUiModel.color.color(this),
+                            onClick = {
+                                homeViewModel.selectLandscape(landscapeUiModel.osmId)
+                            }
+                        )
+                    }
+                }
+
+                selectedLandscape?.let {
+                    val landscapeOsmId = selectedLandscape.landscapeUiModel.osmId
+                    val landscapeColor = selectedLandscape.landscapeUiModel.color.color(this)
+
+                    // Zoom to the selected landscape
+                    homeMapView.zoomToBoundingBox(homeMapView.landscapeBoundingBox(selectedLandscape), true)
+
+                    // Draw the selected landscape to be outlined
+                    homeMapView.removeOverlay(landscapeOsmId)
+                    selectedLandscape.geometryUiModel.ways.forEach { way ->
+                        homeMapView.addLandscapeOutline(
+                            overlayId = landscapeOsmId,
+                            overlayType = OverlayType.LANDSCAPE_MAP,
+                            way = way,
+                            landscapeColor = landscapeColor,
+                            onClick = {
+                                homeViewModel.selectLandscape(landscapeOsmId)
+                            }
+                        )
+                    }
+
+                    initDestinations(OverlayType.LANDSCAPE_MAP, selectedLandscape.landscapeUiModel)
+                }
+            }
+        }
+    }
+
     private fun initLandscapeDetails(landscapeDetails: LandscapeDetailsUiModel?) {
         when {
             landscapeDetails == null -> {
-                homeMapView.removeOverlay(OverlayType.LANDSCAPE)
+                homeMapView.removeOverlay(OverlayType.LANDSCAPE_DETAILS)
+                homeMapView.closeAllInfoWindowsForMarkers<LandscapeDetailsDestinationMarker>()
             }
             homeMapView.hasNoOverlay(landscapeDetails.landscapeUiModel.osmId) -> {
-                homeMapView.removeOverlay(OverlayType.LANDSCAPE)
+                homeMapView.removeOverlay(OverlayType.LANDSCAPE_DETAILS)
 
                 val landscapeUiModel = landscapeDetails.landscapeUiModel
                 val geometryUiModel = landscapeDetails.geometryUiModel
                 val boundingBox = BoundingBox.fromGeoPoints(geometryUiModel.ways.flatMap { it.geoPoints })
                 val offsetBoundingBox = boundingBox.withOffset(homeMapView, OffsetType.LANDSCAPE)
-                val overlays = mutableListOf<OverlayWithIW>()
                 val placeArea = PlaceAreaMapper.map(landscapeUiModel, boundingBox)
 
                 geometryUiModel.ways.forEach { way ->
-                    val landscapeOverlays = homeMapView.addLandscapePolyOverlay(
+                    homeMapView.addLandscapeOutline(
                         overlayId = landscapeUiModel.osmId,
+                        overlayType = OverlayType.LANDSCAPE_DETAILS,
                         way = way,
+                        landscapeColor = landscapeUiModel.color.color(this),
                         onClick = {
                             initPlaceCategoryBottomSheet(placeArea)
 
                             homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
                         }
                     )
-                    overlays.addAll(landscapeOverlays)
                 }
 
-                initPlaceCategoryBottomSheet(placeArea)
+                initDestinations(OverlayType.LANDSCAPE_DETAILS, landscapeUiModel)
 
                 homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+
+                initPlaceCategoryBottomSheet(placeArea)
             }
+        }
+    }
+
+    private fun initDestinations(overlayType: OverlayType, landscape: LandscapeUiModel) {
+        landscape.destinations.forEach { destination ->
+            val geoPoint = destination.location.toGeoPoint()
+
+            homeMapView.addDestinationMarker(
+                overlayId = landscape.osmId,
+                overlayType = overlayType,
+                geoPoint = geoPoint,
+                landscapeColor = landscape.color.color(this),
+                destinationType = destination.type,
+                infoWindowTitle = "${destination.name} (${destination.town})",
+                infoWindowDescription = destination.description.toMessage().resolve(this),
+                onMarkerClick = {
+                    analyticsService.destinationClicked(destination.name)
+                },
+                onInfoWindowNavigationClick = {
+                    analyticsService.destinationNavigationClicked(destination.name)
+                    homeViewModel.loadDestination(destination)
+                },
+            )
         }
     }
 
     private fun initPlaceDetails(placeDetails: PlaceDetailsUiModel?) {
         when {
             placeDetails == null -> {
-                homeMapView.closeInfoWindowsForMarkerType<DistanceInfoWindow, PlaceDetailsMarker>()
+                homeMapView.closeInfoWindowsForMarkers<DistanceInfoWindow, PlaceDetailsMarker>()
                 homeMapView.removeOverlay(OverlayType.PLACE_DETAILS)
             }
             homeMapView.hasNoOverlay(placeDetails.placeUiModel.overlayId) -> {
@@ -1528,9 +1602,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         homeMapView.removeOverlay(OverlayType.OKT_ROUTES)
 
-        if (homeMapView.hasNoOverlay(OKT_OVERLAY_ID)) {
+        if (homeMapView.hasNoOverlay(OVERLAY_ID_OKT)) {
             homeMapView.addOktBasePolyline(
-                overlayId = OKT_OVERLAY_ID,
+                overlayId = OVERLAY_ID_OKT,
                 geoPoints = oktRoutes.mapGeoPoints,
                 onClick = {
                     homeViewModel.selectOktRoute(it)
@@ -1600,8 +1674,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeMapView.addPlaceCategoryMarker(
                         placeCategory = placeCategory,
                         geoPoint = placeUiModel.geoPoint,
-                        infoWindowTitle = placeUiModel.primaryText.resolve(this@HomeActivity),
-                        iconDrawable = placeUiModel.iconRes.toDrawable(this@HomeActivity),
+                        infoWindowTitle = placeUiModel.primaryText.resolve(this),
+                        iconDrawable = placeUiModel.iconRes.toDrawable(this, R.color.colorStrokeMarker.color(this)),
                         onMarkerClick = { marker ->
                             initNodeBottomSheet(placeUiModel, marker)
 
@@ -1641,11 +1715,32 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         bottomSheets.showOnly(oktRoutesBottomSheet)
     }
 
+    private fun initLandscapesBottomSheet(landscapeMap: LandscapeMapUiModel) {
+        landscapesBottomSheet.init(
+            landscapes = landscapeMap.landscapes,
+            selectedOsmId = landscapeMap.selectedLandscape?.landscapeUiModel?.osmId,
+            onLandscapeClick = { landscapeUiModel ->
+                homeViewModel.selectLandscape(landscapeUiModel.osmId)
+            },
+            onAllLandscapesClick = {
+                homeViewModel.selectLandscape(OSM_ID_LANDSCAPES_ALL)
+            },
+            onDetailsClick = { osmId ->
+                homeViewModel.clearLandscapeMap()
+                homeViewModel.loadLandscapeDetails(osmId)
+            },
+            onCloseClick = {
+                homeViewModel.clearLandscapeMap()
+            }
+        )
+        bottomSheets.showOnly(landscapesBottomSheet)
+    }
+
     private fun initHikingRoutesBottomSheet(hikingRoutes: List<HikingRoutesItem>) {
         hikingRoutesBottomSheet.initBottomSheet(
             hikingRoutes = hikingRoutes,
             onHikingRouteClick = { hikingRoute ->
-                homeViewModel.loadHikingRouteDetails(hikingRoute)
+                homeViewModel.loadHikingRouteDetails(hikingRoute.osmId)
                 homeMapView.removeOverlay(OverlayType.PLACE_DETAILS)
                 analyticsService.loadHikingRouteDetailsClicked(hikingRoute.name)
             },
@@ -1666,7 +1761,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             placeUiModel = placeUiModel,
             routePlanMarkerCount = routePlanMarkers.size,
             onShowAllPointsClick = {
-                homeMapView.closeInfoWindowsForMarkerType<DistanceInfoWindow, PlaceDetailsMarker>()
+                homeMapView.closeInfoWindowsForMarkers<DistanceInfoWindow, PlaceDetailsMarker>()
                 placeDetailsBottomSheet.hide()
                 homeMapView.removeOverlay(OverlayType.PLACE_DETAILS)
 
@@ -1684,7 +1779,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 }
 
                 homeMapView.removeMarker(marker)
-                homeViewModel.clearPlaceDetails()
+                homeViewModel.clearAllOverlay()
 
                 RoutePlannerFragment.addFragment(
                     supportFragmentManager,
@@ -1693,7 +1788,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 )
             },
             onCloseButtonClick = {
-                homeMapView.closeInfoWindowsForMarkerType<DistanceInfoWindow, PlaceDetailsMarker>()
+                homeMapView.closeInfoWindowsForMarkers<DistanceInfoWindow, PlaceDetailsMarker>()
                 homeMapView.removeMarker(marker)
                 placeDetailsBottomSheet.hide()
 
@@ -1732,6 +1827,13 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     },
                     onCategoryClick = { placeCategory ->
                         homeViewModel.loadPlaceCategories(setOf(placeCategory), placeArea.boundingBox)
+                    },
+                    onDestinationClick = { destination ->
+                        val destinationGeoPoint = destination.location.toGeoPoint()
+
+                        homeMapView.closeAllInfoWindowsForMarkers<LandscapeDetailsDestinationMarker>()
+                        homeMapView.findMarker(destinationGeoPoint)?.showInfoWindow()
+                        homeMapView.center(destinationGeoPoint)
                     },
                     onCloseClick = {
                         homeViewModel.clearLandscapeDetails()
@@ -1788,7 +1890,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             homeMapView.switchOverlayVisibility<GpxPolyline>(gpxDetailsUiModel.id)
                         },
                         onCommentsButtonClick = {
-                            homeMapView.toggleInfoWindows<GpxMarkerInfoWindow>()
+                            homeMapView.toggleInfoWindows<NavigationMarkerInfoWindow>()
                         },
                         onSlopeColorSwitched = { isChecked ->
                             layersViewModel.updateGpxSlopeColors(isChecked)

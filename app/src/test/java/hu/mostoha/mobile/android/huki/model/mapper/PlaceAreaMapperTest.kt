@@ -4,10 +4,13 @@ import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Location
+import hu.mostoha.mobile.android.huki.model.domain.toLocation
+import hu.mostoha.mobile.android.huki.model.domain.toOsm
 import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
 import hu.mostoha.mobile.android.huki.model.ui.PlaceAreaType
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
+import hu.mostoha.mobile.android.huki.util.DEFAULT_LANDSCAPE_UI_MODEL
 import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_AREA_BOX
 import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_AREA_LOCATION
 import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_PROFILE
@@ -26,7 +29,7 @@ class PlaceAreaMapperTest {
 
         assertThat(placeArea).isEqualTo(
             PlaceArea(
-                placeAreaType = PlaceAreaType.MAP_SEARCH,
+                placeAreaType = PlaceAreaType.MapSearch,
                 location = location,
                 boundingBox = boundingBox,
                 addressMessage = LocationFormatter.formatText(location),
@@ -45,7 +48,7 @@ class PlaceAreaMapperTest {
 
         assertThat(placeArea).isEqualTo(
             PlaceArea(
-                placeAreaType = PlaceAreaType.MAP_SEARCH,
+                placeAreaType = PlaceAreaType.MapSearch,
                 location = location,
                 boundingBox = boundingBox,
                 addressMessage = DEFAULT_PLACE_PROFILE.address.country!!.toMessage(),
@@ -64,7 +67,7 @@ class PlaceAreaMapperTest {
 
         assertThat(placeArea).isEqualTo(
             PlaceArea(
-                placeAreaType = PlaceAreaType.MAP_SEARCH,
+                placeAreaType = PlaceAreaType.MapSearch,
                 location = location,
                 boundingBox = boundingBox,
                 addressMessage = DEFAULT_PLACE_PROFILE.address.city!!.toMessage(),
@@ -83,12 +86,32 @@ class PlaceAreaMapperTest {
 
         assertThat(placeArea).isEqualTo(
             PlaceArea(
-                placeAreaType = PlaceAreaType.MAP_SEARCH,
+                placeAreaType = PlaceAreaType.MapSearch,
                 location = location,
                 boundingBox = boundingBox,
                 addressMessage = DEFAULT_PLACE_PROFILE.displayName.toMessage(),
                 distanceMessage = boundingBox.areaDistanceMessage(),
                 iconRes = R.drawable.ic_place_category_city
+            )
+        )
+    }
+
+    @Test
+    fun `Given landscape PlaceAreaType, when map location, then correct place area returns`() {
+        val boundingBox = BOUNDING_BOX_NAME
+        val placeArea = PlaceAreaMapper.map(DEFAULT_LANDSCAPE_UI_MODEL, boundingBox.toOsm())
+
+        assertThat(placeArea).isEqualTo(
+            PlaceArea(
+                placeAreaType = PlaceAreaType.Landscape(
+                    osmId = DEFAULT_LANDSCAPE_UI_MODEL.osmId,
+                    destinations = DEFAULT_LANDSCAPE_UI_MODEL.destinations
+                ),
+                location = DEFAULT_LANDSCAPE_UI_MODEL.geoPoint.toLocation(),
+                boundingBox = boundingBox,
+                addressMessage = DEFAULT_LANDSCAPE_UI_MODEL.name,
+                distanceMessage = boundingBox.areaDistanceMessage(),
+                iconRes = DEFAULT_LANDSCAPE_UI_MODEL.iconRes
             )
         )
     }

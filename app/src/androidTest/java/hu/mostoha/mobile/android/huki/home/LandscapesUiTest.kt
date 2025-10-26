@@ -21,11 +21,10 @@ import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.model.domain.HikeRecommendation
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
-import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolygon
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeDetailsDestinationMarker
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeDetailsPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
@@ -36,6 +35,7 @@ import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
+import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayCount
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
@@ -43,6 +43,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.espresso.swipeUp
 import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
+import hu.mostoha.mobile.android.huki.util.espresso.waitForScroll
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
@@ -97,10 +98,6 @@ class LandscapesUiTest {
     @JvmField
     val geocodingRepository: GeocodingRepository = mockk()
 
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
-
     @Before
     fun init() {
         hiltRule.inject()
@@ -136,7 +133,24 @@ class LandscapesUiTest {
 
             landscape.nameRes.clickWithText()
 
-            R.id.homeMapView.hasOverlay<LandscapePolygon>()
+            R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
+            R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
+        }
+    }
+
+    @Test
+    fun givenLandscapes_whenClickOnLandscape_thenDestinationsDisplaysOnMap() {
+        val landscape = DEFAULT_LANDSCAPE
+        answerTestLocationProvider()
+        answerTestWayGeometry(landscape.osmId)
+
+        launchScenario<HomeActivity> {
+            R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
+            R.id.homePlaceCategoriesFab.click()
+
+            landscape.nameRes.clickWithText()
+
+            R.id.homeMapView.hasOverlayCount<LandscapeDetailsDestinationMarker>(landscape.destinations.count())
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }
@@ -150,7 +164,9 @@ class LandscapesUiTest {
         launchScenario<HomeActivity> {
             R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
+
             R.id.placeCategoryBottomSheetHeaderContainer.swipeUp()
+            waitForScroll()
 
             R.string.place_category_national_routes_chip_title.clickWithText()
 
@@ -167,6 +183,10 @@ class LandscapesUiTest {
         launchScenario<HomeActivity> {
             R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
+
+            R.id.placeCategoryBottomSheetHeaderContainer.swipeUp()
+            waitForScroll()
+
             R.string.hike_recommender_kirandulastippek.clickWithText()
 
             intended(
@@ -191,6 +211,10 @@ class LandscapesUiTest {
         launchScenario<HomeActivity> {
             R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
+
+            R.id.placeCategoryBottomSheetHeaderContainer.swipeUp()
+            waitForScroll()
+
             R.id.placeCategoryBottomSheetHikeRecommendationsScrollView.swipeLeft()
             R.string.hike_recommender_termeszetjaro.clickWithText()
 
@@ -238,13 +262,13 @@ class LandscapesUiTest {
             R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
             R.id.homePlaceCategoryBottomSheetContainer.isDisplayed()
-            R.id.homeMapView.hasOverlay<LandscapePolygon>()
+            R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
             recreate()
             waitForRecreate()
 
-            R.id.homeMapView.hasOverlay<LandscapePolygon>()
+            R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
     }

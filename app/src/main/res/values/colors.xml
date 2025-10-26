@@ -28,7 +28,7 @@
     <color name="colorShimmer">#cecece</color>
     <color name="colorStroke">#DEDEDE</color>
     <color name="colorStrokeLight">@color/colorBackgroundLight</color>
-    <color name="colorStrokeOnMap">#C4C4C4</color>
+    <color name="colorStrokeOnMap">@color/colorStroke</color>
     <color name="colorStrokeMarker">#ffffff</color>
     <color name="colorStrokeMarkerDark">@color/colorPrimaryIcon</color>
     <color name="colorDivider">#61DEDEDE</color>
@@ -87,7 +87,7 @@
     <color name="colorPlaceCategoryCastle">#757575</color>
     <color name="colorPlaceCategoryHistoric">#673AB6</color>
     <color name="colorPlaceCategoryMuseum">#9E9D24</color>
-    <color name="colorPlaceCategoryChurch">#FBBF2C</color>
+    <color name="colorPlaceCategoryChurch">#f6b005</color>
     <color name="colorPlaceCategoryParking">#015398</color>
     <color name="colorPlaceCategoryPublicTransport">#f0b800</color>
     <color name="colorPlaceCategoryShop">#5D35B1</color>
@@ -113,5 +113,39 @@
     <color name="colorOktFillPolygonMarker">@color/colorBackground</color>
 
     <color name="transparent">@android:color/transparent</color>
+
+    <color name="color_landscape_bukk">@color/colorPaymentsDeerIcon</color>
+    <color name="color_landscape_balaton_felvidék">@color/colorPlaceCategoryRiver</color>
+    <color name="color_landscape_aggteleki_karszt">@color/colorPlaceCategoryCave</color>
+    <color name="color_landscape_mecsek">@color/colorPlaceCategoryPeak</color>
+    <color name="color_landscape_matra">@color/colorPlaceCategoryPeak</color>
+    <color name="color_landscape_borzsony">@color/colorPlaceCategoryRestaurant</color>
+    <color name="color_landscape_pilis_hegyseg">@color/colorPlaceCategoryViewpoint</color>
+    <color name="color_landscape_visegradi_hegyseg">@color/colorPlaceCategoryCastle</color>
+    <color name="color_landscape_bakony">@color/colorPlaceCategoryHistoric</color>
+    <color name="color_landscape_gerecse_hegyseg">@color/colorPlaceCategoryMuseum</color>
+    <color name="color_landscape_keszthelyi_hegyseg">@color/colorPlaceCategoryChurch</color>
+    <color name="color_landscape_cserhat">@color/colorPlaceCategoryParking</color>
+    <color name="color_landscape_zempleni_hegyseg">@color/colorPlaceCategoryChurch</color>
+    <color name="color_landscape_vertes">@color/colorPlaceCategoryToilet</color>
+    <color name="color_landscape_velencei_hegyseg">@color/colorPlaceCategoryRestaurant</color>
+    <color name="color_landscape_zselic">@color/colorPlaceCategoryPharmacy</color>
+    <color name="color_landscape_villanyi_hegyseg">@color/colorPlaceCategoryForest</color>
+    <color name="color_landscape_koszegi_hegyseg">@color/colorPlaceCategoryPeak</color>
+    <color name="color_landscape_heves_borsodi_dombsag">@color/colorPlaceCategoryPharmacy</color>
+    <color name="color_landscape_budai_hegyseg">@color/colorPlaceCategoryFireplace</color>
+    <color name="color_landscape_soproni_hegyseg">@color/colorPaymentsDeerIcon</color>
+    <color name="color_landscape_hortobagy">@color/colorPlaceCategoryForest</color>
+    <color name="color_landscape_orseg">@color/colorPlaceCategoryViewpoint</color>
+    <color name="color_landscape_alfold">#85a552</color>
+    <color name="color_landscape_zalai_dombsag">@color/color_landscape_alfold</color>
+    <color name="color_landscape_szigetkoz">@color/colorPlaceCategoryWaterfall</color>
+
+    <color name="color_icon_alfold">@color/color_landscape_alfold</color>
+    <color name="color_icon_eszaki_kh">@color/colorPlaceCategoryRestaurant</color>
+    <color name="color_icon_dunantuli_kh">@color/colorPlaceCategoryPeak</color>
+    <color name="color_icon_dunantuli_dombsag">@color/colorPlaceCategoryChurch</color>
+    <color name="color_icon_kisalfold">@color/colorPlaceCategoryForest</color>
+    <color name="color_icon_alpokalja">@color/colorPlaceCategoryPharmacy</color>
 
 </resources>

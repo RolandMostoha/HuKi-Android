@@ -10,7 +10,9 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.Px
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import hu.mostoha.mobile.android.huki.R
@@ -59,6 +61,11 @@ fun showErrorSnackbar(view: View, message: Message) {
 }
 
 fun Context.colorStateList(@ColorRes res: Int) = ContextCompat.getColorStateList(this, res)
+
+@Px
+fun @receiver:DimenRes Int.pixelSize(context: Context): Int {
+    return context.resources.getDimensionPixelSize(this)
+}
 
 inline fun <reified T : Any> Context.requireSystemService(): T {
     return ContextCompat.getSystemService(this, T::class.java)

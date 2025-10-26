@@ -43,8 +43,6 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.RoutePlannerRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
@@ -148,10 +146,6 @@ class RoutePlannerUiTest {
     @BindValue
     @JvmField
     val geocodingRepository: GeocodingRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @BindValue
     @JvmField

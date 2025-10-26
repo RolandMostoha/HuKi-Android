@@ -17,7 +17,15 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun placeFinderPlaceClicked(searchText: String, placeName: String, isFromHistory: Boolean) = Unit
 
-    override fun loadLandscapeClicked(placeName: String) = Unit
+    override fun discoverClicked() = Unit
+
+    override fun landscapeClicked(name: String) = Unit
+
+    override fun landscapeMapClicked() = Unit
+
+    override fun destinationClicked(name: String) = Unit
+
+    override fun destinationNavigationClicked(name: String) = Unit
 
     override fun hikeRecommenderInfoClicked() = Unit
 

@@ -19,7 +19,7 @@ class HikeRecommendationMapperTest {
     fun `Given TERMESZETJARO and PLACE_DETAILS area type, when getNavigationLink, then TERMESZETJARO_PLACE_URL is returned`() {
         val placeArea = DEFAULT_NODE_NAME
             .toTestPlaceArea()
-            .copy(placeAreaType = PlaceAreaType.PLACE_DETAILS)
+            .copy(placeAreaType = PlaceAreaType.PlaceDetails)
 
         val actualUrl = mapper.getNavigationLink(HikeRecommendation.TERMESZETJARO, placeArea)
 
@@ -32,7 +32,7 @@ class HikeRecommendationMapperTest {
     fun `Given TERMESZETJARO and MAP_SEARCH area type, when getNavigationLink, then TERMESZETJARO_AREA_URL is returned`() {
         val placeArea = DEFAULT_NODE_NAME
             .toTestPlaceArea()
-            .copy(placeAreaType = PlaceAreaType.MAP_SEARCH)
+            .copy(placeAreaType = PlaceAreaType.MapSearch)
         val closestLandscape = LOCAL_LANDSCAPES
             .map { it to it.center.distanceBetween(placeArea.location) }
             .minBy { it.second }
@@ -52,7 +52,7 @@ class HikeRecommendationMapperTest {
     fun `Given AKTIVKALANDOR and MAP_SEARCH area type, when getNavigationLink, then AKTIVKALANDOR URL is returned`() {
         val placeArea = DEFAULT_NODE_NAME
             .toTestPlaceArea()
-            .copy(placeAreaType = PlaceAreaType.MAP_SEARCH)
+            .copy(placeAreaType = PlaceAreaType.MapSearch)
         val closestLandscape = LOCAL_LANDSCAPES
             .map { it to it.center.distanceBetween(placeArea.location) }
             .minBy { it.second }

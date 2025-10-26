@@ -7,3 +7,8 @@ data class HikingRoute(
     val name: String,
     val symbolType: SymbolType
 )
+
+data class HikingRouteDetails(
+    val hikingRoute: HikingRoute,
+    val geometry: Geometry.Relation
+)

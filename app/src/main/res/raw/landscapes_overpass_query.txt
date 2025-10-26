@@ -1,0 +1,21 @@
+[out:json][timeout:60];
+
+// Hungary area
+relation(21335);
+map_to_area -> .searchArea;
+
+(
+  // WAY Landscapes as mountain ranges
+  way["natural"="mountain_range"](area.searchArea);
+
+  // Extra landscapes by OSM id
+  rel(3716160); // Budai Hegység
+  rel(11073175); // Soproni Hegység
+  rel(8545511); // Őrség
+  rel(6503266); // Hortobágy
+  rel(22719); // Alföld
+  way(380535667); // Zalai dombság
+  way(380535854); // Szigetköz
+);
+
+out geom;

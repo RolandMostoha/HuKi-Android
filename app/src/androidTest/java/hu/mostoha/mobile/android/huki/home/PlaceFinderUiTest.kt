@@ -23,8 +23,6 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlaceHistoryRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
@@ -121,10 +119,6 @@ class PlaceFinderUiTest {
     @BindValue
     @JvmField
     val placeHistoryRepository: PlaceHistoryRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @Before
     fun init() {

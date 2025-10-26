@@ -25,15 +25,13 @@ import hu.mostoha.mobile.android.huki.extensions.copyFrom
 import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
-import hu.mostoha.mobile.android.huki.osmdroid.infowindow.GpxMarkerInfoWindow
+import hu.mostoha.mobile.android.huki.osmdroid.infowindow.NavigationMarkerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxArrowMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_ALTITUDE
@@ -107,10 +105,6 @@ class GpxDetailsUiTest {
     @BindValue
     @JvmField
     val geocodingRepository: GeocodingRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @Before
     fun init() {
@@ -324,7 +318,7 @@ class GpxDetailsUiTest {
             R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
 
             // Open info windows cannot be tested, because infinite animation is running from MapView
-            R.id.homeMapView.areInfoWindowsClosed<GpxMarkerInfoWindow>(true)
+            R.id.homeMapView.areInfoWindowsClosed<NavigationMarkerInfoWindow>(true)
         }
     }
 

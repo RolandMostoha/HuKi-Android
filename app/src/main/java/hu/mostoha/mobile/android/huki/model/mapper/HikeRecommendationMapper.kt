@@ -32,7 +32,7 @@ object HikeRecommendationMapper {
 
     private fun getTermeszetjaroLink(placeArea: PlaceArea): String {
         return when (placeArea.placeAreaType) {
-            PlaceAreaType.PLACE_DETAILS -> {
+            PlaceAreaType.PlaceDetails -> {
                 TERMESZETJARO_PLACE_URL.format(
                     "${placeArea.location.longitude},${placeArea.location.latitude}"
                 )

@@ -5,8 +5,10 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import hu.mostoha.mobile.android.huki.repository.DefaultGpxRepository
+import hu.mostoha.mobile.android.huki.repository.DefaultLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.DefaultLayersRepository
 import hu.mostoha.mobile.android.huki.repository.GpxRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import javax.inject.Singleton
 
@@ -21,5 +23,9 @@ abstract class FileSystemModule {
     @Singleton
     @Binds
     abstract fun bindGpxRepository(gpxRepository: DefaultGpxRepository): GpxRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindLandscapeRepository(landscapeRepository: DefaultLandscapeRepository): LandscapeRepository
 
 }

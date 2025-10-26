@@ -5,12 +5,12 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.HikingRouteDetails
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
-import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
@@ -21,11 +21,6 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_JEL
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_HIKING_ROUTE_OSM_ID
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_CITY
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LATITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
-import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_GEOMETRY_CLOSED
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_WAY_OSM_ID
@@ -33,9 +28,7 @@ import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.util.calculateCenter
 import hu.mostoha.mobile.android.huki.util.toTestPlaceArea
-import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.osmdroid.util.GeoPoint
 
 class HomeUiModelMapperTest {
 
@@ -53,10 +46,12 @@ class HomeUiModelMapperTest {
             listOf(
                 LandscapeUiModel(
                     osmId = landscape.osmId,
-                    osmType = landscape.osmType,
+                    placeType = landscape.osmType,
                     name = landscape.nameRes.toMessage(),
                     geoPoint = landscape.center.toGeoPoint(),
-                    iconRes = R.drawable.ic_landscapes_mountain_medium,
+                    color = landscape.color,
+                    iconRes = R.drawable.ic_landscapes_mountain_high,
+                    destinations = landscape.destinations,
                 )
             )
         )
@@ -75,17 +70,19 @@ class HomeUiModelMapperTest {
             listOf(
                 LandscapeUiModel(
                     osmId = landscape.osmId,
-                    osmType = landscape.osmType,
+                    placeType = landscape.osmType,
                     name = landscape.nameRes.toMessage(),
                     geoPoint = landscape.center.toGeoPoint(),
-                    iconRes = R.drawable.ic_landscapes_mountain_medium,
+                    color = landscape.color,
+                    iconRes = R.drawable.ic_landscapes_mountain_high,
+                    destinations = landscape.destinations,
                 )
             )
         )
     }
 
     @Test
-    fun `Given landscape ui model and geometry, when mapLandscapeDetails, then correct LandscapeDetailSUiModel returns`() {
+    fun `Given landscape ui model and geometry, when mapLandscapeDetails, then correct LandscapeDetailsUiModel returns`() {
         val landscape = DEFAULT_LANDSCAPE
         val landscapeUiModel = mapper.mapLandscapes(listOf(landscape)).first()
 
@@ -103,6 +100,33 @@ class HomeUiModelMapperTest {
                         )
                     )
                 ),
+                isSelected = false,
+            )
+        )
+    }
+
+    @Test
+    fun `Given landscape geometry list, when mapLandscapesGeometry, then correct LandscapeDetailsUiModel list returns`() {
+        val landscape = DEFAULT_LANDSCAPE
+        val landscapeGeometryList = listOf(landscape to DEFAULT_CLOSED_WAY_GEOMETRY)
+
+        val places = mapper.mapLandscapesGeometry(landscapeGeometryList)
+
+        assertThat(places).isEqualTo(
+            listOf(
+                LandscapeDetailsUiModel(
+                    landscapeUiModel = mapper.mapLandscapes(listOf(landscape)).first(),
+                    geometryUiModel = GeometryUiModel.Relation(
+                        ways = listOf(
+                            GeometryUiModel.Way(
+                                osmId = DEFAULT_CLOSED_WAY_GEOMETRY.osmId,
+                                geoPoints = DEFAULT_CLOSED_WAY_GEOMETRY.locations.toGeoPoints(),
+                                isClosed = true
+                            )
+                        )
+                    ),
+                    isSelected = false,
+                )
             )
         )
     }
@@ -147,28 +171,11 @@ class HomeUiModelMapperTest {
     }
 
     @Test
-    fun `Given hiking route details domain model with not relation geometry, when mapHikingRouteDetails, then error throws`() {
-        val hikingRoute = HikingRouteUiModel(
-            osmId = DEFAULT_HIKING_ROUTE_OSM_ID,
-            name = DEFAULT_HIKING_ROUTE_NAME,
-            symbolIcon = SymbolType.valueOf(DEFAULT_HIKING_ROUTE_JEL).iconRes
-        )
-        val geometry = Geometry.Node(
-            osmId = DEFAULT_PLACE_UI_MODEL.osmId,
-            location = DEFAULT_PLACE_UI_MODEL.geoPoint.toLocation()
-        )
-
-        assertThrows(IllegalStateException::class.java) {
-            placeMapper.mapToHikingRouteDetails(hikingRoute, geometry)
-        }
-    }
-
-    @Test
     fun `Given hiking route details domain model, when mapHikingRouteDetails, then correct PlaceDetailsUiModel returns`() {
-        val hikingRoute = HikingRouteUiModel(
+        val hikingRoute = HikingRoute(
             osmId = DEFAULT_HIKING_ROUTE_OSM_ID,
             name = DEFAULT_HIKING_ROUTE_NAME,
-            symbolIcon = SymbolType.PC.iconRes
+            symbolType = SymbolType.PC
         )
         val geometry = Geometry.Relation(
             osmId = hikingRoute.osmId,
@@ -185,8 +192,9 @@ class HomeUiModelMapperTest {
                 )
             )
         )
+        val hikingRouteDetails = HikingRouteDetails(hikingRoute, geometry)
 
-        val placeDetailsUiModel = placeMapper.mapToHikingRouteDetails(hikingRoute, geometry)
+        val placeDetailsUiModel = placeMapper.mapToHikingRouteDetails(hikingRouteDetails)
 
         assertThat(placeDetailsUiModel).isEqualTo(
             placeMapper.mapToPlaceDetailsUiModel(
@@ -195,7 +203,7 @@ class HomeUiModelMapperTest {
                     primaryText = hikingRoute.name.toMessage(),
                     secondaryText = DistanceFormatter.format(100 + 150),
                     placeType = PlaceType.HIKING_ROUTE,
-                    iconRes = hikingRoute.symbolIcon,
+                    iconRes = hikingRoute.symbolType.iconRes,
                     geoPoint = geometry.ways.flatMap { it.locations }
                         .calculateCenter()
                         .toGeoPoint(),
@@ -212,16 +220,6 @@ class HomeUiModelMapperTest {
             osmId = DEFAULT_WAY_OSM_ID,
             locations = DEFAULT_WAY_GEOMETRY_CLOSED.map { Location(it.first, it.second) },
             distance = (500..1000).random()
-        )
-        private val DEFAULT_PLACE_UI_MODEL = PlaceUiModel(
-            osmId = DEFAULT_NODE_OSM_ID,
-            placeType = PlaceType.NODE,
-            primaryText = DEFAULT_NODE_NAME.toMessage(),
-            secondaryText = DEFAULT_NODE_CITY.toMessage(),
-            iconRes = 0,
-            geoPoint = GeoPoint(DEFAULT_NODE_LATITUDE, DEFAULT_NODE_LONGITUDE),
-            placeFeature = PlaceFeature.HIKING_ROUTE_WAYPOINT,
-            boundingBox = null,
         )
         private val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.first()
     }

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/space_medium"
     android:background="@drawable/background_info_popup"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <com.google.android.material.textview.MaterialTextView
@@ -21,5 +23,15 @@
         android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall"
         android:textColor="@color/colorOnPrimary"
         tools:text="Title text for info text" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/infoButtonPopupCloseButton"
+        style="@style/DefaultButton.IconOnly.ExtraSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/space_medium"
+        app:icon="@drawable/ic_info_popup_close"
+        app:iconTint="@color/colorOnPrimary" />
 
 </LinearLayout>

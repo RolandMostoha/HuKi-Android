@@ -121,20 +121,17 @@ class LayersViewModelTest {
     }
 
     @Test
-    fun `When deselect hiking layer, then layers config is updated with null hiking layer`() =
+    fun `When deselect hiking layer, then layers config is updated with invisible hiking layer`() =
         runTestDefault {
             viewModel.layersConfig.test {
                 advanceUntilIdle()
 
                 viewModel.selectHikingLayer()
 
-                skipItems(2)
-                assertThat(awaitItem()).isEqualTo(
-                    LayersConfig(
-                        baseLayer = BaseLayer.MAPNIK,
-                        hikingLayer = null
-                    )
-                )
+                skipItems(1)
+
+                assertThat(awaitItem().hikingLayer?.isVisible).isTrue()
+                assertThat(awaitItem().hikingLayer?.isVisible).isFalse()
             }
         }
 

@@ -5,16 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.Destination
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
-import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.isZero
+import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toLocation
 import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.OktRoutesMapper
@@ -22,10 +22,9 @@ import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
 import hu.mostoha.mobile.android.huki.model.ui.CompassState
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikeModeUiModel
-import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HomeEvents
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
-import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
+import hu.mostoha.mobile.android.huki.model.ui.LandscapeMapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationConfigUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
@@ -34,6 +33,7 @@ import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.MapConfigRepository
 import hu.mostoha.mobile.android.huki.repository.OktRepository
 import hu.mostoha.mobile.android.huki.repository.OsmPlacesRepository.Companion.OSM_PLACE_CATEGORY_QUERY_LIMIT
@@ -51,9 +51,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -74,7 +72,7 @@ class HomeViewModel @Inject constructor(
     private val geocodingRepository: GeocodingRepository,
     private val oktRepository: OktRepository,
     private val mapConfigRepository: MapConfigRepository,
-    private val landscapeInteractor: LandscapeInteractor,
+    private val landscapeRepository: LandscapeRepository,
     private val homeUiModelMapper: HomeUiModelMapper,
     private val placeDomainUiMapper: PlaceDomainUiMapper,
     private val oktRoutesMapper: OktRoutesMapper,
@@ -101,6 +99,10 @@ class HomeViewModel @Inject constructor(
 
     private val _placeDetails = MutableStateFlow<PlaceDetailsUiModel?>(null)
     val placeDetails: StateFlow<PlaceDetailsUiModel?> = _placeDetails
+        .stateIn(viewModelScope, WhileViewSubscribed, null)
+
+    private val _landscapeMap = MutableStateFlow<LandscapeMapUiModel?>(null)
+    val landscapeMap: StateFlow<LandscapeMapUiModel?> = _landscapeMap
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     private val _landscapeDetails = MutableStateFlow<LandscapeDetailsUiModel?>(null)
@@ -136,32 +138,53 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun loadLandscapeDetails(landscapeUiModel: LandscapeUiModel) = viewModelScope.launch {
-        flowWithExceptions(
-            request = { placesRepository.getGeometry(landscapeUiModel.osmId, landscapeUiModel.osmType) },
-            exceptionLogger = exceptionLogger
-        )
-            .map { homeUiModelMapper.mapLandscapeDetails(landscapeUiModel, it) }
-            .onEach { _landscapeDetails.emit(it) }
-            .onStart {
-                clearFollowLocation()
-                clearHikingRoutes()
-                clearPlaceDetails()
-                clearOktRoutes()
+    fun loadLandscapeMap() = viewModelScope.launch {
+        clearFollowLocation()
+        clearHikingRoutes()
+        clearPlaceDetails()
+        clearLandscapeDetails()
+        clearOktRoutes()
 
-                showLoading(true)
+        val landscapeGeometryList = landscapeRepository.getLandscapeGeometryList()
+        val landscapes = homeUiModelMapper.mapLandscapesGeometry(landscapeGeometryList)
+        val landscapeMap = LandscapeMapUiModel(
+            landscapes = landscapes,
+            lastSelectedLandscape = null,
+            selectedLandscape = null,
+        )
+
+        _landscapeMap.emit(landscapeMap)
+    }
+
+    fun selectLandscape(osmId: String) {
+        _landscapeMap.update { uiModel ->
+            if (uiModel == null) {
+                return@update null
             }
-            .onCompletion { showLoading(false) }
-            .catch { showError(it) }
-            .collect()
+
+            return@update uiModel.copy(
+                landscapes = uiModel.landscapes.map { landscape ->
+                    landscape.copy(isSelected = landscape.landscapeUiModel.osmId == osmId)
+                },
+                selectedLandscape = uiModel.landscapes.firstOrNull { it.landscapeUiModel.osmId == osmId },
+                lastSelectedLandscape = uiModel.selectedLandscape,
+            )
+        }
     }
 
     fun loadLandscapeDetails(osmId: String) = viewModelScope.launch {
-        landscapeInteractor.requestGetLandscapesFlow()
-            .map { homeUiModelMapper.mapLandscapes(it) }
-            .mapNotNull { landscapes -> landscapes.firstOrNull { it.osmId == osmId } }
-            .catch { showError(it) }
-            .collectLatest { loadLandscapeDetails(it) }
+        clearFollowLocation()
+        clearHikingRoutes()
+        clearPlaceDetails()
+        clearOktRoutes()
+        clearLandscapeMap()
+
+        val landscapeGeometryList = landscapeRepository.getLandscapeGeometryList()
+        val landscapeGeometry = landscapeGeometryList.first { it.first.osmId == osmId }
+        val landscapeUiModel = homeUiModelMapper.mapLandscape(landscapeGeometry.first)
+        val landscapeDetails = homeUiModelMapper.mapLandscapeDetails(landscapeUiModel, landscapeGeometry.second)
+
+        _landscapeDetails.emit(landscapeDetails)
     }
 
     fun loadPlaceDetails(placeUiModel: PlaceUiModel) = viewModelScope.launch {
@@ -203,7 +226,6 @@ class HomeViewModel @Inject constructor(
                 .onStart {
                     clearFollowLocation()
                     clearHikingRoutes()
-                    clearLandscapeDetails()
 
                     showLoading(true)
                 }
@@ -245,6 +267,32 @@ class HomeViewModel @Inject constructor(
                 showLoading(true)
             }
             .onCompletion { showLoading(false) }
+            .catch { showError(it) }
+            .collect()
+    }
+
+    fun loadHikingRouteDetails(osmRelId: String) = viewModelScope.launch {
+        flowWithExceptions(
+            request = { placesRepository.getHikingRouteDetails(osmRelId) },
+            exceptionLogger = exceptionLogger
+        )
+            .map { hikingRouteDetails ->
+                placeDomainUiMapper.mapToHikingRouteDetails(hikingRouteDetails)
+            }
+            .onEach { _placeDetails.emit(it) }
+            .onStart {
+                clearFollowLocation()
+                clearPlaceDetails()
+                clearLandscapeDetails()
+                clearOktRoutes()
+
+                showLoading(true)
+            }
+            .onCompletion {
+                clearHikingRoutes()
+
+                showLoading(false)
+            }
             .catch { showError(it) }
             .collect()
     }
@@ -300,6 +348,16 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
+    fun loadDestination(destination: Destination) {
+        if (destination.relId == null) {
+            loadPlaceDetailsWithGeocoding(destination.location.toGeoPoint(), PlaceFeature.MAP_SEARCH)
+        } else {
+            clearLandscapeMap()
+            clearLandscapeDetails()
+            loadHikingRouteDetails(destination.relId)
+        }
+    }
+
     fun loadOsmTags(placeUiModel: PlaceUiModel) = viewModelScope.launch {
         flowWithExceptions(
             request = { placesRepository.getOsmTags(placeUiModel.osmId, placeUiModel.placeType) },
@@ -321,30 +379,6 @@ class HomeViewModel @Inject constructor(
                 showLoading(true)
             }
             .onCompletion { showLoading(false) }
-            .catch { showError(it) }
-            .collect()
-    }
-
-    fun loadHikingRouteDetails(hikingRoute: HikingRouteUiModel) = viewModelScope.launch {
-        flowWithExceptions(
-            request = { placesRepository.getGeometry(hikingRoute.osmId, PlaceType.RELATION) },
-            exceptionLogger = exceptionLogger
-        )
-            .map { placeDomainUiMapper.mapToHikingRouteDetails(hikingRoute, it) }
-            .onEach { _placeDetails.emit(it) }
-            .onStart {
-                clearFollowLocation()
-                clearPlaceDetails()
-                clearLandscapeDetails()
-                clearOktRoutes()
-
-                showLoading(true)
-            }
-            .onCompletion {
-                clearHikingRoutes()
-
-                showLoading(false)
-            }
             .catch { showError(it) }
             .collect()
     }
@@ -478,6 +512,10 @@ class HomeViewModel @Inject constructor(
         _placeDetails.value = null
     }
 
+    fun clearLandscapeMap() {
+        _landscapeMap.value = null
+    }
+
     fun clearLandscapeDetails() {
         _landscapeDetails.value = null
     }
@@ -506,6 +544,7 @@ class HomeViewModel @Inject constructor(
 
     fun clearAllOverlay() {
         clearPlaceDetails()
+        clearLandscapeMap()
         clearLandscapeDetails()
         clearHikingRoutes()
         clearOktRoutes()

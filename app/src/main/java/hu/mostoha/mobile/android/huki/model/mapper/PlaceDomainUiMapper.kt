@@ -2,6 +2,7 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
+import hu.mostoha.mobile.android.huki.model.domain.HikingRouteDetails
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.OsmTags
 import hu.mostoha.mobile.android.huki.model.domain.Place
@@ -12,7 +13,6 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoints
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
-import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
@@ -168,10 +168,10 @@ class PlaceDomainUiMapper @Inject constructor(
         )
     }
 
-    fun mapToHikingRouteDetails(hikingRoute: HikingRouteUiModel, geometry: Geometry): PlaceDetailsUiModel {
-        val relation = geometry as? Geometry.Relation ?: error("Hiking route can only be a Relation")
-
-        val totalDistance = relation.ways.sumOf { it.distance }
+    fun mapToHikingRouteDetails(hikingRouteDetails: HikingRouteDetails): PlaceDetailsUiModel {
+        val hikingRoute = hikingRouteDetails.hikingRoute
+        val geometry = hikingRouteDetails.geometry
+        val totalDistance = geometry.ways.sumOf { it.distance }
 
         return mapToPlaceDetailsUiModel(
             placeUiModel = PlaceUiModel(
@@ -179,8 +179,8 @@ class PlaceDomainUiMapper @Inject constructor(
                 primaryText = hikingRoute.name.toMessage(),
                 secondaryText = DistanceFormatter.format(totalDistance),
                 placeType = PlaceType.HIKING_ROUTE,
-                iconRes = hikingRoute.symbolIcon,
-                geoPoint = relation.ways.flatMap { it.locations }
+                iconRes = hikingRoute.symbolType.iconRes,
+                geoPoint = geometry.ways.flatMap { it.locations }
                     .calculateCenter()
                     .toGeoPoint(),
                 boundingBox = null,

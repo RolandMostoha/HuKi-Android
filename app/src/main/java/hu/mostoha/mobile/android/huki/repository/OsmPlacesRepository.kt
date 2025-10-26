@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.repository
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.HikingRouteDetails
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
@@ -14,7 +15,6 @@ import hu.mostoha.mobile.android.huki.overpasser.output.OutputFormat
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputModificator
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputVerbosity
 import hu.mostoha.mobile.android.huki.overpasser.query.OverpassQuery
-import timber.log.Timber
 import javax.inject.Inject
 
 class OsmPlacesRepository @Inject constructor(
@@ -66,6 +66,24 @@ class OsmPlacesRepository @Inject constructor(
         return placeDetailsNetworkDomainMapper.mapHikingRoutes(response)
     }
 
+    override suspend fun getHikingRouteDetails(osmRelId: String): HikingRouteDetails {
+        val query = OverpassQuery()
+            .format(OutputFormat.JSON)
+            .timeout(NetworkConfig.DEFAULT_TIMEOUT_S)
+            .filterQuery()
+            .relBy(osmRelId)
+            .end()
+            .output(OutputVerbosity.BODY, OutputModificator.GEOM, null, 1)
+            .build()
+
+        val response = overpassService.interpreter(query)
+
+        return HikingRouteDetails(
+            hikingRoute = placeDetailsNetworkDomainMapper.mapHikingRoutes(response).first(),
+            geometry = placeDetailsNetworkDomainMapper.mapGeometryByRelation(response, osmRelId)
+        )
+    }
+
     override suspend fun getPlacesByCategories(categories: Set<PlaceCategory>, boundingBox: BoundingBox): List<Place> {
         val osmQueryTags = categories.flatMap { it.osmQueryTags }
         val query = OverpassQuery()
@@ -76,8 +94,6 @@ class OsmPlacesRepository @Inject constructor(
             .end()
             .output(OutputVerbosity.TAGS, OutputModificator.BB, null, OSM_PLACE_CATEGORY_QUERY_LIMIT)
             .build()
-
-        Timber.d("OSM query: $query")
 
         val response = overpassService.interpreter(query)
 

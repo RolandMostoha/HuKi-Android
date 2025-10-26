@@ -102,7 +102,7 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 settingsViewModel.updateMapScale(value.toInt())
             }
         }
-        mapScaleInfoButton.onClick = {
+        mapScaleInfoButton.onOpen = {
             analyticsService.settingsMapScaleInfoClicked()
         }
         themeSystemRadioButton.setOnCheckedChangeListener { _, isChecked ->
@@ -120,7 +120,7 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 settingsViewModel.updateTheme(Theme.DARK)
             }
         }
-        offlineModeInfoButton.onClick = {
+        offlineModeInfoButton.onOpen = {
             analyticsService.settingsOfflineModeInfoClicked()
         }
         emailText.hyperlinkStyle()

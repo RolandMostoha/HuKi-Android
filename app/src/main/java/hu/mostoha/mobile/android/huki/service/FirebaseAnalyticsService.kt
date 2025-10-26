@@ -26,7 +26,11 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
     companion object {
         private const val EVENT_SELECT_PLACE = "select_place"
         private const val EVENT_SELECT_PLACE_FROM_HISTORY = "select_place_from_history"
+        private const val EVENT_SELECT_DISCOVER = "select_discover"
+        private const val EVENT_SELECT_LANDSCAPE_MAP = "select_landscape_map"
         private const val EVENT_SELECT_LANDSCAPE = "select_landscape"
+        private const val EVENT_SELECT_DESTINATION = "select_destination"
+        private const val EVENT_SELECT_DESTINATION_NAVIGATION = "select_destination_navigation"
         private const val EVENT_SELECT_OKT = "select_okt"
         private const val EVENT_SELECT_OKT_ROUTE = "select_okt_route"
         private const val EVENT_SELECT_OKT_ROUTE_LINK = "select_okt_link"
@@ -95,6 +99,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
         private const val PARAM_SELECTED_LANDSCAPE = "selected_landscape"
+        private const val PARAM_SELECTED_DESTINATION = "selected_destination"
         private const val PARAM_SELECTED_PLACE_DETAILS = "selected_place_details"
         private const val PARAM_SELECTED_HIKING_ROUTE_DETAILS = "selected_hiking_route_details"
         private const val PARAM_MAP_SCALE_PERCENTAGE = "map_scale_percentage"
@@ -137,9 +142,29 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         }
     }
 
-    override fun loadLandscapeClicked(placeName: String) {
+    override fun discoverClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_DISCOVER, null)
+    }
+
+    override fun landscapeMapClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_LANDSCAPE_MAP, null)
+    }
+
+    override fun landscapeClicked(name: String) {
         firebaseAnalytics.logEvent(EVENT_SELECT_LANDSCAPE) {
-            param(PARAM_SELECTED_LANDSCAPE, placeName)
+            param(PARAM_SELECTED_LANDSCAPE, name)
+        }
+    }
+
+    override fun destinationClicked(name: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_DESTINATION) {
+            param(PARAM_SELECTED_DESTINATION, name)
+        }
+    }
+
+    override fun destinationNavigationClicked(name: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_DESTINATION_NAVIGATION) {
+            param(PARAM_SELECTED_DESTINATION, name)
         }
     }
 

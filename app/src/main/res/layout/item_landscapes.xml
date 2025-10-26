@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/landscapesItemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="2dp"
+    app:cardBackgroundColor="@color/colorBackground"
+    app:cardCornerRadius="@dimen/default_corner_size_bottom_sheet"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_extra_extra_small"
+        android:animateLayoutChanges="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_small"
+        android:paddingVertical="6dp">
+
+        <!-- Landscape image -->
+        <ImageView
+            android:id="@+id/landscapesItemImage"
+            android:layout_width="@dimen/landscapes_item_image_size"
+            android:layout_height="@dimen/landscapes_item_image_size"
+            android:layout_marginStart="@dimen/space_large"
+            android:background="@drawable/background_badge"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/space_small"
+            tools:src="@drawable/ic_place_type_node" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/space_large">
+
+            <!-- Landscape name -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/landscapesItemTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+                android:textColor="@color/selector_okt_routes_item_color"
+                tools:text="Börzsöny" />
+
+            <!-- Landscape description -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/landscapesItemDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_extra_extra_small"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textAppearance="@style/DefaultTextAppearance.Regular.Small"
+                android:textColor="@color/selector_okt_routes_item_color"
+                android:visibility="gone"
+                tools:text="Börzsöny" />
+
+        </LinearLayout>
+
+        <!-- Landscape details button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/landscapesItemDetailsButton"
+            style="@style/DefaultButton.Contained.Shadowless.Secondary.ExtraSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/space_extra_small"
+            android:backgroundTint="@color/colorBadgeBackground"
+            android:text="@string/landscapes_details_button_title"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

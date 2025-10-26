@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/headerContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_place_category_header"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/space_small">
+
+    <ImageView
+        android:id="@+id/headerImage"
+        android:layout_width="@dimen/place_details_bottom_sheet_image_size"
+        android:layout_height="@dimen/place_details_bottom_sheet_image_size"
+        android:layout_marginStart="@dimen/space_large"
+        android:importantForAccessibility="no"
+        android:foreground="?selectableItemBackground"
+        tools:src="@drawable/ic_place_type_node" />
+
+    <LinearLayout
+        android:id="@+id/headerContentContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_small"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/headerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="2"
+            android:textAppearance="@style/DefaultTextAppearance.Bold.Large"
+            tools:text="Pilis-hegység" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/headerSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_extra_small"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Medium"
+            tools:text="10 km-es körzetében" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/headerCloseButton"
+        style="@style/DefaultButton.BottomSheetAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_medium"
+        app:icon="@drawable/ic_bottom_sheet_clear" />
+
+</LinearLayout>

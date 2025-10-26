@@ -3,7 +3,6 @@ package hu.mostoha.mobile.android.huki.ui.home.placecategory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
@@ -13,12 +12,12 @@ import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceAreaMapper
 import hu.mostoha.mobile.android.huki.model.ui.PlaceCategoryUiModel
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -31,7 +30,7 @@ import javax.inject.Inject
 class PlaceCategoryViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
     private val geocodingRepository: GeocodingRepository,
-    private val landscapeInteractor: LandscapeInteractor,
+    private val landscapeRepository: LandscapeRepository,
     private val homeUiModelMapper: HomeUiModelMapper,
 ) : ViewModel() {
 
@@ -46,12 +45,10 @@ class PlaceCategoryViewModel @Inject constructor(
 
     private fun loadLandscapes() {
         viewModelScope.launch {
-            landscapeInteractor.requestGetLandscapesFlow(null)
-                .map { homeUiModelMapper.mapLandscapes(it) }
-                .onEach { landscapes ->
-                    _placeCategoryUiModel.update { it.copy(landscapes = landscapes) }
-                }
-                .collect()
+            val landscapes = landscapeRepository.getLandscapes()
+            val landscapesUiModels = homeUiModelMapper.mapLandscapes(landscapes)
+
+            _placeCategoryUiModel.update { it.copy(landscapes = landscapesUiModels) }
         }
     }
 

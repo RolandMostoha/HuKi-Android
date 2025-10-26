@@ -4,5 +4,6 @@ import org.osmdroid.tileprovider.tilesource.ITileSource
 
 data class HikingLayer(
     val layerType: LayerType,
-    val tileSource: ITileSource
+    val tileSource: ITileSource,
+    val isVisible: Boolean = true,
 )

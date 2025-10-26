@@ -12,6 +12,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.model.network.overpass.Element
 import hu.mostoha.mobile.android.huki.model.network.overpass.ElementType
 import hu.mostoha.mobile.android.huki.model.network.overpass.Geom
 import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
@@ -19,11 +20,32 @@ import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.network.overpass.center
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
-import hu.mostoha.mobile.android.huki.util.EnumUtil.valueOf
 import hu.mostoha.mobile.android.huki.util.calculateDistance
 import javax.inject.Inject
 
 class PlaceDetailsNetworkDomainMapper @Inject constructor() {
+
+    fun mapGeometryList(response: OverpassQueryResponse): List<Geometry> {
+        return response.elements.mapNotNull { element ->
+            when (element.type) {
+                ElementType.NODE -> {
+                    Geometry.Node(
+                        osmId = element.id.toString(),
+                        location = Location(
+                            latitude = element.lat ?: return@mapNotNull null,
+                            longitude = element.lon ?: return@mapNotNull null
+                        )
+                    )
+                }
+                ElementType.WAY -> {
+                    mapWayGeometry(element.id.toString(), element.geometry ?: emptyList())
+                }
+                ElementType.RELATION -> {
+                    mapRelationGeometry(element.id.toString(), element)
+                }
+            }
+        }
+    }
 
     fun mapGeometryByNode(response: OverpassQueryResponse, osmId: String): Geometry {
         val nodeElement = response.elements.firstOrNull { element ->
@@ -44,12 +66,26 @@ class PlaceDetailsNetworkDomainMapper @Inject constructor() {
         return mapWayGeometry(wayElement.id.toString(), wayElement.geometry ?: emptyList())
     }
 
-    fun mapGeometryByRelation(response: OverpassQueryResponse, osmId: String): Geometry {
+    fun mapGeometryByRelation(response: OverpassQueryResponse, osmId: String): Geometry.Relation {
         val relationElement = response.elements.firstOrNull { element ->
             element.type == ElementType.RELATION && element.id.toString() == osmId
         } ?: throw DomainException(R.string.error_message_missing_osm_id.toMessage())
 
-        val ways = relationElement.members?.mapNotNull { member ->
+        return mapRelationGeometry(osmId, relationElement)
+    }
+
+    private fun mapWayGeometry(osmId: String, geometry: List<Geom>): Geometry.Way {
+        val locations = extractLocations(geometry)
+
+        return Geometry.Way(
+            osmId = osmId,
+            locations = locations,
+            distance = locations.calculateDistance()
+        )
+    }
+
+    private fun mapRelationGeometry(osmId: String, element: Element): Geometry.Relation {
+        val ways = element.members?.mapNotNull { member ->
             val geometry = member.geometry
             if (geometry.isNullOrEmpty()) {
                 null
@@ -61,21 +97,13 @@ class PlaceDetailsNetworkDomainMapper @Inject constructor() {
         return Geometry.Relation(osmId, ways)
     }
 
-    private fun mapWayGeometry(wayId: String, geometry: List<Geom>): Geometry.Way {
-        val locations = extractLocations(geometry)
-
-        return Geometry.Way(
-            osmId = wayId,
-            locations = locations,
-            distance = locations.calculateDistance()
-        )
-    }
-
     fun mapHikingRoutes(response: OverpassQueryResponse): List<HikingRoute> {
         return response.elements.mapNotNull { element ->
             val tags = element.tags
             val name = tags?.get(OSM_TAG_NAME)
-            val symbolType = SymbolType.entries.valueOf(tags?.get(OsmTags.JEL.osmKey)) ?: SymbolType.UNHANDLED
+            val symbolType = tags?.get(OsmTags.JEL.osmKey)?.let { osmValue ->
+                SymbolType.fromOsmValue(osmValue) ?: SymbolType.UNHANDLED
+            } ?: SymbolType.UNHANDLED
 
             if (name == null) {
                 return@mapNotNull null

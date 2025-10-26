@@ -20,6 +20,13 @@ fun TextView.setDrawableEnd(@DrawableRes drawableRes: Int) {
     setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
 }
 
+@Suppress("MagicNumber")
+fun TextView.updateDrawableEnd(@DrawableRes drawableRes: Int?) {
+    val drawable = drawableRes?.toDrawable(context)
+    val drawables = compoundDrawablesRelative
+    setCompoundDrawablesRelativeWithIntrinsicBounds(drawables[0], drawables[1], drawable, drawables[3])
+}
+
 fun TextView.setDrawableTop(@DrawableRes drawableRes: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableRes)
     setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)

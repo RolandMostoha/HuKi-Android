@@ -14,7 +14,8 @@ import org.osmdroid.views.overlay.TilesOverlay
  */
 enum class OverlayType {
     HIKING_LAYER,
-    LANDSCAPE,
+    LANDSCAPE_MAP,
+    LANDSCAPE_DETAILS,
     OKT_ROUTES_BASE,
     OKT_ROUTES,
     GPX,
@@ -37,7 +38,8 @@ val OVERLAY_TYPE_ORDER_MAP = mapOf(
     OverlayType.ROTATION_GESTURE to listOf(RotationGestureOverlay::class),
     OverlayType.HIKING_LAYER to listOf(TilesOverlay::class),
     OverlayType.MY_LOCATION to listOf(MyLocationOverlay::class),
-    OverlayType.LANDSCAPE to listOf(LandscapePolyline::class, LandscapePolygon::class),
+    OverlayType.LANDSCAPE_MAP to listOf(LandscapePolyline::class, LandscapePolygon::class, DestinationMarker::class),
+    OverlayType.LANDSCAPE_DETAILS to listOf(LandscapeDetailsPolyline::class, LandscapeDetailsDestinationMarker::class),
     OverlayType.OKT_ROUTES_BASE to listOf(OktBasePolyline::class),
     OverlayType.OKT_ROUTES to listOf(OktMarker::class, OktPolyline::class),
     OverlayType.PLACE_DETAILS to listOf(
@@ -52,3 +54,5 @@ val OVERLAY_TYPE_ORDER_MAP = mapOf(
     OverlayType.MAP_TOUCH_EVENTS to listOf(MapEventsOverlay::class),
     OverlayType.LOCATION_PICKER to listOf(LocationPickerMarker::class),
 )
+
+const val OVERLAY_ID_OKT = "OVERLAY_ID_OKT"

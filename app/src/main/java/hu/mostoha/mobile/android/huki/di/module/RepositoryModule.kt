@@ -5,8 +5,6 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.LocationIqGeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.OsmPlacesRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
@@ -23,9 +21,5 @@ abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindGeocodingRepository(geocodingRepository: LocationIqGeocodingRepository): GeocodingRepository
-
-    @Singleton
-    @Binds
-    abstract fun bindLandscapeRepository(landscapeRepository: LocalLandscapeRepository): LandscapeRepository
 
 }

@@ -81,6 +81,13 @@
         <item name="iconSize">@dimen/icon_size_extra_small</item>
     </style>
 
+    <style name="DefaultButton.Contained.Shadowless.Secondary.ExtraSmall">
+        <item name="android:paddingTop">@dimen/space_small</item>
+        <item name="android:paddingBottom">@dimen/space_small</item>
+        <item name="android:textSize">@dimen/text_size_extra_small</item>
+        <item name="iconSize">@dimen/icon_size_extra_tiny</item>
+    </style>
+
     <style name="DefaultButton.IconOnly" parent="@style/Widget.MaterialComponents.Button.TextButton">
         <item name="android:paddingTop">@dimen/space_medium</item>
         <item name="android:paddingBottom">@dimen/space_medium</item>

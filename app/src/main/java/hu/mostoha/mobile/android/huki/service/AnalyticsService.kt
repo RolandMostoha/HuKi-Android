@@ -16,7 +16,15 @@ interface AnalyticsService {
 
     fun placeFinderPlaceClicked(searchText: String, placeName: String, isFromHistory: Boolean)
 
-    fun loadLandscapeClicked(placeName: String)
+    fun discoverClicked()
+
+    fun landscapeClicked(name: String)
+
+    fun landscapeMapClicked()
+
+    fun destinationClicked(name: String)
+
+    fun destinationNavigationClicked(name: String)
 
     fun hikeRecommenderInfoClicked()
 

@@ -8,7 +8,7 @@ import hu.mostoha.mobile.android.huki.extensions.visible
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 
-class GpxMarkerInfoWindow(
+class NavigationMarkerInfoWindow(
     mapView: MapView,
     private val title: String,
     private val description: String? = null,

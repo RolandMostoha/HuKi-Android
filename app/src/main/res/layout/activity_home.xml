@@ -236,15 +236,15 @@
             app:layout_constraintTop_toBottomOf="@id/homeLayersFab" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/homeOktFab"
+            android:id="@+id/homeDiscoverFab"
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_small_medium"
-            android:contentDescription="@string/accessibility_home_fab_okt"
+            android:contentDescription="@string/accessibility_home_fab_discover"
             android:elevation="@dimen/default_elevation_map_interactive_views"
-            android:src="@drawable/ic_home_fab_okt"
+            android:src="@drawable/ic_home_fab_discover"
             app:fabSize="mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeSupportFab" />
@@ -261,19 +261,19 @@
             android:src="@drawable/ic_home_fab_place_category"
             app:fabSize="mini"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/homeOktFab" />
+            app:layout_constraintTop_toBottomOf="@id/homeDiscoverFab" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/homeRoutePlannerHeaderGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="homeSearchBarContainer, homeLayersFab, homeSettingsFab, homeHistoryFab, homeSupportFab, homeOktFab, homePlaceCategoriesFab" />
+            app:constraint_referenced_ids="homeSearchBarContainer, homeLayersFab, homeSettingsFab, homeHistoryFab, homeSupportFab, homeDiscoverFab, homePlaceCategoriesFab" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/homeHikeModeHeaderGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="homeSearchBarContainer, homeHistoryFab, homeSupportFab, homeOktFab, homePlaceCategoriesFab" />
+            app:constraint_referenced_ids="homeSearchBarContainer, homeHistoryFab, homeSupportFab, homeDiscoverFab, homePlaceCategoriesFab" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -395,6 +395,11 @@
     <include
         android:id="@+id/homeOktRoutesBottomSheetContainer"
         layout="@layout/layout_bottom_sheet_okt_routes"
+        tools:visibility="gone" />
+
+    <include
+        android:id="@+id/homeLandscapesBottomSheetContainer"
+        layout="@layout/layout_bottom_sheet_landscapes"
         tools:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

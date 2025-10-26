@@ -1,11 +1,9 @@
 package hu.mostoha.mobile.android.huki.model.mapper
 
-import androidx.annotation.DrawableRes
-import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
 import hu.mostoha.mobile.android.huki.model.domain.Landscape
-import hu.mostoha.mobile.android.huki.model.domain.LandscapeType
+import hu.mostoha.mobile.android.huki.model.domain.resolveIcon
 import hu.mostoha.mobile.android.huki.model.domain.toGeoPoint
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
@@ -21,16 +19,18 @@ class HomeUiModelMapper @Inject constructor(
 ) {
 
     fun mapLandscapes(landscapes: List<Landscape>): List<LandscapeUiModel> {
-        return landscapes.map { landscape ->
-            LandscapeUiModel(
-                osmId = landscape.osmId,
-                osmType = landscape.osmType,
-                name = landscape.nameRes.toMessage(),
-                geoPoint = landscape.center.toGeoPoint(),
-                iconRes = getLandscapeIcon(landscape)
-            )
-        }
+        return landscapes.map { mapLandscape(it) }
     }
+
+    fun mapLandscape(landscape: Landscape): LandscapeUiModel = LandscapeUiModel(
+        osmId = landscape.osmId,
+        placeType = landscape.osmType,
+        name = landscape.nameRes.toMessage(),
+        geoPoint = landscape.center.toGeoPoint(),
+        color = landscape.color,
+        iconRes = landscape.landscapeType.resolveIcon(),
+        destinations = landscape.destinations
+    )
 
     fun mapLandscapeDetails(landscapeUiModel: LandscapeUiModel, geometry: Geometry): LandscapeDetailsUiModel {
         return LandscapeDetailsUiModel(
@@ -47,7 +47,18 @@ class HomeUiModelMapper @Inject constructor(
                 }
                 else -> throw IllegalArgumentException("Node geometry is not allowed for landscapes: $geometry")
             },
+            isSelected = false,
         )
+    }
+
+    fun mapLandscapesGeometry(landscapeGeometryList: List<Pair<Landscape, Geometry>>): List<LandscapeDetailsUiModel> {
+        val landscapeDetailsUiModels = landscapeGeometryList.map { landscapeGeometryPair ->
+            val landscapeUiModel = mapLandscape(landscapeGeometryPair.first)
+            val geometry = landscapeGeometryPair.second
+
+            mapLandscapeDetails(landscapeUiModel, geometry)
+        }
+        return landscapeDetailsUiModels
     }
 
     fun mapHikingRoutes(placeArea: PlaceArea, hikingRoutes: List<HikingRoute>): List<HikingRoutesItem> {
@@ -60,32 +71,18 @@ class HomeUiModelMapper @Inject constructor(
                 .plus(HikingRoutesItem.Header(placeArea))
                 .plus(
                     hikingRoutes.map { hikingRoute ->
-                        HikingRoutesItem.Item(
-                            HikingRouteUiModel(
-                                osmId = hikingRoute.osmId,
-                                name = hikingRoute.name,
-                                symbolIcon = hikingRoute.symbolType.iconRes
-                            )
-                        )
+                        HikingRoutesItem.Item(mapHikingRoute(hikingRoute))
                     }
                 )
         }
     }
 
-    @DrawableRes
-    private fun getLandscapeIcon(landscape: Landscape): Int {
-        return when (landscape.landscapeType) {
-            LandscapeType.MOUNTAIN_LOW -> R.drawable.ic_landscapes_mountain_low
-            LandscapeType.MOUNTAIN_MEDIUM -> R.drawable.ic_landscapes_mountain_medium
-            LandscapeType.MOUNTAIN_HIGH -> R.drawable.ic_landscapes_mountain_high
-            LandscapeType.MOUNTAIN_WITH_LAKE -> R.drawable.ic_landscapes_lake
-            LandscapeType.MOUNTAIN_WITH_CASTLE -> R.drawable.ic_landscapes_castle
-            LandscapeType.CAVE_SYSTEM -> R.drawable.ic_landscapes_cave
-            LandscapeType.WINE_AREA -> R.drawable.ic_landscapes_grape
-            LandscapeType.STAR_GAZING_AREA -> R.drawable.ic_landscapes_telescope
-            LandscapeType.FOREST_AREA -> R.drawable.ic_landscapes_forest
-            LandscapeType.PLAIN_LAND -> R.drawable.ic_landscapes_plain_land
-        }
+    fun mapHikingRoute(hikingRoute: HikingRoute): HikingRouteUiModel {
+        return HikingRouteUiModel(
+            osmId = hikingRoute.osmId,
+            name = hikingRoute.name,
+            symbolIcon = hikingRoute.symbolType.iconRes
+        )
     }
 
 }

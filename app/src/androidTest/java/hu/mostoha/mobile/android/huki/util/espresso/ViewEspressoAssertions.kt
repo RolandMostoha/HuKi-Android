@@ -18,6 +18,7 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -177,6 +178,15 @@ fun @receiver:IdRes Int.clickWithSibling(text: String) {
         allOf(
             withId(this),
             hasSibling(withText(text))
+        )
+    ).perform(ViewActions.click())
+}
+
+fun @receiver:IdRes Int.clickWithParent(@IdRes parentId: Int) {
+    onView(
+        allOf(
+            withId(this),
+            hasSibling(isDescendantOfA(withId(parentId)))
         )
     ).perform(ViewActions.click())
 }

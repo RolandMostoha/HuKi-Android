@@ -22,13 +22,12 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.OktMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OktPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithContentDescription
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithParent
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
@@ -36,6 +35,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
 import hu.mostoha.mobile.android.huki.util.launchScenario
@@ -88,10 +88,6 @@ class OktRoutesUiTest {
     @JvmField
     val geocodingRepository: GeocodingRepository = mockk()
 
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
-
     @Before
     fun init() {
         hiltRule.inject()
@@ -104,8 +100,8 @@ class OktRoutesUiTest {
     @Test
     fun whenClickOnOktChip_thenOktBottomSheetDisplays() {
         launchScenario<HomeActivity> {
-            R.id.homeOktFab.click()
-            "OKT".clickWithTextInPopup()
+            R.id.homeDiscoverFab.click()
+            "OKT".clickWithText()
 
             waitForMapClear()
 
@@ -118,12 +114,12 @@ class OktRoutesUiTest {
     @Test
     fun whenClickOnRpddkChip_thenRpddkBottomSheetDisplays() {
         launchScenario<HomeActivity> {
-            R.id.homeOktFab.click()
-            "RPDDK".clickWithTextInPopup()
+            R.id.homeDiscoverFab.click()
+            "RPDDK".clickWithText()
 
             waitForMapClear()
 
-            R.string.okt_rpddk_subtitle.isTextDisplayed()
+            R.string.okt_rpddk_subtitle_long.isTextDisplayed()
             R.id.homeMapView.hasOverlay<OktBasePolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
@@ -132,8 +128,9 @@ class OktRoutesUiTest {
     @Test
     fun whenClickOnAktChip_thenAktBottomSheetDisplays() {
         launchScenario<HomeActivity> {
-            R.id.homeOktFab.click()
-            "AKT".clickWithTextInPopup()
+            R.id.homeDiscoverFab.click()
+            R.id.discoverOktRoutesScrollView.swipeLeft()
+            "AKT".clickWithText()
 
             waitForMapClear()
 
@@ -146,8 +143,8 @@ class OktRoutesUiTest {
     @Test
     fun givenOktRoute_whenSelect_thenOktRouteDisplaysOnMap() {
         launchScenario<HomeActivity> {
-            R.id.homeOktFab.click()
-            "OKT".clickWithTextInPopup()
+            R.id.homeDiscoverFab.click()
+            "OKT".clickWithText()
 
             waitForMapClear()
 
@@ -165,8 +162,8 @@ class OktRoutesUiTest {
     @Test
     fun givenOktRoute_whenClickOnLink_thenOktWebPageRequested() {
         launchScenario<HomeActivity> {
-            R.id.homeOktFab.click()
-            "OKT".clickWithTextInPopup()
+            R.id.homeDiscoverFab.click()
+            "OKT".clickWithText()
 
             waitForMapClear()
 
@@ -185,8 +182,8 @@ class OktRoutesUiTest {
     @Test
     fun givenOktRoute_whenClickOnStartPoint_thenPlaceDetailsDisplays() {
         launchScenario<HomeActivity> {
-            R.id.homeOktFab.click()
-            "OKT".clickWithTextInPopup()
+            R.id.homeDiscoverFab.click()
+            "OKT".clickWithText()
 
             waitForMapClear()
 
@@ -207,8 +204,8 @@ class OktRoutesUiTest {
     @Test
     fun givenOktRoute_whenClickOnEndPoint_thenPlaceDetailsDisplays() {
         launchScenario<HomeActivity> {
-            R.id.homeOktFab.click()
-            "OKT".clickWithTextInPopup()
+            R.id.homeDiscoverFab.click()
+            "OKT".clickWithText()
 
             waitForMapClear()
 
@@ -229,12 +226,12 @@ class OktRoutesUiTest {
     @Test
     fun whenCloseClick_thenBottomSheetHides() {
         launchScenario<HomeActivity> {
-            R.id.homeOktFab.click()
-            "OKT".clickWithTextInPopup()
+            R.id.homeDiscoverFab.click()
+            "OKT".clickWithText()
 
             waitForMapClear()
 
-            R.id.oktRoutesCloseButton.click()
+            R.id.headerCloseButton.clickWithParent(R.id.oktRoutesHeaderContainer)
 
             waitForMapClear()
 
@@ -247,8 +244,8 @@ class OktRoutesUiTest {
     @Test
     fun whenRecreate_thenOktRoutesDisplaysAgain() {
         launchScenario<HomeActivity> {
-            R.id.homeOktFab.click()
-            "OKT".clickWithTextInPopup()
+            R.id.homeDiscoverFab.click()
+            "OKT".clickWithText()
 
             recreate()
             waitForRecreate()

@@ -28,8 +28,6 @@ import hu.mostoha.mobile.android.huki.osmdroid.tilesource.MapnikTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.MerreTekerjekTileSource
 import hu.mostoha.mobile.android.huki.osmdroid.tilesource.TuHuTileSource
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
@@ -89,10 +87,6 @@ class LayersUiTest {
     @BindValue
     @JvmField
     val geocodingRepository: GeocodingRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @Before
     fun init() {

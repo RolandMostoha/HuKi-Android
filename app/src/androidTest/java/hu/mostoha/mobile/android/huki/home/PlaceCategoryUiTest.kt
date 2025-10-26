@@ -23,8 +23,6 @@ import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceCategoryMarker
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_GEOMETRY_LANDSCAPE
@@ -101,10 +99,6 @@ class PlaceCategoryUiTest {
     @BindValue
     @JvmField
     val geocodingRepository: GeocodingRepository = mockk()
-
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
 
     @Before
     fun init() {
@@ -226,7 +220,7 @@ class PlaceCategoryUiTest {
                 BottomSheetBehavior.STATE_EXPANDED
             )
             waitForBottomSheetState()
-            PlaceCategory.DRINKING_WATER.title.clickWithText()
+            PlaceCategory.PARKING.title.clickWithText()
 
             R.id.homeMapView.hasOverlayCount<PlaceCategoryMarker>(1)
         }
@@ -297,7 +291,7 @@ class PlaceCategoryUiTest {
                 osmTags = mapOf(OsmTags.OPENING_HOURS.osmKey to "Mo-Fr 08:00-18:00")
             ),
             DEFAULT_PLACE_RELATION.copy(
-                placeCategory = PlaceCategory.DRINKING_WATER,
+                placeCategory = PlaceCategory.PARKING,
                 osmTags = mapOf(OsmTags.FEE.osmKey to "Yes")
             ),
         )

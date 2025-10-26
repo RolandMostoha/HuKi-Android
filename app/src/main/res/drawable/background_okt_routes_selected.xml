@@ -3,6 +3,6 @@
 
     <solid android:color="@color/colorOktSelected" />
 
-    <corners android:radius="@dimen/default_corner_size_selected" />
+    <corners android:radius="@dimen/default_corner_size_button" />
 
 </shape>

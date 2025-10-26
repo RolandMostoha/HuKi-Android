@@ -32,7 +32,7 @@
     <string name="accessibility_home_fab_settings">Beállítások</string>
     <string name="accessibility_home_fab_history">Előzmények</string>
     <string name="accessibility_home_fab_place_categories">Kategória kereső</string>
-    <string name="accessibility_home_fab_okt">Országos Kék Túra</string>
+    <string name="accessibility_home_fab_discover">Felfedezés</string>
     <string name="accessibility_home_fab_hike_mode">Túra mód</string>
     <string name="accessibility_home_fab_hike_mode_compass">Élő iránytű</string>
     <string name="accessibility_home_zoom_in">Zoom be</string>
@@ -295,10 +295,21 @@
     <string name="okt_okt_title">OKT</string>
     <string name="okt_okt_subtitle">Országos Kéktúra</string>
     <string name="okt_rpddk_title">RPDDK</string>
-    <string name="okt_rpddk_subtitle">Rockenbauer Pál Dél-dunántúli Kéktúra</string>
+    <string name="okt_rpddk_subtitle">Dél-dunántúli Kéktúra</string>
+    <string name="okt_rpddk_subtitle_long">Rockenbauer Pál Dél-dunántúli Kéktúra</string>
     <string name="okt_akt_title">AKT</string>
     <string name="okt_akt_subtitle">Alföldi Kétúra</string>
-    <string name="okt_official_website_subtitle">OKT hivatalos oldala</string>
+    <string name="okt_official_info">A Kéktúra hivatalos oldala:\nhttp://www.kektura.hu/</string>
+
+    <string name="landscapes_title">Tájegységek</string>
+    <string name="landscapes_details_button_title">Részletek</string>
+    <string name="landscapes_header_title">Tájegységek és kirándulóhelyek</string>
+
+    <string name="destinations_header_title">Kirándulóhelyek</string>
+    <string name="destinations_info">A HuKi-ban található kirándulóhelyek a személyes kutatómunkám eredménye, kb. 350 látnivalóval.\n\nOlyan helyeket próbáltam gyűjteni, ahova érdemes ellátogatni egy kirándulás vagy túra során.\n\nHa ismersz egy jó helyet ami kimaradt, vagy hibát tapasztalsz benne, nyugodtan keress meg!</string>
+
+    <string name="discover_title">Fedezd fel Magyarországot!</string>
+    <string name="discover_landscapes_button_title">Tájegységek</string>
 
     <string name="osm_tag_no">Nem</string>
     <string name="osm_tag_yes">Igen</string>

@@ -64,5 +64,12 @@ enum class SymbolType(val osmValue: String, @DrawableRes val iconRes: Int) {
     SM("sm", R.drawable.ic_symbol_sm),
     ZM("zm", R.drawable.ic_symbol_zm),
     PM("pm", R.drawable.ic_symbol_pm),
-    SMZ("smz", R.drawable.ic_symbol_smz)
+    SMZ("smz", R.drawable.ic_symbol_smz);
+
+    companion object {
+        fun fromOsmValue(osmValue: String): SymbolType? {
+            return entries.associateBy { it.osmValue }[osmValue]
+        }
+    }
+
 }

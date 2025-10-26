@@ -37,16 +37,24 @@ class OktRoutesBottomSheetDialog(
     ) {
         postMain {
             with(binding) {
-                oktRoutesTitle.text = when (oktType) {
+                oktRoutesHeaderContainer.headerImage.setImageResource(
+                    when (oktType) {
+                        OktType.OKT -> R.drawable.ic_okt_okt
+                        OktType.RPDDK -> R.drawable.ic_okt_rpddk
+                        OktType.AKT -> R.drawable.ic_okt_akt
+                    }
+                )
+                oktRoutesHeaderContainer.headerTitle.text = when (oktType) {
                     OktType.OKT -> context.getString(R.string.okt_okt_title)
                     OktType.RPDDK -> context.getString(R.string.okt_rpddk_title)
                     OktType.AKT -> context.getString(R.string.okt_akt_title)
                 }
-                oktRoutesSubtitle.text = when (oktType) {
+                oktRoutesHeaderContainer.headerSubTitle.text = when (oktType) {
                     OktType.OKT -> context.getString(R.string.okt_okt_subtitle)
-                    OktType.RPDDK -> context.getString(R.string.okt_rpddk_subtitle)
+                    OktType.RPDDK -> context.getString(R.string.okt_rpddk_subtitle_long)
                     OktType.AKT -> context.getString(R.string.okt_akt_subtitle)
                 }
+                oktRoutesHeaderContainer.headerCloseButton.setOnClickListener { onCloseClick.invoke() }
 
                 if (oktRoutesAdapter == null) {
                     oktRoutesAdapter = OktRoutesAdapter(
@@ -66,7 +74,6 @@ class OktRoutesBottomSheetDialog(
                     oktRoutesList.setHasFixedSize(true)
                     oktRoutesList.adapter = oktRoutesAdapter
                 }
-                oktRoutesCloseButton.setOnClickListener { onCloseClick.invoke() }
             }
 
             oktRoutesAdapter?.submitList(oktRoutes)

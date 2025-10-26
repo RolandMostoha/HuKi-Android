@@ -66,6 +66,36 @@ fun List<Location>.calculateCenter(): Location {
 }
 
 /**
+ * Sparsify the locations by the given [minDistance], so that all locations are at least [minDistance] apart.
+ */
+fun List<Location>.sparsify(minDistance: Int): List<Location> {
+    val locations = this
+    val sparsified = mutableListOf<Location>()
+
+    if (locations.isEmpty()) {
+        return sparsified
+    }
+
+    sparsified.add(locations.first())
+
+    var lastAddedLocation = locations.first()
+    for (location in locations) {
+        if (lastAddedLocation.distanceBetween(location) >= minDistance) {
+            sparsified.add(location)
+
+            lastAddedLocation = location
+        }
+    }
+
+    // Ensure the last point is included
+    if (sparsified.last() != locations.last()) {
+        sparsified.add(locations.last())
+    }
+
+    return sparsified
+}
+
+/**
  * Calculates direction arrows from the given [GeoPoint]s with an evenly distributed distance.
  */
 @Suppress("MagicNumber")

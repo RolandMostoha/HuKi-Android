@@ -12,9 +12,3 @@ data class PlaceArea(
     val distanceMessage: Message,
     @DrawableRes val iconRes: Int,
 )
-
-enum class PlaceAreaType {
-    MAP_SEARCH,
-    PLACE_DETAILS,
-    LANDSCAPE
-}

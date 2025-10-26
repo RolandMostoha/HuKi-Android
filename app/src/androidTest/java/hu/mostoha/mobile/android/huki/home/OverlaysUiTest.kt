@@ -15,11 +15,9 @@ import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
 import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
-import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolygon
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeDetailsPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
-import hu.mostoha.mobile.android.huki.repository.LocalLandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.PlacesRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION
@@ -97,10 +95,6 @@ class OverlaysUiTest {
     @JvmField
     val geocodingRepository: GeocodingRepository = mockk()
 
-    @BindValue
-    @JvmField
-    val landscapeRepository: LandscapeRepository = LocalLandscapeRepository()
-
     @Before
     fun init() {
         hiltRule.inject()
@@ -119,14 +113,14 @@ class OverlaysUiTest {
         launchScenario<HomeActivity> {
             R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
-            R.id.homeMapView.hasOverlay<LandscapePolygon>()
+            R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
             val searchText = DEFAULT_SEARCH_TEXT
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_WAY.name.clickWithTextInPopup()
 
-            R.id.homeMapView.hasNoOverlay<LandscapePolygon>()
+            R.id.homeMapView.hasNoOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlay<Marker>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
             R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
@@ -152,9 +146,9 @@ class OverlaysUiTest {
             R.id.homePlaceCategoriesFab.click()
             landscape.nameRes.clickWithText()
 
-            R.id.homeMapView.hasNoOverlay<Polyline>()
-            R.id.homeMapView.hasOverlay<LandscapePolygon>()
+            R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
+            // TODO R.id.homeMapView.hasNoOverlay<Polyline>()
         }
     }
 

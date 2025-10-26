@@ -7,13 +7,12 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.extensions.toMillis
-import hu.mostoha.mobile.android.huki.interactor.LandscapeInteractor
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
-import hu.mostoha.mobile.android.huki.interactor.exception.UnknownException
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Geometry
 import hu.mostoha.mobile.android.huki.model.domain.HikingRoute
+import hu.mostoha.mobile.android.huki.model.domain.HikingRouteDetails
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.domain.Place
@@ -27,6 +26,7 @@ import hu.mostoha.mobile.android.huki.model.mapper.PlaceDomainUiMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.SymbolType
 import hu.mostoha.mobile.android.huki.model.ui.GeometryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.HikingRouteUiModel
+import hu.mostoha.mobile.android.huki.model.ui.LandscapeMapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.MyLocationConfigUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
@@ -34,6 +34,7 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.MapConfigRepository
 import hu.mostoha.mobile.android.huki.repository.OktRepository
 import hu.mostoha.mobile.android.huki.repository.PlaceHistoryRepository
@@ -56,18 +57,16 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.util.DEFAULT_LOCAL_DATE
 import hu.mostoha.mobile.android.huki.util.DEFAULT_OKT_ROUTES
 import hu.mostoha.mobile.android.huki.util.MainCoroutineRule
+import hu.mostoha.mobile.android.huki.util.OSM_ID_LANDSCAPES_ALL
 import hu.mostoha.mobile.android.huki.util.answerDefaults
-import hu.mostoha.mobile.android.huki.util.flowOfError
 import hu.mostoha.mobile.android.huki.util.runTestDefault
 import hu.mostoha.mobile.android.huki.util.toTestPlaceArea
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
 import org.junit.Rule
@@ -84,7 +83,7 @@ class HomeViewModelTest {
     private val placeHistoryRepository = mockk<PlaceHistoryRepository>()
     private val geocodingRepository = mockk<GeocodingRepository>()
     private val mapConfigRepository = mockk<MapConfigRepository>()
-    private val landscapeInteractor = mockk<LandscapeInteractor>()
+    private val landscapeRepository = mockk<LandscapeRepository>()
     private val oktRepository = mockk<OktRepository>()
     private val myLocationProvider = mockk<AsyncMyLocationProvider>()
     private val dateTimeProvider = mockk<DateTimeProvider>()
@@ -103,7 +102,6 @@ class HomeViewModelTest {
         coEvery { placeHistoryRepository.getPlaces() } returns flow { emptyList<Place>() }
         coEvery { placeHistoryRepository.savePlace(any(), any()) } returns Unit
         coEvery { placeHistoryRepository.clearOldPlaces() } returns Unit
-        mockLandscapes()
         mockOktRoutes()
 
         viewModel = HomeViewModel(
@@ -115,39 +113,13 @@ class HomeViewModelTest {
             geocodingRepository,
             oktRepository,
             mapConfigRepository,
-            landscapeInteractor,
+            landscapeRepository,
             homeUiModelMapper,
             placeDomainUiMapper,
             oktRoutesMapper,
             dateTimeProvider,
         )
     }
-
-    @Test
-    fun `Given domain error, when load landscape details, then error message is emitted`() =
-        runTestDefault {
-            val domainException = UnknownException(Exception(""))
-            every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(domainException)
-
-            viewModel.loadLandscapeDetails(DEFAULT_LANDSCAPE.osmId)
-
-            viewModel.errorMessage.test {
-                assertThat(awaitItem()).isEqualTo(R.string.error_message_unknown.toMessage())
-            }
-        }
-
-    @Test
-    fun `Given unexpected error, when load landscape details, then exception logger is called`() =
-        runTestDefault {
-            val unexpectedException = IllegalStateException(Exception(""))
-            every { landscapeInteractor.requestGetLandscapesFlow(any()) } returns flowOfError(unexpectedException)
-
-            viewModel.loadLandscapeDetails(DEFAULT_LANDSCAPE.osmId)
-
-            advanceUntilIdle()
-
-            verify { exceptionLogger.recordException(any()) }
-        }
 
     @Test
     fun `Given place, when loadPlaceDetails, then place details is emitted`() =
@@ -279,16 +251,16 @@ class HomeViewModelTest {
     fun `Given hiking route, when loadHikingRouteDetails, then hiking routes are emitted`() =
         runTestDefault {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
-            val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
-            coEvery { placesRepository.getGeometry(osmId, any()) } returns geometry
+            val hikingRouteDetails = HikingRouteDetails(DEFAULT_HIKING_ROUTE, geometry)
+            coEvery { placesRepository.getHikingRouteDetails(osmId) } returns hikingRouteDetails
 
             viewModel.placeDetails.test {
-                viewModel.loadHikingRouteDetails(hikingRouteUiModel)
+                viewModel.loadHikingRouteDetails(osmId)
 
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(
-                    placeDomainUiMapper.mapToHikingRouteDetails(hikingRouteUiModel, geometry)
+                    placeDomainUiMapper.mapToHikingRouteDetails(hikingRouteDetails)
                 )
             }
         }
@@ -297,12 +269,11 @@ class HomeViewModelTest {
     fun `When loadHikingRouteDetails, then follow location should be disabled`() =
         runTestDefault {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
-            val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             coEvery { placesRepository.getGeometry(osmId, any()) } returns geometry
 
             viewModel.myLocationConfigUiModel.test {
-                viewModel.loadHikingRouteDetails(hikingRouteUiModel)
+                viewModel.loadHikingRouteDetails(osmId)
 
                 assertThat(awaitItem()).isEqualTo(MyLocationConfigUiModel())
                 assertThat(awaitItem()).isEqualTo(MyLocationConfigUiModel(isFollowLocationEnabled = false))
@@ -317,7 +288,6 @@ class HomeViewModelTest {
             val boundingBox = DEFAULT_BOUNDING_BOX_FOR_HIKING_ROUTES
             val placeArea = placeName.toTestPlaceArea(boundingBox)
             val hikingRoutes = listOf(DEFAULT_HIKING_ROUTE)
-            val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val geometry = DEFAULT_HIKING_ROUTE_GEOMETRY
             coEvery { placesRepository.getGeometry(osmId, any()) } returns geometry
             coEvery { placesRepository.getHikingRoutes(any()) } returns hikingRoutes
@@ -327,7 +297,7 @@ class HomeViewModelTest {
                 assertThat(awaitItem()).isNull()
                 assertThat(awaitItem()).isEqualTo(homeUiModelMapper.mapHikingRoutes(placeArea, hikingRoutes))
 
-                viewModel.loadHikingRouteDetails(hikingRouteUiModel)
+                viewModel.loadHikingRouteDetails(osmId)
                 assertThat(awaitItem()).isNull()
             }
         }
@@ -336,12 +306,11 @@ class HomeViewModelTest {
     fun `Given domain error, when loadHikingRouteDetails, then error message is emitted`() =
         runTestDefault {
             val osmId = DEFAULT_HIKING_ROUTE.osmId
-            val hikingRouteUiModel = DEFAULT_HIKING_ROUTE_UI_MODEL
             val errorRes = R.string.error_message_too_many_requests.toMessage()
-            coEvery { placesRepository.getGeometry(osmId, any()) } throws DomainException(errorRes)
+            coEvery { placesRepository.getHikingRouteDetails(osmId) } throws DomainException(errorRes)
 
             viewModel.errorMessage.test {
-                viewModel.loadHikingRouteDetails(hikingRouteUiModel)
+                viewModel.loadHikingRouteDetails(osmId)
 
                 assertThat(awaitItem()).isEqualTo(R.string.error_message_too_many_requests.toMessage())
             }
@@ -391,6 +360,68 @@ class HomeViewModelTest {
                 assertThat(awaitItem()!!.routes[1].isSelected).isTrue()
             }
         }
+
+    @Test
+    fun `When loadLandscapeMap, then landscape map is updated`() =
+        runTestDefault {
+            viewModel.landscapeMap.test {
+                val landscapeGeometryList = listOf(
+                    LOCAL_LANDSCAPES.first() to DEFAULT_HIKING_ROUTE_GEOMETRY
+                )
+                coEvery { landscapeRepository.getLandscapeGeometryList() } returns landscapeGeometryList
+
+                viewModel.loadLandscapeMap()
+
+                assertThat(awaitItem()).isEqualTo(null)
+                assertThat(awaitItem()).isEqualTo(
+                    LandscapeMapUiModel(
+                        landscapes = homeUiModelMapper.mapLandscapesGeometry(landscapeGeometryList),
+                        selectedLandscape = null,
+                        lastSelectedLandscape = null,
+                    )
+                )
+            }
+        }
+
+    @Test
+    fun `Given landscape, when selectLandscape, then landscape map is updated`() {
+        runTestDefault {
+            viewModel.landscapeMap.test {
+                val landscape = LOCAL_LANDSCAPES.first()
+                val landscapeGeometryList = listOf(
+                    landscape to DEFAULT_HIKING_ROUTE_GEOMETRY
+                )
+                coEvery { landscapeRepository.getLandscapeGeometryList() } returns landscapeGeometryList
+
+                viewModel.loadLandscapeMap()
+
+                val landscapes = homeUiModelMapper.mapLandscapesGeometry(landscapeGeometryList)
+                val selectedLandscape = landscapes.first()
+
+                skipItems(2)
+
+                viewModel.selectLandscape(landscape.osmId)
+
+                assertThat(awaitItem()).isEqualTo(
+                    LandscapeMapUiModel(
+                        landscapes = listOf(selectedLandscape.copy(isSelected = true)),
+                        selectedLandscape = selectedLandscape,
+                        lastSelectedLandscape = null,
+                    )
+                )
+
+                viewModel.selectLandscape(OSM_ID_LANDSCAPES_ALL)
+
+                assertThat(awaitItem()).isEqualTo(
+                    LandscapeMapUiModel(
+                        landscapes = listOf(selectedLandscape.copy(isSelected = false)),
+                        selectedLandscape = null,
+                        lastSelectedLandscape = selectedLandscape,
+                    )
+                )
+            }
+        }
+    }
 
     @Test
     fun `When updateMyLocationConfig, then my location UI model should be updated`() =
@@ -448,12 +479,6 @@ class HomeViewModelTest {
             }
         }
 
-    private fun mockLandscapes() {
-        val landscapes = listOf(DEFAULT_LANDSCAPE)
-
-        every { landscapeInteractor.requestGetLandscapesFlow() } returns flowOf(landscapes)
-    }
-
     private fun mockOktRoutes() {
         coEvery { oktRepository.getOktRoutes(any()) } returns DEFAULT_OKT_ROUTES
     }
@@ -507,7 +532,6 @@ class HomeViewModelTest {
             south = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_SOUTH,
             west = DEFAULT_HIKING_ROUTE_BOUNDING_BOX_WEST
         )
-        private val DEFAULT_LANDSCAPE = LOCAL_LANDSCAPES.first()
     }
 
 }
