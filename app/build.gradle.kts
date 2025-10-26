@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.grgit)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -51,6 +52,7 @@ android {
     buildFeatures {
         buildConfig = true
         viewBinding = true
+        compose = true
     }
 
     buildTypes {
@@ -125,6 +127,12 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.facebook.shimmer)
     implementation(libs.jpwasabeef.recyclerview.animators)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.ui)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.activity.compose)
 
     // Hilt
     implementation(libs.google.dagger.hilt.android)
