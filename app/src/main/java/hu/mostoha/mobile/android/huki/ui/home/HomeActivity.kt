@@ -285,6 +285,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -342,6 +344,12 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             insetSharedViewModel.updateResult(InsetResult(insets))
 
             WindowInsetsCompat.CONSUMED
+        }
+
+        homeContainer.doOnAttach { view ->
+            if (ViewCompat.getRootWindowInsets(view) == null) {
+                ViewCompat.requestApplyInsets(view)
+            }
         }
     }
 
