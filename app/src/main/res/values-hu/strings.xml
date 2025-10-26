@@ -135,7 +135,7 @@
     <string name="waypoint_comment_hint">Komment</string>
     <string name="waypoint_comment_info_button">Az állomás neve és a kommentje bekerülnek a mentett GPX fájlba, így az bármikor újra előhozható.</string>
 
-    <string name="licences_osm_copyright_notice">© OpenStreetMap közreműködők</string>
+    <string name="licences_osm_copyright_notice">© OpenStreetMap</string>
     <string name="licences_title">Licencek</string>
     <string name="licences_notices">Licencek elérhetőségei</string>
     <string name="licences_ok_button_title">Rendben</string>

@@ -153,7 +153,7 @@
     <string name="waypoint_comment_hint">Comment</string>
     <string name="waypoint_comment_info_button">The destination name and comment are included in the saved GPX file, so it can be retrieved at any time.</string>
 
-    <string name="licences_osm_copyright_notice">© OpenStreetMap contributors</string>
+    <string name="licences_osm_copyright_notice">© OpenStreetMap</string>
     <string name="licences_title">Licenses</string>
     <string name="licences_notices">License resources</string>
     <string name="licences_ok_button_title">OK</string>

@@ -38,6 +38,7 @@ class OsmLicencesOverlay(
 
     private val hitRect: Rect = Rect()
     private val textBounds: Rect = Rect()
+    private val textPadding = context.resources.getDimensionPixelSize(R.dimen.space_small)
 
     override fun draw(canvas: Canvas, projection: Projection) {
         val canvasHeight = canvas.height
@@ -47,20 +48,22 @@ class OsmLicencesOverlay(
 
         projection.save(canvas, false, false)
 
-        canvas.drawText(copyrightNotice, x, y, textPaint)
         textPaint.getTextBounds(copyrightNotice, 0, copyrightNotice.length, textBounds)
+
         hitRect.set(
-            0,
-            canvasHeight - (textBounds.height() + 2 * yOffset),
-            textBounds.width() + 2 * xOffset,
-            canvasHeight
+            (x - textPadding).toInt(),
+            (y + textBounds.top - textPadding).toInt(),
+            (x + textBounds.width() + textPadding).toInt(),
+            (y + textBounds.bottom + textPadding).toInt()
         )
+
+        canvas.drawText(copyrightNotice, x, y, textPaint)
 
         projection.restore(canvas, false)
     }
 
     override fun onSingleTapConfirmed(motionEvent: MotionEvent, mapView: MapView): Boolean {
-        return if (isCopyrightHit(motionEvent, mapView)) {
+        return if (isCopyrightHit(motionEvent)) {
             analyticsService.copyrightClicked()
 
             showLicencesDialog()
@@ -71,14 +74,8 @@ class OsmLicencesOverlay(
         }
     }
 
-    private fun isCopyrightHit(event: MotionEvent, mapView: MapView): Boolean {
-        val projection = mapView.projection ?: return false
-        val screenRect = projection.intrinsicScreenRect
-
-        val x = screenRect.left + event.x.toInt()
-        val y = screenRect.top + event.y.toInt()
-
-        return hitRect.contains(x, y)
+    private fun isCopyrightHit(event: MotionEvent): Boolean {
+        return hitRect.contains(event.x.toInt(), event.y.toInt())
     }
 
     @Suppress("LongMethod")
