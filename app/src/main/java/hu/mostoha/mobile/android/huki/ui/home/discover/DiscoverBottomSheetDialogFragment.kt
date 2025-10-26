@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -71,7 +72,8 @@ class DiscoverBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     private fun initViews() {
         with(binding.discoverHeaderContainer) {
-            headerImage.setImageResource(R.drawable.ic_hungary_solid)
+            headerImage.setImageResource(R.drawable.ic_home_fab_discover)
+            headerImage.scaleType = ImageView.ScaleType.CENTER
             headerTitle.text = requireContext().getString(R.string.discover_title)
             headerSubTitle.gone()
             headerCloseButton.setOnClickListener {
