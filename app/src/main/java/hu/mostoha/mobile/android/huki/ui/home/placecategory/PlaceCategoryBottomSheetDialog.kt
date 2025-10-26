@@ -34,6 +34,9 @@ class PlaceCategoryBottomSheetDialog(
             }
         }
 
+        binding.placeCategoryBottomSheetDestinationsInfo.onOpen = {
+            analyticsService.destinationInfoClicked()
+        }
         binding.placeCategoryBottomSheetHikeRecommendationsInfo.setOnClickListener {
             analyticsService.hikeRecommenderInfoClicked()
             onHikingTrailsClick.invoke()

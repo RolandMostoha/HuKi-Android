@@ -27,6 +27,8 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun destinationNavigationClicked(name: String) = Unit
 
+    override fun destinationInfoClicked() = Unit
+
     override fun hikeRecommenderInfoClicked() = Unit
 
     override fun hikeRecommendationClicked(hikeRecommendation: HikeRecommendation) = Unit

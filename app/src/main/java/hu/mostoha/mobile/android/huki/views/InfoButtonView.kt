@@ -33,7 +33,7 @@ class InfoButtonView @JvmOverloads constructor(
             val message = getString(R.styleable.InfoButtonView_messageRes)
 
             infoButton.setOnClickListener {
-                val contentView = context.inflater.inflate(R.layout.view_info_button_popup, this@InfoButtonView)
+                val contentView = context.inflater.inflate(R.layout.view_info_button_popup, null)
                 val simpleTooltip = SimpleTooltip.Builder(context)
                     .anchorView(infoButton)
                     .contentView(contentView, R.id.infoButtonPopupMessageText)

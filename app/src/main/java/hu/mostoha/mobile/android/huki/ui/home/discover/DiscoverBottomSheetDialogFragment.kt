@@ -39,6 +39,7 @@ class DiscoverBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
 
     private val hikeRecommendationInfo by lazy { binding.discoverHikeRecommendationsInfo }
+    private val discoverLandscapesInfo by lazy { binding.discoverLandscapesInfo }
     private val oktRoutesInfo by lazy { binding.discoverOktRoutesInfo }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -84,6 +85,9 @@ class DiscoverBottomSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun initLandscapes() {
+        discoverLandscapesInfo.onOpen = {
+            analyticsService.destinationInfoClicked()
+        }
         binding.discoverLandscapesChipGroup.removeAllViews()
         binding.discoverLandscapesChipGroup.addVerticalChip(
             title = getString(R.string.discover_landscapes_button_title).toMessage(),

@@ -27,6 +27,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_PLACE = "select_place"
         private const val EVENT_SELECT_PLACE_FROM_HISTORY = "select_place_from_history"
         private const val EVENT_SELECT_DISCOVER = "select_discover"
+        private const val EVENT_SELECT_DESTINATIONS_INFO = "select_destinations_info"
         private const val EVENT_SELECT_LANDSCAPE_MAP = "select_landscape_map"
         private const val EVENT_SELECT_LANDSCAPE = "select_landscape"
         private const val EVENT_SELECT_DESTINATION = "select_destination"
@@ -166,6 +167,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         firebaseAnalytics.logEvent(EVENT_SELECT_DESTINATION_NAVIGATION) {
             param(PARAM_SELECTED_DESTINATION, name)
         }
+    }
+
+    override fun destinationInfoClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_DESTINATIONS_INFO, null)
     }
 
     override fun hikeRecommenderInfoClicked() {

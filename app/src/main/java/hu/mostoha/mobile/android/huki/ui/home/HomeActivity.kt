@@ -12,10 +12,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type.displayCutout
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.core.view.children
+import androidx.core.view.doOnAttach
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
@@ -1400,10 +1402,11 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     }
 
     private fun initLandscapeDetails(landscapeDetails: LandscapeDetailsUiModel?) {
+        homeMapView.closeAllInfoWindowsForMarkers<LandscapeDetailsDestinationMarker>()
+
         when {
             landscapeDetails == null -> {
                 homeMapView.removeOverlay(OverlayType.LANDSCAPE_DETAILS)
-                homeMapView.closeAllInfoWindowsForMarkers<LandscapeDetailsDestinationMarker>()
             }
             homeMapView.hasNoOverlay(landscapeDetails.landscapeUiModel.osmId) -> {
                 homeMapView.removeOverlay(OverlayType.LANDSCAPE_DETAILS)

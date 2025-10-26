@@ -26,6 +26,8 @@ interface AnalyticsService {
 
     fun destinationNavigationClicked(name: String)
 
+    fun destinationInfoClicked()
+
     fun hikeRecommenderInfoClicked()
 
     fun hikeRecommendationClicked(hikeRecommendation: HikeRecommendation)

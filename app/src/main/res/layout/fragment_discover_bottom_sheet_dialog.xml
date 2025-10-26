@@ -37,6 +37,7 @@
                     android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
 
                 <hu.mostoha.mobile.android.huki.views.InfoButtonView
+                    android:id="@+id/discoverLandscapesInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:messageRes="@string/destinations_info" />
