@@ -268,6 +268,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
     private val homeAltitudeText by lazy { binding.homeAltitudeText }
     private val mapZoomInFab by lazy { binding.mapZoomInFab }
     private val mapZoomOutFab by lazy { binding.mapZoomOutFab }
+    private val gpxVisibilityButton by lazy { binding.gpxVisibilityButton }
 
     private lateinit var placeFinderPopup: PlaceFinderPopup
     private lateinit var placeDetailsBottomSheet: PlaceDetailsBottomSheetDialog
@@ -347,7 +348,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
 
         homeContainer.doOnAttach { view ->
-            if (ViewCompat.getRootWindowInsets(view) == null) {
+            if (ViewCompat.getRootWindowInsets(view) == null && insetSharedViewModel.isEmpty()) {
                 ViewCompat.requestApplyInsets(view)
             }
         }
@@ -982,6 +983,22 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 .flowWithLifecycle(lifecycle)
                 .collect { gpxUiModel ->
                     initGpxDetails(gpxUiModel)
+                }
+        }
+        lifecycleScope.launch {
+            layersViewModel.gpxDetailsUiModel
+                .map { it?.id }
+                .flowWithLifecycle(lifecycle)
+                .collect { gpxId ->
+                    if (gpxId != null) {
+                        gpxVisibilityButton.visible()
+                        gpxVisibilityButton.setOnClickListener {
+                            homeMapView.switchOverlayVisibility<GpxPolyline>(gpxId)
+                        }
+                    } else {
+                        gpxVisibilityButton.gone()
+                        gpxVisibilityButton.setOnClickListener(null)
+                    }
                 }
         }
     }

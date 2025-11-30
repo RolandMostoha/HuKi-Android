@@ -37,6 +37,7 @@
     <string name="accessibility_home_fab_discover">Discover</string>
     <string name="accessibility_home_fab_hike_mode">Hike mode</string>
     <string name="accessibility_home_fab_hike_mode_compass">Live Compass</string>
+    <string name="accessibility_home_gpx_visibility">Switch GPX visibility</string>
     <string name="accessibility_home_zoom_in">Zoom in</string>
     <string name="accessibility_home_zoom_out">Zoom out</string>
     <string name="accessibility_okt_routes_action_button">%s action button</string>

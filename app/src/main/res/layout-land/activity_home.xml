@@ -211,6 +211,21 @@
             app:layout_constraintTop_toBottomOf="@id/homePlaceCategoriesFab" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/gpxVisibilityButton"
+            style="@style/DefaultFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/home_horizontal_margin"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginEnd="@dimen/space_large"
+            android:contentDescription="@string/accessibility_home_gpx_visibility"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
+            android:src="@drawable/ic_gpx_details_visibility"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/homeSettingsFab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/mapZoomInFab"
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"

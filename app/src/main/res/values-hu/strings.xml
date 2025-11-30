@@ -35,6 +35,7 @@
     <string name="accessibility_home_fab_discover">Felfedezés</string>
     <string name="accessibility_home_fab_hike_mode">Túra mód</string>
     <string name="accessibility_home_fab_hike_mode_compass">Élő iránytű</string>
+    <string name="accessibility_home_gpx_visibility">GPX láthatóság kapcsolása</string>
     <string name="accessibility_home_zoom_in">Zoom be</string>
     <string name="accessibility_home_zoom_out">Zoom ki</string>
     <string name="accessibility_okt_routes_action_button">%s menü gomb</string>

@@ -19,4 +19,8 @@ open class ResultSharedViewModel<T> : ViewModel() {
         _result.value = null
     }
 
+    fun isEmpty(): Boolean {
+        return _result.value == null
+    }
+
 }

@@ -1,6 +1,10 @@
 package hu.mostoha.mobile.android.huki.home
 
 import android.Manifest
+import android.content.Intent
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -19,8 +23,10 @@ import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_ALTITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LATITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_MY_LOCATION_LONGITUDE
+import hu.mostoha.mobile.android.huki.testdata.Gpx.getTestGpxFileResult
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithSibling
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isFollowLocationEnabled
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
@@ -69,7 +75,7 @@ class HikeModeUiTest {
     fun init() {
         hiltRule.inject()
         osmConfiguration.init()
-
+        Intents.init()
     }
 
     @Test
@@ -98,6 +104,23 @@ class HikeModeUiTest {
             R.id.mapZoomInFab.isNotDisplayed()
             R.id.mapZoomOutFab.isNotDisplayed()
             R.id.homeMapView.isFollowLocationEnabled(false)
+        }
+    }
+
+    @Test
+    fun givenGpxDetails_whenClickOnStart_thenVisibilityFabDisplays() {
+        answerTestLocationProvider()
+
+        launchScenario<HomeActivity> {
+            intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(getTestGpxFileResult())
+
+            R.id.gpxVisibilityButton.isNotDisplayed()
+
+            R.id.homeLayersFab.click()
+            R.id.itemLayersActionButton.clickWithSibling(R.string.layers_gpx_title)
+            R.id.gpxDetailsStartButton.click()
+
+            R.id.gpxVisibilityButton.isDisplayed()
         }
     }
 

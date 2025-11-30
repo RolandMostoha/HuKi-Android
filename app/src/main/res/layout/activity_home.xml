@@ -360,7 +360,7 @@
             android:layout_marginBottom="@dimen/home_copyright_bottom_margin"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="invisible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
