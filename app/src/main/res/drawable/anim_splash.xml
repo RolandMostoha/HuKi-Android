@@ -8,6 +8,6 @@
 
     <target
         android:animation="@animator/animator_splash_fade"
-        android:name="iconPath" />
+        android:name="animationGroup" />
 
 </animated-vector>

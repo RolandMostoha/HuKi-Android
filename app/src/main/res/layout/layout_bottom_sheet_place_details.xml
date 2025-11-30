@@ -78,6 +78,7 @@
         android:id="@+id/placeDetailsButtonGroupScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_medium"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:paddingHorizontal="@dimen/space_extra_large"

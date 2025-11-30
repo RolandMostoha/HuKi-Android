@@ -172,7 +172,7 @@
             android:contentDescription="@string/accessibility_home_fab_settings"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_settings"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homePlaceCategoryContainer" />
 
@@ -186,7 +186,7 @@
             android:contentDescription="@string/accessibility_home_fab_layers"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_layers"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeSettingsFab" />
 
@@ -200,7 +200,7 @@
             android:contentDescription="@string/accessibility_home_fab_history"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_history"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeLayersFab" />
 
@@ -215,7 +215,7 @@
             android:importantForAccessibility="no"
             android:src="@drawable/ic_home_fab_support"
             android:visibility="gone"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homePlaceCategoryContainer" />
 
@@ -231,7 +231,7 @@
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_hike_mode_compass"
             android:visibility="gone"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeLayersFab" />
 
@@ -245,7 +245,7 @@
             android:contentDescription="@string/accessibility_home_fab_discover"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_discover"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeSupportFab" />
 
@@ -259,7 +259,7 @@
             android:contentDescription="@string/accessibility_home_fab_place_categories"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_place_category"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeDiscoverFab" />
 
@@ -289,6 +289,17 @@
         app:layout_behavior="@string/fab_transformation_sheet_behavior">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/gpxVisibilityButton"
+            style="@style/DefaultFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/accessibility_home_gpx_visibility"
+            android:elevation="@dimen/default_elevation_map_interactive_views"
+            android:layout_marginBottom="@dimen/space_small"
+            android:src="@drawable/ic_gpx_details_visibility"
+            app:fabCustomSize="@dimen/default_fab_size_mini" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/mapZoomInFab"
             style="@style/DefaultFloatingActionButton"
             android:layout_width="wrap_content"
@@ -296,7 +307,7 @@
             android:contentDescription="@string/accessibility_home_zoom_in"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_map_zoom_controller_plus"
-            app:fabSize="mini" />
+            app:fabCustomSize="@dimen/default_fab_size_mini" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/mapZoomOutFab"
@@ -307,7 +318,7 @@
             android:contentDescription="@string/accessibility_home_zoom_out"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_map_zoom_controller_minus"
-            app:fabSize="mini" />
+            app:fabCustomSize="@dimen/default_fab_size_mini" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/homeHikeModeFab"
@@ -317,7 +328,7 @@
             android:contentDescription="@string/accessibility_home_fab_hike_mode"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_hike_mode"
-            app:fabSize="mini" />
+            app:fabCustomSize="@dimen/default_fab_size_mini" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/homeRoutePlannerFab"

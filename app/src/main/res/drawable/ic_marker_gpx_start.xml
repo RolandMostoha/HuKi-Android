@@ -4,10 +4,10 @@
     <item android:drawable="@drawable/ic_marker_gpx_background" />
 
     <item
-        android:bottom="6dp"
+        android:bottom="7dp"
         android:drawable="@drawable/ic_marker_gpx_start_foreground"
-        android:end="6dp"
-        android:start="6dp"
-        android:top="6dp" />
+        android:end="7dp"
+        android:start="7dp"
+        android:top="7dp" />
 
 </layer-list>

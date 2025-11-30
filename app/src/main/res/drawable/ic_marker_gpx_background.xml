@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/icon_size_extra_extra_large"
-    android:height="@dimen/icon_size_extra_extra_large"
+    android:width="@dimen/gpx_marker_size"
+    android:height="@dimen/gpx_marker_size"
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path

@@ -33,13 +33,12 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/homeSearchBarContainer"
-            android:layout_width="0dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_small"
             app:cardBackgroundColor="@color/colorBackground"
             app:cardElevation="@dimen/default_elevation_map_interactive_views"
-            app:layout_constraintEnd_toStartOf="@id/homeLayersFab"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearance="@style/DefaultShapeAppearance.InputField.OnMap"
@@ -127,11 +126,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/home_horizontal_margin"
             android:layout_marginTop="@dimen/space_medium"
-            android:layout_marginEnd="@dimen/space_large"
+            android:layout_marginEnd="@dimen/space_extra_large"
             android:contentDescription="@string/accessibility_home_fab_my_location"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_layers"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/homeSearchBarContainer" />
 
@@ -142,12 +141,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_large"
             android:layout_marginTop="@dimen/space_medium"
-            android:layout_marginEnd="@dimen/space_large"
+            android:layout_marginEnd="@dimen/space_extra_large"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_home_fab_support"
             android:visibility="gone"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeLayersFab" />
 
@@ -162,7 +161,7 @@
             android:contentDescription="@string/accessibility_home_fab_settings"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_settings"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homePlaceCategoryContainer" />
 
@@ -177,7 +176,7 @@
             android:contentDescription="@string/accessibility_home_fab_history"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_history"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeSettingsFab" />
 
@@ -192,7 +191,7 @@
             android:contentDescription="@string/accessibility_home_fab_place_categories"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_place_category"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeHistoryFab" />
 
@@ -207,7 +206,7 @@
             android:contentDescription="@string/accessibility_home_fab_discover"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_discover"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homePlaceCategoriesFab" />
 
@@ -222,7 +221,7 @@
             android:contentDescription="@string/accessibility_home_zoom_in"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_map_zoom_controller_plus"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/homeSettingsFab" />
 
@@ -237,7 +236,7 @@
             android:contentDescription="@string/accessibility_home_zoom_out"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_map_zoom_controller_minus"
-            app:fabSize="mini"
+            app:fabCustomSize="@dimen/default_fab_size_mini"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mapZoomInFab" />
 
@@ -318,7 +317,7 @@
             android:contentDescription="@string/accessibility_home_fab_hike_mode_compass"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_hike_mode_compass"
-            app:fabSize="mini" />
+            app:fabCustomSize="@dimen/default_fab_size_mini" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/homeHikeModeFab"
@@ -332,7 +331,7 @@
             android:contentDescription="@string/accessibility_home_fab_hike_mode"
             android:elevation="@dimen/default_elevation_map_interactive_views"
             android:src="@drawable/ic_home_fab_hike_mode"
-            app:fabSize="mini" />
+            app:fabCustomSize="@dimen/default_fab_size_mini" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/homeRoutePlannerFab"
