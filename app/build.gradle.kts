@@ -177,6 +177,9 @@ dependencies {
     // Licenses
     implementation(libs.github.marcoscgdev.licenser)
 
+    // Leak canary
+    debugImplementation(libs.leak.canary)
+
     // Unit tests
     testImplementation(project(":test-data"))
     testImplementation(libs.junit)
