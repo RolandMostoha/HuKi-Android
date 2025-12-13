@@ -1,3 +1,5 @@
-- Új: Felfedezés menü (Tájegységek, Túraajánlók, OKT)
-- Új: Tájegységek funkció térképes nézetettel
-- Új: Kirándulóhely gyűjtemény a tájegységekben
+- Új app ikon és színek
+- Új "szem" ikon a térképen GPX gyors elrejtéséhez
+- Mostmár Google Maps-ről is megosztható hely a HuKi-val
+- A megosztott helyet el is menti az előzményekbe
+- A kirándulóhelyek bekerültek a térképes keresőbe is

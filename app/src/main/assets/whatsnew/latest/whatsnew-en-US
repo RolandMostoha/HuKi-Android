@@ -1,3 +1,5 @@
-- New: Discovery menu (Landscapes, Hikes, OKT)
-- New: Landscapes function with map view
-- New: Destinations in landscapes
+- New app icon and colors
+- New "eye" icon on the map to quickly hide GPX
+- Now you can share a location with HuKi from Google Maps
+- The shared location is also saved in the history
+- Destinations have been added to the map search
