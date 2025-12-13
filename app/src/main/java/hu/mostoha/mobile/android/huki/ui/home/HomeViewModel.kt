@@ -31,8 +31,10 @@ import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
 import hu.mostoha.mobile.android.huki.model.ui.PlaceDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceUiModel
+import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.GoogleGeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.MapConfigRepository
 import hu.mostoha.mobile.android.huki.repository.OktRepository
@@ -73,6 +75,7 @@ class HomeViewModel @Inject constructor(
     private val oktRepository: OktRepository,
     private val mapConfigRepository: MapConfigRepository,
     private val landscapeRepository: LandscapeRepository,
+    private val googleGeocodingRepository: GoogleGeocodingRepository,
     private val homeUiModelMapper: HomeUiModelMapper,
     private val placeDomainUiMapper: PlaceDomainUiMapper,
     private val oktRoutesMapper: OktRoutesMapper,
@@ -431,6 +434,23 @@ class HomeViewModel @Inject constructor(
             .first
 
         selectOktRoute(selectedOktId)
+    }
+
+    fun loadGoogleMapsPlace(url: String) {
+        viewModelScope.launch {
+            showLoading(true)
+
+            val googlePlace = googleGeocodingRepository.getPlaceByUrl(url)
+            if (googlePlace == null) {
+                showError(DomainException(R.string.error_message_google_maps_share_failed.toMessage()))
+                return@launch
+            }
+
+            analyticsService.googleMapsPlaceOpened()
+            loadPlaceDetails(placeDomainUiMapper.mapToPlaceUiModel(googlePlace))
+
+            showLoading(false)
+        }
     }
 
     fun updateMyLocationConfig(

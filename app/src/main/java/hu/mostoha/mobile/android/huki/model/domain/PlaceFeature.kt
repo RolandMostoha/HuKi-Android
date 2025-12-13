@@ -10,4 +10,5 @@ enum class PlaceFeature {
     OKT_WAYPOINT,
     GPX_WAYPOINT,
     HIKING_ROUTE_WAYPOINT,
+    GOOGLE_MAPS_SEARCH,
 }

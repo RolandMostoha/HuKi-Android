@@ -10,6 +10,7 @@
     <string name="error_message_unknown_host">Kérjük ellenőrizd az internet kapcsolatot és próbálkozz később.</string>
     <string name="error_message_gpx_parse_failed">GPX feldolgozási hiba. Kérlek keress fel a kapcsolat menüben!</string>
     <string name="error_message_gpx_uri_null">Sikertelen választás. Próbáld újra egy érvényes GPX fájllal.</string>
+    <string name="error_message_google_maps_share_failed">Nem sikerült megtalálni a megosztott Google Maps helyet.</string>
     <string name="error_refresh_button">Frissítés</string>
 
     <string name="default_distance_template_m">%s m</string>

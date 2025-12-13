@@ -10,8 +10,6 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import dagger.hilt.android.qualifiers.ApplicationContext
-import hu.mostoha.mobile.android.huki.util.MY_LOCATION_MIN_INTERVAL_TIME_MS
-import hu.mostoha.mobile.android.huki.util.MY_LOCATION_TIME_MS
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -29,6 +27,11 @@ import kotlin.coroutines.resume
 class FusedLocationProvider @Inject constructor(
     @ApplicationContext val context: Context
 ) : AsyncMyLocationProvider {
+
+    companion object {
+        private const val MY_LOCATION_TIME_MS = 10000L
+        private const val MY_LOCATION_MIN_INTERVAL_TIME_MS = 4000L
+    }
 
     private var myLocationConsumer: IMyLocationConsumer? = null
 

@@ -158,4 +158,8 @@ interface AnalyticsService {
 
     fun allOsmDataClicked()
 
+    fun deeplinkOpened(lastPathSegment: String)
+
+    fun googleMapsPlaceOpened()
+
 }

@@ -96,6 +96,8 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_ALL_OSM_DATA = "select_all_osm_data"
         private const val EVENT_VIEW_NEW_FEATURES = "view_new_features"
         private const val EVENT_SELECT_PLACE_CATEGORY = "select_place_category"
+        private const val EVENT_VIEW_GOOGLE_MAPS_PLACE = "view_google_maps_place"
+        private const val EVENT_VIEW_DEEPLINK = "view_deeplink"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
@@ -109,6 +111,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_ROUTE_PLANNER_DISTANCE = "route_planner_distance"
         private const val PARAM_OKT_ID = "okt_id"
         private const val PARAM_NEW_FEATURES_VERSION = "version"
+        private const val PARAM_DEEPLINK_PATH = "deeplink_path"
 
         private val MAP_SCALE_PERCENTAGE_RANGES = listOf(
             1..99,
@@ -512,6 +515,16 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun allOsmDataClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_ALL_OSM_DATA, null)
+    }
+
+    override fun deeplinkOpened(lastPathSegment: String) {
+        firebaseAnalytics.logEvent(EVENT_VIEW_DEEPLINK) {
+            param(PARAM_DEEPLINK_PATH, lastPathSegment)
+        }
+    }
+
+    override fun googleMapsPlaceOpened() {
+        firebaseAnalytics.logEvent(EVENT_VIEW_GOOGLE_MAPS_PLACE, null)
     }
 
 }

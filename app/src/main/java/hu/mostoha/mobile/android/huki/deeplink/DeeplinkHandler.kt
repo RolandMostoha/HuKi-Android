@@ -1,14 +1,19 @@
 package hu.mostoha.mobile.android.huki.deeplink
 
 import android.content.Intent
+import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.DeeplinkEvent
+import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import timber.log.Timber
 import javax.inject.Inject
 
-class DeeplinkHandler @Inject constructor() {
+class DeeplinkHandler @Inject constructor(
+    private val analyticsService: AnalyticsService,
+    private val exceptionLogger: ExceptionLogger
+) {
 
     companion object {
-        private const val HUKI_HOST = "huki.hu"
+        const val HUKI_HOST = "huki.hu"
 
         private const val PATH_LANDSCAPE = "landscape"
         private const val PATH_PLACE = "place"
@@ -23,9 +28,10 @@ class DeeplinkHandler @Inject constructor() {
         val data = intent.data
 
         if (action == Intent.ACTION_VIEW && data != null && data.host == HUKI_HOST) {
-            Timber.d("Deeplink: opened $data")
-
             val lastPathSegment = data.lastPathSegment
+
+            Timber.d("Deeplink: opened $data")
+            analyticsService.deeplinkOpened(lastPathSegment ?: "null")
 
             when (lastPathSegment) {
                 PATH_LANDSCAPE -> {
@@ -45,6 +51,7 @@ class DeeplinkHandler @Inject constructor() {
                 }
                 else -> {
                     Timber.d("Deeplink: unknown deeplink $data")
+                    exceptionLogger.recordException(IllegalArgumentException("Deeplink: Unknown deeplink $data"))
                 }
             }
         }

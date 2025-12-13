@@ -12,6 +12,7 @@
     <string name="error_message_unknown_host">Please check your internet connection and try again later.</string>
     <string name="error_message_gpx_parse_failed">Cannot process GPX. Please contact us.</string>
     <string name="error_message_gpx_uri_null">Unsuccessful choice. Try again with a valid GPX file.</string>
+    <string name="error_message_google_maps_share_failed">Couldn\'t find the shared Google Maps place.</string>
     <string name="error_refresh_button">Refresh</string>
 
     <string name="default_distance_template_m">%s m</string>

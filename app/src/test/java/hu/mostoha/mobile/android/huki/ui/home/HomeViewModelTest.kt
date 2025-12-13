@@ -34,6 +34,7 @@ import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.provider.DateTimeProvider
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
+import hu.mostoha.mobile.android.huki.repository.GoogleGeocodingRepository
 import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.repository.MapConfigRepository
 import hu.mostoha.mobile.android.huki.repository.OktRepository
@@ -84,6 +85,7 @@ class HomeViewModelTest {
     private val geocodingRepository = mockk<GeocodingRepository>()
     private val mapConfigRepository = mockk<MapConfigRepository>()
     private val landscapeRepository = mockk<LandscapeRepository>()
+    private val googleGeocodingRepository = mockk<GoogleGeocodingRepository>()
     private val oktRepository = mockk<OktRepository>()
     private val myLocationProvider = mockk<AsyncMyLocationProvider>()
     private val dateTimeProvider = mockk<DateTimeProvider>()
@@ -114,6 +116,7 @@ class HomeViewModelTest {
             oktRepository,
             mapConfigRepository,
             landscapeRepository,
+            googleGeocodingRepository,
             homeUiModelMapper,
             placeDomainUiMapper,
             oktRoutesMapper,

@@ -5,6 +5,8 @@ import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
+import hu.mostoha.mobile.android.huki.fake.FakeAnalyticsService
+import hu.mostoha.mobile.android.huki.logger.FakeExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.DeeplinkEvent
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_LANDSCAPE_OSM_ID
 import org.junit.Before
@@ -19,7 +21,7 @@ class DeeplinkHandlerTest {
 
     @Before
     fun setUp() {
-        deeplinkHandler = DeeplinkHandler()
+        deeplinkHandler = DeeplinkHandler(FakeAnalyticsService(), FakeExceptionLogger())
     }
 
     @Test

@@ -20,6 +20,7 @@ import hu.mostoha.mobile.android.huki.util.OSM_ID_UNKNOWN_PREFIX
 import hu.mostoha.mobile.android.huki.util.colorStateList
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 
+@Suppress("MagicNumber")
 class PlaceDetailsBottomSheetDialog(
     private val binding: LayoutBottomSheetPlaceDetailsBinding,
     private val analyticsService: AnalyticsService
@@ -36,15 +37,22 @@ class PlaceDetailsBottomSheetDialog(
     ) {
         postMain {
             with(binding) {
-                val placeName = placeUiModel.primaryText.resolve(root.context)
+                val primaryText = placeUiModel.primaryText.resolve(root.context)
+                val secondaryText = placeUiModel.secondaryText.resolve(root.context)
 
                 placeDetailsButtonGroupScrollView.visible()
 
                 placeDetailsPrimaryText.setTextAppearance(R.style.DefaultTextAppearance_SemiBold_Large)
-                placeDetailsPrimaryText.maxLines = 2
-                placeDetailsPrimaryText.text = placeName
+                placeDetailsPrimaryText.text = primaryText
 
-                placeDetailsSecondaryText.setMessage(placeUiModel.secondaryText)
+                if (primaryText != secondaryText) {
+                    placeDetailsPrimaryText.maxLines = 2
+                    placeDetailsSecondaryText.text = secondaryText
+                    placeDetailsSecondaryText.visible()
+                } else {
+                    placeDetailsPrimaryText.maxLines = 3
+                    placeDetailsSecondaryText.gone()
+                }
 
                 if (placeUiModel.osmId.startsWith(OSM_ID_UNKNOWN_PREFIX)) {
                     placeDetailsOsmDataButton.gone()
@@ -104,7 +112,7 @@ class PlaceDetailsBottomSheetDialog(
                 } else {
                     placeDetailsShowAllPointsButton.visible()
                     placeDetailsShowAllPointsButton.setOnClickListener {
-                        analyticsService.loadPlaceDetailsClicked(placeName, placeUiModel.placeType)
+                        analyticsService.loadPlaceDetailsClicked(primaryText, placeUiModel.placeType)
                         onShowAllPointsClick.invoke()
                     }
                 }

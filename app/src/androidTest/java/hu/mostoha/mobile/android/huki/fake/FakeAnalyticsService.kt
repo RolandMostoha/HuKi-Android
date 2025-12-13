@@ -159,4 +159,8 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun allOsmDataClicked() = Unit
 
+    override fun deeplinkOpened(lastPathSegment: String) = Unit
+
+    override fun googleMapsPlaceOpened() = Unit
+
 }

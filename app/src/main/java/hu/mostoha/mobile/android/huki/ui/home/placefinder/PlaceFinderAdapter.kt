@@ -13,10 +13,11 @@ import hu.mostoha.mobile.android.huki.databinding.ItemPlaceFinderStaticActionsBi
 import hu.mostoha.mobile.android.huki.databinding.ViewAttributionBinding
 import hu.mostoha.mobile.android.huki.databinding.ViewErrorBinding
 import hu.mostoha.mobile.android.huki.databinding.ViewLoadingIndicatorBinding
+import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setDrawableTop
-import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
+import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 
 class PlaceFinderAdapter(
@@ -51,8 +52,20 @@ class PlaceFinderAdapter(
                     holder = convertView.tag as ViewHolder
                 }
 
-                holder.primaryText.text = placeFinderItem.placeUiModel.primaryText.resolve(context)
-                holder.secondaryText.setMessage(placeFinderItem.placeUiModel.secondaryText)
+                val primaryText = placeFinderItem.placeUiModel.primaryText.resolve(context)
+                val secondaryText = placeFinderItem.placeUiModel.secondaryText.resolve(context)
+
+                holder.primaryText.text = primaryText
+
+                if (primaryText != secondaryText) {
+                    holder.primaryText.maxLines = 1
+                    holder.secondaryText.text = secondaryText
+                    holder.secondaryText.visible()
+                } else {
+                    holder.primaryText.maxLines = 2
+                    holder.secondaryText.gone()
+                }
+
                 holder.iconImage.setImageResource(placeFinderItem.placeUiModel.iconRes)
                 holder.distanceText.setMessageOrGone(placeFinderItem.placeUiModel.distanceText)
             }

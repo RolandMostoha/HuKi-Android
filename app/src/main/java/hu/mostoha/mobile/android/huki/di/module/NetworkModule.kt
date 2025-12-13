@@ -1,21 +1,19 @@
 package hu.mostoha.mobile.android.huki.di.module
 
 import android.content.Context
-import android.webkit.WebSettings
-import com.google.common.net.HttpHeaders
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.network.GraphhopperService
 import hu.mostoha.mobile.android.huki.network.LocationIqService
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
 import hu.mostoha.mobile.android.huki.network.PhotonService
 import hu.mostoha.mobile.android.huki.network.interceptor.TimeoutInterceptor
+import hu.mostoha.mobile.android.huki.network.interceptor.UserAgentInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,17 +28,8 @@ class NetworkModule {
     @Provides
     fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder()
-            .addNetworkInterceptor { chain ->
-                chain.proceed(
-                    chain.request()
-                        .newBuilder()
-                        .header(
-                            name = HttpHeaders.USER_AGENT,
-                            value = "${WebSettings.getDefaultUserAgent(context)} ${BuildConfig.APPLICATION_ID}"
-                        )
-                        .build()
-                )
-            }
+            .addNetworkInterceptor(UserAgentInterceptor(context))
+            .addNetworkInterceptor(TimeoutInterceptor())
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY

@@ -80,8 +80,21 @@ class PlaceHistoryAdapter(
             val placeUiModel = item.placeUiModel
 
             with(binding) {
-                placeHistoryItemName.text = placeUiModel.primaryText.resolve(context)
-                placeHistoryAddressText.text = placeUiModel.secondaryText.resolve(context)
+                val primaryText = placeUiModel.primaryText.resolve(context)
+                val secondaryText = placeUiModel.secondaryText.resolve(context)
+
+                placeHistoryItemName.text = primaryText
+                placeHistoryAddressText.text = secondaryText
+
+                if (primaryText != secondaryText) {
+                    placeHistoryItemName.maxLines = 1
+                    placeHistoryAddressText.text = secondaryText
+                    placeHistoryAddressText.visible()
+                } else {
+                    placeHistoryItemName.maxLines = 2
+                    placeHistoryAddressText.gone()
+                }
+
                 bindFeatureIcon(placeUiModel.placeFeature, context)
                 placeHistoryActionsButton.setOnClickListener {
                     context.showPopupMenu(
@@ -132,6 +145,9 @@ class PlaceHistoryAdapter(
                 }
                 PlaceFeature.HIKING_ROUTE_WAYPOINT -> {
                     placeHistoryIcon.setImageResource(R.drawable.ic_place_history_hiking_route)
+                }
+                PlaceFeature.GOOGLE_MAPS_SEARCH -> {
+                    placeHistoryIcon.setImageResource(R.drawable.ic_place_history_google_maps)
                 }
                 PlaceFeature.OKT_WAYPOINT -> {
                     placeHistoryTextIcon.text = context.getString(R.string.place_history_icon_text_okt)

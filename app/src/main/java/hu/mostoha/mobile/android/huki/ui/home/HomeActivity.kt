@@ -54,9 +54,12 @@ import hu.mostoha.mobile.android.huki.extensions.hasOverlay
 import hu.mostoha.mobile.android.huki.extensions.hideAll
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.isDarkMode
+import hu.mostoha.mobile.android.huki.extensions.isDeeplink
+import hu.mostoha.mobile.android.huki.extensions.isGoogleMapsIntent
 import hu.mostoha.mobile.android.huki.extensions.isGooglePlayServicesAvailable
 import hu.mostoha.mobile.android.huki.extensions.isGpxFileIntent
 import hu.mostoha.mobile.android.huki.extensions.isLocationPermissionGranted
+import hu.mostoha.mobile.android.huki.extensions.isTextIntent
 import hu.mostoha.mobile.android.huki.extensions.landscapeBoundingBox
 import hu.mostoha.mobile.android.huki.extensions.locationPermissions
 import hu.mostoha.mobile.android.huki.extensions.openInfoWindows
@@ -137,7 +140,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.RotationGestureOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
-import hu.mostoha.mobile.android.huki.repository.SettingsRepository
+import hu.mostoha.mobile.android.huki.repository.DestinationsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.adapter.PlaceCategoryAdapter.Companion.addSelectionChip
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
@@ -1240,21 +1243,31 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private fun initIntentHandlers(intent: Intent?) {
         if (intent != null) {
-            if (intent.isGpxFileIntent()) {
-                layersViewModel.loadGpx(intent.data)
-                homeViewModel.clearFollowLocation()
+            when {
+                intent.isGpxFileIntent() -> {
+                    layersViewModel.loadGpx(intent.data)
+                    homeViewModel.clearFollowLocation()
 
-                analyticsService.gpxImportedByIntent()
-            }
-
-            when (val event = deeplinkHandler.handleDeeplink(intent)) {
-                is DeeplinkEvent.LandscapeDetails -> {
-                    homeViewModel.loadLandscapeDetails(event.osmId)
+                    analyticsService.gpxImportedByIntent()
                 }
-                is DeeplinkEvent.PlaceDetails -> {
-                    homeViewModel.loadPlaceDetailsWithGeocoding(GeoPoint(event.lat, event.lon), MAP_SEARCH)
+                intent.isDeeplink() -> {
+                    when (val event = deeplinkHandler.handleDeeplink(intent)) {
+                        is DeeplinkEvent.LandscapeDetails -> {
+                            homeViewModel.loadLandscapeDetails(event.osmId)
+                        }
+                        is DeeplinkEvent.PlaceDetails -> {
+                            homeViewModel.loadPlaceDetailsWithGeocoding(GeoPoint(event.lat, event.lon), MAP_SEARCH)
+                        }
+                        null -> Unit
+                    }
                 }
-                null -> Unit
+                intent.isTextIntent() -> {
+                    when {
+                        intent.isGoogleMapsIntent() -> {
+                            homeViewModel.loadGoogleMapsPlace(intent.getStringExtra(Intent.EXTRA_TEXT)!!)
+                        }
+                    }
+                }
             }
         }
     }

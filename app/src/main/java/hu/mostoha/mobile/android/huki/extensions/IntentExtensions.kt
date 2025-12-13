@@ -9,6 +9,8 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.core.net.toUri
 import hu.mostoha.mobile.android.huki.BuildConfig
+import hu.mostoha.mobile.android.huki.deeplink.DeeplinkHandler.Companion.HUKI_HOST
+import hu.mostoha.mobile.android.huki.service.GoogleMapsUrlParser.isGoogleMapsUrl
 import hu.mostoha.mobile.android.huki.util.GOOGLE_MAPS_DIRECTIONS_URL
 import org.osmdroid.util.GeoPoint
 import timber.log.Timber
@@ -68,6 +70,20 @@ fun Intent.isGpxFileIntent(): Boolean {
     val isUriPathGpx = uri.path?.contains("gpx") ?: false
 
     return isTypeGpx || isOctetStream || isSchemeGpx || isUriPathGpx
+}
+
+fun Intent.isTextIntent(): Boolean {
+    return action == Intent.ACTION_SEND && type == "text/plain"
+}
+
+fun Intent.isGoogleMapsIntent(): Boolean {
+    val hasTextExtra = hasExtra(Intent.EXTRA_TEXT)
+    val text = getStringExtra(Intent.EXTRA_TEXT)
+    return isTextIntent() && hasTextExtra && text!!.isGoogleMapsUrl()
+}
+
+fun Intent.isDeeplink(): Boolean {
+    return action == Intent.ACTION_VIEW && data?.host == HUKI_HOST
 }
 
 fun Context.shareFile(uri: Uri) {
