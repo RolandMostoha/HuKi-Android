@@ -104,8 +104,7 @@ class PlaceAreaMapperTest {
         assertThat(placeArea).isEqualTo(
             PlaceArea(
                 placeAreaType = PlaceAreaType.Landscape(
-                    osmId = DEFAULT_LANDSCAPE_UI_MODEL.osmId,
-                    destinations = DEFAULT_LANDSCAPE_UI_MODEL.destinations
+                    osmId = DEFAULT_LANDSCAPE_UI_MODEL.osmId
                 ),
                 location = DEFAULT_LANDSCAPE_UI_MODEL.geoPoint.toLocation(),
                 boundingBox = boundingBox,

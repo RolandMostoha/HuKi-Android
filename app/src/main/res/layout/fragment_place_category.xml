@@ -30,34 +30,42 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--  Landscapes Header -->
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
+            <!--  Destinations Header -->
+            <LinearLayout
+                android:id="@+id/placeCategoryDestinationsHeader"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/space_extra_large"
-                android:paddingTop="@dimen/space_medium"
-                android:paddingBottom="@dimen/space_medium"
-                android:text="@string/place_category_landscapes_header_title"
-                android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/space_extra_large">
 
-            <!--  Landscapes  -->
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/destinations_header_title"
+                    android:textAppearance="@style/DefaultTextAppearance.Regular.Medium" />
+
+                <hu.mostoha.mobile.android.huki.views.InfoButtonView
+                    android:id="@+id/placeCategoryDestinationsInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:messageRes="@string/destinations_info" />
+
+            </LinearLayout>
+
+            <!--  Destinations -->
             <HorizontalScrollView
-                android:id="@+id/placeCategoryLandscapeScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="@dimen/default_elevation_map_interactive_views"
                 android:scrollbars="none">
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/placeCategoryLandscapeChipGroup"
+                    android:id="@+id/placeCategoryDestinationsChipGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:paddingStart="@dimen/space_large"
-                    android:paddingTop="@dimen/space_medium"
-                    android:paddingEnd="@dimen/space_large"
-                    android:paddingBottom="@dimen/space_medium" />
+                    android:paddingEnd="@dimen/space_large" />
 
             </HorizontalScrollView>
 

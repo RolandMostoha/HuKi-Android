@@ -113,7 +113,7 @@ class PlaceCategoryUiTest {
             R.id.homePlaceCategoriesFab.click()
 
             R.id.placeCategoryHeaderContainer.isDisplayed()
-            R.id.placeCategoryLandscapeChipGroup.isDisplayed()
+            R.id.placeCategoryDestinationsHeader.isDisplayed()
             R.id.placeCategoryHikeRecommendationsChipGroup.isDisplayed()
             R.id.placeCategoryGroups.isDisplayed()
         }

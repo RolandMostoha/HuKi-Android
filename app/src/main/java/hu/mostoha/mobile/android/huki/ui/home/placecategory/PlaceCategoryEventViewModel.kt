@@ -1,8 +1,8 @@
 package hu.mostoha.mobile.android.huki.ui.home.placecategory
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.mostoha.mobile.android.huki.model.domain.Destination
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
-import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
 import hu.mostoha.mobile.android.huki.util.EventSharedViewModel
 import javax.inject.Inject
@@ -16,8 +16,8 @@ sealed class PlaceCategoryEvent {
         val placeCategory: PlaceCategory
     ) : PlaceCategoryEvent()
 
-    data class LandscapeSelected(
-        val landscape: LandscapeUiModel
+    data class DestinationSelected(
+        val destination: Destination
     ) : PlaceCategoryEvent()
 
     data class HikingRouteSelected(

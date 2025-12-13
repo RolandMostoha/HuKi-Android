@@ -1,6 +1,7 @@
 package hu.mostoha.mobile.android.huki.ui.adapter
 
 import android.content.Context
+import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
@@ -12,8 +13,10 @@ import hu.mostoha.mobile.android.huki.databinding.ItemPlaceCategoryChipBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceCategoryChipGroupBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceCategorySelectionChipBinding
 import hu.mostoha.mobile.android.huki.databinding.ItemPlaceCategoryVerticalChipBinding
+import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
+import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.Destination
 import hu.mostoha.mobile.android.huki.model.domain.HikeRecommendation
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
@@ -86,22 +89,31 @@ class PlaceCategoryAdapter(val context: Context) {
     }
 
     fun initDestinations(
+        headerView: View,
         chipGroup: ChipGroup,
         destinations: List<Destination>,
+        isStroked: Boolean = true,
         onDestinationClick: (Destination) -> Unit,
     ) {
         chipGroup.removeAllViews()
 
-        destinations.forEach { destination ->
-            chipGroup.addVerticalChip(
-                title = destination.name.toMessage(),
-                iconRes = destination.type.resolveIcon(),
-                iconSize = R.dimen.icon_size_small,
-                isStroked = true,
-                onClick = {
-                    onDestinationClick.invoke(destination)
-                }
-            )
+        if (destinations.isNotEmpty()) {
+            headerView.visible()
+            chipGroup.visible()
+            destinations.forEach { destination ->
+                chipGroup.addVerticalChip(
+                    title = destination.name.toMessage(),
+                    iconRes = destination.type.resolveIcon(),
+                    iconSize = R.dimen.icon_size_small,
+                    isStroked = isStroked,
+                    onClick = {
+                        onDestinationClick.invoke(destination)
+                    }
+                )
+            }
+        } else {
+            headerView.gone()
+            chipGroup.gone()
         }
     }
 

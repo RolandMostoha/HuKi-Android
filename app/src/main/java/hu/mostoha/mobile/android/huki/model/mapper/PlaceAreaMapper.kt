@@ -49,7 +49,7 @@ object PlaceAreaMapper {
 
     fun map(landscapeUiModel: LandscapeUiModel, boundingBox: BoundingBox): PlaceArea {
         return PlaceArea(
-            placeAreaType = PlaceAreaType.Landscape(landscapeUiModel.osmId, landscapeUiModel.destinations),
+            placeAreaType = PlaceAreaType.Landscape(landscapeUiModel.osmId),
             location = landscapeUiModel.geoPoint.toLocation(),
             boundingBox = boundingBox.toDomain(),
             addressMessage = landscapeUiModel.name,

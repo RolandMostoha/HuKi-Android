@@ -8,11 +8,10 @@ import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.center
-import hu.mostoha.mobile.android.huki.model.mapper.HomeUiModelMapper
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceAreaMapper
 import hu.mostoha.mobile.android.huki.model.ui.PlaceCategoryUiModel
+import hu.mostoha.mobile.android.huki.repository.DestinationsRepository
 import hu.mostoha.mobile.android.huki.repository.GeocodingRepository
-import hu.mostoha.mobile.android.huki.repository.LandscapeRepository
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,8 +29,7 @@ import javax.inject.Inject
 class PlaceCategoryViewModel @Inject constructor(
     private val exceptionLogger: ExceptionLogger,
     private val geocodingRepository: GeocodingRepository,
-    private val landscapeRepository: LandscapeRepository,
-    private val homeUiModelMapper: HomeUiModelMapper,
+    private val destinationsRepository: DestinationsRepository,
 ) : ViewModel() {
 
     private val _placeCategoryUiModel = MutableStateFlow(PlaceCategoryUiModel())
@@ -39,17 +37,7 @@ class PlaceCategoryViewModel @Inject constructor(
         .stateIn(viewModelScope, WhileViewSubscribed, PlaceCategoryUiModel())
 
     fun init(boundingBox: BoundingBox) {
-        loadLandscapes()
         loadPlaceArea(boundingBox.center(), boundingBox)
-    }
-
-    private fun loadLandscapes() {
-        viewModelScope.launch {
-            val landscapes = landscapeRepository.getLandscapes()
-            val landscapesUiModels = homeUiModelMapper.mapLandscapes(landscapes)
-
-            _placeCategoryUiModel.update { it.copy(landscapes = landscapesUiModels) }
-        }
     }
 
     private fun loadPlaceArea(location: Location, boundingBox: BoundingBox) = viewModelScope.launch {
@@ -58,24 +46,27 @@ class PlaceCategoryViewModel @Inject constructor(
             exceptionLogger = exceptionLogger
         )
             .onStart {
-                _placeCategoryUiModel.update {
-                    it.copy(
+                _placeCategoryUiModel.update { uiModel ->
+                    val placeArea = PlaceAreaMapper.map(location, boundingBox, null)
+
+                    uiModel.copy(
                         isAreaLoading = true,
-                        placeArea = PlaceAreaMapper.map(location, boundingBox, null)
+                        placeArea = placeArea,
+                        destinations = destinationsRepository.getDestinations(placeArea)
                     )
                 }
             }
             .onEach { placeProfile ->
-                _placeCategoryUiModel.update {
-                    it.copy(placeArea = PlaceAreaMapper.map(location, boundingBox, placeProfile))
+                _placeCategoryUiModel.update { uiModel ->
+                    uiModel.copy(placeArea = PlaceAreaMapper.map(location, boundingBox, placeProfile))
                 }
             }
             .onCompletion {
                 _placeCategoryUiModel.update { it.copy(isAreaLoading = false) }
             }
             .catch {
-                _placeCategoryUiModel.update {
-                    it.copy(placeArea = PlaceAreaMapper.map(location, boundingBox, null))
+                _placeCategoryUiModel.update { uiModel ->
+                    uiModel.copy(placeArea = PlaceAreaMapper.map(location, boundingBox, null))
                 }
             }
             .collect()

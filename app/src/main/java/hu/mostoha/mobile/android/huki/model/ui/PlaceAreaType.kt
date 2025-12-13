@@ -1,16 +1,20 @@
 package hu.mostoha.mobile.android.huki.model.ui
 
-import hu.mostoha.mobile.android.huki.model.domain.Destination
-
 sealed class PlaceAreaType {
 
+    /**
+     * Place category search initiated from the map mini-fab.
+     */
     data object MapSearch : PlaceAreaType()
 
+    /**
+     * Place details initiated from marker placement.
+     */
     data object PlaceDetails : PlaceAreaType()
 
-    data class Landscape(
-        val osmId: String,
-        val destinations: List<Destination>
-    ) : PlaceAreaType()
+    /**
+     * Landscapes from Discover-Landscapes feature.
+     */
+    data class Landscape(val osmId: String) : PlaceAreaType()
 
 }

@@ -2,12 +2,10 @@ package hu.mostoha.mobile.android.huki.ui.home.placecategory
 
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetPlaceCategoryBinding
 import hu.mostoha.mobile.android.huki.extensions.openUrl
-import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.model.domain.Destination
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommendationMapper
 import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
-import hu.mostoha.mobile.android.huki.model.ui.PlaceAreaType
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.adapter.PlaceCategoryAdapter
@@ -20,6 +18,7 @@ class PlaceCategoryBottomSheetDialog(
 
     fun init(
         placeArea: PlaceArea,
+        destinations: List<Destination>,
         onHikingTrailsClick: () -> Unit,
         onCategoryClick: (PlaceCategory) -> Unit,
         onDestinationClick: (Destination) -> Unit,
@@ -43,20 +42,16 @@ class PlaceCategoryBottomSheetDialog(
         }
 
         val adapter = PlaceCategoryAdapter(context)
-        val placeAreaType = placeArea.placeAreaType
 
-        val isLandscape = placeAreaType is PlaceAreaType.Landscape
-        if (isLandscape) {
-            adapter.initDestinations(
-                binding.placeCategoryBottomSheetDestinationsChipGroup,
-                placeAreaType.destinations,
-                onDestinationClick = { destination ->
-                    analyticsService.destinationClicked(destination.name)
-                    onDestinationClick.invoke(destination)
-                }
-            )
-        }
-        binding.placeCategoryBottomSheetDestinationsContainer.visibleOrGone(isLandscape)
+        adapter.initDestinations(
+            headerView = binding.placeCategoryBottomSheetDestinationsContainer,
+            chipGroup = binding.placeCategoryBottomSheetDestinationsChipGroup,
+            destinations = destinations,
+            onDestinationClick = { destination ->
+                analyticsService.destinationClicked(destination.name)
+                onDestinationClick.invoke(destination)
+            }
+        )
 
         adapter.initHikeRecommendations(
             chipGroup = binding.placeCategoryBottomSheetHikeRecommendationsChipGroup,

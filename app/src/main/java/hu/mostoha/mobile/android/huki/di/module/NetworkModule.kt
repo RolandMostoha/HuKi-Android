@@ -29,7 +29,7 @@ class NetworkModule {
     fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addNetworkInterceptor(UserAgentInterceptor(context))
-            .addNetworkInterceptor(TimeoutInterceptor())
+            .addInterceptor(TimeoutInterceptor())
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY

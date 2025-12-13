@@ -245,7 +245,6 @@
 
     <string name="place_area_distance_template">%s-es körzetében</string>
 
-    <string name="place_category_landscapes_header_title">Tájegységek</string>
     <string name="place_category_hike_recommendations_header_title">Túraajánlók</string>
     <string name="place_category_hike_recommendations_info">A túraajánlókból letöltött GPX útvonalak megnyithatóak az alkalmazással.\n\nEzek a személyes kedvenceim, de nem fűz hozzájuk semmilyen érdekeltség.\n\nA HuKi a weboldalak tartalmait semmilyen formában nem használja fel, csak egy navigációs linket nyújt, ami külső böngészőben nyílik meg. \n\nA weboldalakon elérhető tartalom felhasználásához az adott oldal feltételei érvényesek.</string>
     <string name="place_category_national_routes_chip_title">Túraútvonalak</string>

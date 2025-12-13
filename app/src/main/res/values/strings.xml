@@ -271,7 +271,6 @@
 
     <string name="place_area_distance_template">Area of %s</string>
 
-    <string name="place_category_landscapes_header_title">Landscapes</string>
     <string name="place_category_hike_recommendations_header_title">Hike recommendations</string>
     <string name="place_category_hike_recommendations_info">The GPX routes downloaded from the tour recommendations can be opened with the application.\n\nThese are my personal favorites, but I have no affiliation or interest in them.\n\nHuKi does not use the contents of the websites in any way; it only provides a navigation link that opens in an external browser.\n\nThe terms of the respective websites apply to the use of the content available on them.</string>
     <string name="place_category_national_routes_chip_title">National routes</string>

@@ -6,7 +6,7 @@ import hu.mostoha.mobile.android.huki.model.domain.Location
 
 interface LandscapeRepository {
 
-    suspend fun getLandscapes(location: Location? = null): List<Landscape>
+    fun getLandscapes(location: Location? = null): List<Landscape>
 
     suspend fun getLandscapeGeometryList(): List<Pair<Landscape, Geometry>>
 

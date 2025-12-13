@@ -31,13 +31,13 @@ import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.DistanceInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.LocationPickerInfoWindow
 import hu.mostoha.mobile.android.huki.osmdroid.infowindow.NavigationMarkerInfoWindow
-import hu.mostoha.mobile.android.huki.osmdroid.overlay.DestinationMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxArrowMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.HukiScaleBarOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeDetailsDestinationMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeDetailsPolyline
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeMapDestinationMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolygon
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapePolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LocationPickerMarker
@@ -47,6 +47,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.OktPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceCategoryMarker
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsDestinationMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
@@ -209,17 +210,24 @@ fun MapView.addDestinationMarker(
     overlayId: String,
     overlayType: OverlayType,
     geoPoint: GeoPoint,
-    @ColorInt landscapeColor: Int,
+    @ColorInt markerColor: Int,
     destinationType: DestinationType,
     infoWindowTitle: String,
     infoWindowDescription: String? = null,
     onMarkerClick: () -> Unit,
     onInfoWindowNavigationClick: (GeoPoint) -> Unit,
 ) {
-    val destinationMarker = if (overlayType == OverlayType.LANDSCAPE_DETAILS) {
-        LandscapeDetailsDestinationMarker(this)
-    } else {
-        DestinationMarker(this)
+    val destinationMarker = when (overlayType) {
+        OverlayType.LANDSCAPE_DETAILS -> {
+            LandscapeDetailsDestinationMarker(this)
+        }
+        OverlayType.LANDSCAPE_MAP -> {
+            LandscapeMapDestinationMarker(this)
+        }
+        OverlayType.PLACE_DETAILS -> {
+            PlaceDetailsDestinationMarker(this)
+        }
+        else -> return
     }
 
     val marker = destinationMarker.apply {
@@ -232,7 +240,7 @@ fun MapView.addDestinationMarker(
                     resources.getDimensionPixelSize(R.dimen.destination_marker_background_size),
                 ),
                 LayerDrawableConfig(
-                    R.drawable.ic_marker_background.toDrawable(context, landscapeColor),
+                    R.drawable.ic_marker_background.toDrawable(context, markerColor),
                     resources.getDimensionPixelSize(R.dimen.destination_marker_background_size),
                 ),
                 LayerDrawableConfig(

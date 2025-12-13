@@ -31,7 +31,7 @@ class DefaultLandscapeRepository @Inject constructor(
         )
     }
 
-    override suspend fun getLandscapes(location: Location?): List<Landscape> {
+    override fun getLandscapes(location: Location?): List<Landscape> {
         return if (location == null) {
             LOCAL_LANDSCAPES.sortedBy { context.getString(it.nameRes) }
         } else {

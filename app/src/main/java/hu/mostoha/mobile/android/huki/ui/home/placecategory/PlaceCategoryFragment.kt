@@ -20,13 +20,12 @@ import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.BoundingBox
+import hu.mostoha.mobile.android.huki.model.domain.Destination
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.mapper.HikeRecommendationMapper
-import hu.mostoha.mobile.android.huki.model.ui.LandscapeUiModel
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.adapter.PlaceCategoryAdapter
-import hu.mostoha.mobile.android.huki.ui.adapter.PlaceCategoryAdapter.Companion.addChip
 import hu.mostoha.mobile.android.huki.ui.home.shared.InsetSharedViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -61,6 +60,8 @@ class PlaceCategoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val boundingBox by lazy { requireArguments().getParcelable<BoundingBox>(ARG_BOUNDING_BOX)!! }
+
+    private lateinit var placeCategoryAdapter: PlaceCategoryAdapter
 
     private val container by lazy { binding.placeCategoryContainer }
     private val scrollContainer by lazy { binding.placeCategoryScrollContainer }
@@ -100,7 +101,7 @@ class PlaceCategoryFragment : Fragment() {
             analyticsService.hikeRecommenderInfoClicked()
         }
 
-        val placeCategoryAdapter = PlaceCategoryAdapter(requireContext())
+        placeCategoryAdapter = PlaceCategoryAdapter(requireContext())
         placeCategoryAdapter.initHikeRecommendations(
             chipGroup = binding.placeCategoryHikeRecommendationsChipGroup,
             isStroked = false,
@@ -153,11 +154,11 @@ class PlaceCategoryFragment : Fragment() {
         }
         lifecycleScope.launch {
             placeCategoryViewModel.placeCategoryUiModel
-                .map { it.landscapes }
+                .map { it.destinations }
                 .distinctUntilChanged()
                 .flowWithLifecycle(lifecycle)
-                .collect { landscapes ->
-                    landscapes?.let { initLandscapes(it) }
+                .collect { destinations ->
+                    initDestinations(destinations)
                 }
         }
         lifecycleScope.launch {
@@ -187,22 +188,20 @@ class PlaceCategoryFragment : Fragment() {
                     }
                 }
         }
-
     }
 
-    private fun initLandscapes(landscapes: List<LandscapeUiModel>) {
-        binding.placeCategoryLandscapeChipGroup.removeAllViews()
-        landscapes.forEach { landscape ->
-            binding.placeCategoryLandscapeChipGroup.addChip(
-                title = landscape.name,
-                isStroked = false,
-                onClick = {
-                    analyticsService.landscapeClicked(landscape.name.resolve(requireContext()))
-                    placeCategoryEventViewModel.updateEvent(PlaceCategoryEvent.LandscapeSelected(landscape))
-                    requireActivity().supportFragmentManager.popBackStack()
-                }
-            )
-        }
+    private fun initDestinations(destinations: List<Destination>) {
+        placeCategoryAdapter.initDestinations(
+            headerView = binding.placeCategoryDestinationsHeader,
+            chipGroup = binding.placeCategoryDestinationsChipGroup,
+            destinations = destinations,
+            isStroked = false,
+            onDestinationClick = { destination ->
+                analyticsService.destinationClicked(destination.name)
+                placeCategoryEventViewModel.updateEvent(PlaceCategoryEvent.DestinationSelected(destination))
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+        )
     }
 
 }
