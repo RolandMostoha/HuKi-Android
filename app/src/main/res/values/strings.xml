@@ -268,6 +268,7 @@
 
     <string name="new_features_title_template">New features (%s)</string>
     <string name="new_features_ok_button">OK</string>
+    <string name="new_features_supporter_message">Thanks for being a HuKi supporter!</string>
 
     <string name="place_area_distance_template">Area of %s</string>
 

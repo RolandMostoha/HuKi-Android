@@ -41,7 +41,6 @@ class SupporterAdapter : ListAdapter<BillingProductType, RecyclerView.ViewHolder
                 val context = binding.root.context
                 val productColor = context.color(productType.productColorRes)
 
-                supporterBadgeImage.imageTintList = productColor.productIconColor(context).colorStateList()
                 supporterBadgeTitle.setTextColor(productColor.productTextColor(context))
                 binding.supporterBadgeTitle.text = context.getString(
                     R.string.support_supporter_title_template,
@@ -55,6 +54,7 @@ class SupporterAdapter : ListAdapter<BillingProductType, RecyclerView.ViewHolder
                         .color(context)
                         .productStrongTextColor(context)
                 )
+                supporterBadgeImage.imageTintList = productColor.productIconColor(context).colorStateList()
                 supporterBadgeImage.setImageResource(productType.productIcon)
                 supporterCard.setCardBackgroundColor(productColor.productBackgroundColor(context))
                 supporterCard.strokeColor = productColor.productHighlightColor(context)

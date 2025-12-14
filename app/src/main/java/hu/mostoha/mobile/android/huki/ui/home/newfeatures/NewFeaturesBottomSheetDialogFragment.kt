@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -14,7 +16,19 @@ import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentNewFeaturesBinding
 import hu.mostoha.mobile.android.huki.extensions.clearBackground
+import hu.mostoha.mobile.android.huki.extensions.gone
+import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsViewModel
+import hu.mostoha.mobile.android.huki.ui.home.support.ProductsViewModel
+import hu.mostoha.mobile.android.huki.util.color
+import hu.mostoha.mobile.android.huki.util.colorStateList
+import hu.mostoha.mobile.android.huki.util.productBackgroundColor
+import hu.mostoha.mobile.android.huki.util.productHighlightColor
+import hu.mostoha.mobile.android.huki.util.productIconColor
+import hu.mostoha.mobile.android.huki.util.productTextColor
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
@@ -37,6 +51,7 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     private val settingsViewModel: SettingsViewModel by activityViewModels()
+    private val productsViewModel: ProductsViewModel by activityViewModels()
 
     private var _binding: FragmentNewFeaturesBinding? = null
     private val binding get() = _binding!!
@@ -47,6 +62,9 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val newFeaturesMessage by lazy { binding.newFeaturesMessage }
     private val closeButton by lazy { binding.newFeaturesCloseButton }
     private val okButton by lazy { binding.newFeaturesOkButton }
+    private val supporterCard by lazy { binding.newFeaturesSupporterCard }
+    private val supporterMessage by lazy { binding.newFeaturesSupporterMessage }
+    private val supporterBadgeImage by lazy { binding.newFeaturesSupporterBadgeImage }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNewFeaturesBinding.inflate(inflater, container, false)
@@ -61,6 +79,7 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
         initDialog()
         initViews()
+        initFlows()
 
         settingsViewModel.updateNewFeaturesSeen(BuildConfig.VERSION_NAME)
     }
@@ -85,6 +104,31 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
         okButton.setOnClickListener {
             dismiss()
+        }
+    }
+
+    private fun initFlows() {
+        lifecycleScope.launch {
+            productsViewModel.productsUiModel
+                .map { it.purchases }
+                .distinctUntilChanged()
+                .flowWithLifecycle(lifecycle)
+                .collect { purchases ->
+                    if (purchases.isNotEmpty()) {
+                        val lastPurchasedProduct = purchases.map { it.productType }.first()
+                        val productColor = requireContext().color(lastPurchasedProduct.productColorRes)
+                        supporterMessage.setTextColor(productColor.productTextColor(requireContext()))
+                        supporterBadgeImage.imageTintList = productColor
+                            .productIconColor(requireContext())
+                            .colorStateList()
+                        supporterBadgeImage.setImageResource(lastPurchasedProduct.productIcon)
+                        supporterCard.setCardBackgroundColor(productColor.productBackgroundColor(requireContext()))
+                        supporterCard.strokeColor = productColor.productHighlightColor(requireContext())
+                        supporterCard.visible()
+                    } else {
+                        supporterCard.gone()
+                    }
+                }
         }
     }
 

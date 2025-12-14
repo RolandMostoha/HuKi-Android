@@ -242,6 +242,7 @@
 
     <string name="new_features_title_template">Új funkciók (%s)</string>
     <string name="new_features_ok_button">OK</string>
+    <string name="new_features_supporter_message">Köszönöm, hogy HuKi támogató vagy!</string>
 
     <string name="place_area_distance_template">%s-es körzetében</string>
 
