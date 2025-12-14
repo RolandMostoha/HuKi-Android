@@ -19,6 +19,7 @@ import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
 import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
 import hu.mostoha.mobile.android.huki.model.domain.HikeRecommendation
+import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeDetailsDestinationMarker
@@ -33,6 +34,7 @@ import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_GEOMETRY_LANDS
 import hu.mostoha.mobile.android.huki.testdata.Landscapes.DEFAULT_LANDSCAPE
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithSiblingContentDescription
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayCount
@@ -42,9 +44,11 @@ import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.espresso.swipeUp
+import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
 import hu.mostoha.mobile.android.huki.util.espresso.waitForScroll
 import hu.mostoha.mobile.android.huki.util.launchScenario
+import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
 import io.mockk.every
@@ -113,9 +117,8 @@ class LandscapesUiTest {
 
         launchScenario<HomeActivity> {
             R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
-            R.id.homePlaceCategoriesFab.click()
 
-            landscape.nameRes.clickWithText()
+            openLandscapeDetails(landscape)
 
             R.id.homePlaceCategoryBottomSheetContainer.isDisplayed()
         }
@@ -128,10 +131,7 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
-            R.id.homePlaceCategoriesFab.click()
-
-            landscape.nameRes.clickWithText()
+            openLandscapeDetails(landscape)
 
             R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
@@ -145,10 +145,7 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
-            R.id.homePlaceCategoriesFab.click()
-
-            landscape.nameRes.clickWithText()
+            openLandscapeDetails(landscape)
 
             R.id.homeMapView.hasOverlayCount<LandscapeDetailsDestinationMarker>(landscape.destinations.count())
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
@@ -162,8 +159,7 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homePlaceCategoriesFab.click()
-            landscape.nameRes.clickWithText()
+            openLandscapeDetails(landscape)
 
             R.id.placeCategoryBottomSheetHeaderContainer.swipeUp()
             waitForScroll()
@@ -181,8 +177,7 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homePlaceCategoriesFab.click()
-            landscape.nameRes.clickWithText()
+            openLandscapeDetails(landscape)
 
             R.id.placeCategoryBottomSheetHeaderContainer.swipeUp()
             waitForScroll()
@@ -209,8 +204,7 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homePlaceCategoriesFab.click()
-            landscape.nameRes.clickWithText()
+            openLandscapeDetails(landscape)
 
             R.id.placeCategoryBottomSheetHeaderContainer.swipeUp()
             waitForScroll()
@@ -241,9 +235,8 @@ class LandscapesUiTest {
         launchScenario<HomeActivity> {
             R.id.homePlaceCategoryBottomSheetContainer.isNotDisplayed()
 
-            R.id.homePlaceCategoriesFab.click()
-
-            landscape.nameRes.isTextDisplayed()
+            R.id.homeDiscoverFab.click()
+            R.string.discover_landscapes_button_title.clickWithText()
 
             recreate()
             waitForRecreate()
@@ -259,8 +252,8 @@ class LandscapesUiTest {
         answerTestWayGeometry(landscape.osmId)
 
         launchScenario<HomeActivity> {
-            R.id.homePlaceCategoriesFab.click()
-            landscape.nameRes.clickWithText()
+            openLandscapeDetails(landscape)
+
             R.id.homePlaceCategoryBottomSheetContainer.isDisplayed()
             R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
@@ -271,6 +264,14 @@ class LandscapesUiTest {
             R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
+    }
+
+    private fun openLandscapeDetails(landscape: Landscape) {
+        R.id.homeDiscoverFab.click()
+        R.string.discover_landscapes_button_title.clickWithText()
+        landscape.nameRes.clickWithText()
+        waitFor(400)
+        R.id.landscapesItemDetailsButton.clickWithSiblingContentDescription(testAppContext.getString(landscape.nameRes))
     }
 
     private fun answerTestLocationProvider() {

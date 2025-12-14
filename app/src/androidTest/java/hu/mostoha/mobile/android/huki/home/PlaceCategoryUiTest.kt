@@ -15,6 +15,7 @@ import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
 import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
+import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.model.domain.OsmTags
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.ui.resolve
@@ -37,6 +38,7 @@ import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.DEFAULT_PLACE_PROFILE
 import hu.mostoha.mobile.android.huki.util.espresso.click
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithSiblingContentDescription
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlayCount
@@ -48,6 +50,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.setBottomSheetState
 import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
+import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.espresso.waitForBottomSheetState
 import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
 import hu.mostoha.mobile.android.huki.util.launchScenario
@@ -212,8 +215,7 @@ class PlaceCategoryUiTest {
             answerPlacesByCategories()
             coEvery { placesRepository.getGeometry(any(), any()) } returns DEFAULT_GEOMETRY_LANDSCAPE
 
-            R.id.homePlaceCategoriesFab.click()
-            DEFAULT_LANDSCAPE.nameRes.clickWithText()
+            openLandscapeDetails(DEFAULT_LANDSCAPE)
 
             R.id.homeContainer.setBottomSheetState(
                 R.id.homePlaceCategoryBottomSheetContainer,
@@ -261,6 +263,14 @@ class PlaceCategoryUiTest {
 
             R.id.placeCategoryHeaderContainer.isDisplayed()
         }
+    }
+
+    private fun openLandscapeDetails(landscape: Landscape) {
+        R.id.homeDiscoverFab.click()
+        R.string.discover_landscapes_button_title.clickWithText()
+        landscape.nameRes.clickWithText()
+        waitFor(300)
+        R.id.landscapesItemDetailsButton.clickWithSiblingContentDescription(testAppContext.getString(landscape.nameRes))
     }
 
     private fun answerTestPlaces() {

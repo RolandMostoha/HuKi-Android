@@ -13,6 +13,7 @@ import hu.mostoha.mobile.android.huki.di.module.LocationModule
 import hu.mostoha.mobile.android.huki.di.module.RepositoryModule
 import hu.mostoha.mobile.android.huki.di.module.VersionConfigurationModule
 import hu.mostoha.mobile.android.huki.fake.FakeVersionConfiguration
+import hu.mostoha.mobile.android.huki.model.domain.Landscape
 import hu.mostoha.mobile.android.huki.osmdroid.OsmConfiguration
 import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeDetailsPolyline
@@ -33,6 +34,7 @@ import hu.mostoha.mobile.android.huki.testdata.Places.DEFAULT_SEARCH_TEXT
 import hu.mostoha.mobile.android.huki.ui.home.HomeActivity
 import hu.mostoha.mobile.android.huki.util.espresso.click
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithScroll
+import hu.mostoha.mobile.android.huki.util.espresso.clickWithSiblingContentDescription
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.clickWithTextInPopup
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
@@ -41,7 +43,9 @@ import hu.mostoha.mobile.android.huki.util.espresso.hasOverlaysInOrder
 import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
+import hu.mostoha.mobile.android.huki.util.espresso.waitFor
 import hu.mostoha.mobile.android.huki.util.launchScenario
+import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.coEvery
 import io.mockk.every
@@ -105,14 +109,13 @@ class OverlaysUiTest {
 
     @Test
     fun givenLandscapeDetails_whenClickOnPlace_thenLandscapeDetailsHides() {
-        val landscape = DEFAULT_LANDSCAPE
         answerTestLocationProvider()
         answerTestPlaces()
         answerTestGeometries()
 
         launchScenario<HomeActivity> {
-            R.id.homePlaceCategoriesFab.click()
-            landscape.nameRes.clickWithText()
+            openLandscapeDetails(DEFAULT_LANDSCAPE)
+
             R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
@@ -130,7 +133,6 @@ class OverlaysUiTest {
 
     @Test
     fun givenPlaceDetails_whenClickOnLandscape_thenPlaceDetailsHides() {
-        val landscape = DEFAULT_LANDSCAPE
         answerTestLocationProvider()
         answerTestPlaces()
         answerTestGeometries()
@@ -143,12 +145,10 @@ class OverlaysUiTest {
             R.id.homeMapView.hasOverlay<Polyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
 
-            R.id.homePlaceCategoriesFab.click()
-            landscape.nameRes.clickWithText()
+            openLandscapeDetails(DEFAULT_LANDSCAPE)
 
             R.id.homeMapView.hasOverlay<LandscapeDetailsPolyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
-            // TODO R.id.homeMapView.hasNoOverlay<Polyline>()
         }
     }
 
@@ -172,6 +172,14 @@ class OverlaysUiTest {
             R.id.homeMapView.hasOverlay<Polyline>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)
         }
+    }
+
+    private fun openLandscapeDetails(landscape: Landscape) {
+        R.id.homeDiscoverFab.click()
+        R.string.discover_landscapes_button_title.clickWithText()
+        landscape.nameRes.clickWithText()
+        waitFor(300)
+        R.id.landscapesItemDetailsButton.clickWithSiblingContentDescription(testAppContext.getString(landscape.nameRes))
     }
 
     private fun answerTestLocationProvider() {

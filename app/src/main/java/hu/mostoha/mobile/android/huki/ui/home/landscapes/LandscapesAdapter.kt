@@ -38,6 +38,7 @@ class LandscapesAdapter(
         fun bind(uiModel: LandscapeDetailsUiModel) {
             with(binding) {
                 val context = root.context
+                val landscapeName = uiModel.landscapeUiModel.name.resolve(binding.root.context)
                 val landscapeColor = uiModel.landscapeUiModel.color.color(context)
 
                 if (uiModel.isSelected) {
@@ -55,8 +56,9 @@ class LandscapesAdapter(
                 landscapesItemContainer.setOnClickListener {
                     onItemClick.invoke(uiModel.landscapeUiModel)
                 }
-                landscapesItemTitle.text = uiModel.landscapeUiModel.name.resolve(binding.root.context)
+                landscapesItemTitle.text = landscapeName
                 landscapesItemImage.setImageResource(uiModel.landscapeUiModel.iconRes)
+                landscapesItemImage.contentDescription = landscapeName
 
                 val description = uiModel.landscapeUiModel.destinations.joinToString(", ") { it.name }
                 landscapesItemDescription.text = description

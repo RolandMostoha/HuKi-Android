@@ -27,7 +27,6 @@
             android:layout_height="@dimen/landscapes_item_image_size"
             android:layout_marginStart="@dimen/space_large"
             android:background="@drawable/background_badge"
-            android:importantForAccessibility="no"
             android:padding="@dimen/space_small"
             tools:src="@drawable/ic_place_type_node" />
 

@@ -173,6 +173,15 @@ fun @receiver:IdRes Int.clickWithSibling(@StringRes stringRes: Int) {
     ).perform(ViewActions.click())
 }
 
+fun @receiver:IdRes Int.clickWithSiblingContentDescription(contentDescription: String) {
+    onView(
+        allOf(
+            withId(this),
+            hasSibling(withContentDescription(contentDescription))
+        )
+    ).perform(ViewActions.click())
+}
+
 fun @receiver:IdRes Int.clickWithSibling(text: String) {
     onView(
         allOf(
