@@ -17,10 +17,8 @@ import hu.mostoha.mobile.android.huki.model.domain.toGpxWaypointsByLocations
 import hu.mostoha.mobile.android.huki.model.domain.toLocationsTriple
 import hu.mostoha.mobile.android.huki.model.mapper.LayersUiModelMapper
 import hu.mostoha.mobile.android.huki.model.ui.Message
-import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
-import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileSource
 import hu.mostoha.mobile.android.huki.repository.GpxRepository
-import hu.mostoha.mobile.android.huki.repository.LayersRepository
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
@@ -46,9 +44,7 @@ class LayersViewModelTest {
 
     private val exceptionLogger = mockk<ExceptionLogger>()
     private val gpxRepository = mockk<GpxRepository>()
-    private val layersRepository = mockk<LayersRepository>()
     private val settingsRepository = mockk<SettingsRepository>()
-    private val tileUrlProvider = mockk<HikingTileUrlProvider>()
     private val gpxFileUri = mockk<Uri>()
     private val analyticsService = mockk<AnalyticsService>(relaxed = true)
     private val layersUiModelMapper = LayersUiModelMapper()
@@ -58,7 +54,6 @@ class LayersViewModelTest {
 
     @Before
     fun setUp() {
-        coEvery { layersRepository.getHikingLayerZoomRanges() } returns emptyList()
         coEvery { settingsRepository.saveBaseLayer(any()) } returns Unit
         every { settingsRepository.getBaseLayer() } returns flowOf(BaseLayer.MAPNIK)
 
@@ -66,31 +61,23 @@ class LayersViewModelTest {
             SavedStateHandle(),
             UnconfinedTestDispatcher(),
             gpxRepository,
-            layersRepository,
             settingsRepository,
             layersUiModelMapper,
-            tileUrlProvider,
             exceptionLogger,
             analyticsService,
         )
     }
 
     @Test
-    fun `When init, then layers config is emitted with null and then with the configured hiking layer`() =
+    fun `When init, then layers config is emitted with the configured hiking layer`() =
         runTestDefault {
             viewModel.layersConfig.test {
                 assertThat(awaitItem()).isEqualTo(
                     LayersConfig(
                         baseLayer = BaseLayer.MAPNIK,
-                        hikingLayer = null
-                    )
-                )
-                assertThat(awaitItem()).isEqualTo(
-                    LayersConfig(
-                        baseLayer = BaseLayer.MAPNIK,
                         hikingLayer = HikingLayer(
                             LayerType.HUNGARIAN_HIKING_LAYER,
-                            AwsHikingTileSource(tileUrlProvider, emptyList())
+                            HikingTileSource
                         )
                     )
                 )
@@ -98,13 +85,12 @@ class LayersViewModelTest {
         }
 
     @Test
-    fun `When init, then layer adapter items are emitted with unselected and then selected hiking layer`() =
+    fun `When init, then layer adapter items are emitted with the selected hiking layer`() =
         runTestDefault {
             viewModel.layerAdapterItems.test {
                 advanceUntilIdle()
 
                 assertThat(awaitItem()).isEqualTo(emptyList<LayersAdapterItem>())
-                assertThat(awaitItem()).isEqualTo(createSelectedAdapterItems(listOf(LayerType.MAPNIK)))
                 assertThat(awaitItem()).isEqualTo(
                     createSelectedAdapterItems(listOf(LayerType.MAPNIK, LayerType.HUNGARIAN_HIKING_LAYER))
                 )
@@ -126,12 +112,11 @@ class LayersViewModelTest {
             viewModel.layersConfig.test {
                 advanceUntilIdle()
 
+                assertThat(awaitItem().hikingLayer.isVisible).isTrue()
+
                 viewModel.selectHikingLayer()
 
-                skipItems(1)
-
-                assertThat(awaitItem().hikingLayer?.isVisible).isTrue()
-                assertThat(awaitItem().hikingLayer?.isVisible).isFalse()
+                assertThat(awaitItem().hikingLayer.isVisible).isFalse()
             }
         }
 

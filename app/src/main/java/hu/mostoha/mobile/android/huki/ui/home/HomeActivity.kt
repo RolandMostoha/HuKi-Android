@@ -140,7 +140,6 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceDetailsMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RotationGestureOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.RoutePlannerPolyline
-import hu.mostoha.mobile.android.huki.osmdroid.tileprovider.AwsMapTileProviderBasic
 import hu.mostoha.mobile.android.huki.repository.DestinationsRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.ui.adapter.PlaceCategoryAdapter.Companion.addSelectionChip
@@ -206,6 +205,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
@@ -1274,14 +1274,9 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         }
     }
 
-    private fun initHikingLayer(hikingLayer: HikingLayer?) {
-        if (hikingLayer == null) {
-            removeHikingLayer()
-            return
-        }
-
+    private fun initHikingLayer(hikingLayer: HikingLayer) {
         if (hikingLayer.isVisible) {
-            val tileProvider = AwsMapTileProviderBasic(this, hikingLayer.tileSource)
+            val tileProvider = MapTileProviderBasic(this, hikingLayer.tileSource)
             val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {
                 if (this@HomeActivity.isDarkMode()) {
                     setColorFilter(getBrightnessColorMatrix(DARK_MODE_HIKING_LAYER_BRIGHTNESS))
@@ -1290,20 +1285,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                 loadingLineColor = Color.TRANSPARENT
             }
 
-            tileProvider.tileRequestCompleteHandlers.apply {
-                // Issue: https://github.com/osmdroid/osmdroid/issues/690
-                clear()
-                add(homeMapView.tileRequestCompleteHandler)
-            }
-            homeMapView.replaceOverlay(tilesOverlay, OverlayComparator)
+            homeMapView.addOverlay(tilesOverlay, OverlayComparator)
         } else {
             homeMapView.updateOverlayVisibility(OverlayType.HIKING_LAYER, false)
         }
-    }
-
-    private fun removeHikingLayer() {
-        homeMapView.overlays.removeIf { it is TilesOverlay }
-        homeMapView.invalidate()
     }
 
     private fun initHikeMode(uiModel: HikeModeUiModel) {
