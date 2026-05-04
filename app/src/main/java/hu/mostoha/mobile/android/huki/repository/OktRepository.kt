@@ -25,9 +25,9 @@ class OktRepository @Inject constructor(
     suspend fun getOktRoutes(oktType: OktType): OktRoutes {
         return withContext(ioDispatcher) {
             val inputStream = when (oktType) {
-                OktType.OKT -> context.resources.openRawResource(R.raw.okt_teljes_bh_20250924)
-                OktType.RPDDK -> context.resources.openRawResource(R.raw.rpddk_teljes_bh_20250909)
-                OktType.AKT -> context.resources.openRawResource(R.raw.ak_teljes_bh_20250903)
+                OktType.OKT -> context.resources.openRawResource(R.raw.okt_teljes_bh_20260430)
+                OktType.RPDDK -> context.resources.openRawResource(R.raw.rpddk_teljes_bh_20260415)
+                OktType.AKT -> context.resources.openRawResource(R.raw.ak_teljes_bh_20260415)
             }
 
             val gpx = GPXParser().parse(inputStream)
