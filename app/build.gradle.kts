@@ -160,10 +160,6 @@ dependencies {
     implementation(libs.squareup.moshi.kotlin)
     ksp(libs.squareup.moshi.kotlin.codegen)
 
-    // AWS
-    implementation(libs.bundles.amplify)
-    coreLibraryDesugaring(libs.android.tools.desugar.jdk.libs)
-
     // Room
     implementation(libs.bundles.room)
     ksp(libs.androidx.room.compiler)

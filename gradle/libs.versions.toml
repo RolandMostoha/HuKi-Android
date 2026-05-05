@@ -4,7 +4,6 @@ android-gpx-parser = "2.3.0"
 android-gradle-plugin = "8.10.0"
 appcompat = "1.7.0"
 arch-core-testing = "2.2.0"
-aws-amplify = "2.14.5"
 billing = "7.1.1"
 constraintlayout = "2.2.1"
 core-ktx = "1.16.0"
@@ -52,9 +51,6 @@ androidx-test-espresso = "3.6.1"
 androidx-test-orchestrator = "1.5.1"
 
 [libraries]
-amplifyframework-aws-auth-cognito = { group = "com.amplifyframework", name = "aws-auth-cognito", version.ref = "aws-amplify" }
-amplifyframework-aws-storage-s3 = { group = "com.amplifyframework", name = "aws-storage-s3", version.ref = "aws-amplify" }
-amplifyframework-core = { group = "com.amplifyframework", name = "core", version.ref = "aws-amplify" }
 airbnb-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 android-billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
 android-tools-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
@@ -124,7 +120,6 @@ kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 
 [bundles]
-amplify = ["amplifyframework-core", "amplifyframework-aws-storage-s3", "amplifyframework-aws-auth-cognito"]
 firebase = ["google-firebase-analytics-ktx", "google-firebase-crashlytics-ktx"]
 ktx-lifecycle = ["androidx-lifecycle-viewmodel-ktx", "androidx-lifecycle-runtime-ktx"]
 room = ["androidx-room-runtime", "androidx-room-ktx"]

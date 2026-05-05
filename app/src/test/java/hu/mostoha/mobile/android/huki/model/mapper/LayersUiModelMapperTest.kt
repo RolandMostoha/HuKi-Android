@@ -17,15 +17,13 @@ import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.WaypointUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
-import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileSource
-import hu.mostoha.mobile.android.huki.osmdroid.tilesource.AwsHikingTileUrlProvider
+import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileSource
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_OPEN
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import hu.mostoha.mobile.android.huki.util.calculateDirectionArrows
-import io.mockk.mockk
 import org.junit.Test
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
@@ -35,8 +33,6 @@ import kotlin.time.Duration.Companion.hours
 class LayersUiModelMapperTest {
 
     private val mapper = LayersUiModelMapper()
-
-    private val urlProvider = mockk<AwsHikingTileUrlProvider>()
 
     @Test
     fun `Given Mapnik base layer and null hiking layer, when mapLayerAdapterItems, then adapter items with selected Mapnik returns`() {
@@ -169,7 +165,7 @@ class LayersUiModelMapperTest {
     @Test
     fun `Given Mapnik base layer and hiking layer, when mapLayerAdapterItems, then adapter items with selected OpenTopo and Hiking Layer returns`() {
         val baseLayer = BaseLayer.MAPNIK
-        val hikingLayer = HikingLayer(LayerType.HUNGARIAN_HIKING_LAYER, AwsHikingTileSource(urlProvider, emptyList()))
+        val hikingLayer = HikingLayer(LayerType.HUNGARIAN_HIKING_LAYER, HikingTileSource)
         val gpxDetails = null
 
         val adapterItems = mapper.mapLayerAdapterItems(baseLayer, hikingLayer, gpxDetails)
