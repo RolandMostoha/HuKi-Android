@@ -1546,7 +1546,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                             .withOffset(homeMapView, OffsetType.BOTTOM_SHEET)
                         homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
                     } else {
-                        homeMapView.animateCenterAndZoomIn(geoPoint, MAP_DEFAULT_ZOOM_LEVEL)
+                        homeMapView.center(geoPoint)
                     }
                 }
             )
