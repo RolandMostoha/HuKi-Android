@@ -28,6 +28,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.clickWithText
 import hu.mostoha.mobile.android.huki.util.espresso.hasNoOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.hasOverlay
 import hu.mostoha.mobile.android.huki.util.espresso.isPopupTextDisplayed
+import hu.mostoha.mobile.android.huki.util.espresso.waitForBottomSheetState
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.toMockLocation
 import io.mockk.every
@@ -121,6 +122,9 @@ class DiscoverUiTest {
 
             R.id.homeDiscoverFab.click()
             R.string.discover_landscapes_button_title.clickWithText()
+
+            waitForBottomSheetState()
+
             R.string.landscape_aggteleki_karszt.clickWithText()
 
             R.id.homeMapView.hasOverlay<LandscapePolyline>()

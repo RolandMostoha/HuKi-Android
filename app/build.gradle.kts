@@ -1,4 +1,5 @@
 import org.ajoberstar.grgit.Grgit
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -15,12 +16,12 @@ plugins {
 
 android {
     namespace = "hu.mostoha.mobile.android.huki"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "hu.mostoha.mobile.android.huki"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 37
 
         val versions = getVersions()
         versionCode = versions["versionCode"]?.toInt()
@@ -44,8 +45,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
+    kotlin.compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 
     buildFeatures {
@@ -158,6 +159,7 @@ dependencies {
     implementation(libs.squareup.retrofit2.converter.moshi)
     implementation(libs.squareup.okhttp3.logging.interceptor)
     implementation(libs.squareup.moshi.kotlin)
+    implementation(libs.google.code.gson)
     ksp(libs.squareup.moshi.kotlin.codegen)
 
     // Room
