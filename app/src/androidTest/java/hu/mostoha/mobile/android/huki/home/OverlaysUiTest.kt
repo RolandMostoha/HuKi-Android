@@ -44,6 +44,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
 import hu.mostoha.mobile.android.huki.util.espresso.waitFor
+import hu.mostoha.mobile.android.huki.util.espresso.waitForBottomSheetState
 import hu.mostoha.mobile.android.huki.util.launchScenario
 import hu.mostoha.mobile.android.huki.util.testAppContext
 import hu.mostoha.mobile.android.huki.util.toMockLocation
@@ -177,8 +178,9 @@ class OverlaysUiTest {
     private fun openLandscapeDetails(landscape: Landscape) {
         R.id.homeDiscoverFab.click()
         R.string.discover_landscapes_button_title.clickWithText()
+        waitForBottomSheetState()
         landscape.nameRes.clickWithText()
-        waitFor(300)
+        waitForBottomSheetState()
         R.id.landscapesItemDetailsButton.clickWithSiblingContentDescription(testAppContext.getString(landscape.nameRes))
     }
 

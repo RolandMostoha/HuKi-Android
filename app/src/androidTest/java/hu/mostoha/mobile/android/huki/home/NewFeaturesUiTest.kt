@@ -45,34 +45,31 @@ class NewFeaturesUiTest {
     @Test
     fun whenNewFeaturesWasNotSeen_thenNewFeaturesDialogIsShown() {
         launchScenario<HomeActivity> {
-            testAppContext.getString(R.string.new_features_title_template)
-                .format(BuildConfig.VERSION_NAME)
-                .isTextDisplayed()
+            R.string.new_features_title.isTextDisplayed()
+            BuildConfig.VERSION_NAME.isTextDisplayed()
         }
     }
 
     @Test
     fun whenNewFeaturesOkButtonIsClicked_thenNewFeaturesDialogIsShownAnymore() {
         launchScenario<HomeActivity> {
-            testAppContext.getString(R.string.new_features_title_template)
+            testAppContext.getString(R.string.new_features_title)
                 .format(BuildConfig.VERSION_NAME)
                 .isTextDisplayed()
 
-            R.id.newFeaturesOkButton.click()
+            R.id.newFeaturesCloseButton.click()
 
             recreate()
             waitForRecreate()
 
-            R.id.newFeaturesOkButton.doesNotExist()
+            R.id.newFeaturesCloseButton.doesNotExist()
         }
     }
 
     @Test
     fun whenNewFeaturesCloseButtonIsClicked_thenNewFeaturesDialogIsShownAnymore() {
         launchScenario<HomeActivity> {
-            testAppContext.getString(R.string.new_features_title_template)
-                .format(BuildConfig.VERSION_NAME)
-                .isTextDisplayed()
+            R.string.new_features_title.isTextDisplayed()
 
             R.id.newFeaturesCloseButton.click()
 

@@ -47,6 +47,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.espresso.typeText
+import hu.mostoha.mobile.android.huki.util.espresso.waitForBottomSheetState
 import hu.mostoha.mobile.android.huki.util.espresso.waitForInputFocusGain
 import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
 import hu.mostoha.mobile.android.huki.util.launchScenario
@@ -382,6 +383,8 @@ class PlacesUiTest {
 
             R.id.homeSearchBarInput.typeText(searchText)
             DEFAULT_PLACE_RELATION.name.clickWithTextInPopup()
+
+            waitForBottomSheetState()
 
             R.id.homeMapView.hasOverlay<Marker>()
             R.id.homeMapView.hasOverlaysInOrder(OverlayComparator)

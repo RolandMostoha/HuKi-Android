@@ -44,7 +44,7 @@ import hu.mostoha.mobile.android.huki.util.espresso.isNotDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.isTextDisplayed
 import hu.mostoha.mobile.android.huki.util.espresso.swipeLeft
 import hu.mostoha.mobile.android.huki.util.espresso.swipeUp
-import hu.mostoha.mobile.android.huki.util.espresso.waitFor
+import hu.mostoha.mobile.android.huki.util.espresso.waitForBottomSheetState
 import hu.mostoha.mobile.android.huki.util.espresso.waitForRecreate
 import hu.mostoha.mobile.android.huki.util.espresso.waitForScroll
 import hu.mostoha.mobile.android.huki.util.launchScenario
@@ -269,8 +269,9 @@ class LandscapesUiTest {
     private fun openLandscapeDetails(landscape: Landscape) {
         R.id.homeDiscoverFab.click()
         R.string.discover_landscapes_button_title.clickWithText()
+        waitForBottomSheetState()
         landscape.nameRes.clickWithText()
-        waitFor(400)
+        waitForBottomSheetState()
         R.id.landscapesItemDetailsButton.clickWithSiblingContentDescription(testAppContext.getString(landscape.nameRes))
     }
 

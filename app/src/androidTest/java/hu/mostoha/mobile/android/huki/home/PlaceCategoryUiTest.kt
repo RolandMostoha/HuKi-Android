@@ -268,8 +268,9 @@ class PlaceCategoryUiTest {
     private fun openLandscapeDetails(landscape: Landscape) {
         R.id.homeDiscoverFab.click()
         R.string.discover_landscapes_button_title.clickWithText()
+        waitForBottomSheetState()
         landscape.nameRes.clickWithText()
-        waitFor(300)
+        waitForBottomSheetState()
         R.id.landscapesItemDetailsButton.clickWithSiblingContentDescription(testAppContext.getString(landscape.nameRes))
     }
 
