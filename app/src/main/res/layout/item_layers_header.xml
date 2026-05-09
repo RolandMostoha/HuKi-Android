@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/space_small"
-    android:layout_marginBottom="@dimen/space_extra_small"
+    android:layout_marginBottom="@dimen/space_small"
+    android:layout_marginStart="@dimen/space_small_medium"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -14,8 +15,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textAllCaps="true"
-        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+        android:textAppearance="@style/DefaultTextAppearance.Bold.Large"
         tools:text="Base layers" />
 
     <com.google.android.material.button.MaterialButton

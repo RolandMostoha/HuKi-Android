@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.view.WindowCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
@@ -88,6 +89,10 @@ class GpxRenameBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val sheet = requireDialog() as BottomSheetDialog
         sheet.behavior.skipCollapsed = true
         sheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        sheet.window?.let { window ->
+            val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+            insetsController.isAppearanceLightNavigationBars = true
+        }
     }
 
     private fun initViews() {

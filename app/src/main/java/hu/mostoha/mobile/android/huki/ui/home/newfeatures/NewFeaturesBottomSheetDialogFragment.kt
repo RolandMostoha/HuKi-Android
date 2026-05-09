@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -96,6 +97,10 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val sheet = requireDialog() as BottomSheetDialog
         sheet.behavior.skipCollapsed = true
         sheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        sheet.window?.let { window ->
+            val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+            insetsController.isAppearanceLightNavigationBars = true
+        }
     }
 
     private fun initViews() {
