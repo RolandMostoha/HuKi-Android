@@ -9,6 +9,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 private const val DEFAULT_DATE_TIME_FORMAT = "yyyy.MM.dd HH:mm"
 private const val DEFAULT_DATE_FORMAT = "yyyy.MM.dd"
@@ -24,6 +25,10 @@ fun LocalDate.toMillis(): Long {
 
 fun LocalDateTime.formatLongDateTime(): String {
     return this.format(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT))
+}
+
+fun LocalDate.toMonthFormat(): String {
+    return this.format(DateTimeFormatter.ofPattern("yyyy MMMM", Locale.getDefault()))
 }
 
 fun LocalDate.formatFriendlyDate(today: LocalDate): Message {

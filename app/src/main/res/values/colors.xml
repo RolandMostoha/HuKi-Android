@@ -16,7 +16,7 @@
     <color name="colorPrimaryTextWhite">#fffff7</color>
     <color name="colorPrimaryTextStrong">#000000</color>
     <color name="colorPrimaryTextDisabled">#61262626</color>
-    <color name="colorSecondaryText">#969696</color>
+    <color name="colorSecondaryText">#939393</color>
     <color name="colorMapOverlayText">#404040</color>
     <color name="colorMapOverlayStroke">#ffffff</color>
     <color name="colorBackground">#ffffff</color>
@@ -111,6 +111,10 @@
     <color name="colorOktSelected">#015398</color>
     <color name="colorOktStrokePolygonMarker">@color/colorStrokeMarkerDark</color>
     <color name="colorOktFillPolygonMarker">@color/colorBackground</color>
+
+    <color name="colorFacebook">#2663EB</color>
+    <color name="colorFacebookCardBackground">#F1F6FD</color>
+    <color name="colorFacebookCardStroke">#DDEBFE</color>
 
     <color name="transparent">@android:color/transparent</color>
 

@@ -39,7 +39,7 @@ class VersionConfigurationTest {
 
             val newFeatures = configuration.getNewFeatures(BuildConfig.VERSION_NAME).first()
 
-            assertThat(newFeatures).isNotEmpty()
+            assertThat(newFeatures!!.releaseNotes).isNotEmpty()
         }
     }
 
@@ -50,7 +50,7 @@ class VersionConfigurationTest {
 
             val newFeatures = configuration.getNewFeatures(BuildConfig.VERSION_NAME).first()
 
-            assertThat(newFeatures).isNotEmpty()
+            assertThat(newFeatures!!.releaseNotes).isNotEmpty()
         }
     }
 
@@ -61,7 +61,7 @@ class VersionConfigurationTest {
 
             val newFeatures = configuration.getNewFeatures(BuildConfig.VERSION_NAME).first()
 
-            assertThat(newFeatures).isNotEmpty()
+            assertThat(newFeatures!!.releaseNotes).isNotEmpty()
         }
     }
 
@@ -72,7 +72,7 @@ class VersionConfigurationTest {
 
             val newFeatures = configuration.getNewFeatures(BuildConfig.VERSION_NAME).first()
 
-            assertThat(newFeatures).isNotEmpty()
+            assertThat(newFeatures!!.releaseNotes).isNotEmpty()
         }
     }
 
@@ -83,7 +83,7 @@ class VersionConfigurationTest {
 
             val newFeatures = configuration.getNewFeatures("v1.0.4").first()
 
-            assertThat(newFeatures).contains("- GPX beolvasási hibák javítása")
+            assertThat(newFeatures!!.releaseNotes).contains("- GPX beolvasási hibák javítása")
         }
     }
 
@@ -115,7 +115,7 @@ class VersionConfigurationTest {
             configuration.saveNewFeaturesSeen("v1.0.4")
             val newFeatures = configuration.getNewFeatures("v1.0.5").first()
 
-            assertThat(newFeatures).contains("- Update OKT routes and stamp locations")
+            assertThat(newFeatures!!.releaseNotes).contains("- Update OKT routes and stamp locations")
         }
     }
 

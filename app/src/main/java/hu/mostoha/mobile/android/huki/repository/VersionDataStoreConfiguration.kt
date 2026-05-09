@@ -7,8 +7,11 @@ import androidx.datastore.preferences.core.edit
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.extensions.readText
+import hu.mostoha.mobile.android.huki.model.domain.NewFeatures
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
@@ -24,7 +27,7 @@ class VersionDataStoreConfiguration @Inject constructor(
         private val LOCALE_HU = Locale.forLanguageTag("hu-HU")
     }
 
-    override fun getNewFeatures(versionName: String): Flow<String?> {
+    override fun getNewFeatures(versionName: String): Flow<NewFeatures?> {
         return dataStore.data
             .map { preferences ->
                 val lastSeenVersion = preferences[DataStoreConstants.NewFeatures.NEW_FEATURES_SEEN_VERSION]
@@ -45,7 +48,13 @@ class VersionDataStoreConfiguration @Inject constructor(
                         versionName
                     }
 
-                    context.readText("whatsnew/$version/whatsnew-$languageTag")
+                    val buildDate = BuildConfig.BUILD_DATE
+                    val releaseDate = OffsetDateTime.parse(buildDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                    val releaseNotes = context.readText("whatsnew/$version/whatsnew-$languageTag")
+
+                    releaseNotes?.let {
+                        NewFeatures(versionName, releaseDate.toLocalDate(), releaseNotes)
+                    }
                 } else {
                     null
                 }

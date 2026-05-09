@@ -162,4 +162,6 @@ interface AnalyticsService {
 
     fun googleMapsPlaceOpened()
 
+    fun facebookPageClicked()
+
 }

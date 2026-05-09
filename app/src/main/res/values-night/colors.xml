@@ -41,4 +41,7 @@
     <color name="colorOktStrokePolygonMarker">@color/colorOktSelected</color>
     <color name="colorOktFillPolygonMarker">@color/colorBackgroundLight</color>
 
+    <color name="colorFacebookCardBackground">#1A222F</color>
+    <color name="colorFacebookCardStroke">#2D3748</color>
+
 </resources>

@@ -17,15 +17,17 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentNewFeaturesBinding
 import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import hu.mostoha.mobile.android.huki.extensions.gone
+import hu.mostoha.mobile.android.huki.extensions.openUrl
+import hu.mostoha.mobile.android.huki.extensions.toMonthFormat
 import hu.mostoha.mobile.android.huki.extensions.visible
+import hu.mostoha.mobile.android.huki.model.domain.NewFeatures
 import hu.mostoha.mobile.android.huki.ui.home.settings.SettingsViewModel
 import hu.mostoha.mobile.android.huki.ui.home.support.ProductsViewModel
 import hu.mostoha.mobile.android.huki.util.color
 import hu.mostoha.mobile.android.huki.util.colorStateList
 import hu.mostoha.mobile.android.huki.util.productBackgroundColor
-import hu.mostoha.mobile.android.huki.util.productHighlightColor
 import hu.mostoha.mobile.android.huki.util.productIconColor
-import hu.mostoha.mobile.android.huki.util.productTextColor
+import hu.mostoha.mobile.android.huki.util.productStrokeColor
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -37,14 +39,14 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
         private val TAG = NewFeaturesBottomSheetDialogFragment::class.java.simpleName + ".TAG"
         private val ARG_NEW_FEATURES = this::class.java.simpleName + "ARG_NEW_FEATURES"
 
-        fun showDialog(activity: FragmentActivity, newFeatures: String) {
+        fun showDialog(activity: FragmentActivity, newFeatures: NewFeatures) {
             newInstance(newFeatures).show(activity.supportFragmentManager, TAG)
         }
 
-        private fun newInstance(newFeatures: String): NewFeaturesBottomSheetDialogFragment {
+        private fun newInstance(newFeatures: NewFeatures): NewFeaturesBottomSheetDialogFragment {
             return NewFeaturesBottomSheetDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_NEW_FEATURES, newFeatures)
+                    putParcelable(ARG_NEW_FEATURES, newFeatures)
                 }
             }
         }
@@ -56,14 +58,14 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentNewFeaturesBinding? = null
     private val binding get() = _binding!!
 
-    private val newFeatures by lazy { requireArguments().getString(ARG_NEW_FEATURES)!! }
+    private val newFeatures by lazy { requireArguments().getParcelable<NewFeatures>(ARG_NEW_FEATURES)!! }
 
-    private val newFeaturesTitle by lazy { binding.newFeaturesTitle }
+    private val newFeaturesVersion by lazy { binding.newFeaturesVersion }
+    private val newFeaturesReleaseDate by lazy { binding.newFeaturesReleaseDate }
     private val newFeaturesMessage by lazy { binding.newFeaturesMessage }
     private val closeButton by lazy { binding.newFeaturesCloseButton }
-    private val okButton by lazy { binding.newFeaturesOkButton }
+    private val facebookJoinButton by lazy { binding.newFeaturesFacebookJoinButton }
     private val supporterCard by lazy { binding.newFeaturesSupporterCard }
-    private val supporterMessage by lazy { binding.newFeaturesSupporterMessage }
     private val supporterBadgeImage by lazy { binding.newFeaturesSupporterBadgeImage }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -97,13 +99,14 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun initViews() {
-        newFeaturesTitle.text = getString(R.string.new_features_title_template, BuildConfig.VERSION_NAME)
-        newFeaturesMessage.text = newFeatures
+        newFeaturesVersion.text = newFeatures.version
+        newFeaturesReleaseDate.text = newFeatures.releaseDate.toMonthFormat()
+        newFeaturesMessage.text = newFeatures.releaseNotes
         closeButton.setOnClickListener {
             dismiss()
         }
-        okButton.setOnClickListener {
-            dismiss()
+        facebookJoinButton.setOnClickListener {
+            requireContext().openUrl(getString(R.string.facebook_page_url))
         }
     }
 
@@ -117,13 +120,12 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     if (purchases.isNotEmpty()) {
                         val lastPurchasedProduct = purchases.map { it.productType }.first()
                         val productColor = requireContext().color(lastPurchasedProduct.productColorRes)
-                        supporterMessage.setTextColor(productColor.productTextColor(requireContext()))
                         supporterBadgeImage.imageTintList = productColor
                             .productIconColor(requireContext())
                             .colorStateList()
                         supporterBadgeImage.setImageResource(lastPurchasedProduct.productIcon)
                         supporterCard.setCardBackgroundColor(productColor.productBackgroundColor(requireContext()))
-                        supporterCard.strokeColor = productColor.productHighlightColor(requireContext())
+                        supporterCard.strokeColor = productColor.productStrokeColor(requireContext())
                         supporterCard.visible()
                     } else {
                         supporterCard.gone()

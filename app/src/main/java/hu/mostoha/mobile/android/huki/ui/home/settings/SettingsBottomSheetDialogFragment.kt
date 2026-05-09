@@ -54,6 +54,7 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val offlineModeInfoButton by lazy { binding.settingsOfflineModeInfoButton }
     private val emailText by lazy { binding.settingsEmailText }
     private val gitHubText by lazy { binding.settingsGitHubText }
+    private val facebookGroupText by lazy { binding.settingsFacebookText }
     private val googlePlayReviewButton by lazy { binding.settingsGooglePlayReviewButton }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -135,6 +136,11 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         gitHubText.setOnClickListener {
             analyticsService.settingsGitHubClicked()
             requireContext().openUrl(getString(R.string.settings_github_repository_url))
+        }
+        facebookGroupText.hyperlinkStyle()
+        facebookGroupText.setOnClickListener {
+            analyticsService.facebookPageClicked()
+            requireContext().openUrl(getString(R.string.facebook_page_url))
         }
         googlePlayReviewButton.setOnClickListener {
             analyticsService.settingsGooglePlayReviewClicked()

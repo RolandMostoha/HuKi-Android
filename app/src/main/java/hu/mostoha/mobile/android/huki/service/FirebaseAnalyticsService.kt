@@ -98,6 +98,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_PLACE_CATEGORY = "select_place_category"
         private const val EVENT_VIEW_GOOGLE_MAPS_PLACE = "view_google_maps_place"
         private const val EVENT_VIEW_DEEPLINK = "view_deeplink"
+        private const val EVENT_SELECT_FACEBOOK_PAGE = "select_facebook_page"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
@@ -525,6 +526,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun googleMapsPlaceOpened() {
         firebaseAnalytics.logEvent(EVENT_VIEW_GOOGLE_MAPS_PLACE, null)
+    }
+
+    override fun facebookPageClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_FACEBOOK_PAGE, null)
     }
 
 }

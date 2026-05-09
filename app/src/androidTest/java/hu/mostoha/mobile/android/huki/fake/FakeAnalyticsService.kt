@@ -163,4 +163,6 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun googleMapsPlaceOpened() = Unit
 
+    override fun facebookPageClicked() = Unit
+
 }

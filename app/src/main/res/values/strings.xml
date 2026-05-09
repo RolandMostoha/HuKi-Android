@@ -188,6 +188,7 @@
     <string name="settings_email" translatable="false">huki.app@gmail.com</string>
     <string name="settings_email_subject" translatable="false">[HuKi]</string>
     <string name="settings_github_repository_url" translatable="false">https://github.com/RolandMostoha/HuKi-Android/</string>
+    <string name="settings_facebook_title">Facebook page:</string>
     <string name="settings_google_play_review_button">Google Play review</string>
     <string name="settings_google_play_review_url" translatable="false">https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki</string>
 
@@ -266,9 +267,7 @@
     <string name="support_error_acknowledge_purchase">There was an error on Google Billing payment acknowledgement.</string>
     <string name="support_error_consume_purchase">There was an error on Google Billing payment consume.</string>
 
-    <string name="new_features_title_template">New features (%s)</string>
-    <string name="new_features_ok_button">OK</string>
-    <string name="new_features_supporter_message">Thanks for being a HuKi supporter!</string>
+    <string name="new_features_title">New Features</string>
 
     <string name="place_area_distance_template">Area of %s</string>
 
@@ -357,5 +356,10 @@
     <string name="osm_data_popup_title">OSM Data</string>
 
     <string name="location_iq_attribution_url" translatable="false">https://locationiq.com/</string>
+
+    <string name="facebook_follow_title">Follow HuKi on Facebook!</string>
+    <string name="facebook_follow_message">News, updates, tips.</string>
+    <string name="facebook_follow_button">Follow</string>
+    <string name="facebook_page_url" translatable="false">https://www.facebook.com/profile.php?id=61572010721841</string>
 
 </resources>

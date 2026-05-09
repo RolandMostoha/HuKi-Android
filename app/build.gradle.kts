@@ -1,6 +1,8 @@
 import org.ajoberstar.grgit.Grgit
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Properties
 
 plugins {
@@ -27,10 +29,14 @@ android {
         versionCode = versions["versionCode"]?.toInt()
         versionName = versions["versionName"]
 
+        val now = ZonedDateTime.now()
+        val buildDate = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+
         setProperty("archivesBaseName", "HuKi_${versionName}_$versionCode")
 
         buildConfigField("String", "GRAPHHOPPER_API_KEY", getApiKey("GRAPHHOPPER_API_KEY"))
         buildConfigField("String", "LOCATION_IQ_API_KEY", getApiKey("LOCATION_IQ_API_KEY"))
+        buildConfigField("String", "BUILD_DATE", "\"$buildDate\"")
 
         testInstrumentationRunner = "hu.mostoha.mobile.android.huki.HiltTestRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"

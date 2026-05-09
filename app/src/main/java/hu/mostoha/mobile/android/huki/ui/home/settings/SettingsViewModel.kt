@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.BuildConfig
+import hu.mostoha.mobile.android.huki.model.domain.NewFeatures
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.repository.SettingsRepository
 import hu.mostoha.mobile.android.huki.repository.VersionConfiguration
@@ -29,7 +30,7 @@ class SettingsViewModel @Inject constructor(
     val theme: StateFlow<Theme> = settingsRepository.getTheme()
         .stateIn(viewModelScope, WhileViewSubscribed, Theme.SYSTEM)
 
-    val newFeatures: StateFlow<String?> = versionConfiguration.getNewFeatures(BuildConfig.VERSION_NAME)
+    val newFeatures: StateFlow<NewFeatures?> = versionConfiguration.getNewFeatures(BuildConfig.VERSION_NAME)
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     fun updateMapScale(percentage: Int) {
