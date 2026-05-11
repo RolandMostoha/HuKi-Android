@@ -11,7 +11,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.databinding.FragmentGpxHistoryBinding
-import hu.mostoha.mobile.android.huki.extensions.shareFile
+import hu.mostoha.mobile.android.huki.extensions.shareGpxFile
 import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -87,7 +87,7 @@ class GpxHistoryFragment : Fragment() {
             onGpxShare = { gpxHistoryItem ->
                 analyticsService.gpxHistoryItemShared()
 
-                requireContext().shareFile(gpxHistoryItem.fileUri)
+                requireContext().shareGpxFile(gpxHistoryItem.fileUri)
             },
             onGpxRename = { item ->
                 lifecycleScope.launch {

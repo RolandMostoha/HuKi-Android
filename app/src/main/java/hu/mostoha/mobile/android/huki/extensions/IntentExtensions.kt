@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.MailTo
 import android.net.Uri
-import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.core.net.toUri
@@ -86,11 +85,31 @@ fun Intent.isDeeplink(): Boolean {
     return action == Intent.ACTION_VIEW && data?.host == HUKI_HOST
 }
 
-fun Context.shareFile(uri: Uri) {
-    val shareProviderUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", uri.toFile())
+fun Context.shareGpxFile(uri: Uri) {
+    val providerUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", uri.toFile())
 
-    ShareCompat.IntentBuilder(this)
-        .setStream(shareProviderUri)
-        .setType("*/*")
-        .startChooser()
+    // Base ACTION_SEND Intent to share social/email apps
+    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "*/*"
+        putExtra(Intent.EXTRA_STREAM, providerUri)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+
+    // Extra ACTION_VIEW GPX Intent for map apps (Garmin Connect, OsmAnd, Locus)
+    val viewIntent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(providerUri, "application/gpx+xml")
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    val viewTargets = packageManager.queryIntentActivities(viewIntent, 0)
+        .map { resolveInfo ->
+            Intent(viewIntent).setPackage(resolveInfo.activityInfo.packageName)
+        }
+
+    val chooser = Intent.createChooser(sendIntent, null).apply {
+        if (viewTargets.isNotEmpty()) {
+            putExtra(Intent.EXTRA_INITIAL_INTENTS, viewTargets.toTypedArray())
+        }
+    }
+
+    startActivity(chooser)
 }

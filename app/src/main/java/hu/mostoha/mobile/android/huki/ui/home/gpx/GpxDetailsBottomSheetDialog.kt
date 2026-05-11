@@ -15,7 +15,7 @@ import hu.mostoha.mobile.android.huki.extensions.inflater
 import hu.mostoha.mobile.android.huki.extensions.setDrawableStart
 import hu.mostoha.mobile.android.huki.extensions.setMessage
 import hu.mostoha.mobile.android.huki.extensions.setMessageOrGone
-import hu.mostoha.mobile.android.huki.extensions.shareFile
+import hu.mostoha.mobile.android.huki.extensions.shareGpxFile
 import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.extensions.startGoogleMapsDirectionsIntent
 import hu.mostoha.mobile.android.huki.extensions.switchVisibility
@@ -125,7 +125,7 @@ class GpxDetailsBottomSheetDialog(
             }
             gpxDetailsShareButton.setOnClickListener {
                 analyticsService.gpxDetailsShareClicked()
-                context.shareFile(gpxDetails.fileUri.toUri())
+                context.shareGpxFile(gpxDetails.fileUri.toUri())
             }
         }
     }
