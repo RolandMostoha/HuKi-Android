@@ -1,5 +1,5 @@
-- Új app ikon és színek
-- Új "szem" ikon a GPX gyors elrejtéséhez
-- Mostmár Google Maps-ről is megosztható hely a HuKi-val
-- A megosztott helyet el is menti az előzményekbe
-- A kirándulóhelyek bekerültek a térképes keresőbe is
+- Overpass API csere, így újra működnek az OSM hívások
+- Túraútvonalak frissítése
+- OKT, RPDDK, AK útvonalak és bélyegzőhelyek frissítése
+- Hosszú klikkes POI + zoom javítások
+- Garmin Connect GPX megosztás
