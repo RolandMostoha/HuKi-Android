@@ -1,0 +1,5 @@
+- Use alternative Overpass API to fix OSM calls
+- Update hiking trails
+- Update OKT, RPDDK, AK routes and stamp locations
+- Long click POI zoom fixes
+- Support Garmin connect with GPX share
