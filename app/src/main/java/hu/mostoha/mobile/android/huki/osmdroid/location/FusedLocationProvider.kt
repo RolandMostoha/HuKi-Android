@@ -11,8 +11,10 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider
@@ -31,6 +33,7 @@ class FusedLocationProvider @Inject constructor(
     companion object {
         private const val MY_LOCATION_TIME_MS = 10000L
         private const val MY_LOCATION_MIN_INTERVAL_TIME_MS = 4000L
+        private const val LOCATION_STREAM_RETRY_DELAY_MS = 2000L
     }
 
     private var myLocationConsumer: IMyLocationConsumer? = null
@@ -75,6 +78,10 @@ class FusedLocationProvider @Inject constructor(
             Timber.d("Location Flow stream is closed, stopping location monitoring")
             fusedLocationClient.removeLocationUpdates(locationCallback)
         }
+    }.retryWhen { cause, _ ->
+        Timber.w(cause, "Location stream failed, re-subscribing")
+        delay(LOCATION_STREAM_RETRY_DELAY_MS)
+        true
     }
 
     override fun startLocationProvider(myLocationConsumer: IMyLocationConsumer): Boolean {

@@ -23,8 +23,10 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.skydoves.powermenu.CustomPowerMenu
 import dagger.hilt.android.AndroidEntryPoint
@@ -195,14 +197,13 @@ import hu.mostoha.mobile.android.huki.util.getColorScaledMatrix
 import hu.mostoha.mobile.android.huki.util.productIconColor
 import hu.mostoha.mobile.android.huki.views.BottomSheetDialog
 import hu.mostoha.mobile.android.huki.views.PopupMenuAdapter
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import org.osmdroid.tileprovider.MapTileProviderBasic
@@ -285,6 +286,7 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
     private var rotationGestureOverlay: RotationGestureOverlay? = null
     private var myLocationOverlay: MyLocationOverlay? = null
+    private var locationMonitoringJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -737,11 +739,23 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                     homeMapView.addOverlay(this, OverlayComparator)
                 }
         }
-        myLocationOverlay?.let { overlay ->
-            lifecycleScope.launch {
-                overlay.startLocationFlow()
-                    .distinctUntilChanged()
-                    .onEach { myLocation ->
+        if (locationMonitoringJob?.isActive == true) {
+            return
+        }
+        locationMonitoringJob = lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myLocationOverlay?.startLocationFlow()
+                    ?.distinctUntilChanged()
+                    ?.collect { myLocation ->
+                        val isFollowing = homeViewModel.myLocationConfigUiModel.value.isFollowLocationEnabled
+                        homeMyLocationFab.setImageResource(
+                            if (isFollowing) {
+                                R.drawable.ic_home_fab_my_location_fixed
+                            } else {
+                                R.drawable.ic_home_fab_my_location_not_fixed
+                            }
+                        )
+
                         initAltitude(myLocation.altitude)
 
                         homeMapView.doOnInfoWindows<DistanceInfoWindow> { marker, infoWindow ->
@@ -752,7 +766,6 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                                 .resolve(this@HomeActivity)
                         }
                     }
-                    .collect()
             }
         }
     }
