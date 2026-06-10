@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface OverpassService {
 
     companion object {
-        const val OVERPASS_TIMEOUT_MS = 30000
+        const val OVERPASS_TIMEOUT_MS = 15000
     }
 
     @Headers("$HEADER_TIMEOUT:$OVERPASS_TIMEOUT_MS")

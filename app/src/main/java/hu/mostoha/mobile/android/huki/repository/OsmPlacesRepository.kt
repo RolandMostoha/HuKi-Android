@@ -7,6 +7,7 @@ import hu.mostoha.mobile.android.huki.model.domain.HikingRouteDetails
 import hu.mostoha.mobile.android.huki.model.domain.Place
 import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
+import hu.mostoha.mobile.android.huki.interactor.isRetriableOverpassError
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceDetailsNetworkDomainMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
 import hu.mostoha.mobile.android.huki.network.OverpassService
@@ -14,6 +15,9 @@ import hu.mostoha.mobile.android.huki.overpasser.output.OutputFormat
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputModificator
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputVerbosity
 import hu.mostoha.mobile.android.huki.overpasser.query.OverpassQuery
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -26,6 +30,9 @@ class OsmPlacesRepository @Inject constructor(
         const val OSM_HIKING_ROUTES_QUERY_LIMIT = 30
         const val OSM_PLACE_CATEGORY_QUERY_LIMIT = 100
         val TIMEOUT_S = OverpassService.OVERPASS_TIMEOUT_MS.milliseconds.inWholeSeconds.toInt()
+
+        private const val OVERPASS_MAX_ATTEMPTS = 2
+        private val OVERPASS_RETRY_DELAY = 700.milliseconds
     }
 
     override suspend fun getGeometry(osmId: String, placeType: PlaceType): Geometry {
@@ -62,7 +69,7 @@ class OsmPlacesRepository @Inject constructor(
             .output(OutputVerbosity.TAGS, null, null, OSM_HIKING_ROUTES_QUERY_LIMIT)
             .build()
 
-        val response = overpassService.interpreter(query)
+        val response = withOverpassRetry { overpassService.interpreter(query) }
 
         return placeDetailsNetworkDomainMapper.mapHikingRoutes(response)
     }
@@ -77,7 +84,7 @@ class OsmPlacesRepository @Inject constructor(
             .output(OutputVerbosity.BODY, OutputModificator.GEOM, null, 1)
             .build()
 
-        val response = overpassService.interpreter(query)
+        val response = withOverpassRetry { overpassService.interpreter(query) }
 
         return HikingRouteDetails(
             hikingRoute = placeDetailsNetworkDomainMapper.mapHikingRoutes(response).first(),
@@ -96,7 +103,7 @@ class OsmPlacesRepository @Inject constructor(
             .output(OutputVerbosity.TAGS, OutputModificator.BB, null, OSM_PLACE_CATEGORY_QUERY_LIMIT)
             .build()
 
-        val response = overpassService.interpreter(query)
+        val response = withOverpassRetry { overpassService.interpreter(query) }
 
         return placeDetailsNetworkDomainMapper.mapPlacesByCategories(response, categories)
     }
@@ -117,7 +124,7 @@ class OsmPlacesRepository @Inject constructor(
             .output(OutputVerbosity.TAGS, OutputModificator.BB, null, 1)
             .build()
 
-        return overpassService.interpreter(query).elements.firstOrNull()?.tags ?: emptyMap()
+        return withOverpassRetry { overpassService.interpreter(query) }.elements.firstOrNull()?.tags ?: emptyMap()
     }
 
     private suspend fun getNode(osmId: String): OverpassQueryResponse {
@@ -130,7 +137,7 @@ class OsmPlacesRepository @Inject constructor(
             .output(OutputVerbosity.BODY, OutputModificator.GEOM, null, 1)
             .build()
 
-        return overpassService.interpreter(query)
+        return withOverpassRetry { overpassService.interpreter(query) }
     }
 
     private suspend fun getNodesByWay(osmId: String): OverpassQueryResponse {
@@ -143,7 +150,7 @@ class OsmPlacesRepository @Inject constructor(
             .output(OutputVerbosity.BODY, OutputModificator.GEOM, null, -1)
             .build()
 
-        return overpassService.interpreter(query)
+        return withOverpassRetry { overpassService.interpreter(query) }
     }
 
     private suspend fun getNodesByRelation(osmId: String): OverpassQueryResponse {
@@ -156,7 +163,32 @@ class OsmPlacesRepository @Inject constructor(
             .output(OutputVerbosity.BODY, OutputModificator.GEOM, null, -1)
             .build()
 
-        return overpassService.interpreter(query)
+        return withOverpassRetry { overpassService.interpreter(query) }
+    }
+
+    /**
+     * Runs an Overpass [request] with a single retry on transient timeout/gateway errors.
+     *
+     * A cold query often exceeds the public instance's gateway timeout (HTTP 504) while it reads the
+     * queried area from disk, but that first attempt warms the server's page cache, so an immediate
+     * retry usually returns instantly. Only [isRetriableOverpassError] cases are retried; 429 and all
+     * other errors propagate unchanged so the rate-limit is respected.
+     */
+    private suspend fun <T> withOverpassRetry(request: suspend () -> T): T {
+        repeat(OVERPASS_MAX_ATTEMPTS - 1) {
+            try {
+                return request()
+            } catch (exception: Exception) {
+                if (exception is CancellationException) throw exception
+                if (!exception.isRetriableOverpassError()) throw exception
+
+                Timber.w(exception, "Overpass request failed, retrying in $OVERPASS_RETRY_DELAY")
+
+                delay(OVERPASS_RETRY_DELAY)
+            }
+        }
+
+        return request()
     }
 
 }
