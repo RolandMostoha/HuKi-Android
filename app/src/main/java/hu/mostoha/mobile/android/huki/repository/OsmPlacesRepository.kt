@@ -9,13 +9,13 @@ import hu.mostoha.mobile.android.huki.model.domain.PlaceCategory
 import hu.mostoha.mobile.android.huki.model.domain.PlaceType
 import hu.mostoha.mobile.android.huki.model.mapper.PlaceDetailsNetworkDomainMapper
 import hu.mostoha.mobile.android.huki.model.network.overpass.OverpassQueryResponse
-import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputFormat
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputModificator
 import hu.mostoha.mobile.android.huki.overpasser.output.OutputVerbosity
 import hu.mostoha.mobile.android.huki.overpasser.query.OverpassQuery
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 class OsmPlacesRepository @Inject constructor(
     private val overpassService: OverpassService,
@@ -25,6 +25,7 @@ class OsmPlacesRepository @Inject constructor(
     companion object {
         const val OSM_HIKING_ROUTES_QUERY_LIMIT = 30
         const val OSM_PLACE_CATEGORY_QUERY_LIMIT = 100
+        val TIMEOUT_S = OverpassService.OVERPASS_TIMEOUT_MS.milliseconds.inWholeSeconds.toInt()
     }
 
     override suspend fun getGeometry(osmId: String, placeType: PlaceType): Geometry {
@@ -50,7 +51,7 @@ class OsmPlacesRepository @Inject constructor(
     override suspend fun getHikingRoutes(boundingBox: BoundingBox): List<HikingRoute> {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.DEFAULT_TIMEOUT_S)
+            .timeout(TIMEOUT_S)
             .filterQuery()
             .rel()
             .tag("type", "route")
@@ -69,7 +70,7 @@ class OsmPlacesRepository @Inject constructor(
     override suspend fun getHikingRouteDetails(osmRelId: String): HikingRouteDetails {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.DEFAULT_TIMEOUT_S)
+            .timeout(TIMEOUT_S)
             .filterQuery()
             .relBy(osmRelId)
             .end()
@@ -88,7 +89,7 @@ class OsmPlacesRepository @Inject constructor(
         val osmQueryTags = categories.flatMap { it.osmQueryTags }
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.DEFAULT_TIMEOUT_S)
+            .timeout(TIMEOUT_S)
             .filterQuery()
             .nwrs(osmQueryTags, boundingBox.south, boundingBox.west, boundingBox.north, boundingBox.east)
             .end()
@@ -103,7 +104,7 @@ class OsmPlacesRepository @Inject constructor(
     override suspend fun getOsmTags(osmId: String, placeType: PlaceType): Map<String, String> {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.DEFAULT_TIMEOUT_S)
+            .timeout(TIMEOUT_S)
             .filterQuery()
             .apply {
                 when (placeType) {
@@ -122,7 +123,7 @@ class OsmPlacesRepository @Inject constructor(
     private suspend fun getNode(osmId: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.DEFAULT_TIMEOUT_S)
+            .timeout(TIMEOUT_S)
             .filterQuery()
             .nodeBy(osmId)
             .end()
@@ -135,7 +136,7 @@ class OsmPlacesRepository @Inject constructor(
     private suspend fun getNodesByWay(osmId: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.DEFAULT_TIMEOUT_S)
+            .timeout(TIMEOUT_S)
             .filterQuery()
             .wayBy(osmId)
             .end()
@@ -148,7 +149,7 @@ class OsmPlacesRepository @Inject constructor(
     private suspend fun getNodesByRelation(osmId: String): OverpassQueryResponse {
         val query = OverpassQuery()
             .format(OutputFormat.JSON)
-            .timeout(NetworkConfig.DEFAULT_TIMEOUT_S)
+            .timeout(TIMEOUT_S)
             .filterQuery()
             .relBy(osmId)
             .end()
