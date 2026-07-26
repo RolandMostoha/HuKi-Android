@@ -58,7 +58,15 @@ class WaypointAdapter(
         private val binding: ItemRoutePlannerWaypointBinding,
         private val context: Context = binding.root.context,
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        private var wayPointItem: WaypointItem? = null
+
+        init {
+            binding.initWaypointInputListeners()
+        }
+
         fun bind(wayPointItem: WaypointItem) {
+            this.wayPointItem = wayPointItem
             with(binding) {
                 initWaypointInput(wayPointItem)
                 initWaypointImage(wayPointItem)
@@ -66,15 +74,16 @@ class WaypointAdapter(
             }
         }
 
-        private fun ItemRoutePlannerWaypointBinding.initWaypointInput(wayPointItem: WaypointItem) {
-            routePlannerWaypointInput.setText(wayPointItem.primaryText?.resolve(context))
+        private fun ItemRoutePlannerWaypointBinding.initWaypointInputListeners() {
             routePlannerWaypointInput.setOnFocusChangeListener { _, hasFocus ->
+                val item = wayPointItem ?: return@setOnFocusChangeListener
                 if (hasFocus) {
-                    onSearchTextFocused.invoke(routePlannerWaypointInputLayout, wayPointItem)
+                    onSearchTextFocused.invoke(routePlannerWaypointInputLayout, item)
                 }
             }
             routePlannerWaypointInput.addTextChangedListener { editable ->
-                onSearchTextChanged.invoke(routePlannerWaypointInputLayout, wayPointItem, editable.toString())
+                val item = wayPointItem ?: return@addTextChangedListener
+                onSearchTextChanged.invoke(routePlannerWaypointInputLayout, item, editable.toString())
             }
             routePlannerWaypointInput.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -85,6 +94,10 @@ class WaypointAdapter(
                 }
             }
             routePlannerWaypointInputLayout.setEndIconOnClickListener {}
+        }
+
+        private fun ItemRoutePlannerWaypointBinding.initWaypointInput(wayPointItem: WaypointItem) {
+            routePlannerWaypointInput.setText(wayPointItem.primaryText?.resolve(context))
         }
 
         private fun ItemRoutePlannerWaypointBinding.initWaypointImage(wayPointItem: WaypointItem) {
