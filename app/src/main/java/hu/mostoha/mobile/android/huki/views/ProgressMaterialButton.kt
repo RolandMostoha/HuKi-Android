@@ -22,7 +22,7 @@ class ProgressMaterialButton @JvmOverloads constructor(
     @ColorInt
     private val iconColor: Int
     private val iconDrawable: Drawable
-    private val progressIndicatorDrawable: Drawable
+    private val progressIndicatorDrawable: IndeterminateDrawable<CircularProgressIndicatorSpec>
 
     var disabled: Boolean = false
         set(value) {
@@ -45,8 +45,10 @@ class ProgressMaterialButton @JvmOverloads constructor(
         set(value) {
             if (value) {
                 icon = progressIndicatorDrawable
+                progressIndicatorDrawable.setVisible(true, true)
                 isEnabled = false
             } else {
+                progressIndicatorDrawable.hideNow()
                 icon = iconDrawable
                 isEnabled = true
             }
@@ -80,12 +82,24 @@ class ProgressMaterialButton @JvmOverloads constructor(
         )
         progressIndicatorSpec.indicatorColors = intArrayOf(ContextCompat.getColor(context, R.color.colorPrimary))
 
-        val circularDrawable = IndeterminateDrawable.createCircularDrawable(context, progressIndicatorSpec).apply {
+        return IndeterminateDrawable.createCircularDrawable(context, progressIndicatorSpec).apply {
             bounds = iconDrawable.bounds
-            setVisible(true, true)
         }
+    }
 
-        return circularDrawable
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        if (inProgress) {
+            progressIndicatorDrawable.setVisible(true, true)
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        // Stops the infinite animator, otherwise it keeps the drawable and its Context alive via AnimationHandler
+        progressIndicatorDrawable.hideNow()
+
+        super.onDetachedFromWindow()
     }
 
 }
