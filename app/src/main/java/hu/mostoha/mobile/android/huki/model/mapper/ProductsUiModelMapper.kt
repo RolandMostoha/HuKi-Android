@@ -2,10 +2,10 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.PurchaseHistoryRecord
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.toLocalDateTime
-import hu.mostoha.mobile.android.huki.model.domain.toBillingProduct
+import hu.mostoha.mobile.android.huki.model.domain.OneTimePurchaseRecord
+import hu.mostoha.mobile.android.huki.model.domain.toBillingProductOrNull
 import hu.mostoha.mobile.android.huki.model.domain.toOneTimeBillingProduct
 import hu.mostoha.mobile.android.huki.model.domain.toRecurringBillingProduct
 import hu.mostoha.mobile.android.huki.model.ui.BillingProduct
@@ -55,22 +55,27 @@ class ProductsUiModelMapper @Inject constructor() {
         }
     }
 
-    fun mapHistoryPurchases(purchases: List<PurchaseHistoryRecord>): List<BillingPurchase> {
-        return purchases.map { purchase ->
+    fun mapActivePurchases(purchases: List<Purchase>): List<BillingPurchase> {
+        return purchases.mapNotNull { purchase ->
+            val productType = purchase.products.firstOrNull()?.toBillingProductOrNull() ?: return@mapNotNull null
+
             BillingPurchase(
-                productType = purchase.products.first().toBillingProduct(),
+                productType = productType,
                 purchaseTime = purchase.purchaseTime.toLocalDateTime(),
                 purchaseToken = purchase.purchaseToken
             )
         }
     }
 
-    fun mapPurchases(purchases: List<Purchase>): List<BillingPurchase> {
-        return purchases.map { purchase ->
+    fun mapPurchaseHistory(oneTimePurchaseHistory: List<OneTimePurchaseRecord>): List<BillingPurchase> {
+        return oneTimePurchaseHistory.mapNotNull { record ->
+            val productType = record.productId.toBillingProductOrNull() ?: return@mapNotNull null
+
             BillingPurchase(
-                productType = purchase.products.first().toBillingProduct(),
-                purchaseTime = purchase.purchaseTime.toLocalDateTime(),
-                purchaseToken = purchase.purchaseToken
+                productType = productType,
+                purchaseTime = record.lastPurchaseTimeMillis.toLocalDateTime(),
+                purchaseToken = "",
+                count = record.count,
             )
         }
     }

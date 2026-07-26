@@ -45,8 +45,36 @@ Layer responsibilities (see `README.md` for the canonical table):
 - `:osm-overpasser` — internal Overpass API client used as a library module.
 - `:test-data` — shared test fixtures, depended on by both `testImplementation` and `androidTestImplementation` in `:app`.
 
+### General
+- Don't fight the framework → use the native side best practices, avoid platform anti-patterns
+- Use comments only if necessary. If necessary, preferred: 1 line, max: 2 lines. If need more than 3 lines: ask.
+
 ## Tests
 
 - **Unit tests** (`app/src/test`): JUnit4 + Truth + MockK + Turbine + `kotlinx-coroutines-test`.
 - **Instrumentation tests** (`app/src/androidTest`): Espresso + Hilt testing. Custom runner is `hu.mostoha.mobile.android.huki.HiltTestRunner` (set in `defaultConfig.testInstrumentationRunner`).
 - Both test source sets depend on `:test-data` for fixtures.
+
+## Mappers
+- Type mappers between layers (data↔domain, domain↔domain, platform↔domain) are **top-level extension functions** named `to<Target>()`, grouped by the domain concept they map in `model/mapper/<Concept>Mapper.kt` (e.g. `GpxMapper.kt`, `MapboxMapper.kt`).
+- Do **not** place mappers on the model classes themselves: a `model/data` class must not import `model/domain` types (and vice versa), so co-locating a mapper in the model file leaks a cross-layer dependency.
+- Keep mappers out of repositories/ViewModels — they belong in `model/mapper` so they stay reusable and unit-testable.
+
+## Chores
+
+Chores is a checklist which should be checked for every "feature complete" code review.
+
+- Unit tests
+- Instrumentation tests (e.g. Repository tests)
+- UI tests (Espresso E2E) - should work on both platforms
+- Lint passes — detekt, lint
+- Potential re-usable View UI components
+- UI styling - Material Design
+- Use official Material Design, avoid custom UI solutions
+- Dark mode (Colors)
+- Device landscape mode
+- Translations
+- Analytics: check for worth-to-measure events
+- Always ask: what happens with this feature in offline mode? → for a hiking app offline mode is crucial
+- Permissions denied / not-granted paths
+- Docs updated — AGENTS.md / README.md

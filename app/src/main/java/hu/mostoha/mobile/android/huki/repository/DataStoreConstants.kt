@@ -4,6 +4,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 
 object DataStoreConstants {
 
@@ -25,6 +26,12 @@ object DataStoreConstants {
 
     object NewFeatures {
         val NEW_FEATURES_SEEN_VERSION = stringPreferencesKey("new_features_seen_version")
+    }
+
+    object Support {
+        val PURCHASED_ONE_TIME_PRODUCTS = stringSetPreferencesKey("support_purchased_one_time_products")
+        val RECORDED_PURCHASE_TOKENS = stringSetPreferencesKey("support_recorded_purchase_tokens")
+        val LEGACY_HISTORY_MIGRATED = booleanPreferencesKey("support_legacy_history_migrated")
     }
 
 }

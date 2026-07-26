@@ -212,6 +212,7 @@
     <string name="support_recurring_payment_month_template">%s / hónap</string>
 
     <string name="support_supporter_title_template">Köszönöm, hogy \"%s\" támogató vagy!</string>
+    <string name="support_supporter_count_template">%dx</string>
     <string name="support_supporter_message_one_time_level_2"><![CDATA[
         <p><strong>&Eacute;rdekess&eacute;g: </strong>A&nbsp;m&oacute;kusok az őszi időszakban nagy mennyis&eacute;gű &eacute;lelmet &ndash; di&oacute;t, mogyor&oacute;t, makkot &ndash; rejtenek el k&uuml;l&ouml;nb&ouml;ző helyekre. &Eacute;rdekes m&oacute;don gyakran elfelejtik, hogy hova rejtett&eacute;k ezeket a magvakat, &iacute;gy hozz&aacute;j&aacute;rulnak az erdő f&aacute;inak terjed&eacute;s&eacute;hez.</p>
         <p><strong>&Eacute;lőhely: </strong>A&nbsp;v&ouml;r&ouml;s m&oacute;kusok megtal&aacute;lhat&oacute;k szinte mindenhol Magyarorsz&aacute;g erdeiben, de legnagyobb es&eacute;llyel a t&ouml;lgyesekben, fenyvesekben, ahol sok di&oacute;, makk &eacute;s m&aacute;s mag tal&aacute;lhat&oacute;. P&eacute;ld&aacute;ul a <strong><a href="https://huki.hu/landscape?osmId=3716160" aria-invalid="true">Budai-hegys&eacute;g</a>&nbsp;</strong>k&ouml;rny&eacute;ke, vagy a <a href="https://huki.hu/landscape?osmId=279583932" aria-invalid="true"><strong>M&aacute;tra</strong></a> &eacute;s a <a href="https://huki.hu/landscape?osmId=279573777" aria-invalid="true"><strong>B&uuml;kk</strong></a> hegyvid&eacute;ki ter&uuml;letei&nbsp;gazdagok vegyes erdőkben.</p>

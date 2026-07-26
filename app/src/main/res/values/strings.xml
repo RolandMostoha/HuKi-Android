@@ -238,6 +238,7 @@
     <string name="support_recurring_payment_month_template">%s / month</string>
 
     <string name="support_supporter_title_template">Thanks for being a(n) \"%s\" supporter!</string>
+    <string name="support_supporter_count_template">%dx</string>
     <string name="support_supporter_message_one_time_level_2"><![CDATA[
         <p><strong>Interesting fact:</strong> During the fall, squirrels hide large amounts of food - nuts, hazelnuts, acorns - in different places. Interestingly, they often forget where they hid these seeds, thus contributing to the spread of the trees in the forest.</p>
         <p><strong>Habitat:</strong> Red squirrels can be found almost everywhere in the forests of Hungary, but most likely in oak and pine forests, where there are many nuts, acorns and other seeds. For example, the surroundings of the <a href="https://huki.hu/landscape?osmId=3716160" aria-invalid="true">Buda Mountains</a> or the mountainous areas of <a href="https://huki.hu/landscape?osmId=279583932" aria-invalid="true">M&aacute;tra</a> and <a href="https://huki.hu/landscape?osmId=279573777" aria-invalid="true">B&uuml;kk</a> are rich in mixed forests, where squirrels like to live.</p>

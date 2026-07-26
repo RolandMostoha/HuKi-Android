@@ -14,4 +14,5 @@ data class BillingPurchase(
     val productType: BillingProductType,
     val purchaseTime: LocalDateTime,
     val purchaseToken: String,
+    val count: Int = 1,
 )

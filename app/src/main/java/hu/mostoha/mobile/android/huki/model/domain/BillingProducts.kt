@@ -76,22 +76,9 @@ fun String.toRecurringBillingProduct(): RecurringBillingProducts {
     return RecurringBillingProducts.entries.first { it.productId == this }
 }
 
-fun String.toBillingProduct(): BillingProductType {
-    val oneTime = OneTimeBillingProducts.entries.firstOrNull { it.productId == this }
-
-    if (oneTime != null) return oneTime
-
-    val recurring = RecurringBillingProducts.entries.firstOrNull { it.productId == this }
-
-    if (recurring != null) return recurring
-
-    throw IllegalArgumentException("Invalid product id: $this")
+fun String.toBillingProductOrNull(): BillingProductType? {
+    return OneTimeBillingProducts.entries.firstOrNull { it.productId == this }
+        ?: RecurringBillingProducts.entries.firstOrNull { it.productId == this }
 }
 
-fun OneTimeBillingProducts.isOneTime(): Boolean = this.productType == BillingClient.ProductType.INAPP
-
-fun OneTimeBillingProducts.isRecurring(): Boolean = this.productType == BillingClient.ProductType.SUBS
-
 fun String.isOneTime(): Boolean = OneTimeBillingProducts.entries.any { it.productId == this }
-
-fun String.isRecurring(): Boolean = RecurringBillingProducts.entries.any { it.productId == this }

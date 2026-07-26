@@ -170,7 +170,7 @@ class SupportFragment : Fragment() {
                             supporterList.itemAnimator = SlideInUpAnimator()
                         }
 
-                        supporterAdapter?.submitList(purchases.map { it.productType })
+                        supporterAdapter?.submitList(purchases)
                     } else {
                         infoCard.visible()
                         supporterList.gone()

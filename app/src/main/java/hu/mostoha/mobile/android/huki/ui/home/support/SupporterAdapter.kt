@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.ItemSupporterBinding
+import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.inflater
-import hu.mostoha.mobile.android.huki.model.domain.BillingProductType
+import hu.mostoha.mobile.android.huki.extensions.visible
+import hu.mostoha.mobile.android.huki.model.ui.BillingPurchase
 import hu.mostoha.mobile.android.huki.model.ui.resolve
 import hu.mostoha.mobile.android.huki.util.color
 import hu.mostoha.mobile.android.huki.util.colorStateList
@@ -19,7 +21,7 @@ import hu.mostoha.mobile.android.huki.util.productStrongTextColor
 import hu.mostoha.mobile.android.huki.util.productTextColor
 import hu.mostoha.mobile.android.huki.views.DefaultDiffUtilCallback
 
-class SupporterAdapter : ListAdapter<BillingProductType, RecyclerView.ViewHolder>(DefaultDiffUtilCallback()) {
+class SupporterAdapter : ListAdapter<BillingPurchase, RecyclerView.ViewHolder>(DefaultDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolderItem(ItemSupporterBinding.inflate(parent.context.inflater, parent, false))
@@ -28,7 +30,7 @@ class SupporterAdapter : ListAdapter<BillingProductType, RecyclerView.ViewHolder
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ViewHolderItem -> {
-                holder.bind((getItem(position) as BillingProductType))
+                holder.bind(getItem(position))
             }
         }
     }
@@ -36,9 +38,10 @@ class SupporterAdapter : ListAdapter<BillingProductType, RecyclerView.ViewHolder
     inner class ViewHolderItem(
         private val binding: ItemSupporterBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(productType: BillingProductType) {
+        fun bind(purchase: BillingPurchase) {
             with(binding) {
                 val context = binding.root.context
+                val productType = purchase.productType
                 val productColor = context.color(productType.productColorRes)
 
                 supporterBadgeTitle.setTextColor(productColor.productTextColor(context))
@@ -58,6 +61,17 @@ class SupporterAdapter : ListAdapter<BillingProductType, RecyclerView.ViewHolder
                 supporterBadgeImage.setImageResource(productType.productIcon)
                 supporterCard.setCardBackgroundColor(productColor.productBackgroundColor(context))
                 supporterCard.strokeColor = productColor.productHighlightColor(context)
+
+                if (purchase.count > 1) {
+                    supporterBadgeCount.setTextColor(productColor.productIconColor(context))
+                    supporterBadgeCount.text = context.getString(
+                        R.string.support_supporter_count_template,
+                        purchase.count
+                    )
+                    supporterBadgeCount.visible()
+                } else {
+                    supporterBadgeCount.gone()
+                }
             }
         }
     }

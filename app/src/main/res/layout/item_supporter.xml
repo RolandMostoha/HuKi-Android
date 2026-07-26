@@ -19,12 +19,29 @@
         android:paddingTop="@dimen/space_extra_large"
         android:paddingHorizontal="@dimen/space_extra_large">
 
-        <ImageView
-            android:id="@+id/supporterBadgeImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:importantForAccessibility="no"
-            tools:src="@drawable/ic_product_squirrel" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/supporterBadgeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_small"
+                android:textAppearance="@style/DefaultTextAppearance.Bold.Large"
+                android:textSize="35sp"
+                tools:text="2x" />
+
+            <ImageView
+                android:id="@+id/supporterBadgeImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:importantForAccessibility="no"
+                tools:src="@drawable/ic_product_squirrel" />
+
+        </LinearLayout>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/supporterBadgeTitle"

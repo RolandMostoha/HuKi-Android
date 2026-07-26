@@ -99,6 +99,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_VIEW_GOOGLE_MAPS_PLACE = "view_google_maps_place"
         private const val EVENT_VIEW_DEEPLINK = "view_deeplink"
         private const val EVENT_SELECT_FACEBOOK_PAGE = "select_facebook_page"
+        private const val EVENT_BILLING_LEGACY_PURCHASE_BACKFILLED = "billing_legacy_purchase_backfilled"
 
         private const val PARAM_SEARCH_PLACE_TEXT = "search_place_text"
         private const val PARAM_SELECTED_PLACE_NAME = "selected_place_name"
@@ -113,6 +114,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val PARAM_OKT_ID = "okt_id"
         private const val PARAM_NEW_FEATURES_VERSION = "version"
         private const val PARAM_DEEPLINK_PATH = "deeplink_path"
+        private const val PARAM_BILLING_PRODUCT_ID = "product_id"
 
         private val MAP_SCALE_PERCENTAGE_RANGES = listOf(
             1..99,
@@ -492,6 +494,12 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         val eventName = "billing_${billingAction.name.lowercase()}_$billingResponseFieldName"
 
         firebaseAnalytics.logEvent(eventName, null)
+    }
+
+    override fun legacyPurchaseBackfilled(productId: String) {
+        firebaseAnalytics.logEvent(EVENT_BILLING_LEGACY_PURCHASE_BACKFILLED) {
+            param(PARAM_BILLING_PRODUCT_ID, productId)
+        }
     }
 
     override fun placeCategoryFabClicked() {
