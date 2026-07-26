@@ -148,7 +148,7 @@ class PlaceFinderViewModel @Inject constructor(
                 job.cancel()
             }
         }
-        viewModelScope.launch {
+        loadPlacesJob = viewModelScope.launch {
             val myLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation()
             val historyPlaces = placeHistoryRepository
                 .getPlacesBy(searchText, PLACE_FINDER_MAX_HISTORY_ITEM)
@@ -170,7 +170,7 @@ class PlaceFinderViewModel @Inject constructor(
                 )
             }
 
-            loadPlacesJob = viewModelScope.launch {
+            launch {
                 flowWithExceptions(
                     request = { geocodingRepository.getAutocompletePlaces(searchText, boundingBox) },
                     exceptionLogger = exceptionLogger
