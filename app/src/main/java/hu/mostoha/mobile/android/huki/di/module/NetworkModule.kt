@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.network.GraphhopperService
 import hu.mostoha.mobile.android.huki.network.LocationIqService
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
@@ -32,7 +33,11 @@ class NetworkModule {
             .addInterceptor(TimeoutInterceptor())
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
+                    level = if (BuildConfig.DEBUG) {
+                        HttpLoggingInterceptor.Level.BODY
+                    } else {
+                        HttpLoggingInterceptor.Level.NONE
+                    }
                 }
             )
             .addInterceptor(TimeoutInterceptor())
