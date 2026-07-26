@@ -22,6 +22,7 @@ class PhotonPlaceNetworkMapper @Inject constructor() {
         return response.features
             .mapNotNull { item ->
                 val properties = item.properties
+                val osmId = properties.osmId ?: return@mapNotNull null
                 val city = properties.city ?: properties.county
                 val country = properties.state ?: properties.country
                 val street = listOfNotNull(
@@ -38,7 +39,7 @@ class PhotonPlaceNetworkMapper @Inject constructor() {
                 val name = properties.name ?: street ?: city ?: return@mapNotNull null
 
                 PlaceProfile(
-                    osmId = properties.osmId.toString(),
+                    osmId = osmId.toString(),
                     placeType = when (properties.osmType) {
                         OsmType.RELATION -> PlaceType.RELATION
                         OsmType.WAY -> PlaceType.WAY

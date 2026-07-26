@@ -9,7 +9,7 @@ data class Properties(
     val name: String? = null,
 
     @Json(name = "osm_id")
-    val osmId: Long,
+    val osmId: Long? = null,
 
     @Json(name = "osm_type")
     val osmType: OsmType,
