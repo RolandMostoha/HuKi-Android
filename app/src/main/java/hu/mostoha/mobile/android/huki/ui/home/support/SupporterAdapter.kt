@@ -35,7 +35,7 @@ class SupporterAdapter : ListAdapter<BillingPurchase, RecyclerView.ViewHolder>(D
         }
     }
 
-    inner class ViewHolderItem(
+    class ViewHolderItem(
         private val binding: ItemSupporterBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(purchase: BillingPurchase) {

@@ -327,7 +327,7 @@ class ProductsViewModel @Inject constructor(
                 }
             },
             onError = { result ->
-                if (result.responseCode != BillingClient.BillingResponseCode.USER_CANCELED) {
+                if (result.responseCode != BillingResponseCode.USER_CANCELED) {
                     viewModelScope.launch {
                         _productsEvents.emit(ProductEvents.Error(BillingAction.PURCHASES_UPDATED.toMessage()))
                     }

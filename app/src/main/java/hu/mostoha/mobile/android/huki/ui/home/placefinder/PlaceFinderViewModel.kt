@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class PlaceFinderViewModel @Inject constructor(
@@ -189,7 +190,7 @@ class PlaceFinderViewModel @Inject constructor(
                     .onStart {
                         placeFinderUiModel.update { it?.copy(isLoading = true) }
 
-                        delay(appConfiguration.getNetworkDebounceDelay())
+                        delay(appConfiguration.getNetworkDebounceDelay().milliseconds)
                     }
                     .catch { throwable ->
                         if (throwable is DomainException && throwable !is JobCancellationException) {
