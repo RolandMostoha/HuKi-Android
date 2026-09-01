@@ -1,0 +1,89 @@
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="AndroidGPX ( http://codebutchery.wordpress.com )" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" >
+	<wpt lat="47.78972" lon="18.933678" >
+	</wpt>
+	<wpt lat="47.78409" lon="18.933603" >
+	</wpt>
+	<trk >
+		<name ><![CDATA[Hegyesteto_Julianus_b_HuKi269]]></name>
+		<trkseg >
+			<trkpt lat="47.78972" lon="18.933678" >
+				<ele >395.13</ele>
+			</trkpt>
+			<trkpt lat="47.789635" lon="18.934032" >
+				<ele >392.26</ele>
+			</trkpt>
+			<trkpt lat="47.789577" lon="18.934425" >
+				<ele >388.85</ele>
+			</trkpt>
+			<trkpt lat="47.78946" lon="18.934883" >
+				<ele >384.23</ele>
+			</trkpt>
+			<trkpt lat="47.789433" lon="18.935156" >
+				<ele >381.5</ele>
+			</trkpt>
+			<trkpt lat="47.789444" lon="18.935349" >
+				<ele >379.81</ele>
+			</trkpt>
+			<trkpt lat="47.789227" lon="18.935434" >
+				<ele >376.76</ele>
+			</trkpt>
+			<trkpt lat="47.788677" lon="18.934853" >
+				<ele >366.48</ele>
+			</trkpt>
+			<trkpt lat="47.788357" lon="18.934502" >
+				<ele >370.89</ele>
+			</trkpt>
+			<trkpt lat="47.78829" lon="18.934465" >
+				<ele >373.79</ele>
+			</trkpt>
+			<trkpt lat="47.788155" lon="18.934357" >
+				<ele >380.53</ele>
+			</trkpt>
+			<trkpt lat="47.78793" lon="18.934393" >
+				<ele >386.53</ele>
+			</trkpt>
+			<trkpt lat="47.787655" lon="18.934322" >
+				<ele >392.18</ele>
+			</trkpt>
+			<trkpt lat="47.78733" lon="18.934208" >
+				<ele >399.4</ele>
+			</trkpt>
+			<trkpt lat="47.786804" lon="18.934132" >
+				<ele >410.61</ele>
+			</trkpt>
+			<trkpt lat="47.78641" lon="18.933897" >
+				<ele >420.08</ele>
+			</trkpt>
+			<trkpt lat="47.78602" lon="18.933893" >
+				<ele >430.16</ele>
+			</trkpt>
+			<trkpt lat="47.785675" lon="18.93404" >
+				<ele >442.03</ele>
+			</trkpt>
+			<trkpt lat="47.785393" lon="18.93414" >
+				<ele >451.55</ele>
+			</trkpt>
+			<trkpt lat="47.784782" lon="18.93386" >
+				<ele >470.0</ele>
+			</trkpt>
+			<trkpt lat="47.784637" lon="18.933922" >
+				<ele >473.95</ele>
+			</trkpt>
+			<trkpt lat="47.784546" lon="18.933899" >
+				<ele >476.31</ele>
+			</trkpt>
+			<trkpt lat="47.784454" lon="18.933784" >
+				<ele >478.78</ele>
+			</trkpt>
+			<trkpt lat="47.784306" lon="18.933706" >
+				<ele >481.25</ele>
+			</trkpt>
+			<trkpt lat="47.784138" lon="18.933695" >
+				<ele >480.89</ele>
+			</trkpt>
+			<trkpt lat="47.78409" lon="18.933601" >
+				<ele >481.51</ele>
+			</trkpt>
+		</trkseg>
+	</trk>
+</gpx>

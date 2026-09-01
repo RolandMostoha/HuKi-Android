@@ -4,5 +4,7 @@
     <integer name="symbol_stroke_width">4</integer>
 
     <integer name="splash_animation_duration">800</integer>
+    <integer name="splash_base_fade_duration">320</integer>
+    <integer name="splash_leaf_pop_duration">320</integer>
 
 </resources>

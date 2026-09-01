@@ -20,7 +20,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="false"
         android:localeConfig="@xml/locales_config"
-        android:icon="${appIcon}"
+        android:icon="@mipmap/ic_launcher"
         android:label="${appNameHuki}"
         android:theme="@style/BaseTheme.HuKiTheme"
         tools:replace="android:label,android:allowBackup">

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorLauncher">@color/colorPrimaryStrong</color>
+    <color name="colorLauncher">#1D492E</color>
     <color name="colorLauncherIcon">#ffffff</color>
-    <color name="colorLauncherDebug">#e64a19</color>
 
     <color name="colorPrimaryExtraLight">#EAF9E6</color>
     <color name="colorPrimaryLight">#89dd72</color>

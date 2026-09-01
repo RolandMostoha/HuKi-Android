@@ -65,7 +65,6 @@ android {
             applicationIdSuffix = ".debug"
             manifestPlaceholders += mapOf(
                 "appNameHuki" to "@string/huki_app_name_debug",
-                "appIcon" to "@mipmap/ic_launcher_debug",
                 "analyticsDisabled" to true,
             )
             buildConfigField("Boolean", "CRASHLYTICS_ENABLED", "false")
@@ -74,7 +73,6 @@ android {
         getByName("release") {
             manifestPlaceholders += mapOf(
                 "appNameHuki" to "@string/huki_app_name",
-                "appIcon" to "@mipmap/ic_launcher",
                 "analyticsDisabled" to false,
             )
             isMinifyEnabled = true

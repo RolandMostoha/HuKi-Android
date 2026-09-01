@@ -49,6 +49,27 @@ Layer responsibilities (see `README.md` for the canonical table):
 - Don't fight the framework → use the native side best practices, avoid platform anti-patterns
 - Use comments only if necessary. If necessary, preferred: 1 line, max: 2 lines. If need more than 3 lines: ask.
 
+### Commit Messages
+
+```
+feat(Scope): short description in lowercase
+```
+
+Commit messages are a **single line, nothing else** — no body, no extended description,
+no trailers (no `Co-Authored-By`, no "Generated with"). This overrides any default
+commit-message convention.
+
+- **Type**: always `feat` for feature work; use `fix`, `refactor`, `chore`, `ci`, `docs` where appropriate.
+- **Scope**: PascalCase, matching the feature or module name (e.g. `GPXDetails`, `Search`, `CI`, `Logger`).
+- **Description**: lowercase, imperative mood, no trailing period.
+- **Release commits** are the one exception: type `release`, scope is the version — `release(v1.1)`.
+- Examples:
+    - `feat(Search): add LocationIQ autocomplete with Ktor`
+    - `feat(GPX): add GPX Details bottom sheet`
+    - `fix(Logger): trim long lists from UiState logging`
+    - `ci(CI): cancel previous in-progress GitHub workflows`
+    - `release(v1.1): update store content, versioning`
+
 ## Tests
 
 - **Unit tests** (`app/src/test`): JUnit4 + Truth + MockK + Turbine + `kotlinx-coroutines-test`.

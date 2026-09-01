@@ -3,11 +3,71 @@
     android:drawable="@drawable/ic_launcher_splash">
 
     <target
-        android:animation="@animator/animator_splash_scale"
-        android:name="animationGroup" />
+        android:name="hill"
+        android:animation="@animator/animator_splash_fade" />
 
     <target
-        android:animation="@animator/animator_splash_fade"
-        android:name="animationGroup" />
+        android:name="trunk"
+        android:animation="@animator/animator_splash_fade" />
+
+    <target
+        android:name="leafGroup0"
+        android:animation="@animator/animator_splash_leaf_pop_1" />
+
+    <target
+        android:name="leafGroup1"
+        android:animation="@animator/animator_splash_leaf_pop_1" />
+
+    <target
+        android:name="leafGroup2"
+        android:animation="@animator/animator_splash_leaf_pop_1" />
+
+    <target
+        android:name="leafGroup3"
+        android:animation="@animator/animator_splash_leaf_pop_1" />
+
+    <target
+        android:name="leafGroup4"
+        android:animation="@animator/animator_splash_leaf_pop_2" />
+
+    <target
+        android:name="leafGroup5"
+        android:animation="@animator/animator_splash_leaf_pop_2" />
+
+    <target
+        android:name="leafGroup6"
+        android:animation="@animator/animator_splash_leaf_pop_2" />
+
+    <target
+        android:name="leafGroup7"
+        android:animation="@animator/animator_splash_leaf_pop_2" />
+
+    <target
+        android:name="leafGroup8"
+        android:animation="@animator/animator_splash_leaf_pop_3" />
+
+    <target
+        android:name="leafGroup9"
+        android:animation="@animator/animator_splash_leaf_pop_3" />
+
+    <target
+        android:name="leafGroup10"
+        android:animation="@animator/animator_splash_leaf_pop_3" />
+
+    <target
+        android:name="leafGroup11"
+        android:animation="@animator/animator_splash_leaf_pop_3" />
+
+    <target
+        android:name="leafGroup12"
+        android:animation="@animator/animator_splash_leaf_pop_4" />
+
+    <target
+        android:name="leafGroup13"
+        android:animation="@animator/animator_splash_leaf_pop_4" />
+
+    <target
+        android:name="leafGroup14"
+        android:animation="@animator/animator_splash_leaf_pop_4" />
 
 </animated-vector>
