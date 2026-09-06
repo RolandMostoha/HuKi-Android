@@ -10,8 +10,15 @@ HuKi is an Android hiking app for Hungary, built around OpenStreetMap data and t
 
 The project uses Gradle (Kotlin DSL). All commands run from the repo root.
 
+Toolchain: Gradle 9, AGP 9 (built-in Kotlin — the `org.jetbrains.kotlin.android` plugin must **not**
+be applied), Kotlin 2.4, Java 21 toolchain, `minSdk=26`, `targetSdk=37`, `compileSdk=37`.
+Configuration cache and build cache are enabled, so anything read at configuration time must go
+through a `Provider` (see `getVersions()` / `getApiKey()` in `app/build.gradle.kts`).
+
 - Build debug APK: `./gradlew assembleDebug`
-- Static analysis: `./gradlew lint detekt` (detekt config at `tools/quality/HuKi-detekt.yml`, `allRules = true`, `buildUponDefaultConfig = true`)
+- Static analysis: `./gradlew lint detekt` (detekt 2.x, plugin id `dev.detekt`, ktlint rules via
+  `dev.detekt:detekt-rules-ktlint-wrapper`; config at `tools/quality/HuKi-detekt.yml`,
+  `allRules = true`, `buildUponDefaultConfig = true`)
 - Unit tests: `./gradlew testDebugUnitTest`
 - Single unit test class: `./gradlew :app:testDebugUnitTest --tests "hu.mostoha.mobile.android.huki.<FQCN>"`
 - Instrumentation test APK: `./gradlew assembleDebugAndroidTest`

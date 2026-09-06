@@ -36,7 +36,7 @@ enum class DestinationType {
 }
 
 @DrawableRes
-@Suppress("ComplexMethod")
+@Suppress("CyclomaticComplexMethod")
 fun DestinationType.resolveIcon(): Int {
     return when (this) {
         DestinationType.WATERFALL -> R.drawable.ic_place_category_waterfall

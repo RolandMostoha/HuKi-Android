@@ -1,19 +1,21 @@
-import org.ajoberstar.grgit.Grgit
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.io.FileInputStream
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    id(libs.plugins.kotlin.android.get().pluginId)
     alias(libs.plugins.kotlin.ksp)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
-    alias(libs.plugins.grgit)
+}
+
+val appVersions = getVersions()
+
+base {
+    archivesName = "HuKi_${appVersions.name}_${appVersions.code}"
 }
 
 android {
@@ -25,14 +27,11 @@ android {
         minSdk = 26
         targetSdk = 37
 
-        val versions = getVersions()
-        versionCode = versions["versionCode"]?.toInt()
-        versionName = versions["versionName"]
+        versionCode = appVersions.code
+        versionName = appVersions.name
 
         val now = ZonedDateTime.now()
         val buildDate = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-
-        setProperty("archivesBaseName", "HuKi_${versionName}_$versionCode")
 
         buildConfigField("String", "GRAPHHOPPER_API_KEY", getApiKey("GRAPHHOPPER_API_KEY"))
         buildConfigField("String", "LOCATION_IQ_API_KEY", getApiKey("LOCATION_IQ_API_KEY"))
@@ -86,7 +85,7 @@ android {
 
     sourceSets {
         getByName("main") {
-            res.srcDirs("src/main/res", "src/main/res_symbols")
+            res.directories.addAll(listOf("src/main/res", "src/main/res_symbols"))
         }
     }
 
@@ -211,19 +210,29 @@ dependencies {
     androidTestUtil(libs.androidx.test.orchestrator)
 }
 
-fun getVersions(): Map<String, String> {
-    val git = Grgit.open(mapOf("currentDir" to file(project.rootDir)))
+data class Versions(val name: String, val code: Int)
 
-    val versionName = git.describe().replace(Regex("-\\w+$"), "")
-    val versionCode = git.log().size.toString()
+fun getVersions(): Versions {
+    val versionName = git("describe").replace(Regex("-\\w+$"), "")
+    val versionCode = git("rev-list", "--count", "HEAD").toInt()
     println("VersionName: $versionName \nVersionCode: $versionCode")
 
-    git.close()
-    return mapOf("versionName" to versionName, "versionCode" to versionCode)
+    return Versions(versionName, versionCode)
+}
+
+fun git(vararg args: String): String {
+    val result = providers.exec {
+        workingDir = rootProject.projectDir
+        commandLine("git", *args)
+    }
+    return result.standardOutput.asText.get().trim()
 }
 
 fun getApiKey(key: String): String {
-    val props = Properties()
-    props.load(FileInputStream(rootProject.file("./local.properties")))
+    val localProperties = providers
+        .fileContents(rootProject.layout.projectDirectory.file("local.properties"))
+        .asText
+        .get()
+    val props = Properties().apply { load(localProperties.reader()) }
     return props[key] as String
 }

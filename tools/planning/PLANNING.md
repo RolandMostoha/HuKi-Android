@@ -17,11 +17,12 @@
 
 ### General / tech tasks
 
-| Status | Feature                                 |
-|--------|-----------------------------------------|
-| `[~]`  | Google Play Billing SDK update -> 9.1.0 |
-| `[R]`  | Revamp support screen                   |
-| `[R]`  | Update app icon to latest               |
+| Status | Feature                                                                          |
+|--------|----------------------------------------------------------------------------------|
+| `[~]`  | Google Play Billing SDK update -> 9.1.0                                          |
+| `[x]`  | chore(App): upgrade to Gradle 9, Kotlin 2.4.10, targetSdk=37, dependency updates |
+| `[R]`  | Revamp support screen                                                            |
+| `[R]`  | Update app icon to latest                                                        |
 
 ### Bugs
 
@@ -82,15 +83,16 @@ Target is **9.1.0**, not the originally planned 8.3.0: the API surface we use is
 deprecated until **Aug 31, 2028** — a full extra year over Billing 8 (Aug 31, 2027).
 
 **Dropped `billing-ktx`:** its Kotlin metadata requires Kotlin 2.3 for 9.x (and 2.2 for 8.1+),
-while the project compiles with 2.1.20 — only `billing-ktx` 8.0.0 would have been consumable. The
+while the project compiled with 2.1.20 at the time — only `billing-ktx` 8.0.0 would have been consumable. The
 core `billing` artifact is plain Java with no metadata constraint, so it is used together with our
-own suspend wrappers in `billing/BillingClientExtensions.kt`. Revisit if/when Kotlin is bumped.
+own suspend wrappers in `billing/BillingClientExtensions.kt`. Kotlin is now 2.4.10, so `billing-ktx`
+9.1.0 is consumable — switching to it is optional, the local wrappers cover what we use.
 
-| Status | Scope   | Task                                                                                                                                                                                                     |
-|--------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `[ ]`  | Billing | Re-verify badge + re-purchase flow on device on 9.1.0 (needs `applicationIdSuffix` commented out — restore before committing)                                                                            |
-| `[ ]`  | Billing | Review/trim the temporary `Timber.d("Billing: ...")` logs in `ProductsViewModel`                                                                                                                         |
-| `[L]`  | Billing | Ship release 2 to production — **blocks every other release** until it is out                                                                                                                            |
+| Status | Scope   | Task                                                                                                                          |
+|--------|---------|-------------------------------------------------------------------------------------------------------------------------------|
+| `[ ]`  | Billing | Re-verify badge + re-purchase flow on device on 9.1.0 (needs `applicationIdSuffix` commented out — restore before committing) |
+| `[ ]`  | Billing | Review/trim the temporary `Timber.d("Billing: ...")` logs in `ProductsViewModel`                                              |
+| `[L]`  | Billing | Ship release 2 to production — **blocks every other release** until it is out                                                 |
 
 #### Risks / known limitations
 

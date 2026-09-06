@@ -78,7 +78,7 @@ class ProgressMaterialButton @JvmOverloads constructor(
             context,
             null,
             0,
-            R.style.Widget_MaterialComponents_CircularProgressIndicator_ExtraSmall
+            com.google.android.material.R.style.Widget_MaterialComponents_CircularProgressIndicator_ExtraSmall
         )
         progressIndicatorSpec.indicatorColors = intArrayOf(ContextCompat.getColor(context, R.color.colorPrimary))
 

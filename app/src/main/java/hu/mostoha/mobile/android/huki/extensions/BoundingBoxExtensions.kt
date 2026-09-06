@@ -90,7 +90,7 @@ fun BoundingBox.withMapViewOffset(
     )
 }
 
-@Suppress("ComplexMethod")
+@Suppress("CyclomaticComplexMethod")
 fun BoundingBox.withOffset(mapView: MapView, offsetType: OffsetType): BoundingBox {
     return withMapViewOffset(
         mapView = mapView,

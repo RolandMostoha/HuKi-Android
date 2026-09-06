@@ -1,16 +1,13 @@
-repositories {
-    mavenCentral()
-    google()
-    gradlePluginPortal()
-}
-
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.ksp) apply false
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.detekt)
 }
+
+val detektVersion = libs.versions.detekt.get()
 
 allprojects {
     repositories {
@@ -21,8 +18,8 @@ allprojects {
     }
 }
 
-subprojects {
-    apply(plugin = "io.gitlab.arturbosch.detekt")
+allprojects {
+    apply(plugin = "dev.detekt")
 
     detekt {
         config.setFrom("${rootProject.projectDir}/tools/quality/HuKi-detekt.yml")
@@ -32,6 +29,6 @@ subprojects {
     }
 
     dependencies {
-        detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
+        detektPlugins("dev.detekt:detekt-rules-ktlint-wrapper:$detektVersion")
     }
 }
