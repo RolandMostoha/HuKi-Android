@@ -17,16 +17,19 @@
 
 ### General / tech tasks
 
-| Status | Feature                                        |
-|--------|------------------------------------------------|
-| `[R]`  | Google Play Billing SDK update -> Aug deadline |
-| `[R]`  | Update app icon to latest                      |
+| Status | Feature                                 |
+|--------|-----------------------------------------|
+| `[~]`  | Google Play Billing SDK update -> 9.1.0 |
+| `[R]`  | Revamp support screen                   |
+| `[R]`  | Update app icon to latest               |
 
 ### Bugs
 
-| Status | Scope | Bug                                                      |
-|--------|-------|----------------------------------------------------------|
-| `[ ]`  | GPX   | BUG: GPX roundtrip distance to my location not displayed |
+| Status | Scope        | Bug                                                                                                           |
+|--------|--------------|---------------------------------------------------------------------------------------------------------------|
+| `[ ]`  | GPX          | BUG: GPX roundtrip distance to my location not displayed                                                      |
+| `[R]`  | BottomSheets | BUG: There is an unnecessary big gap between sheet and FABs. ![img.png](img.png)                              |
+| `[ ]`  | App          | Bitmap memory usage in your app's background state exceeds the bad behavior threshold ![img_1.png](img_1.png) |
 
 ### FEATURE: Map
 
@@ -35,18 +38,18 @@
 | `[ ]`  | Map   | Status message on hike mode changes           |
 | `[ ]`  | Map   | Offline detection + status message at the top |
 
-### FEATURE: HikingRoutes
-
-| Status | Scope        | Task                                   |
-|--------|--------------|----------------------------------------|
-| `[ ]`  | HikingRoutes | Convert Hiking Route to GPX + altitude |
-
 ### FEATURE: RoutePlanner
 
 | Status | Scope        | Task                                                                                                                                                |
 |--------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | `[R]`  | RoutePlanner | Add a dedicated error message if Graphhopper daily limit is reached. "We've reached the route planner service daily limit. Please try it tomorrow." |
 | `[ ]`  | RoutePlanner | Update Route Planner settings icon for visibility                                                                                                   |
+
+### FEATURE: HikingRoutes
+
+| Status | Scope        | Task                                   |
+|--------|--------------|----------------------------------------|
+| `[ ]`  | HikingRoutes | Convert Hiking Route to GPX + altitude |
 
 ### FEATURE: Favourites / Flags
 
@@ -56,59 +59,47 @@
 
 ### FEATURE: Billing / Supporters
 
-Two-release plan to reach Billing 8.x without existing one-time supporters losing their badge.
+Two-release plan to reach Billing 9.x without existing one-time supporters losing their badge.
 
 **Why two releases:** Billing 8.x removes `queryPurchaseHistoryAsync` entirely, and there is no
 Play Developer API endpoint to look up a user's lifetime purchases (only per-purchase-token
 lookups). One-time products are consumed on purchase so they can be re-bought, so after the
-upgrade Play can no longer tell us who supported before. Release 1 (still on 7.1.1) reads the
-legacy history one last time and backfills it into local DataStore; release 2 does the upgrade
+upgrade Play can no longer tell us who supported before. Release 1 (still on 7.1.1) read the
+legacy history one last time and backfilled it into local DataStore; release 2 does the upgrade
 and reads only that local record.
 
-#### Release 1 — bridge (Billing 7.1.1 + migration)
+#### Release 1 — bridge (Billing 7.1.1 + migration) — SHIPPED
 
-| Status | Scope   | Task                                                                                                                                |
-|--------|---------|-------------------------------------------------------------------------------------------------------------------------------------|
-| `[x]`  | Billing | `SupportRepository` + `SupportMapper`: persist one-time purchases with counts                                                       |
-| `[x]`  | Billing | `migrateLegacyOneTimePurchaseHistory()`: backfill from `queryPurchaseHistory`                                                       |
-| `[x]`  | Billing | `recordAndConsumeOwnedOneTimePurchases()`: sweep stuck unconsumed purchases                                                         |
-| `[x]`  | Billing | Supporter badge shows purchase count (`2x` + product icon)                                                                          |
-| `[x]`  | Billing | Recording is idempotent per purchase token (`RECORDED_PURCHASE_TOKENS`), so a re-swept or re-backfilled purchase never counts twice |
-| `[x]`  | Billing | Migration is one-shot per install (`LEGACY_HISTORY_MIGRATED`), set only after Play answers `OK`                                     |
-| `[x]`  | Billing | `billing_legacy_purchase_backfilled` analytics event — measures release 1 adoption for the gate below                               |
-| `[x]`  | Billing | `SupportMapperTest` + `ProductsUiModelMapperTest` unit tests, `SupportRepositoryTest` instrumentation tests                         |
-| `[ ]`  | Billing | Manually verify on device: purchase -> badge -> re-purchase -> count increments                                                     |
-| `[ ]`  | Billing | Manually verify: kill the app between purchase and consume -> next launch sweeps it, count stays right                              |
-| `[ ]`  | Billing | Restore `applicationIdSuffix = ".debug"` in `app/build.gradle.kts` (commented out for billing testing)                              |
-| `[L]`  | Billing | Ship release 1 to production, keep `billing = "7.1.1"` — **must be submitted before end of Aug 2026**                               |
+Prod `v1.2.1` on 2026-07-27 (`e887ad5`). GA4 confirms the backfill ran:
+`billing_legacy_purchase_backfilled` fired for **83 distinct users** (89 events), tailing off week
+over week (17 / 25 / 11 / 18 / 14). `ProductsViewModel` is created by `HomeActivity` at startup,
+not only by the Support screen, so the migration ran on plain app launch.
 
-#### Release 2 — upgrade (Billing 8.3.0), after release 1 has soaked
+#### Release 2 — upgrade (Billing 9.1.0)
 
-No hard deadline: the Google cutoff applies to new submissions only, so the published 7.1.1
-build stays live and serving. Release 2 can wait as long as needed for adoption. Caveat: once
-the cutoff passes, *any* update — including an unrelated hotfix — must already be on 8.x, so
-release 2 becomes a prerequisite for shipping anything else.
+Target is **9.1.0**, not the originally planned 8.3.0: the API surface we use is identical,
+`minSdk 23` / `targetSdk 35` are already satisfied (we are on 26 / 37), and Billing 9 is not
+deprecated until **Aug 31, 2028** — a full extra year over Billing 8 (Aug 31, 2027).
+
+**Dropped `billing-ktx`:** its Kotlin metadata requires Kotlin 2.3 for 9.x (and 2.2 for 8.1+),
+while the project compiles with 2.1.20 — only `billing-ktx` 8.0.0 would have been consumable. The
+core `billing` artifact is plain Java with no metadata constraint, so it is used together with our
+own suspend wrappers in `billing/BillingClientExtensions.kt`. Revisit if/when Kotlin is bumped.
 
 | Status | Scope   | Task                                                                                                                                                                                                     |
 |--------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `[ ]`  | Billing | Check adoption of release 1 before starting: `billing_legacy_purchase_backfilled` in Firebase (see risk below)                                                                                           |
-| `[ ]`  | Billing | Bump `billing = "8.3.0"` in `gradle/libs.versions.toml`                                                                                                                                                  |
-| `[ ]`  | Billing | Delete `migrateLegacyOneTimePurchaseHistory()` + its `QueryPurchaseHistory*` imports                                                                                                                     |
-| `[ ]`  | Billing | Delete `SupportRepository.recordLegacyPurchase()` + `is/setLegacyHistoryMigrated()` + the `LEGACY_HISTORY_MIGRATED` key. Keep `RECORDED_PURCHASE_TOKENS`: it guards the consume sweep, not the migration |
-| `[ ]`  | Billing | Delete `AnalyticsService.legacyPurchaseBackfilled()` + its Firebase/Fake implementations                                                                                                                 |
-| `[ ]`  | Billing | Re-verify badge + re-purchase flow still work on 8.3.0                                                                                                                                                   |
+| `[ ]`  | Billing | Re-verify badge + re-purchase flow on device on 9.1.0 (needs `applicationIdSuffix` commented out — restore before committing)                                                                            |
 | `[ ]`  | Billing | Review/trim the temporary `Timber.d("Billing: ...")` logs in `ProductsViewModel`                                                                                                                         |
+| `[L]`  | Billing | Ship release 2 to production — **blocks every other release** until it is out                                                                                                                            |
 
 #### Risks / known limitations
 
-| Status | Scope   | Note                                                                                                                                                                                                                                                           |
-|--------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `[x]`  | Billing | ~~**Timing:** Aug deadline leaves little soak time.~~ Resolved: the cutoff (end of Aug 2026) applies to new submissions only, so the live 7.1.1 build keeps serving and release 2 can soak freely. Only constraint: get release 1 submitted before the cutoff. |
-| `[-]`  | Billing | **Accepted:** users who never install release 1 (dormant, then updating straight to a post-cutoff build) lose their badge. Unavoidable without a backend.                                                                                                      |
-| `[-]`  | Billing | **Accepted:** supporter record is local only (per install), so reinstall / new device / cleared data loses the badge. Fixing this needs a backend + user IDs — rejected as too much scope.                                                                     |
-| `[?]`  | Billing | Legacy backfill can only seed `count = 1`; Play's history API never returned a quantity. Pre-migration repeat buyers show `1x` until they buy again.                                                                                                           |
-| `[-]`  | Billing | **Accepted:** the migration is one-shot, so a user who signs into a different Play account after it ran never gets that account's history backfilled. Edge case, and the API is gone in release 2 anyway.                                                      |
-| `[-]`  | Billing | **Accepted:** `RECORDED_PURCHASE_TOKENS` grows by one ~60-char token per purchase and is never pruned. Bounded in practice by how often a person buys.                                                                                                         |
+| Status | Scope   | Note                                                                                                                                                                                                                                                                                                                                  |
+|--------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `[L]`  | Billing | **Timing:** the Billing 7 cutoff (**Aug 31, 2026**) has passed. The live 7.1.1 build keeps serving, but no update of any kind — including an unrelated hotfix — can be submitted until release 2 ships. An extension can be requested from Play Console -> Policy status until **Nov 1, 2026**. Billing 9 is good until Aug 31, 2028. |
+| `[-]`  | Billing | **Accepted:** users who never install release 1 (dormant, then updating straight to a post-cutoff build) lose their badge. Unavoidable without a backend.                                                                                                                                                                             |
+| `[-]`  | Billing | **Accepted:** supporter record is local only (per install), so reinstall / new device / cleared data loses the badge. Fixing this needs a backend + user IDs — rejected as too much scope.                                                                                                                                            |
+| `[-]`  | Billing | **Accepted:** `RECORDED_PURCHASE_TOKENS` grows by one ~60-char token per purchase and is never pruned. Bounded in practice by how often a person buys.                                                                                                                                                                                |
 
 ---
 

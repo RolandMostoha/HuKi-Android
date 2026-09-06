@@ -18,10 +18,10 @@ import javax.inject.Inject
 class ProductsUiModelMapper @Inject constructor() {
 
     fun mapOneTimeProducts(products: List<ProductDetails>): List<BillingProduct> {
-        return products.map { productDetails ->
-
+        return products.mapNotNull { productDetails ->
             val billingProduct = productDetails.productId.toOneTimeBillingProduct()
-            val details = productDetails.oneTimePurchaseOfferDetails!!
+            val details = productDetails.oneTimePurchaseOfferDetailsList?.firstOrNull()
+                ?: return@mapNotNull null
 
             BillingProduct(
                 productDetails = productDetails,

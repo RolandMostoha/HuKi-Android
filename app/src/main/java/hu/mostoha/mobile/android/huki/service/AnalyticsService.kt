@@ -150,8 +150,6 @@ interface AnalyticsService {
 
     fun billingEvent(billingAction: BillingAction, billingResponseCode: Int)
 
-    fun legacyPurchaseBackfilled(productId: String)
-
     fun placeCategoryFabClicked()
 
     fun placeCategoryClicked(placeCategory: PlaceCategory)

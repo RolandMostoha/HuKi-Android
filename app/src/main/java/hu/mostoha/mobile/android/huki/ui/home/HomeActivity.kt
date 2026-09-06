@@ -308,6 +308,8 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
 
         homeViewModel.updateMyLocationConfig(isLocationPermissionGranted())
 
+        productsViewModel.refresh()
+
         homeMapView.onResume()
     }
 
@@ -1173,6 +1175,15 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
                                     .colorStateList()
                             }
                             setImageResource(R.drawable.ic_home_fab_support_purchased)
+                        }
+                    } else {
+                        binding.homeSearchBarAppIcon.setDefaultIcon()
+
+                        with(binding.homeSupportFab) {
+                            imageTintList = R.color.colorPrimaryIconStrong
+                                .color(this@HomeActivity)
+                                .colorStateList()
+                            setImageResource(R.drawable.ic_home_fab_support)
                         }
                     }
                     binding.homeSupportFab.show()

@@ -227,7 +227,7 @@
 
     <string name="support_title">Support</string>
     <string name="support_greeting">Dear future supporter!</string>
-    <string name="support_message">HuKi is still ad-free and all of its functions are free, support is voluntary.\n\nI develop it in my free time and I love that I\'m doing something useful for the hiking community. Since more and more of us are using it, its monthly cost is raising, so I have to think about make it self-sustaining.\n\nI will continue to do everything to ensure that the maintenance is as cheap and efficient as possible for the project to survive.</string>
+    <string name="support_message">HuKi remains free and ad-free, support is entirely voluntary. If the app helps you too and you are in a position to, please consider supporting it.\n\nMy goal with supporting is to make the app self-sustaining, so that its costs are covered independently of me. I will continue to do everything to ensure that the maintenance is as cheap and efficient as possible for the project to survive.\n\nI develop the app as a hobby in my free time, and I love that I\'m doing something useful for the hiking community. It feels good to give something back from the many experiences I have gained while hiking in Hungary.</string>
     <string name="support_recurring_title">Recurring support</string>
     <string name="support_one_time_title">One-time support</string>
     <string name="support_contact_message">If you want to support the development in other ways, or have an idea, feel free to reach out:</string>

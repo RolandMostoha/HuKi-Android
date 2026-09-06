@@ -151,8 +151,6 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun billingEvent(billingAction: BillingAction, billingResponseCode: Int) = Unit
 
-    override fun legacyPurchaseBackfilled(productId: String) = Unit
-
     override fun placeCategoryFabClicked() = Unit
 
     override fun placeCategoryClicked(placeCategory: PlaceCategory) = Unit

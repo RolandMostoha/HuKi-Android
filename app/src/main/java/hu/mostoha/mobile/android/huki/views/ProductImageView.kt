@@ -37,6 +37,16 @@ class ProductImageView @JvmOverloads constructor(
             .colorStateList()
     }
 
+    fun setDefaultIcon() {
+        strokeWidth = 0f
+        setBackgroundColor(R.color.transparent.color(context))
+        imageTintList = null
+        setImageResource(R.drawable.ic_home_search_bar)
+        strokeColor = R.color.transparent
+            .color(context)
+            .colorStateList()
+    }
+
     fun setAppIcon() {
         setStrokeWidthResource(R.dimen.default_highlighted_card_stroke_width)
         setPadding(resources.getDimensionPixelSize(R.dimen.default_highlighted_card_stroke_width))

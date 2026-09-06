@@ -8,7 +8,6 @@ import hu.mostoha.mobile.android.huki.model.domain.OneTimePurchaseRecord
 import hu.mostoha.mobile.android.huki.model.mapper.toDataStoreEntries
 import hu.mostoha.mobile.android.huki.model.mapper.toOneTimePurchaseRecords
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -38,45 +37,6 @@ class SupportRepository @Inject constructor(
             )
 
             preferences.writePurchaseRecords(existing.filterNot { it.productId == productId } + updated)
-        }
-    }
-
-    /**
-     * Bridge-migration only: seeds a product as purchased once if it isn't tracked yet. Play's
-     * legacy purchase history API only ever returns the most recent purchase per product, never a
-     * quantity, so this can't backfill an accurate count - only "has purchased at least once".
-     *
-     * @return true if the product was seeded, false if it was already tracked or already recorded.
-     */
-    suspend fun recordLegacyPurchase(productId: String, purchaseToken: String, purchaseTimeMillis: Long): Boolean {
-        var isSeeded = false
-
-        dataStore.edit { preferences ->
-            // The token is claimed even when the count isn't seeded: a legacy purchase that is
-            // still owned must not be counted a second time by the consume sweep.
-            if (!preferences.markPurchaseTokenRecorded(purchaseToken)) return@edit
-
-            val existing = preferences.readPurchaseRecords()
-
-            if (existing.any { it.productId == productId }) return@edit
-
-            preferences.writePurchaseRecords(
-                existing + OneTimePurchaseRecord(productId, count = 1, lastPurchaseTimeMillis = purchaseTimeMillis)
-            )
-
-            isSeeded = true
-        }
-
-        return isSeeded
-    }
-
-    suspend fun isLegacyHistoryMigrated(): Boolean {
-        return dataStore.data.first()[DataStoreConstants.Support.LEGACY_HISTORY_MIGRATED] == true
-    }
-
-    suspend fun setLegacyHistoryMigrated() {
-        dataStore.edit { preferences ->
-            preferences[DataStoreConstants.Support.LEGACY_HISTORY_MIGRATED] = true
         }
     }
 

@@ -86,6 +86,12 @@ class SupportFragment : Fragment() {
         initFlows()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        productsViewModel.refresh()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
 
@@ -246,9 +252,10 @@ class SupportFragment : Fragment() {
             .newBuilder()
             .setProductDetails(productDetails)
 
-        productDetails.subscriptionOfferDetails?.let {
-            billingFlowBuilder.setOfferToken(it.first().offerToken)
-        }
+        val offerToken = productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken
+            ?: productDetails.oneTimePurchaseOfferDetailsList?.firstOrNull()?.offerToken
+
+        offerToken?.let { billingFlowBuilder.setOfferToken(it) }
 
         val billingFlowParams = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(listOf(billingFlowBuilder.build()))

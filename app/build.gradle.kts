@@ -150,7 +150,7 @@ dependencies {
     implementation(libs.google.play.services.location)
 
     // Google Play Billing
-    implementation(libs.android.billing.ktx)
+    implementation(libs.android.billing)
 
     // GPX
     implementation(libs.github.ticofab.gpx.parser)

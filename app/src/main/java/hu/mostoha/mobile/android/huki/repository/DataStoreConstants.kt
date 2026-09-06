@@ -31,7 +31,6 @@ object DataStoreConstants {
     object Support {
         val PURCHASED_ONE_TIME_PRODUCTS = stringSetPreferencesKey("support_purchased_one_time_products")
         val RECORDED_PURCHASE_TOKENS = stringSetPreferencesKey("support_recorded_purchase_tokens")
-        val LEGACY_HISTORY_MIGRATED = booleanPreferencesKey("support_legacy_history_migrated")
     }
 
 }

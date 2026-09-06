@@ -39,7 +39,6 @@ class SupportRepositoryTest {
             dataStore.edit { preferences ->
                 preferences.remove(DataStoreConstants.Support.PURCHASED_ONE_TIME_PRODUCTS)
                 preferences.remove(DataStoreConstants.Support.RECORDED_PURCHASE_TOKENS)
-                preferences.remove(DataStoreConstants.Support.LEGACY_HISTORY_MIGRATED)
             }
         }
     }
@@ -97,67 +96,6 @@ class SupportRepositoryTest {
     }
 
     @Test
-    fun givenEmptyStore_whenRecordLegacyPurchase_thenProductIsSeededWithCountOne() {
-        runTest {
-            val isSeeded = repository.recordLegacyPurchase(PRODUCT_ID, TOKEN_1, PURCHASE_TIME)
-
-            val history = repository.getOneTimePurchaseHistory().first()
-
-            assertThat(isSeeded).isTrue()
-            assertThat(history).containsExactly(OneTimePurchaseRecord(PRODUCT_ID, 1, PURCHASE_TIME))
-        }
-    }
-
-    @Test
-    fun givenTrackedProduct_whenRecordLegacyPurchase_thenCountIsNotTouched() {
-        runTest {
-            repository.recordOneTimePurchase(PRODUCT_ID, TOKEN_1, PURCHASE_TIME)
-            repository.recordOneTimePurchase(PRODUCT_ID, TOKEN_2, PURCHASE_TIME_LATER)
-
-            val isSeeded = repository.recordLegacyPurchase(PRODUCT_ID, TOKEN_3, PURCHASE_TIME)
-
-            val history = repository.getOneTimePurchaseHistory().first()
-
-            assertThat(isSeeded).isFalse()
-            assertThat(history).containsExactly(OneTimePurchaseRecord(PRODUCT_ID, 2, PURCHASE_TIME_LATER))
-        }
-    }
-
-    /**
-     * The legacy backfill and the consume sweep see the same still-owned purchase: seeded once by
-     * the migration, then swept - the shared token must keep it at a single count.
-     */
-    @Test
-    fun givenLegacyPurchaseStillOwned_whenSweptWithSameToken_thenCountStaysOne() {
-        runTest {
-            repository.recordLegacyPurchase(PRODUCT_ID, TOKEN_1, PURCHASE_TIME)
-            repository.recordOneTimePurchase(PRODUCT_ID, TOKEN_1, PURCHASE_TIME)
-
-            val history = repository.getOneTimePurchaseHistory().first()
-
-            assertThat(history).containsExactly(OneTimePurchaseRecord(PRODUCT_ID, 1, PURCHASE_TIME))
-        }
-    }
-
-    /**
-     * The legacy backfill must claim the token even when it doesn't seed the count, otherwise the
-     * sweep counts an already tracked - but still owned - legacy purchase a second time.
-     */
-    @Test
-    fun givenTrackedProduct_whenLegacyPurchaseIsSweptWithItsOwnToken_thenCountStaysOne() {
-        runTest {
-            repository.recordOneTimePurchase(PRODUCT_ID, TOKEN_1, PURCHASE_TIME)
-
-            repository.recordLegacyPurchase(PRODUCT_ID, TOKEN_2, PURCHASE_TIME)
-            repository.recordOneTimePurchase(PRODUCT_ID, TOKEN_2, PURCHASE_TIME)
-
-            val history = repository.getOneTimePurchaseHistory().first()
-
-            assertThat(history).containsExactly(OneTimePurchaseRecord(PRODUCT_ID, 1, PURCHASE_TIME))
-        }
-    }
-
-    @Test
     fun givenCorruptEntryInStore_whenRecordOneTimePurchase_thenValidRecordsSurvive() {
         runTest {
             dataStore.edit { preferences ->
@@ -175,22 +113,6 @@ class SupportRepositoryTest {
                 OneTimePurchaseRecord(PRODUCT_ID_LEVEL_2, 1, PURCHASE_TIME),
                 OneTimePurchaseRecord(PRODUCT_ID, 1, PURCHASE_TIME)
             )
-        }
-    }
-
-    @Test
-    fun givenFreshInstall_whenIsLegacyHistoryMigrated_thenFalseReturns() {
-        runTest {
-            assertThat(repository.isLegacyHistoryMigrated()).isFalse()
-        }
-    }
-
-    @Test
-    fun givenMigrationFlagSet_whenIsLegacyHistoryMigrated_thenTrueReturns() {
-        runTest {
-            repository.setLegacyHistoryMigrated()
-
-            assertThat(repository.isLegacyHistoryMigrated()).isTrue()
         }
     }
 

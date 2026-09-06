@@ -4,7 +4,7 @@ android-gpx-parser = "2.3.0"
 android-gradle-plugin = "8.10.1"
 appcompat = "1.7.1"
 arch-core-testing = "2.2.0"
-billing = "7.1.1"
+billing = "9.1.0"
 constraintlayout = "2.2.1"
 core-ktx = "1.18.0"
 core-splashscreen = "1.2.0"
@@ -53,7 +53,7 @@ androidx-test-orchestrator = "1.6.1"
 
 [libraries]
 airbnb-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
-android-billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
+android-billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
 android-tools-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity-ktx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
