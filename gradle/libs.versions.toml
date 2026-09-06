@@ -51,7 +51,7 @@ androidx-test-orchestrator = "1.6.1"
 
 [libraries]
 airbnb-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
-android-billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
+android-billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
 android-tools-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity-ktx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

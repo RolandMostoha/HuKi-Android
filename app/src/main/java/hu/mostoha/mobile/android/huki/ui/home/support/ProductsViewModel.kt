@@ -18,14 +18,14 @@ import com.android.billingclient.api.Purchase.PurchaseState
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
+import com.android.billingclient.api.acknowledgePurchase
+import com.android.billingclient.api.consumePurchase
+import com.android.billingclient.api.queryProductDetails
+import com.android.billingclient.api.queryPurchasesAsync
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.billing.BillingResponseHandler
-import hu.mostoha.mobile.android.huki.billing.acknowledgePurchase
-import hu.mostoha.mobile.android.huki.billing.consumePurchase
-import hu.mostoha.mobile.android.huki.billing.queryProductDetails
-import hu.mostoha.mobile.android.huki.billing.queryPurchasesAsync
 import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
 import hu.mostoha.mobile.android.huki.model.domain.OneTimeBillingProducts
 import hu.mostoha.mobile.android.huki.model.domain.RecurringBillingProducts
@@ -187,8 +187,8 @@ class ProductsViewModel @Inject constructor(
             billingResult = recurringProductDetails.billingResult
         )
 
-        val oneTimeList = oneTimeProductDetails.productDetailsList
-        val recurringList = recurringProductDetails.productDetailsList
+        val oneTimeList = oneTimeProductDetails.productDetailsList.orEmpty()
+        val recurringList = recurringProductDetails.productDetailsList.orEmpty()
 
         if (oneTimeList.isEmpty() && recurringList.isEmpty()) {
             analyticsService.billingEvent(BillingAction.QUERY_PRODUCTS, BillingResponseCode.ITEM_UNAVAILABLE)

@@ -19,8 +19,6 @@
 
 | Status | Feature                                                                          |
 |--------|----------------------------------------------------------------------------------|
-| `[~]`  | Google Play Billing SDK update -> 9.1.0                                          |
-| `[x]`  | chore(App): upgrade to Gradle 9, Kotlin 2.4.10, targetSdk=37, dependency updates |
 | `[R]`  | Revamp support screen                                                            |
 | `[R]`  | Update app icon to latest                                                        |
 
@@ -82,11 +80,14 @@ Target is **9.1.0**, not the originally planned 8.3.0: the API surface we use is
 `minSdk 23` / `targetSdk 35` are already satisfied (we are on 26 / 37), and Billing 9 is not
 deprecated until **Aug 31, 2028** — a full extra year over Billing 8 (Aug 31, 2027).
 
-**Dropped `billing-ktx`:** its Kotlin metadata requires Kotlin 2.3 for 9.x (and 2.2 for 8.1+),
-while the project compiled with 2.1.20 at the time — only `billing-ktx` 8.0.0 would have been consumable. The
-core `billing` artifact is plain Java with no metadata constraint, so it is used together with our
-own suspend wrappers in `billing/BillingClientExtensions.kt`. Kotlin is now 2.4.10, so `billing-ktx`
-9.1.0 is consumable — switching to it is optional, the local wrappers cover what we use.
+**`billing-ktx` restored:** it was dropped during release 2 because its Kotlin metadata requires
+Kotlin 2.3 for 9.x (and 2.2 for 8.1+) while the project compiled with 2.1.20 — only `billing-ktx`
+8.0.0 would have been consumable — so the plain Java `billing` artifact was used with hand-written
+suspend wrappers. With Kotlin at 2.4.10 the project is back on `billing-ktx` 9.1.0 and
+`billing/BillingClientExtensions.kt` is deleted; the official
+`queryProductDetails` / `queryPurchasesAsync` / `acknowledgePurchase` / `consumePurchase`
+extensions are drop-in equivalents, except that `ProductDetailsResult.productDetailsList` is
+nullable there.
 
 | Status | Scope   | Task                                                                                                                          |
 |--------|---------|-------------------------------------------------------------------------------------------------------------------------------|
