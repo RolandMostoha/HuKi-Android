@@ -40,6 +40,8 @@ interface AnalyticsService {
 
     fun myLocationClicked()
 
+    fun myLocationLongClicked()
+
     fun routePlannerClicked()
 
     fun routePlannerPickLocationClicked()

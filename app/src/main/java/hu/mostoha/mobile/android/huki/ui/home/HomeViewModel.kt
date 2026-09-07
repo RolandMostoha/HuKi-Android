@@ -511,6 +511,12 @@ class HomeViewModel @Inject constructor(
         _hikeModeUiModel.update { it.copy(compassState = newCompassSate) }
     }
 
+    fun enableLiveCompass() {
+        updateMyLocationConfig(isFollowLocationEnabled = true)
+
+        _hikeModeUiModel.update { it.copy(isHikeModeEnabled = true, compassState = CompassState.Live) }
+    }
+
     fun setFreeCompass(mapOrientation: Float) {
         _hikeModeUiModel.update { it.copy(compassState = CompassState.Free(mapOrientation)) }
     }

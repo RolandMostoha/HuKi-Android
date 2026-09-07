@@ -77,6 +77,15 @@ commit-message convention.
     - `ci(CI): cancel previous in-progress GitHub workflows`
     - `release(v1.1): update store content, versioning`
 
+## Billing / Supporters
+
+One-time support products are consumed right after purchase so they can be re-bought, so Play
+does not report them as owned. `SupportRepository` (DataStore) is the only record of "has ever
+supported". Known, accepted limitations:
+
+- The record is local per install, and `allowBackup="false"`, so a reinstall / new device / cleared
+  data loses the supporter badge. Fixing it needs a backend + user IDs — out of scope.
+
 ## Tests
 
 - **Unit tests** (`app/src/test`): JUnit4 + Truth + MockK + Turbine + `kotlinx-coroutines-test`.

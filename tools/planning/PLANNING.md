@@ -5,7 +5,7 @@
 | Status | Meaning                     |
 |--------|-----------------------------|
 | `[ ]`  | Not started                 |
-| `[L]`  | Required for Go-Live        |
+| `[R]`  | Required for Next Release   |
 | `[~]`  | In progress                 |
 | `[x]`  | Done                        |
 | `[-]`  | Cancelled / deprioritized   |
@@ -17,25 +17,24 @@
 
 ### General / tech tasks
 
-| Status | Feature                                                                          |
-|--------|----------------------------------------------------------------------------------|
-| `[R]`  | Revamp support screen                                                            |
-| `[R]`  | Update app icon to latest                                                        |
+| Status | Feature               |
+|--------|-----------------------|
+| `[R]`  | Revamp support screen |
 
 ### Bugs
 
-| Status | Scope        | Bug                                                                                                           |
-|--------|--------------|---------------------------------------------------------------------------------------------------------------|
-| `[ ]`  | GPX          | BUG: GPX roundtrip distance to my location not displayed                                                      |
-| `[R]`  | BottomSheets | BUG: There is an unnecessary big gap between sheet and FABs. ![img.png](img.png)                              |
-| `[ ]`  | App          | Bitmap memory usage in your app's background state exceeds the bad behavior threshold ![img_1.png](img_1.png) |
+| Status | Scope | Bug                                                                                                           |
+|--------|-------|---------------------------------------------------------------------------------------------------------------|
+| `[ ]`  | GPX   | BUG: GPX roundtrip distance to my location not displayed                                                      |
+| `[R]`  | App   | Bitmap memory usage in your app's background state exceeds the bad behavior threshold ![img_1.png](img_1.png) |
 
 ### FEATURE: Map
 
-| Status | Scope | Task                                          |
-|--------|-------|-----------------------------------------------|
-| `[ ]`  | Map   | Status message on hike mode changes           |
-| `[ ]`  | Map   | Offline detection + status message at the top |
+| Status | Scope | Task                                                      |
+|--------|-------|-----------------------------------------------------------|
+| `[ ]`  | Map   | Status message on hike mode changes                       |
+| `[ ]`  | Map   | Offline detection + status message at the top             |
+| `[x]`  | Home  | On My Location long click -> trigger FollowingLiveCompass |
 
 ### FEATURE: RoutePlanner
 
@@ -93,16 +92,7 @@ nullable there.
 |--------|---------|-------------------------------------------------------------------------------------------------------------------------------|
 | `[ ]`  | Billing | Re-verify badge + re-purchase flow on device on 9.1.0 (needs `applicationIdSuffix` commented out — restore before committing) |
 | `[ ]`  | Billing | Review/trim the temporary `Timber.d("Billing: ...")` logs in `ProductsViewModel`                                              |
-| `[L]`  | Billing | Ship release 2 to production — **blocks every other release** until it is out                                                 |
-
-#### Risks / known limitations
-
-| Status | Scope   | Note                                                                                                                                                                                                                                                                                                                                  |
-|--------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `[L]`  | Billing | **Timing:** the Billing 7 cutoff (**Aug 31, 2026**) has passed. The live 7.1.1 build keeps serving, but no update of any kind — including an unrelated hotfix — can be submitted until release 2 ships. An extension can be requested from Play Console -> Policy status until **Nov 1, 2026**. Billing 9 is good until Aug 31, 2028. |
-| `[-]`  | Billing | **Accepted:** users who never install release 1 (dormant, then updating straight to a post-cutoff build) lose their badge. Unavoidable without a backend.                                                                                                                                                                             |
-| `[-]`  | Billing | **Accepted:** supporter record is local only (per install), so reinstall / new device / cleared data loses the badge. Fixing this needs a backend + user IDs — rejected as too much scope.                                                                                                                                            |
-| `[-]`  | Billing | **Accepted:** `RECORDED_PURCHASE_TOKENS` grows by one ~60-char token per purchase and is never pruned. Bounded in practice by how often a person buys.                                                                                                                                                                                |
+| `[R]`  | Billing | Ship release 2 to production — **blocks every other release** until it is out                                                 |
 
 ---
 

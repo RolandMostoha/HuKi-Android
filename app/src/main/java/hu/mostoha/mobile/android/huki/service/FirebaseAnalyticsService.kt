@@ -44,6 +44,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SEARCH_HIKING_ROUTES = "search_hiking_routes"
         private const val EVENT_SELECT_HIKING_ROUTE = "select_hiking_route"
         private const val EVENT_SELECT_MY_LOCATION = "select_my_location"
+        private const val EVENT_SELECT_MY_LOCATION_LONG = "select_my_location_long"
         private const val EVENT_SELECT_ROUTE_PLANNER = "select_route_planner"
         private const val EVENT_SELECT_ROUTE_PLANNER_PICK_LOCATION = "select_route_planner_pick_location"
         private const val EVENT_SELECT_ROUTE_PLANNER_MY_LOCATION = "select_route_planner_my_location"
@@ -206,6 +207,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun myLocationClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_MY_LOCATION, null)
+    }
+
+    override fun myLocationLongClicked() {
+        firebaseAnalytics.logEvent(EVENT_SELECT_MY_LOCATION_LONG, null)
     }
 
     override fun routePlannerClicked() {

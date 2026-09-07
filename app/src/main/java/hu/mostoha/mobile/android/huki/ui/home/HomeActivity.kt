@@ -519,27 +519,43 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
         placeFinderViewModel.cancelSearch()
     }
 
+    private fun withMyLocationPermission(onPermissionGranted: () -> Unit) {
+        when {
+            !isGooglePlayServicesAvailable() -> {
+                showGooglePlayServiceNotAvailableDialog()
+            }
+            isLocationPermissionGranted() -> {
+                onPermissionGranted()
+            }
+            shouldShowLocationRationale() -> {
+                showLocationRationaleDialog()
+            }
+            else -> {
+                permissionLauncher.launch(locationPermissions)
+            }
+        }
+    }
+
     private fun initFabs() {
         homeMyLocationFab.setOnClickListener {
             analyticsService.myLocationClicked()
 
-            when {
-                !isGooglePlayServicesAvailable() -> {
-                    showGooglePlayServiceNotAvailableDialog()
-                }
-                isLocationPermissionGranted() -> {
-                    homeViewModel.updateMyLocationConfig(
-                        isLocationPermissionEnabled = true,
-                        isFollowLocationEnabled = true,
-                    )
-                }
-                shouldShowLocationRationale() -> {
-                    showLocationRationaleDialog()
-                }
-                else -> {
-                    permissionLauncher.launch(locationPermissions)
-                }
+            withMyLocationPermission {
+                homeViewModel.updateMyLocationConfig(
+                    isLocationPermissionEnabled = true,
+                    isFollowLocationEnabled = true,
+                )
             }
+        }
+        homeMyLocationFab.setOnLongClickListener {
+            analyticsService.myLocationLongClicked()
+
+            withMyLocationPermission {
+                homeViewModel.updateMyLocationConfig(isLocationPermissionEnabled = true)
+                homeViewModel.enableLiveCompass()
+            }
+
+            true
         }
         homeRoutePlannerFab.setOnClickListener {
             analyticsService.routePlannerClicked()
