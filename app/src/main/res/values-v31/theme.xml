@@ -3,7 +3,7 @@
 
     <style name="BaseTheme.HuKiTheme">
 
-        <item name="android:windowSplashScreenBackground">@color/colorLauncher</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/colorLauncher</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/anim_splash</item>
         <item name="android:windowSplashScreenAnimationDuration">
             @integer/splash_animation_duration
