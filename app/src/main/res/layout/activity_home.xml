@@ -286,7 +286,7 @@
         android:animateLayoutChanges="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_behavior="@string/fab_transformation_sheet_behavior">
+        app:layout_behavior="hu.mostoha.mobile.android.huki.views.BottomSheetDodgeBehavior">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/gpxVisibilityButton"

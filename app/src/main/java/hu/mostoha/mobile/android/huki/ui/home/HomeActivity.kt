@@ -341,10 +341,10 @@ class HomeActivity : AppCompatActivity(R.layout.activity_home) {
             )
             homeFabContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 updateMargins(
-                    bottom = insets.bottom,
                     right = insets.right + resources.getDimensionPixelSize(R.dimen.home_horizontal_margin),
                 )
             }
+            homeFabContainer.updatePadding(bottom = insets.bottom)
             bottomSheets.forEach { it.updateInset(insets) }
 
             homeMapView.replaceOverlay(OsmLicencesOverlay(this, analyticsService, insets), OverlayComparator)
