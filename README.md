@@ -1,17 +1,18 @@
 # HuKi - Hungarian Hiking Map #
 
-HuKi is an Android app for hikers, which helps you plan trips and discover the hiking trails of Hungary.
+[![Android CI](https://img.shields.io/github/actions/workflow/status/RolandMostoha/HuKi-Android/github-workflow-deploy.yml?branch=master&event=push&label=Android%20CI&logo=android)](https://github.com/RolandMostoha/HuKi-Android/actions/workflows/github-workflow-deploy.yml)
+[![Google Play](https://img.shields.io/badge/Google%20Play-Download-018786?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki)
+[![Last commit](https://img.shields.io/github/last-commit/RolandMostoha/HuKi-Android?color=018786)](https://github.com/RolandMostoha/HuKi-Android/commits/master)
+
+HuKi is a native Android app for hikers, which helps you plan trips and discover the hiking trails of Hungary.
+
+HuKi is my pet project, I develop it in my free time. The app is free, ad-free and open source.
+
+## Releases
 
 The app is available in Google Play: [HuKi - Hungarian Hiking App](https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki)
 
-## Goals
-
-The project was born for two primary reasons:
-
-1. My personal entertainment - it's my beloved pet project in which I can try out Android stuff outside of my job.
-2. It comes in handy for hikers to have trips in Hungary. No need to download tiles or setup layers manually.
-
-The inspiration of the project was [turistautak.openstreetmap.hu](https://turistautak.openstreetmap.hu/), I've been using their webapp since I started hiking.
+<a href="https://play.google.com/store/apps/details?id=hu.mostoha.mobile.android.huki"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" width="200"></a>
 
 ## Screenshots
 

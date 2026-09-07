@@ -17,16 +17,16 @@
 
 ### General / tech tasks
 
-| Status | Feature               |
-|--------|-----------------------|
-| `[R]`  | Revamp support screen |
+| Status | Feature                           |
+|--------|-----------------------------------|
+| `[R]`  | Add smart labels to Github README |
+| `[R]`  | Revamp support screen             |
 
 ### Bugs
 
-| Status | Scope | Bug                                                                                                           |
-|--------|-------|---------------------------------------------------------------------------------------------------------------|
-| `[ ]`  | GPX   | BUG: GPX roundtrip distance to my location not displayed                                                      |
-| `[R]`  | App   | Bitmap memory usage in your app's background state exceeds the bad behavior threshold ![img_1.png](img_1.png) |
+| Status | Scope | Bug                                                                                                                                   |
+|--------|-------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `[ ]`  | GPX   | BUG: GPX roundtrip distance to my location not displayed                                                                              |
 
 ### FEATURE: Map
 
