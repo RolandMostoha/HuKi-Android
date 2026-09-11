@@ -19,7 +19,6 @@
 
 | Status | Feature                           |
 |--------|-----------------------------------|
-| `[R]`  | Add smart labels to Github README |
 | `[R]`  | Revamp support screen             |
 
 ### Bugs
@@ -34,13 +33,11 @@
 |--------|-------|-----------------------------------------------------------|
 | `[ ]`  | Map   | Status message on hike mode changes                       |
 | `[ ]`  | Map   | Offline detection + status message at the top             |
-| `[x]`  | Home  | On My Location long click -> trigger FollowingLiveCompass |
 
 ### FEATURE: RoutePlanner
 
 | Status | Scope        | Task                                                                                                                                                |
 |--------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `[R]`  | RoutePlanner | Add a dedicated error message if Graphhopper daily limit is reached. "We've reached the route planner service daily limit. Please try it tomorrow." |
 | `[ ]`  | RoutePlanner | Update Route Planner settings icon for visibility                                                                                                   |
 
 ### FEATURE: HikingRoutes

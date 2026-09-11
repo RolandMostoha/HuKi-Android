@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.update
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
+import hu.mostoha.mobile.android.huki.interactor.exception.RoutePlannerLimitReachedException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
@@ -119,10 +120,12 @@ class RoutePlannerViewModel @Inject constructor(
                         }
                         .onCompletion { _isRoutePlanLoading.emit(false) }
                         .catch { throwable ->
-                            val domainException = DomainException(
-                                Message.Res(R.string.route_planner_general_error_message),
+                            val domainException = if (throwable is RoutePlannerLimitReachedException) {
+                                analyticsService.routePlannerLimitReached()
                                 throwable
-                            )
+                            } else {
+                                DomainException(Message.Res(R.string.route_planner_general_error_message), throwable)
+                            }
                             showError(domainException)
                         }
                 }

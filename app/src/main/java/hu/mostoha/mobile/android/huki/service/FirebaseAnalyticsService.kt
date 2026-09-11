@@ -51,6 +51,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_ROUTE_PLANNER_DONE = "select_route_planner_done"
         private const val EVENT_SELECT_ROUTE_PLANNER_COMMENT_DONE = "select_route_planner_comment_done"
         private const val EVENT_SELECT_ROUTE_PLANNER_HIKE_TYPE_TEMPLATE = "select_route_planner_%s"
+        private const val EVENT_ROUTE_PLANNER_LIMIT_REACHED = "route_planner_limit_reached"
         private const val EVENT_SELECT_MAPS_DIRECTIONS = "select_maps_directions"
         private const val EVENT_GPX_IMPORT_CLICKED = "gpx_import_clicked"
         private const val EVENT_GPX_IMPORTED = "gpx_imported"
@@ -252,6 +253,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
                 param(PARAM_ROUTE_PLANNER_DISTANCE, distanceParam)
             }
         }
+    }
+
+    override fun routePlannerLimitReached() {
+        firebaseAnalytics.logEvent(EVENT_ROUTE_PLANNER_LIMIT_REACHED, null)
     }
 
     override fun googleMapsClicked() {

@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.toMillis
+import hu.mostoha.mobile.android.huki.interactor.exception.RoutePlannerLimitReachedException
 import hu.mostoha.mobile.android.huki.logger.ExceptionLogger
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
@@ -461,6 +462,29 @@ class RoutePlannerViewModelTest {
 
                 assertThat(awaitItem()).isEqualTo(R.string.route_planner_error_file_save_unsuccsessful.toMessage())
             }
+        }
+    }
+
+    @Test
+    fun `Given daily limit reached, when getRoutePlan, then dedicated error message is emitted`() {
+        runTestDefault {
+            val searchText1 = "Dob"
+            val searchText2 = "Szánkó"
+            coEvery {
+                routePlannerRepository.getRoutePlan(any(), any())
+            } throws RoutePlannerLimitReachedException(IllegalStateException(""))
+
+            viewModel.routePlanErrorMessage.test {
+                viewModel.initWaypoints()
+                advanceUntilIdle()
+                viewModel.updateWaypoint(viewModel.waypointItems.value[0], DEFAULT_PLACE_UI_MODEL_1, searchText1)
+                viewModel.updateWaypoint(viewModel.waypointItems.value[1], DEFAULT_PLACE_UI_MODEL_2, searchText2)
+                advanceUntilIdle()
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(R.string.route_planner_error_daily_limit_reached.toMessage())
+            }
+            coVerify { analyticsService.routePlannerLimitReached() }
         }
     }
 

@@ -10,6 +10,8 @@ import com.codebutchery.androidgpx.print.GPXFilePrinter
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.configuration.GpxConfiguration
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
+import hu.mostoha.mobile.android.huki.interactor.exception.RoutePlannerLimitReachedException
+import hu.mostoha.mobile.android.huki.interactor.isTooManyRequests
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
@@ -18,6 +20,7 @@ import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.network.GraphhopperService
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointItem
+import retrofit2.HttpException
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -34,7 +37,15 @@ class RoutePlannerRepository @Inject constructor(
     suspend fun getRoutePlan(planType: RoutePlanType, waypoints: List<Location>): RoutePlan {
         val routeRequest = routePlannerNetworkModelMapper.createRouteRequest(planType, waypoints)
 
-        val routeResponse = graphhopperService.getRoute(routeRequest)
+        val routeResponse = try {
+            graphhopperService.getRoute(routeRequest)
+        } catch (httpException: HttpException) {
+            if (httpException.isTooManyRequests()) {
+                throw RoutePlannerLimitReachedException(httpException)
+            } else {
+                throw httpException
+            }
+        }
 
         return routePlannerNetworkModelMapper.mapRouteResponse(planType, routeResponse)
     }

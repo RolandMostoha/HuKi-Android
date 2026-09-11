@@ -54,6 +54,8 @@ interface AnalyticsService {
 
     fun routePlanSaved(routePlan: RoutePlanUiModel)
 
+    fun routePlannerLimitReached()
+
     fun googleMapsClicked()
 
     fun gpxImportClicked()

@@ -55,6 +55,8 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun routePlanSaved(routePlan: RoutePlanUiModel) = Unit
 
+    override fun routePlannerLimitReached() = Unit
+
     override fun googleMapsClicked() = Unit
 
     override fun gpxImportClicked() = Unit
