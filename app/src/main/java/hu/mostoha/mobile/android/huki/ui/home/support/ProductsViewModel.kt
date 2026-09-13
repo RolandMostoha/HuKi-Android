@@ -13,6 +13,7 @@ import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.PendingPurchasesParams
+import com.android.billingclient.api.ProductDetailsResult
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.Purchase.PurchaseState
 import com.android.billingclient.api.PurchasesUpdatedListener
@@ -27,6 +28,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.billing.BillingResponseHandler
 import hu.mostoha.mobile.android.huki.di.module.IoDispatcher
+import hu.mostoha.mobile.android.huki.model.domain.BillingProductType
 import hu.mostoha.mobile.android.huki.model.domain.OneTimeBillingProducts
 import hu.mostoha.mobile.android.huki.model.domain.RecurringBillingProducts
 import hu.mostoha.mobile.android.huki.model.domain.isOneTime
@@ -39,6 +41,7 @@ import hu.mostoha.mobile.android.huki.repository.SupportRepository
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -47,6 +50,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -79,7 +84,9 @@ class ProductsViewModel @Inject constructor(
         )
         .build()
 
-    private var isLoadInProgress = false
+    private val loadMutex = Mutex()
+
+    private var isConnectionStarted = false
 
     init {
         initProducts()
@@ -90,36 +97,50 @@ class ProductsViewModel @Inject constructor(
     }
 
     fun refresh() {
-        if (billingClient.isReady) {
+        if (billingClient.connectionState == ConnectionState.CONNECTED) {
             launchLoad { loadPurchaseHistory() }
         } else {
             startBillingConnection()
         }
     }
 
+    /**
+     * Loads are serialized instead of dropped while another one runs, so the load started right
+     * after the connection - the only one querying products - is never lost to a [refresh] that
+     * happens to be in flight.
+     */
     private fun launchLoad(load: suspend () -> Unit) {
         viewModelScope.launch {
-            if (isLoadInProgress) return@launch
-
-            isLoadInProgress = true
-
-            try {
+            loadMutex.withLock {
                 load()
-            } finally {
-                isLoadInProgress = false
             }
         }
     }
 
+    /**
+     * [BillingClient.Builder.enableAutoServiceReconnection] makes the library reconnect on its own,
+     * so startConnection must be called once only: a second call while a connection is in flight -
+     * ours or one of the library's own retries - fails with DEVELOPER_ERROR. Note that
+     * [BillingClient.isReady] already returns true while connecting, so only
+     * [ConnectionState.CONNECTED] tells a finished connection apart from a pending one.
+     */
     private fun startBillingConnection() {
-        if (billingClient.connectionState == ConnectionState.CONNECTING) {
-            Timber.d("Billing: connection already in progress")
+        if (isConnectionStarted && billingClient.connectionState != ConnectionState.DISCONNECTED) {
+            Timber.d("Billing: connection already started, state=${billingClient.connectionState}")
 
             return
         }
 
+        isConnectionStarted = true
+
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.isReconnectionCollision()) {
+                    Timber.d("Billing: reconnection collided with a connection in flight, ignoring")
+
+                    return
+                }
+
                 billingResponseHandler.handleBillingResponse(
                     billingAction = BillingAction.START_CONNECTION,
                     billingResult = billingResult,
@@ -140,6 +161,16 @@ class ProductsViewModel @Inject constructor(
                 )
             }
 
+            /**
+             * The library routes the failures of its own reconnections to this listener too. Such a
+             * failure means a connection is already in flight and its real result still arrives in a
+             * separate callback, so it must not be reported as an error.
+             */
+            private fun BillingResult.isReconnectionCollision(): Boolean {
+                return responseCode == BillingResponseCode.DEVELOPER_ERROR &&
+                    billingClient.connectionState != ConnectionState.DISCONNECTED
+            }
+
             override fun onBillingServiceDisconnected() {
                 Timber.w("Billing: service disconnected")
                 _productsUiModel.update {
@@ -153,30 +184,8 @@ class ProductsViewModel @Inject constructor(
     }
 
     private suspend fun loadProducts() = withContext(ioDispatcher) {
-        val oneTimeProductDetails = billingClient.queryProductDetails(
-            QueryProductDetailsParams.newBuilder()
-                .setProductList(
-                    OneTimeBillingProducts.entries.map {
-                        QueryProductDetailsParams.Product.newBuilder()
-                            .setProductId(it.productId)
-                            .setProductType(it.productType)
-                            .build()
-                    }
-                )
-                .build()
-        )
-        val recurringProductDetails = billingClient.queryProductDetails(
-            QueryProductDetailsParams.newBuilder()
-                .setProductList(
-                    RecurringBillingProducts.entries.map {
-                        QueryProductDetailsParams.Product.newBuilder()
-                            .setProductId(it.productId)
-                            .setProductType(it.productType)
-                            .build()
-                    }
-                )
-                .build()
-        )
+        val oneTimeProductDetails = queryProductDetails(OneTimeBillingProducts.entries)
+        val recurringProductDetails = queryProductDetails(RecurringBillingProducts.entries)
 
         billingResponseHandler.handleBillingResponse(
             billingAction = BillingAction.QUERY_PRODUCTS,
@@ -189,10 +198,16 @@ class ProductsViewModel @Inject constructor(
 
         val oneTimeList = oneTimeProductDetails.productDetailsList.orEmpty()
         val recurringList = recurringProductDetails.productDetailsList.orEmpty()
+        val isQueryFailed = oneTimeProductDetails.billingResult.responseCode != BillingResponseCode.OK ||
+            recurringProductDetails.billingResult.responseCode != BillingResponseCode.OK
 
         if (oneTimeList.isEmpty() && recurringList.isEmpty()) {
             analyticsService.billingEvent(BillingAction.QUERY_PRODUCTS, BillingResponseCode.ITEM_UNAVAILABLE)
+        }
 
+        // A failed query returns no products at all, so rendering what the other one returned would
+        // leave the products of the failed one as empty placeholders with no way to notice it.
+        if (isQueryFailed || (oneTimeList.isEmpty() && recurringList.isEmpty())) {
             _productsUiModel.update {
                 it.copy(
                     products = emptyList(),
@@ -210,6 +225,34 @@ class ProductsViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    /**
+     * Play answers with a transient SERVICE_UNAVAILABLE now and then - right after an install, for
+     * example -, so such a query is given one more chance before it is reported as an error.
+     */
+    private suspend fun queryProductDetails(products: List<BillingProductType>): ProductDetailsResult {
+        val params = QueryProductDetailsParams.newBuilder()
+            .setProductList(
+                products.map {
+                    QueryProductDetailsParams.Product.newBuilder()
+                        .setProductId(it.productId)
+                        .setProductType(it.productType)
+                        .build()
+                }
+            )
+            .build()
+        val productDetails = billingClient.queryProductDetails(params)
+
+        if (productDetails.billingResult.responseCode != BillingResponseCode.SERVICE_UNAVAILABLE) {
+            return productDetails
+        }
+
+        Timber.w("Billing: product query is unavailable, retrying")
+
+        delay(PRODUCT_QUERY_RETRY_DELAY)
+
+        return billingClient.queryProductDetails(params)
     }
 
     /**
@@ -381,6 +424,10 @@ class ProductsViewModel @Inject constructor(
                 }
             }
         )
+    }
+
+    companion object {
+        private const val PRODUCT_QUERY_RETRY_DELAY = 1000L
     }
 
 }
