@@ -79,3 +79,10 @@
  -keep class com.google.android.gms.** { *; }
  -dontwarn com.google.android.gms.*
  -keep class com.google.api.client.** {*;}
+
+# Firebase component discovery: registrars are instantiated reflectively by name
+# from AndroidManifest metadata, so their no-arg constructor must survive R8.
+-keep class com.google.firebase.components.ComponentRegistrar
+-keep class * implements com.google.firebase.components.ComponentRegistrar {
+    public <init>();
+}
