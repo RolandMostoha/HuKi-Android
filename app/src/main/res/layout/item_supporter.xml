@@ -16,8 +16,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingTop="@dimen/space_extra_large"
-        android:paddingHorizontal="@dimen/space_extra_large">
+        android:paddingHorizontal="@dimen/space_extra_large"
+        android:paddingVertical="@dimen/space_extra_large">
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.BillingFlowParams
@@ -33,6 +34,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -43,6 +45,7 @@ class SupportFragment : Fragment() {
 
     private val insetSharedViewModel: InsetSharedViewModel by activityViewModels()
     private val productsViewModel: ProductsViewModel by activityViewModels()
+    private val supportAnimationViewModel: SupportAnimationViewModel by viewModels()
 
     private var _binding: FragmentSupportBinding? = null
     private val binding get() = _binding!!
@@ -52,13 +55,20 @@ class SupportFragment : Fragment() {
     private val toolbar by lazy { binding.supportToolbar }
     private val container by lazy { binding.supportContainer }
     private val scrollContainer by lazy { binding.supportScrollContainer }
+    private val swipeRefreshContainer by lazy { binding.supportSwipeRefreshContainer }
     private val paymentsContainer by lazy { binding.supportPaymentsContainer }
     private val infoCard by lazy { binding.supportInfoCard }
+    private val supporterInfoCard by lazy { binding.supportSupporterInfoCard }
+    private val animationViews by lazy {
+        listOf(infoCard.supportAnimationView, supporterInfoCard.supportAnimationView)
+    }
     private val supporterList by lazy { binding.supportSupporterList }
     private val loadingIndicator by lazy { binding.supportLoadingIndicator.loadingIndicatorContainer }
     private val errorView by lazy { binding.supportErrorView.errorViewContainer }
     private val errorViewText by lazy { binding.supportErrorView.errorViewText }
     private val errorViewRefreshButton by lazy { binding.supportErrorView.errorViewRefreshButton }
+    private val oneTimePaymentsTitle by lazy { binding.supportOneTimePaymentsTitle }
+    private val recurringPaymentsTitle by lazy { binding.supportRecurringPaymentsTitle }
     private val oneTimeLevel2Badge by lazy { binding.supportOneTimeLevel2Badge }
     private val oneTimeLevel1Badge by lazy { binding.supportOneTimeLevel1Badge }
     private val recurringLevel2Badge by lazy { binding.supportRecurringLevel2Badge }
@@ -102,6 +112,24 @@ class SupportFragment : Fragment() {
         toolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
+        swipeRefreshContainer.setColorSchemeColors(requireContext().color(R.color.colorPrimary))
+        swipeRefreshContainer.setOnRefreshListener {
+            supportAnimationViewModel.nextAnimation()
+            productsViewModel.reload()
+        }
+        animationViews.forEach { animationView ->
+            animationView.addLottieOnCompositionLoadedListener {
+                swipeRefreshContainer.isRefreshing = false
+                animationView.playAnimation()
+            }
+            animationView.setFailureListener { throwable ->
+                Timber.e(throwable, "Support: loading the Lottie animation failed")
+
+                swipeRefreshContainer.isRefreshing = false
+            }
+        }
+        supporterInfoCard.supportInfoTitle.gone()
+        supporterInfoCard.supportInfoMessage.gone()
         contactEmail.hyperlinkStyle()
         contactEmail.setOnClickListener {
             analyticsService.supportEmailClicked()
@@ -125,6 +153,13 @@ class SupportFragment : Fragment() {
                             bottom = result.insets.bottom + resources.getDimensionPixelSize(R.dimen.space_medium),
                         )
                     }
+                }
+        }
+        lifecycleScope.launch {
+            supportAnimationViewModel.animation
+                .flowWithLifecycle(lifecycle)
+                .collect { animation ->
+                    animationViews.forEach { it.setAnimation(animation.rawRes) }
                 }
         }
         lifecycleScope.launch {
@@ -166,20 +201,25 @@ class SupportFragment : Fragment() {
                     if (purchases.isNotEmpty()) {
                         scrollContainer.smoothScrollTo(0, 0)
 
-                        infoCard.gone()
+                        infoCard.root.gone()
+                        supporterInfoCard.root.visible()
                         supporterList.visible()
+                        oneTimePaymentsTitle.setText(R.string.support_one_time_supporter_title)
+                        recurringPaymentsTitle.setText(R.string.support_recurring_supporter_title)
 
                         if (supporterAdapter == null) {
                             supporterAdapter = SupporterAdapter()
-                            supporterList.setHasFixedSize(true)
                             supporterList.adapter = supporterAdapter
                             supporterList.itemAnimator = SlideInUpAnimator()
                         }
 
                         supporterAdapter?.submitList(purchases)
                     } else {
-                        infoCard.visible()
+                        infoCard.root.visible()
+                        supporterInfoCard.root.gone()
                         supporterList.gone()
+                        oneTimePaymentsTitle.setText(R.string.support_one_time_title)
+                        recurringPaymentsTitle.setText(R.string.support_recurring_title)
                     }
                 }
         }

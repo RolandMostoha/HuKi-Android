@@ -11,7 +11,6 @@ sealed interface BillingProductType {
     val productId: String
     val productType: String
     val productName: Message.Res
-    val productMessage: Message.Res
     val productIcon: Int
     val productColorRes: Int
 }
@@ -20,7 +19,6 @@ enum class OneTimeBillingProducts(
     override val productId: String,
     override val productType: String,
     override val productName: Message.Res,
-    override val productMessage: Message.Res,
     @DrawableRes override val productIcon: Int,
     @ColorRes override val productColorRes: Int
 ) : BillingProductType {
@@ -28,7 +26,6 @@ enum class OneTimeBillingProducts(
         productId = "huki_support_one_time_level_1",
         productType = BillingClient.ProductType.INAPP,
         productName = R.string.support_product_name_one_time_level_1.toMessage(),
-        productMessage = R.string.support_supporter_message_one_time_level_1.toMessage(),
         productIcon = R.drawable.ic_product_owl,
         productColorRes = R.color.colorPaymentsOwlIcon
     ),
@@ -36,7 +33,6 @@ enum class OneTimeBillingProducts(
         productId = "huki_support_one_time_level_2",
         productType = BillingClient.ProductType.INAPP,
         productName = R.string.support_product_name_one_time_level_2.toMessage(),
-        productMessage = R.string.support_supporter_message_one_time_level_2.toMessage(),
         productIcon = R.drawable.ic_product_squirrel,
         productColorRes = R.color.colorPaymentsSquirrelIcon
     ),
@@ -46,7 +42,6 @@ enum class RecurringBillingProducts(
     override val productId: String,
     override val productType: String,
     override val productName: Message.Res,
-    override val productMessage: Message.Res,
     @DrawableRes override val productIcon: Int,
     @ColorRes override val productColorRes: Int,
 ) : BillingProductType {
@@ -54,7 +49,6 @@ enum class RecurringBillingProducts(
         productId = "huki_support_recurring_level_1",
         productType = BillingClient.ProductType.SUBS,
         productName = R.string.support_product_name_recurring_level_1.toMessage(),
-        productMessage = R.string.support_supporter_message_recurring_level_1.toMessage(),
         productIcon = R.drawable.ic_product_boar,
         productColorRes = R.color.colorPaymentsBoarIcon
     ),
@@ -62,7 +56,6 @@ enum class RecurringBillingProducts(
         productId = "huki_support_recurring_level_2",
         productType = BillingClient.ProductType.SUBS,
         productName = R.string.support_product_name_recurring_level_2.toMessage(),
-        productMessage = R.string.support_supporter_message_recurring_level_2.toMessage(),
         productIcon = R.drawable.ic_product_deer,
         productColorRes = R.color.colorPaymentsDeerIcon
     ),

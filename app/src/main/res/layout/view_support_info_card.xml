@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/colorBackground"
+    app:cardCornerRadius="@dimen/default_corner_size_info_card"
+    app:cardElevation="@dimen/default_card_elevation">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_extra_large"
+        android:paddingTop="@dimen/space_medium"
+        android:paddingBottom="@dimen/space_large">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/supportAnimationView"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:padding="@dimen/space_medium"
+            app:lottie_autoPlay="true"
+            app:lottie_enableMergePathsForKitKatAndAbove="true"
+            app:lottie_loop="true"
+            tools:lottie_rawRes="@raw/lottie_support_guide" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/supportInfoTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/support_greeting"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/supportInfoMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_medium"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/support_message"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/supportPurposeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_large"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/support_message_purpose_title"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/supportPurposeMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_medium"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/support_message_purpose"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/supportMotivationTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_large"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/support_message_motivation_title"
+            android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/supportMotivationMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginBottom="@dimen/space_medium"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/support_message_motivation"
+            android:textAppearance="@style/DefaultTextAppearance.Regular.Small" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

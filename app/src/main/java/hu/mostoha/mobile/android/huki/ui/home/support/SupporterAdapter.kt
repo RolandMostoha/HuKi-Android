@@ -50,7 +50,7 @@ class SupporterAdapter : ListAdapter<BillingPurchase, RecyclerView.ViewHolder>(D
                     productType.productName.resolve(context)
                 )
                 supporterBadgeMessage.setTextColor(productColor.productTextColor(context))
-                supporterBadgeMessage.text = productType.productMessage.resolve(context).parseAsHtml()
+                supporterBadgeMessage.text = context.getString(R.string.support_supporter_message).parseAsHtml()
                 supporterBadgeMessage.movementMethod = LinkMovementMethod.getInstance()
                 supporterBadgeMessage.setLinkTextColor(
                     productType.productColorRes

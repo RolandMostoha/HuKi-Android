@@ -104,6 +104,17 @@ class ProductsViewModel @Inject constructor(
         }
     }
 
+    fun reload() {
+        if (billingClient.connectionState == ConnectionState.CONNECTED) {
+            launchLoad {
+                loadPurchaseHistory()
+                loadProducts()
+            }
+        } else {
+            startBillingConnection()
+        }
+    }
+
     /**
      * Loads are serialized instead of dropped while another one runs, so the load started right
      * after the connection - the only one querying products - is never lost to a [refresh] that
