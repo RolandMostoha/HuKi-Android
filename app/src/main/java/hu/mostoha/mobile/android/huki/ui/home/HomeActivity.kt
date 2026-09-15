@@ -218,7 +218,7 @@ import javax.inject.Inject
 
 @Suppress("LargeClass")
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity(R.layout.activity_home) {
+class HomeActivity : AppCompatActivity() {
 
     @Inject
     lateinit var myLocationProvider: AsyncMyLocationProvider
