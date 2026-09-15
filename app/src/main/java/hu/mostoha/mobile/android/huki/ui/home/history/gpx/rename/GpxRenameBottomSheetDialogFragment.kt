@@ -18,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.databinding.FragmentGpxRenameBottomSheetDialogBinding
+import hu.mostoha.mobile.android.huki.extensions.isDarkMode
 import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import kotlinx.coroutines.launch
 
@@ -91,7 +92,7 @@ class GpxRenameBottomSheetDialogFragment : BottomSheetDialogFragment() {
         sheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         sheet.window?.let { window ->
             val insetsController = WindowCompat.getInsetsController(window, window.decorView)
-            insetsController.isAppearanceLightNavigationBars = true
+            insetsController.isAppearanceLightNavigationBars = !requireContext().isDarkMode()
         }
     }
 

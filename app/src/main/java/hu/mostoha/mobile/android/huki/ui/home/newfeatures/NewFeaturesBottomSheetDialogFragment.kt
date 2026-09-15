@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.FragmentNewFeaturesBinding
+import hu.mostoha.mobile.android.huki.extensions.isDarkMode
 import hu.mostoha.mobile.android.huki.extensions.clearBackground
 import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.openUrl
@@ -99,7 +100,7 @@ class NewFeaturesBottomSheetDialogFragment : BottomSheetDialogFragment() {
         sheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         sheet.window?.let { window ->
             val insetsController = WindowCompat.getInsetsController(window, window.decorView)
-            insetsController.isAppearanceLightNavigationBars = true
+            insetsController.isAppearanceLightNavigationBars = !requireContext().isDarkMode()
         }
     }
 

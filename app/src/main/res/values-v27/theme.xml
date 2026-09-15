@@ -4,6 +4,7 @@
     <style name="BaseTheme.HuKiTheme">
 
         <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarColor">@color/colorBackground</item>
 
     </style>
 
