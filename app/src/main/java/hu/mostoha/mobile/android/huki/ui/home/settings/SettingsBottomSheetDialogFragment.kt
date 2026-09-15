@@ -22,6 +22,7 @@ import hu.mostoha.mobile.android.huki.extensions.startEmailIntent
 import hu.mostoha.mobile.android.huki.model.domain.Theme
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
 import hu.mostoha.mobile.android.huki.util.toPercentageFromScale
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -164,6 +165,7 @@ class SettingsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         lifecycleScope.launch {
             val theme = settingsViewModel.theme
                 .flowWithLifecycle(lifecycle)
+                .filterNotNull()
                 .first()
 
             when (theme) {

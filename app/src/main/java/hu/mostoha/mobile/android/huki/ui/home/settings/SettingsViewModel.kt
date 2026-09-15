@@ -13,6 +13,7 @@ import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_SCALE_FACTOR
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import hu.mostoha.mobile.android.huki.util.toScaleFromPercentage
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,8 +28,8 @@ class SettingsViewModel @Inject constructor(
     val mapScaleFactor: StateFlow<Double> = settingsRepository.getMapScaleFactor()
         .stateIn(viewModelScope, WhileViewSubscribed, MAP_DEFAULT_SCALE_FACTOR)
 
-    val theme: StateFlow<Theme> = settingsRepository.getTheme()
-        .stateIn(viewModelScope, WhileViewSubscribed, Theme.SYSTEM)
+    val theme: StateFlow<Theme?> = settingsRepository.getTheme()
+        .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     val newFeatures: StateFlow<NewFeatures?> = versionConfiguration.getNewFeatures(BuildConfig.VERSION_NAME)
         .stateIn(viewModelScope, WhileViewSubscribed, null)
@@ -41,7 +42,7 @@ class SettingsViewModel @Inject constructor(
 
     fun updateTheme(theme: Theme) {
         viewModelScope.launch {
-            val actualTheme = this@SettingsViewModel.theme.value
+            val actualTheme = settingsRepository.getTheme().first()
 
             if (actualTheme != theme) {
                 settingsRepository.saveTheme(theme)

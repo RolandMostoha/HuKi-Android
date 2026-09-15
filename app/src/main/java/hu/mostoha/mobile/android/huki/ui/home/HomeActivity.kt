@@ -1124,6 +1124,7 @@ class HomeActivity : AppCompatActivity() {
         lifecycleScope.launch {
             settingsViewModel.theme
                 .flowWithLifecycle(lifecycle)
+                .filterNotNull()
                 .collect { theme ->
                     AppCompatDelegate.setDefaultNightMode(
                         when (theme) {

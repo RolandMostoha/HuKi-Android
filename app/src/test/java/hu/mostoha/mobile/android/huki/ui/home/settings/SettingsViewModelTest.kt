@@ -56,6 +56,16 @@ class SettingsViewModelTest {
     }
 
     @Test
+    fun `When theme is collected, then null is emitted before the saved theme`() {
+        runTestDefault {
+            viewModel.theme.test {
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(Theme.SYSTEM)
+            }
+        }
+    }
+
+    @Test
     fun `Given percentage, when updateMapScale, then empty waypoints are emitted`() {
         runTestDefault {
             val mapScaleFactor = 2.1
