@@ -1,10 +1,9 @@
 package hu.mostoha.mobile.android.huki.osmdroid
 
 import android.content.Context
-import android.webkit.WebSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
-import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.extensions.getOrCreateDirectory
+import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.ONE_WEEK
 import org.osmdroid.tileprovider.util.StorageUtils
@@ -50,13 +49,15 @@ class OsmConfiguration @Inject constructor(
 
             osmdroidBasePath = getOsmDroidBaseDirectory()
             osmdroidTileCache = getOsmDroidCacheDirectory()
-            userAgentValue = "${WebSettings.getDefaultUserAgent(context)} ${BuildConfig.APPLICATION_ID}"
             expirationExtendedDuration = ONE_WEEK
             tileFileSystemCacheMaxBytes = TILE_FILE_SYSTEM_CACHE_MAX_BYTES
             tileFileSystemCacheTrimBytes = TILE_FILE_SYSTEM_CACHE_TARGET_BYTES
             cacheMapTileCount = DEFAULT_TILE_COUNT_IN_CACHE
 
             load(context, context.getSharedPreferences(KEY_GLOBAL_SHARED_PREFERENCES, Context.MODE_PRIVATE))
+
+            // load() overrides the user agent from preferences, so it must be set afterwards
+            userAgentValue = NetworkConfig.HUKI_USER_AGENT
         }
     }
 
