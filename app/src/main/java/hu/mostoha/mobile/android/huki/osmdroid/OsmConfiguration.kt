@@ -41,14 +41,16 @@ class OsmConfiguration @Inject constructor(
     private val isDebug = false
 
     fun init() {
+        val baseDirectory = getOsmDroidBaseDirectory()
+
         Configuration.getInstance().apply {
             isDebugMapView = isDebug
             isDebugMode = isDebug
             isDebugTileProviders = isDebug
             isDebugMapTileDownloader = isDebug
 
-            osmdroidBasePath = getOsmDroidBaseDirectory()
-            osmdroidTileCache = getOsmDroidCacheDirectory()
+            osmdroidBasePath = baseDirectory
+            osmdroidTileCache = getOsmDroidCacheDirectory(baseDirectory)
             expirationExtendedDuration = ONE_WEEK
             tileFileSystemCacheMaxBytes = TILE_FILE_SYSTEM_CACHE_MAX_BYTES
             tileFileSystemCacheTrimBytes = TILE_FILE_SYSTEM_CACHE_TARGET_BYTES
@@ -81,11 +83,11 @@ class OsmConfiguration @Inject constructor(
         return baseDirectory
     }
 
-    private fun getOsmDroidCacheDirectory(): File {
+    private fun getOsmDroidCacheDirectory(baseDirectory: File): File {
         val cacheDirectory = if (osmDroidCachePath != null) {
             File(osmDroidCachePath)
         } else {
-            val basePath = getOsmDroidBaseDirectory().path
+            val basePath = baseDirectory.path
             val file = getOrCreateDirectory(
                 parent = basePath,
                 child = DIRECTORY_NAME_CACHE
