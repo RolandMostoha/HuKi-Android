@@ -38,10 +38,8 @@ jobs:
       - name: Unit tests
         run: ./gradlew testDebugUnitTest
 
-  android_tests:
-    needs: [ lint, unit_tests ]
+  build_debug:
     runs-on: [ ubuntu-latest ]
-
     steps:
       - uses: actions/checkout@v2
       - name: Checkout with secrets
@@ -53,48 +51,11 @@ jobs:
           graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
           location-iq-api-key: ${{ secrets.LOCATION_IQ_API_KEY }}
 
-      - name: Create test apks
-        run: |
-          ./gradlew assembleDebug
-          ./gradlew assembleDebugAndroidTest
-
-  #      - name: Set test artifact names to ENV
-  #        id: set_artifact_names
-  #        run: |
-  #          ARTIFACT_PATHNAME_APK=$(ls app/build/outputs/apk/debug/*.apk | head -n 1)
-  #          ARTIFACT_NAME_APK=$(basename $ARTIFACT_PATHNAME_APK)
-  #          ARTIFACT_PATHNAME_TEST_APK=$(ls app/build/outputs/apk/androidTest/debug/*.apk | head -n 1)
-  #          echo "ARTIFACT_PATHNAME_APK is " ${ARTIFACT_PATHNAME_APK}
-  #          echo "ARTIFACT_NAME_APK is " ${ARTIFACT_NAME_APK}
-  #          echo "ARTIFACT_PATHNAME_TEST_APK is " ${ARTIFACT_PATHNAME_TEST_APK}
-  #          echo "ARTIFACT_PATHNAME_APK=${ARTIFACT_PATHNAME_APK}" >> $GITHUB_ENV
-  #          echo "ARTIFACT_NAME_APK=${ARTIFACT_NAME_APK}" >> $GITHUB_ENV
-  #          echo "ARTIFACT_PATHNAME_TEST_APK=${ARTIFACT_PATHNAME_TEST_APK}" >> $GITHUB_ENV
-  #
-  #      - uses: actions/upload-artifact@master
-  #        with:
-  #          name: ${{ env.ARTIFACT_NAME_APK }}
-  #          path: ${{ env.ARTIFACT_PATHNAME_APK }}
-  #
-  #      - name: Setup Google Cloud SDK
-  #        uses: google-github-actions/setup-gcloud@v0
-  #        with:
-  #          project_id: huki-c8bc7
-  #          service_account_key: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT }}
-
-  #      - name: Run Instrumentation Tests in Firebase Test Lab
-  #        run: >
-  #          gcloud firebase test android run
-  #          --type instrumentation
-  #          --app ${{ env.ARTIFACT_PATHNAME_APK }}
-  #          --test ${{ env.ARTIFACT_PATHNAME_TEST_APK }}
-  #          --device model=a52sxq,version=34,locale=hu,orientation=portrait
-  #          --use-orchestrator
-  #          --environment-variables clearPackageData=true
-  #          --num-flaky-test-attempts=1
+      - name: Verify debug build
+        run: ./gradlew assembleDebug
 
   release:
-    needs: [ lint, unit_tests, android_tests ]
+    needs: [ lint, unit_tests, build_debug ]
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
