@@ -1318,7 +1318,9 @@ class HomeActivity : AppCompatActivity() {
             return
         }
         if (hikingLayer.isVisible) {
-            val tileProvider = MapTileProviderBasic(this, hikingLayer.tileSource)
+            val tileProvider = MapTileProviderBasic(this, hikingLayer.tileSource).apply {
+                tileRequestCompleteHandlers.add(homeMapView.tileRequestCompleteHandler)
+            }
             val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {
                 if (this@HomeActivity.isDarkMode()) {
                     setColorFilter(getBrightnessColorMatrix(DARK_MODE_HIKING_LAYER_BRIGHTNESS))
