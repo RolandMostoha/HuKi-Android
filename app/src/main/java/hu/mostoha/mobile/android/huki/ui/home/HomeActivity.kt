@@ -134,6 +134,7 @@ import hu.mostoha.mobile.android.huki.osmdroid.overlay.GpxPolyline
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeDetailsDestinationMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.LandscapeMapDestinationMarker
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OVERLAY_ID_OKT
+import hu.mostoha.mobile.android.huki.osmdroid.overlay.HikingTilesOverlay
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayComparator
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.OverlayType
 import hu.mostoha.mobile.android.huki.osmdroid.overlay.PlaceCategoryMarker
@@ -210,7 +211,6 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 import timber.log.Timber
 import java.util.UUID
@@ -1321,7 +1321,7 @@ class HomeActivity : AppCompatActivity() {
             val tileProvider = MapTileProviderBasic(this, hikingLayer.tileSource).apply {
                 tileRequestCompleteHandlers.add(homeMapView.tileRequestCompleteHandler)
             }
-            val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {
+            val tilesOverlay = HikingTilesOverlay(tileProvider, baseContext).apply {
                 if (this@HomeActivity.isDarkMode()) {
                     setColorFilter(getBrightnessColorMatrix(DARK_MODE_HIKING_LAYER_BRIGHTNESS))
                 }

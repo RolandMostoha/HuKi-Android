@@ -8,6 +8,7 @@ import org.osmdroid.views.Projection
 import org.osmdroid.views.overlay.TilesOverlay
 import kotlin.math.ceil
 import kotlin.math.pow
+import androidx.core.graphics.withTranslation
 
 /**
  * Above the tile source's max zoom, draws the max zoom tiles scaled up on the canvas,
@@ -29,14 +30,13 @@ class HikingTilesOverlay(
         val scale = 2.0.pow(projection.zoomLevel - maxTileZoomLevel)
         val maxZoomProjection = projection.toMaxZoomProjection(scale)
 
-        canvas.save()
-        canvas.translate(
+        canvas.withTranslation(
             (projection.offsetX - scale * maxZoomProjection.offsetX).toFloat(),
             (projection.offsetY - scale * maxZoomProjection.offsetY).toFloat(),
-        )
-        canvas.scale(scale.toFloat(), scale.toFloat())
-        super.draw(canvas, maxZoomProjection)
-        canvas.restore()
+        ) {
+            scale(scale.toFloat(), scale.toFloat())
+            super.draw(this, maxZoomProjection)
+        }
     }
 
     override fun setViewPort(canvas: Canvas, projection: Projection): Boolean {
