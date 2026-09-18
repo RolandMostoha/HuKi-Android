@@ -1313,6 +1313,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initHikingLayer(hikingLayer: HikingLayer) {
+        if (homeMapView.hasOverlay(OverlayType.HIKING_LAYER)) {
+            homeMapView.updateOverlayVisibility(OverlayType.HIKING_LAYER, hikingLayer.isVisible)
+            return
+        }
         if (hikingLayer.isVisible) {
             val tileProvider = MapTileProviderBasic(this, hikingLayer.tileSource)
             val tilesOverlay = TilesOverlay(tileProvider, baseContext).apply {
