@@ -86,7 +86,7 @@ fun Intent.isDeeplink(): Boolean {
 }
 
 fun Context.shareGpxFile(uri: Uri) {
-    val providerUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", uri.toFile())
+    val providerUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", uri.toFile())
 
     // Base ACTION_SEND Intent to share social/email apps
     val sendIntent = Intent(Intent.ACTION_SEND).apply {
