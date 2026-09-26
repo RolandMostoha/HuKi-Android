@@ -80,6 +80,7 @@ import hu.mostoha.mobile.android.huki.extensions.showPopupMenu
 import hu.mostoha.mobile.android.huki.extensions.showSnackbar
 import hu.mostoha.mobile.android.huki.extensions.showToast
 import hu.mostoha.mobile.android.huki.extensions.startDrawableAnimation
+import hu.mostoha.mobile.android.huki.extensions.stopDrawableAnimation
 import hu.mostoha.mobile.android.huki.extensions.switchOverlayVisibility
 import hu.mostoha.mobile.android.huki.extensions.toDrawable
 import hu.mostoha.mobile.android.huki.extensions.toggleInfoWindows
@@ -320,6 +321,12 @@ class HomeActivity : AppCompatActivity() {
         super.onPause()
     }
 
+    override fun onDestroy() {
+        homeMyLocationFab.stopDrawableAnimation()
+
+        super.onDestroy()
+    }
+
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
@@ -381,10 +388,6 @@ class HomeActivity : AppCompatActivity() {
                 overlayManager.tilesOverlay.setColorFilter(getColorScaledMatrix(getColor(R.color.colorScaleDarkMap)))
             }
             addOnFirstLayoutListener { _, _, _, _, _ ->
-                restoreBoundingBox()
-
-                initFlows()
-
                 rotationGestureOverlay = RotationGestureOverlay(homeMapView)
                     .apply {
                         isEnabled = false
@@ -394,7 +397,14 @@ class HomeActivity : AppCompatActivity() {
                     }
                     .also { homeMapView.addOverlay(it, OverlayComparator) }
 
-                pickLocationEventViewModel.updateEvent(PickLocationEvents.LocationPickEnabled)
+                lifecycleScope.launch {
+                    // Restore first: flows may start zoom animations that would race a later restore
+                    restoreBoundingBox()
+
+                    initFlows()
+
+                    pickLocationEventViewModel.updateEvent(PickLocationEvents.LocationPickEnabled)
+                }
             }
             setOnTouchListener { view, _ ->
                 view.performClick()
@@ -406,16 +416,14 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun restoreBoundingBox() {
-        lifecycleScope.launch {
-            val boundingBox = homeViewModel.getSavedBoundingBox()
-            if (boundingBox == null || boundingBox.isZero()) {
-                Timber.d("MapConfig: there wasn't saved bounding box, showing Hungary")
-                homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toOsm(), false)
-            } else {
-                Timber.d("MapConfig: restoring bounding box: $boundingBox")
-                homeMapView.zoomToBoundingBox(boundingBox.toOsm(), false)
-            }
+    private suspend fun restoreBoundingBox() {
+        val boundingBox = homeViewModel.getSavedBoundingBox()
+        if (boundingBox == null || boundingBox.isZero()) {
+            Timber.d("MapConfig: there wasn't saved bounding box, showing Hungary")
+            homeMapView.zoomToBoundingBox(HUNGARY_BOUNDING_BOX.toOsm(), false)
+        } else {
+            Timber.d("MapConfig: restoring bounding box: $boundingBox")
+            homeMapView.zoomToBoundingBox(boundingBox.toOsm(), false)
         }
     }
 

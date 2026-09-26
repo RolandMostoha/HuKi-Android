@@ -9,3 +9,10 @@ fun ImageView.startDrawableAnimation() {
         (drawable as Animatable).start()
     }
 }
+
+fun ImageView.stopDrawableAnimation() {
+    val drawable = this.drawable
+    if (drawable is Animatable) {
+        (drawable as Animatable).stop()
+    }
+}
