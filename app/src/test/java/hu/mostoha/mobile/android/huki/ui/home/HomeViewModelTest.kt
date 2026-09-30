@@ -124,6 +124,7 @@ class HomeViewModelTest {
             oktRoutesMapper,
             dateTimeProvider,
             myLocationProvider,
+            mainCoroutineRule.testDispatcher,
         )
     }
 
@@ -473,6 +474,7 @@ class HomeViewModelTest {
                 oktRoutesMapper,
                 dateTimeProvider,
                 myLocationProvider,
+                mainCoroutineRule.testDispatcher,
             )
 
             restoredViewModel.oktRoutes.test {
@@ -516,6 +518,7 @@ class HomeViewModelTest {
                 oktRoutesMapper,
                 dateTimeProvider,
                 myLocationProvider,
+                mainCoroutineRule.testDispatcher,
             )
 
             restoredViewModel.myLocationConfigUiModel.test {

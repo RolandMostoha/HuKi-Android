@@ -29,7 +29,7 @@ val LOCAL_OKT_ROUTES = listOf(
         travelTime = 18.hours.plus(50.minutes),
         start = Location(latitude = 47.35275964, longitude = 16.433750795, altitude = 880.1462),
         end = Location(latitude = 47.245569866, longitude = 16.940811899, altitude = 154.3261),
-        stampTagsRange = 1.0..9.0,
+        stampTagsRange = 1.0..9.9,
     ),
     OktRoute(
         id = "OKT-02",

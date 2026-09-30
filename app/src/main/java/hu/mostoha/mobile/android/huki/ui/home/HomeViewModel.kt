@@ -50,6 +50,8 @@ import hu.mostoha.mobile.android.huki.ui.home.hikingroutes.HikingRoutesItem
 import hu.mostoha.mobile.android.huki.util.MAP_DEFAULT_ZOOM_TO_SAVE_BOUNDING_BOX
 import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import hu.mostoha.mobile.android.huki.util.distanceBetween
+import hu.mostoha.mobile.android.huki.di.module.DefaultDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -64,6 +66,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -85,6 +88,7 @@ class HomeViewModel @Inject constructor(
     private val oktRoutesMapper: OktRoutesMapper,
     private val dateTimeProvider: DateTimeProvider,
     private val myLocationProvider: AsyncMyLocationProvider,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     companion object {
@@ -486,27 +490,28 @@ class HomeViewModel @Inject constructor(
             if (!_myLocationConfigUiModel.value.isLocationPermissionEnabled) return@launch
             val myLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation() ?: return@launch
 
-            _oktDistanceFromMe.value = oktRoutesMapper.mapDistanceFromMe(
-                track = oktRoutes.mapGeoPoints.toLocationsWithAlt(),
-                myLocation = myLocation,
-                target = geoPoint,
-            )
+            _oktDistanceFromMe.value = withContext(defaultDispatcher) {
+                oktRoutesMapper.mapDistanceFromMe(
+                    track = oktRoutes.mapGeoPoints.toLocationsWithAlt(),
+                    myLocation = myLocation,
+                    target = geoPoint,
+                )
+            }
         }
     }
 
     fun selectOktRoute(geoPoint: GeoPoint) {
-        val oktRoutes = oktRoutes.value ?: return
-        val selectedOktId = oktRoutes.routes
-            .drop(1)
-            .map { oktRoute ->
-                val closestPoint = oktRoute.geoPoints.minBy { it.toLocation().distanceBetween(geoPoint.toLocation()) }
-
-                oktRoute.oktId to closestPoint
+        viewModelScope.launch {
+            val oktRoutes = oktRoutes.value ?: return@launch
+            val selectedOktId = withContext(defaultDispatcher) {
+                oktRoutes.routes
+                    .drop(1)
+                    .minBy { oktRoute -> oktRoute.geoPoints.minOf { it.distanceBetween(geoPoint) } }
+                    .oktId
             }
-            .minBy { it.second.toLocation().distanceBetween(geoPoint.toLocation()) }
-            .first
 
-        selectOktRoute(selectedOktId)
+            selectOktRoute(selectedOktId)
+        }
     }
 
     fun loadGoogleMapsPlace(url: String) {
