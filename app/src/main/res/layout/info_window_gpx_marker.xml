@@ -14,7 +14,7 @@
         android:background="@drawable/background_map_info_window"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingVertical="6dp"
+        android:paddingVertical="@dimen/space_small_medium"
         android:paddingStart="@dimen/space_large"
         android:paddingEnd="@dimen/space_medium">
 
@@ -36,6 +36,7 @@
                 android:id="@+id/mapInfoWindowDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall"
                 android:textSize="@dimen/text_size_extra_extra_small"
                 tools:text="A temető mellett, az információs táblán." />
