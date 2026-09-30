@@ -3,6 +3,8 @@ package hu.mostoha.mobile.android.huki.ui.home
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import android.location.Location as AndroidLocation
+import hu.mostoha.mobile.android.huki.model.ui.OktRoutesSavedStateUiModel
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.data.LOCAL_LANDSCAPES
 import hu.mostoha.mobile.android.huki.data.LOCAL_OKT_ROUTES
@@ -121,6 +123,7 @@ class HomeViewModelTest {
             placeDomainUiMapper,
             oktRoutesMapper,
             dateTimeProvider,
+            myLocationProvider,
         )
     }
 
@@ -345,6 +348,218 @@ class HomeViewModelTest {
                 skipItems(2)
 
                 assertThat(awaitItem()!!.routes[1].isSelected).isTrue()
+            }
+        }
+
+    @Test
+    fun `Given OKT routes and my location, when loadOktDistanceFromMe, then distance from me is emitted`() =
+        runTestDefault {
+            val track = DEFAULT_OKT_ROUTES.locations
+            val myLocation = mockk<AndroidLocation> {
+                every { latitude } returns track.first().latitude
+                every { longitude } returns track.first().longitude
+            }
+            coEvery { myLocationProvider.getLastKnownLocationCoroutine() } returns myLocation
+            viewModel.updateMyLocationConfig(isLocationPermissionEnabled = true)
+            val target = track.last().toGeoPoint()
+
+            viewModel.oktDistanceFromMe.test {
+                viewModel.loadOktRoutes(OktType.OKT)
+                advanceUntilIdle()
+
+                viewModel.loadOktDistanceFromMe(target)
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(
+                    oktRoutesMapper.mapDistanceFromMe(
+                        track = track.map { Location(it.latitude, it.longitude, it.altitude ?: 0.0) },
+                        myLocation = track.first(),
+                        target = target,
+                    )
+                )
+            }
+        }
+
+    @Test
+    fun `Given location permission is denied, when loadOktDistanceFromMe, then distance from me is not emitted`() =
+        runTestDefault {
+            viewModel.oktDistanceFromMe.test {
+                viewModel.loadOktRoutes(OktType.OKT)
+                advanceUntilIdle()
+
+                viewModel.loadOktDistanceFromMe(DEFAULT_OKT_ROUTES.locations.last().toGeoPoint())
+                advanceUntilIdle()
+
+                assertThat(awaitItem()).isNull()
+                expectNoEvents()
+            }
+        }
+
+    @Test
+    fun `Given OKT routes, when start OKT route, then OKT route is selected and started`() =
+        runTestDefault {
+            viewModel.oktRoutes.test {
+                viewModel.loadOktRoutes(OktType.OKT)
+
+                advanceUntilIdle()
+
+                viewModel.startOktRoute("OKT-01")
+
+                skipItems(2)
+
+                val route = awaitItem()!!.routes[1]
+                assertThat(route.isSelected).isTrue()
+                assertThat(route.isStarted).isTrue()
+            }
+        }
+
+    @Test
+    fun `Given started OKT route, when select another OKT route, then the selected OKT route is started`() =
+        runTestDefault {
+            viewModel.oktRoutes.test {
+                viewModel.loadOktRoutes(OktType.OKT)
+
+                advanceUntilIdle()
+
+                viewModel.startOktRoute("OKT")
+                viewModel.selectOktRoute("OKT-01")
+                advanceUntilIdle()
+
+                val routes = expectMostRecentItem()!!.routes
+                assertThat(routes[0].isStarted).isFalse()
+                assertThat(routes[1].isSelected).isTrue()
+                assertThat(routes[1].isStarted).isTrue()
+            }
+        }
+
+    @Test
+    fun `Given started OKT route, when stop OKT route, then no OKT route is started`() =
+        runTestDefault {
+            viewModel.oktRoutes.test {
+                viewModel.loadOktRoutes(OktType.OKT)
+
+                advanceUntilIdle()
+
+                viewModel.startOktRoute("OKT-01")
+                viewModel.stopOktRoute()
+                advanceUntilIdle()
+
+                assertThat(expectMostRecentItem()!!.routes.none { it.isStarted }).isTrue()
+            }
+        }
+
+    @Test
+    fun `Given saved OKT state, when view model is recreated, then OKT routes are restored`() =
+        runTestDefault {
+            val savedState = OktRoutesSavedStateUiModel(
+                oktType = OktType.OKT,
+                selectedOktId = "OKT-01",
+                isStarted = true,
+                isReversed = true,
+            )
+            val restoredViewModel = HomeViewModel(
+                SavedStateHandle(mapOf("okt_routes" to savedState)),
+                exceptionLogger,
+                analyticsService,
+                placesRepository,
+                placeHistoryRepository,
+                geocodingRepository,
+                oktRepository,
+                mapConfigRepository,
+                landscapeRepository,
+                googleGeocodingRepository,
+                homeUiModelMapper,
+                placeDomainUiMapper,
+                oktRoutesMapper,
+                dateTimeProvider,
+                myLocationProvider,
+            )
+
+            restoredViewModel.oktRoutes.test {
+                advanceUntilIdle()
+
+                val route = expectMostRecentItem()!!.routes[1]
+                assertThat(route.isSelected).isTrue()
+                assertThat(route.isStarted).isTrue()
+                assertThat(route.isReversed).isTrue()
+            }
+        }
+
+    @Test
+    fun `Given saved OKT state with follow location, when view model is recreated, then follow location is kept`() =
+        runTestDefault {
+            val savedState = OktRoutesSavedStateUiModel(
+                oktType = OktType.OKT,
+                selectedOktId = "OKT-01",
+                isStarted = true,
+                isReversed = false,
+            )
+            val savedMyLocationConfig = MyLocationConfigUiModel(
+                isLocationPermissionEnabled = true,
+                isFollowLocationEnabled = true,
+            )
+            val restoredViewModel = HomeViewModel(
+                SavedStateHandle(
+                    mapOf("okt_routes" to savedState, "my_location_config" to savedMyLocationConfig)
+                ),
+                exceptionLogger,
+                analyticsService,
+                placesRepository,
+                placeHistoryRepository,
+                geocodingRepository,
+                oktRepository,
+                mapConfigRepository,
+                landscapeRepository,
+                googleGeocodingRepository,
+                homeUiModelMapper,
+                placeDomainUiMapper,
+                oktRoutesMapper,
+                dateTimeProvider,
+                myLocationProvider,
+            )
+
+            restoredViewModel.myLocationConfigUiModel.test {
+                advanceUntilIdle()
+
+                assertThat(expectMostRecentItem()).isEqualTo(savedMyLocationConfig)
+            }
+        }
+
+    @Test
+    fun `Given OKT routes, when reverse OKT route, then OKT route direction is toggled`() =
+        runTestDefault {
+            viewModel.oktRoutes.test {
+                viewModel.loadOktRoutes(OktType.OKT)
+
+                advanceUntilIdle()
+
+                viewModel.reverseOktRoute("OKT-01")
+
+                skipItems(2)
+
+                assertThat(awaitItem()!!.routes[1].isReversed).isTrue()
+
+                viewModel.reverseOktRoute("OKT-01")
+
+                assertThat(awaitItem()!!.routes[1].isReversed).isFalse()
+            }
+        }
+
+    @Test
+    fun `Given reversed OKT route, when select another OKT route, then reversed direction is reset`() =
+        runTestDefault {
+            viewModel.oktRoutes.test {
+                viewModel.loadOktRoutes(OktType.OKT)
+
+                advanceUntilIdle()
+
+                viewModel.reverseOktRoute("OKT-01")
+                viewModel.selectOktRoute("OKT")
+                advanceUntilIdle()
+
+                val routes = expectMostRecentItem()!!.routes
+                assertThat(routes.none { it.isReversed }).isTrue()
+                assertThat(routes.single { it.isSelected }.oktId).isEqualTo("OKT")
             }
         }
 

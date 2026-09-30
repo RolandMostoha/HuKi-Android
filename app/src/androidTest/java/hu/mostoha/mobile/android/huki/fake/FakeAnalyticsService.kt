@@ -119,11 +119,17 @@ class FakeAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun oktRouteLinkClicked(oktId: String) = Unit
 
-    override fun oktRouteEdgePointClicked(oktId: String) = Unit
+    override fun oktRouteStartClicked(oktId: String) = Unit
+
+    override fun oktRouteReverseClicked(oktId: String) = Unit
+
+    override fun oktRouteStopClicked(oktId: String) = Unit
 
     override fun oktGpxImported(fileName: String) = Unit
 
     override fun oktWaypointClicked() = Unit
+
+    override fun oktStampClicked(oktId: String) = Unit
 
     override fun myLocationPlaceRequested() = Unit
 

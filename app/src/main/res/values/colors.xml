@@ -51,6 +51,8 @@
     <color name="colorStrokeHikingRouteMarker">@color/colorPrimaryIcon</color>
     <color name="colorFillHikingRouteMarker">@color/colorStrokeMarker</color>
     <color name="colorIconLandscapeMarker">@color/colorStrokeMarker</color>
+    <color name="colorInfoWindowChipBackground">@color/colorOktActionsButton</color>
+    <color name="colorInfoWindowChipContent">@color/colorOktBlue</color>
     <color name="colorInfoPopupBackground">@color/colorPrimary</color>
     <color name="colorBadgeBackground">#f1f3f5</color>
     <color name="colorBadgeStroke">#80919191</color>
@@ -110,6 +112,10 @@
     <color name="colorOktSelected">#015398</color>
     <color name="colorOktStrokePolygonMarker">@color/colorStrokeMarkerDark</color>
     <color name="colorOktFillPolygonMarker">@color/colorBackground</color>
+    <color name="colorOktStampCard">#26ffffff</color>
+    <color name="colorOktStampCardStroke">#33ffffff</color>
+    <color name="colorOktActionsButton">#1f015398</color>
+    <color name="colorOktActionsButtonStroke">#66015398</color>
 
     <color name="colorFacebook">#2663EB</color>
     <color name="colorFacebookCardBackground">#F1F6FD</color>

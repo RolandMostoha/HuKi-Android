@@ -56,6 +56,42 @@ fun List<Location>.calculateDistance(): Int {
 }
 
 /**
+ * Returns the part of the track between the track points closest to [from] and [to], ordered from [from].
+ */
+fun List<Location>.trackBetween(from: Location, to: Location): List<Location> {
+    if (isEmpty()) return emptyList()
+
+    val fromIndex = indices.minBy { this[it].distanceBetween(from) }
+    val toIndex = indices.minBy { this[it].distanceBetween(to) }
+
+    return if (fromIndex <= toIndex) {
+        subList(fromIndex, toIndex + 1)
+    } else {
+        subList(toIndex, fromIndex + 1).asReversed()
+    }
+}
+
+/**
+ * Calculates the on-track distance of each point from the previous one, the first one from the track start.
+ */
+fun List<Location>.calculateLegDistances(points: List<Location>): List<Int> {
+    if (isEmpty()) return points.map { 0 }
+
+    val trackDistances = IntArray(size)
+    for (index in 1 until size) {
+        trackDistances[index] = trackDistances[index - 1] + this[index - 1].distanceBetween(this[index])
+    }
+    val pointTrackDistances = points.map { point ->
+        trackDistances[indices.minBy { this[it].distanceBetween(point) }]
+    }
+
+    return pointTrackDistances.mapIndexed { index, distance ->
+        val previousDistance = pointTrackDistances.getOrElse(index - 1) { 0 }
+        (distance - previousDistance).coerceAtLeast(0)
+    }
+}
+
+/**
  * Calculates the center of the given [Location]s. It does not accurate for flat 180/-180 degrees.
  */
 fun List<Location>.calculateCenter(): Location {

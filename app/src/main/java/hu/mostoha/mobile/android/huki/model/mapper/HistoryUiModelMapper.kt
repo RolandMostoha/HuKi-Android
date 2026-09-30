@@ -2,7 +2,6 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatFriendlyDate
-import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistory
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistoryItem
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
@@ -11,6 +10,7 @@ import hu.mostoha.mobile.android.huki.model.ui.GpxHistoryUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.ui.formatter.TravelTimeFormatter
 import hu.mostoha.mobile.android.huki.ui.home.history.gpx.GpxHistoryAdapterModel
 import hu.mostoha.mobile.android.huki.ui.home.history.place.PlaceHistoryAdapterModel
 import java.time.LocalDate
@@ -91,7 +91,7 @@ class HistoryUiModelMapper @Inject constructor(private val placeMapper: PlaceDom
             gpxType = gpxType,
             fileUri = gpxHistoryItem.fileUri,
             travelTimeText = if (gpxHistoryItem.travelTime.inWholeSeconds > 0) {
-                gpxHistoryItem.travelTime.formatHoursAndMinutes().toMessage()
+                TravelTimeFormatter.formatHoursAndMinutes(gpxHistoryItem.travelTime).toMessage()
             } else {
                 null
             },

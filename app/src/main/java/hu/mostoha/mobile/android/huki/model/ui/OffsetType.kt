@@ -36,7 +36,13 @@ enum class OffsetType(
     OKT_ROUTES(
         top = R.dimen.map_view_okt_routes_top_offset,
         bottom = R.dimen.map_view_okt_routes_bottom_offset,
-        left = R.dimen.map_view_default_start_offset,
-        right = R.dimen.map_view_default_end_offset,
+        left = R.dimen.map_view_okt_routes_start_offset,
+        right = R.dimen.map_view_okt_routes_end_offset,
+    ),
+    OKT_ROUTES_STARTED(
+        top = R.dimen.map_view_okt_routes_top_offset,
+        bottom = R.dimen.map_view_okt_routes_started_bottom_offset,
+        left = R.dimen.map_view_okt_routes_start_offset,
+        right = R.dimen.map_view_okt_routes_end_offset,
     ),
 }

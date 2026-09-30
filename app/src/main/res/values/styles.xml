@@ -117,6 +117,52 @@
         <item name="iconSize">@dimen/icon_size_extra_tiny</item>
     </style>
 
+    <style name="DefaultButton.IconOnly.OktActions">
+        <item name="android:padding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="shapeAppearance">@style/DefaultShapeAppearance.Circle</item>
+        <item name="backgroundTint">@color/selector_okt_routes_actions_button_background</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/selector_okt_routes_actions_button_stroke</item>
+        <item name="iconTint">@color/selector_okt_routes_actions_button_icon</item>
+        <item name="iconSize">@dimen/icon_size_small</item>
+    </style>
+
+    <style name="InfoWindowChip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:textAppearance">@style/DefaultTextAppearance.SemiBold.ExtraSmall</item>
+        <item name="android:textColor">@color/colorInfoWindowChipContent</item>
+        <item name="android:textSize">@dimen/text_size_extra_extra_small</item>
+        <item name="chipBackgroundColor">@color/colorInfoWindowChipBackground</item>
+        <item name="chipIconTint">@color/colorInfoWindowChipContent</item>
+        <item name="chipIconSize">@dimen/info_window_chip_icon_size</item>
+        <item name="chipMinHeight">@dimen/info_window_chip_min_height</item>
+        <item name="chipStartPadding">@dimen/space_small</item>
+        <item name="chipEndPadding">@dimen/space_small</item>
+        <item name="iconStartPadding">0dp</item>
+        <item name="iconEndPadding">0dp</item>
+        <item name="textStartPadding">@dimen/space_extra_small</item>
+        <item name="textEndPadding">0dp</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+    </style>
+
+    <style name="DefaultButton.IconOnly.InfoWindowNavigation">
+        <item name="android:padding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="shapeAppearance">@style/DefaultShapeAppearance.Circle</item>
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="iconTint">@color/colorOnPrimary</item>
+        <item name="rippleColor">@color/colorOnPrimary</item>
+        <item name="iconSize">@dimen/icon_size_extra_tiny</item>
+    </style>
+
     <style name="DefaultButton.IconOnly.Stroked">
         <item name="shapeAppearance">@style/DefaultShapeAppearance.Button</item>
         <item name="strokeWidth">1dp</item>
@@ -133,6 +179,11 @@
     <style name="DefaultButton.BottomSheetAction" parent="DefaultButton.IconOnly">
         <item name="shapeAppearanceOverlay">@style/DefaultShapeAppearance.Circle</item>
         <item name="backgroundTint">@color/colorBadgeBackground</item>
+    </style>
+
+    <style name="DefaultButton.BottomSheetAction.Okt">
+        <item name="backgroundTint">@color/colorOktSelected</item>
+        <item name="iconTint">@color/colorOnPrimary</item>
     </style>
 
     <style name="DefaultMaterialDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">

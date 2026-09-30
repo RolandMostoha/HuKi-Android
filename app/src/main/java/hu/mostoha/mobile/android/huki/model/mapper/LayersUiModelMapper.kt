@@ -1,7 +1,6 @@
 package hu.mostoha.mobile.android.huki.model.mapper
 
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
@@ -14,12 +13,13 @@ import hu.mostoha.mobile.android.huki.model.ui.GpxDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.WaypointUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.ui.formatter.TravelTimeFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import hu.mostoha.mobile.android.huki.util.calculateDirectionArrows
 import hu.mostoha.mobile.android.huki.util.isCloseWithThreshold
-import org.osmdroid.util.BoundingBox
 import javax.inject.Inject
+import org.osmdroid.util.BoundingBox
 
 class LayersUiModelMapper @Inject constructor() {
 
@@ -133,7 +133,7 @@ class LayersUiModelMapper @Inject constructor() {
                 BoundingBox.fromGeoPoints(gpxWaypoints.map { it.geoPoint }).toDomain()
             },
             travelTimeText = if (gpxDetails.travelTime.inWholeSeconds > 0) {
-                gpxDetails.travelTime.formatHoursAndMinutes().toMessage()
+                TravelTimeFormatter.formatHoursAndMinutes(gpxDetails.travelTime).toMessage()
             } else {
                 null
             },

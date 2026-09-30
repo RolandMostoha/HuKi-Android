@@ -383,6 +383,50 @@
 
     </LinearLayout>
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/homeOktMenuFab"
+        android:layout_width="@dimen/home_okt_menu_fab_size"
+        android:layout_height="@dimen/home_okt_menu_fab_size"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="@dimen/home_horizontal_margin"
+        android:layout_marginBottom="@dimen/home_okt_menu_fab_bottom_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/colorOktSelected"
+        app:cardElevation="@dimen/default_elevation_map_interactive_views"
+        app:layout_behavior="hu.mostoha.mobile.android.huki.views.BottomSheetDodgeBehavior"
+        app:shapeAppearance="@style/DefaultShapeAppearance.Circle"
+        app:strokeWidth="0dp"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/homeOktMenuFabPrefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/DefaultTextAppearance.Bold.ExtraSmall"
+                android:textColor="@color/colorOnPrimary"
+                tools:text="OKT" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/homeOktMenuFabNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/DefaultTextAppearance.Bold.ExtraSmall"
+                android:textColor="@color/colorOnPrimary"
+                tools:text="01" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <include
         android:id="@+id/homePlaceDetailsBottomSheetContainer"
         layout="@layout/layout_bottom_sheet_place_details"

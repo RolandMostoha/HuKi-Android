@@ -97,6 +97,11 @@ supported". Known, accepted limitations:
 - Do **not** place mappers on the model classes themselves: a `model/data` class must not import `model/domain` types (and vice versa), so co-locating a mapper in the model file leaks a cross-layer dependency.
 - Keep mappers out of repositories/ViewModels — they belong in `model/mapper` so they stay reusable and unit-testable.
 
+## Icons
+
+- Use icons from the official Google Font icon set: https://fonts.google.com/icons.
+- Download the Android vector drawable directly, never hand-write path data: `https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/<icon_name>/default/24px.xml` → `res/drawable/ic_<icon_name>.xml`.
+
 ## Chores
 
 Chores is a checklist which should be checked for every "feature complete" code review.

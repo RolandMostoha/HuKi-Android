@@ -2,7 +2,6 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.BaseLayer
 import hu.mostoha.mobile.android.huki.model.domain.GpxDetails
 import hu.mostoha.mobile.android.huki.model.domain.HikingLayer
@@ -21,14 +20,15 @@ import hu.mostoha.mobile.android.huki.osmdroid.tilesource.HikingTileSource
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_CLOSED
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_GPX_WAY_OPEN
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.ui.formatter.TravelTimeFormatter
 import hu.mostoha.mobile.android.huki.ui.home.layers.LayersAdapterItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
 import hu.mostoha.mobile.android.huki.util.calculateDirectionArrows
+import java.util.UUID
+import kotlin.time.Duration.Companion.hours
 import org.junit.Test
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
-import java.util.UUID
-import kotlin.time.Duration.Companion.hours
 
 class LayersUiModelMapperTest {
 
@@ -381,7 +381,7 @@ class LayersUiModelMapperTest {
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomain(),
-                travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
+                travelTimeText = TravelTimeFormatter.formatHoursAndMinutes(gpxDetails.travelTime).toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
                 altitudeUiModel = AltitudeUiModel(
                     minAltitudeText = DistanceFormatter.format(gpxDetails.altitudeRange.first),
@@ -426,7 +426,7 @@ class LayersUiModelMapperTest {
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomain(),
-                travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
+                travelTimeText = TravelTimeFormatter.formatHoursAndMinutes(gpxDetails.travelTime).toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
                 altitudeUiModel = AltitudeUiModel(
                     minAltitudeText = DistanceFormatter.format(gpxDetails.altitudeRange.first),
@@ -467,7 +467,7 @@ class LayersUiModelMapperTest {
                 boundingBox = BoundingBox
                     .fromGeoPoints(gpxDetails.locations.map { it.toGeoPoint() })
                     .toDomain(),
-                travelTimeText = gpxDetails.travelTime.formatHoursAndMinutes().toMessage(),
+                travelTimeText = TravelTimeFormatter.formatHoursAndMinutes(gpxDetails.travelTime).toMessage(),
                 distanceText = DistanceFormatter.format(gpxDetails.distance),
                 altitudeUiModel = null,
                 isVisible = true,

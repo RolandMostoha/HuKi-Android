@@ -4,6 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.mostoha.mobile.android.huki.model.ui.OktRoutesSavedStateUiModel
+import hu.mostoha.mobile.android.huki.model.domain.toLocationsWithAlt
+import hu.mostoha.mobile.android.huki.osmdroid.location.AsyncMyLocationProvider
+import hu.mostoha.mobile.android.huki.model.ui.OktDistanceFromMeUiModel
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.interactor.exception.DomainException
 import hu.mostoha.mobile.android.huki.interactor.flowWithExceptions
@@ -80,15 +84,18 @@ class HomeViewModel @Inject constructor(
     private val placeDomainUiMapper: PlaceDomainUiMapper,
     private val oktRoutesMapper: OktRoutesMapper,
     private val dateTimeProvider: DateTimeProvider,
+    private val myLocationProvider: AsyncMyLocationProvider,
 ) : ViewModel() {
 
     companion object {
         private const val SAVED_STATE_HIKE_MODE = "map_hike_mode"
         private const val SAVED_STATE_MY_LOCATION_CONFIG = "my_location_config"
+        private const val SAVED_STATE_OKT_ROUTES = "okt_routes"
     }
 
     private val savedHikeMode = savedStateHandle.get<HikeModeUiModel>(SAVED_STATE_HIKE_MODE)
     private val savedMyLocationConfig = savedStateHandle.get<MyLocationConfigUiModel>(SAVED_STATE_MY_LOCATION_CONFIG)
+    private val savedOktRoutes = savedStateHandle.get<OktRoutesSavedStateUiModel>(SAVED_STATE_OKT_ROUTES)
 
     private val _myLocationConfigUiModel = MutableStateFlow(MyLocationConfigUiModel())
     val myLocationConfigUiModel: StateFlow<MyLocationConfigUiModel> = _myLocationConfigUiModel
@@ -122,6 +129,11 @@ class HomeViewModel @Inject constructor(
 
     private val _oktRoutes = MutableStateFlow<OktRoutesUiModel?>(null)
     val oktRoutes: StateFlow<OktRoutesUiModel?> = _oktRoutes
+        .onEach { savedStateHandle[SAVED_STATE_OKT_ROUTES] = it?.let(oktRoutesMapper::mapSavedState) }
+        .stateIn(viewModelScope, WhileViewSubscribed, null)
+
+    private val _oktDistanceFromMe = MutableStateFlow<OktDistanceFromMeUiModel?>(null)
+    val oktDistanceFromMe: StateFlow<OktDistanceFromMeUiModel?> = _oktDistanceFromMe
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     private val _isLoading = MutableSharedFlow<Boolean>()
@@ -386,19 +398,25 @@ class HomeViewModel @Inject constructor(
             .collect()
     }
 
-    fun loadOktRoutes(oktType: OktType) = viewModelScope.launch {
+    fun loadOktRoutes(
+        oktType: OktType,
+        savedState: OktRoutesSavedStateUiModel? = null,
+    ) = viewModelScope.launch {
         flowWithExceptions(
             request = { oktRepository.getOktRoutes(oktType) },
             exceptionLogger = exceptionLogger
         )
             .map { oktRoutesMapper.map(oktType, it) }
+            .map { oktRoutes -> savedState?.let { oktRoutesMapper.applySavedState(oktRoutes, it) } ?: oktRoutes }
             .onEach { _oktRoutes.emit(it) }
             .onStart {
-                clearOktRoutes()
-                clearFollowLocation()
-                clearHikingRoutes()
-                clearPlaceDetails()
-                clearLandscapeDetails()
+                if (savedState == null) {
+                    clearOktRoutes()
+                    clearFollowLocation()
+                    clearHikingRoutes()
+                    clearPlaceDetails()
+                    clearLandscapeDetails()
+                }
 
                 showLoading(true)
             }
@@ -413,10 +431,65 @@ class HomeViewModel @Inject constructor(
                 return@update null
             }
 
+            val isStarted = oktRoutesUiModel.routes.any { it.isStarted }
+
             oktRoutesUiModel.copy(
                 routes = oktRoutesUiModel.routes.map { route ->
-                    route.copy(isSelected = route.oktId == oktId)
+                    val isSelected = route.oktId == oktId
+                    route.copy(
+                        isSelected = isSelected,
+                        isStarted = isStarted && isSelected,
+                        isReversed = isSelected && route.isReversed,
+                    )
                 }
+            )
+        }
+    }
+
+    fun startOktRoute(oktId: String) {
+        _oktRoutes.update { oktRoutesUiModel ->
+            oktRoutesUiModel?.copy(
+                routes = oktRoutesUiModel.routes.map { route ->
+                    val isSelected = route.oktId == oktId
+                    route.copy(
+                        isSelected = isSelected,
+                        isStarted = isSelected,
+                        isReversed = isSelected && route.isReversed,
+                    )
+                }
+            )
+        }
+    }
+
+    fun stopOktRoute() {
+        _oktRoutes.update { oktRoutesUiModel ->
+            oktRoutesUiModel?.copy(
+                routes = oktRoutesUiModel.routes.map { route -> route.copy(isStarted = false) }
+            )
+        }
+    }
+
+    fun reverseOktRoute(oktId: String) {
+        selectOktRoute(oktId)
+        _oktRoutes.update { oktRoutesUiModel ->
+            oktRoutesUiModel?.copy(
+                routes = oktRoutesUiModel.routes.map { route ->
+                    if (route.oktId == oktId) route.copy(isReversed = !route.isReversed) else route
+                }
+            )
+        }
+    }
+
+    fun loadOktDistanceFromMe(geoPoint: GeoPoint) {
+        viewModelScope.launch {
+            val oktRoutes = _oktRoutes.value ?: return@launch
+            if (!_myLocationConfigUiModel.value.isLocationPermissionEnabled) return@launch
+            val myLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation() ?: return@launch
+
+            _oktDistanceFromMe.value = oktRoutesMapper.mapDistanceFromMe(
+                track = oktRoutes.mapGeoPoints.toLocationsWithAlt(),
+                myLocation = myLocation,
+                target = geoPoint,
             )
         }
     }
@@ -552,6 +625,7 @@ class HomeViewModel @Inject constructor(
 
     fun clearOktRoutes() {
         _oktRoutes.value = null
+        _oktDistanceFromMe.value = null
     }
 
     fun clearFollowLocation() {
@@ -598,6 +672,9 @@ class HomeViewModel @Inject constructor(
         }
         if (savedMyLocationConfig != null) {
             _myLocationConfigUiModel.emit(savedMyLocationConfig)
+        }
+        if (savedOktRoutes != null) {
+            loadOktRoutes(savedOktRoutes.oktType, savedOktRoutes)
         }
     }
 

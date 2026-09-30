@@ -1,7 +1,6 @@
 package hu.mostoha.mobile.android.huki.model.mapper
 
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.extensions.getRandomNumberText
 import hu.mostoha.mobile.android.huki.model.domain.PlaceFeature
 import hu.mostoha.mobile.android.huki.model.domain.PlaceProfile
@@ -17,17 +16,18 @@ import hu.mostoha.mobile.android.huki.model.ui.RoutePlanUiModel
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
 import hu.mostoha.mobile.android.huki.ui.formatter.LocationFormatter
+import hu.mostoha.mobile.android.huki.ui.formatter.TravelTimeFormatter
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
-import org.jetbrains.annotations.VisibleForTesting
-import org.osmdroid.util.BoundingBox
-import org.osmdroid.util.GeoPoint
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.Normalizer
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.math.min
+import org.jetbrains.annotations.VisibleForTesting
+import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
 
 class RoutePlannerUiModelMapper @Inject constructor() {
 
@@ -92,7 +92,7 @@ class RoutePlannerUiModelMapper @Inject constructor() {
             wayPoints = wayPointItems,
             geoPoints = geoPoints,
             boundingBox = BoundingBox.fromGeoPoints(geoPoints).toDomain(),
-            travelTimeText = routePlan.travelTime.formatHoursAndMinutes().toMessage(),
+            travelTimeText = TravelTimeFormatter.formatHoursAndMinutes(routePlan.travelTime).toMessage(),
             distanceText = DistanceFormatter.format(routePlan.distance),
             altitudeUiModel = AltitudeUiModel(
                 minAltitudeText = DistanceFormatter.format(altitudeRange.first),

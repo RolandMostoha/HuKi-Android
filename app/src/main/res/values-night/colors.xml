@@ -40,6 +40,11 @@
     <color name="colorOktSelected">#64b5f6</color>
     <color name="colorOktStrokePolygonMarker">@color/colorOktSelected</color>
     <color name="colorOktFillPolygonMarker">@color/colorBackgroundLight</color>
+    <color name="colorOktStampCard">#26232323</color>
+    <color name="colorOktStampCardStroke">#33232323</color>
+    <color name="colorOktActionsButton">#1f64b5f6</color>
+    <color name="colorOktActionsButtonStroke">#6664b5f6</color>
+    <color name="colorInfoWindowChipBackground">#4064b5f6</color>
 
     <color name="colorFacebookCardBackground">#1A222F</color>
     <color name="colorFacebookCardStroke">#2D3748</color>

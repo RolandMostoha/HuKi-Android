@@ -9,11 +9,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="@dimen/space_extra_extra_large"
+        android:layout_marginBottom="@dimen/map_info_window_pointer_height"
+        android:layout_marginHorizontal="@dimen/space_huge"
         android:background="@drawable/background_map_info_window"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingVertical="@dimen/space_extra_small"
+        android:paddingVertical="6dp"
         android:paddingStart="@dimen/space_large"
         android:paddingEnd="@dimen/space_medium">
 
@@ -36,18 +37,53 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/DefaultTextAppearance.Regular.ExtraSmall"
+                android:textSize="@dimen/text_size_extra_extra_small"
                 tools:text="A temető mellett, az információs táblán." />
+
+            <LinearLayout
+                android:id="@+id/mapInfoWindowDistanceContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_small"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/mapInfoWindowDistance"
+                    style="@style/InfoWindowChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_small"
+                    app:chipIcon="@drawable/ic_near_me"
+                    tools:text="25 km" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/mapInfoWindowTravelTime"
+                    style="@style/InfoWindowChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipIcon="@drawable/ic_schedule"
+                    tools:text="5 h 38 min" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mapInfoWindowNavigationButton"
-            style="@style/DefaultButton.IconOnly.ExtraTiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_gpx_info_window_navigation"
-            app:iconTint="@color/colorPrimary" />
+            style="@style/DefaultButton.IconOnly.InfoWindowNavigation"
+            android:layout_width="@dimen/map_info_window_navigation_button_size"
+            android:layout_height="@dimen/map_info_window_navigation_button_size"
+            app:icon="@drawable/ic_gpx_info_window_navigation" />
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_map_info_window_pointer" />
 
 </FrameLayout>

@@ -180,50 +180,6 @@ class OktRoutesUiTest {
     }
 
     @Test
-    fun givenOktRoute_whenClickOnStartPoint_thenPlaceDetailsDisplays() {
-        launchScenario<HomeActivity> {
-            R.id.homeDiscoverFab.click()
-            "OKT".clickWithText()
-
-            waitForMapClear()
-
-            "Írott-kő - Sárvár".clickWithText()
-
-            waitForMapClear()
-
-            testAppContext.getString(R.string.accessibility_okt_routes_action_button)
-                .format("OKT-01")
-                .clickWithContentDescription()
-
-            R.string.okt_routes_menu_action_start_point.clickWithTextInPopup()
-
-            R.id.placeDetailsContentContainer.isDisplayed()
-        }
-    }
-
-    @Test
-    fun givenOktRoute_whenClickOnEndPoint_thenPlaceDetailsDisplays() {
-        launchScenario<HomeActivity> {
-            R.id.homeDiscoverFab.click()
-            "OKT".clickWithText()
-
-            waitForMapClear()
-
-            "Írott-kő - Sárvár".clickWithText()
-
-            waitForMapClear()
-
-            testAppContext.getString(R.string.accessibility_okt_routes_action_button)
-                .format("OKT-01")
-                .clickWithContentDescription()
-
-            R.string.okt_routes_menu_action_start_point.clickWithTextInPopup()
-
-            R.id.placeDetailsContentContainer.isDisplayed()
-        }
-    }
-
-    @Test
     fun whenCloseClick_thenBottomSheetHides() {
         launchScenario<HomeActivity> {
             R.id.homeDiscoverFab.click()

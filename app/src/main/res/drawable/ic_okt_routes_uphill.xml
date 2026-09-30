@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/okt_routes_attributes_icon_width"
+    android:height="@dimen/okt_routes_attributes_icon_height"
+    android:viewportWidth="12"
+    android:viewportHeight="14">
+    <group
+        android:translateX="-6"
+        android:translateY="-5">
+        <path
+            android:fillColor="@color/colorRouteAttributesIcon"
+            android:pathData="M7.41,18.41L6,17L12,11L18,17L16.59,18.41L12,13.83L7.41,18.41M7.41,12.41L6,11L12,5L18,11L16.59,12.41L12,7.83L7.41,12.41Z" />
+    </group>
+</vector>

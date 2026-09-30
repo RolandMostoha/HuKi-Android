@@ -36,23 +36,9 @@ object DistanceFormatter {
 
     fun formatKm(km: Int): Message.Res = format(km * 1000)
 
-    fun formatSigned(meters: Int): Message.Res {
-        val km = (meters.toDouble() / 1000)
-            .toBigDecimal()
-            .setScale(1, RoundingMode.HALF_UP)
-            .stripTrailingZeros()
-
-        val prefix = if (meters > 0) {
-            "+"
-        } else {
-            ""
-        }
-
-        return if (km.abs() >= BigDecimal.ONE) {
-            Message.Res(R.string.default_distance_template_km, listOf(prefix + km.toPlainString()))
-        } else {
-            Message.Res(R.string.default_distance_template_m, listOf(prefix + meters.toString()))
-        }
+    fun formatRelative(meters: Int): Message.Res {
+        val distance = format(meters)
+        return distance.copy(formatArgs = listOf("+${distance.formatArgs.single()}"))
     }
 
     fun Int.toMetersFromKm(): Int {

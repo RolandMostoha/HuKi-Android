@@ -10,6 +10,16 @@
     android:orientation="horizontal"
     android:padding="@dimen/space_small">
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/headerStartButton"
+        style="@style/DefaultButton.BottomSheetAction.Okt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_medium"
+        android:visibility="gone"
+        app:icon="@drawable/ic_play_arrow"
+        tools:visibility="visible" />
+
     <ImageView
         android:id="@+id/headerImage"
         android:layout_width="@dimen/place_details_bottom_sheet_image_size"

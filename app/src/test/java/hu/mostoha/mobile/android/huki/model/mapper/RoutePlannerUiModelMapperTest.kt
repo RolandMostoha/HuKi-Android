@@ -2,7 +2,6 @@ package hu.mostoha.mobile.android.huki.model.mapper
 
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
-import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
@@ -20,11 +19,12 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_LAT
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_ROUTE_PLAN_WAYPOINT_2_NAME
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.ui.formatter.TravelTimeFormatter
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointItem
 import hu.mostoha.mobile.android.huki.ui.home.routeplanner.WaypointType
+import kotlin.time.Duration.Companion.minutes
 import org.junit.Test
 import org.osmdroid.util.BoundingBox
-import kotlin.time.Duration.Companion.minutes
 
 class RoutePlannerUiModelMapperTest {
 
@@ -88,7 +88,7 @@ class RoutePlannerUiModelMapperTest {
                         DEFAULT_WAYPOINTS.last().toGeoPoint()
                     )
                 ).toDomain(),
-                travelTimeText = routePlan.travelTime.formatHoursAndMinutes().toMessage(),
+                travelTimeText = TravelTimeFormatter.formatHoursAndMinutes(routePlan.travelTime).toMessage(),
                 distanceText = DistanceFormatter.format(routePlan.distance),
                 altitudeUiModel = AltitudeUiModel(
                     minAltitudeText = DistanceFormatter.format(routePlan.altitudeRange.first),

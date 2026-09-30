@@ -118,11 +118,17 @@ interface AnalyticsService {
 
     fun oktRouteLinkClicked(oktId: String)
 
-    fun oktRouteEdgePointClicked(oktId: String)
+    fun oktRouteStartClicked(oktId: String)
+
+    fun oktRouteReverseClicked(oktId: String)
+
+    fun oktRouteStopClicked(oktId: String)
 
     fun oktGpxImported(fileName: String)
 
     fun oktWaypointClicked()
+
+    fun oktStampClicked(oktId: String)
 
     fun myLocationPlaceRequested()
 

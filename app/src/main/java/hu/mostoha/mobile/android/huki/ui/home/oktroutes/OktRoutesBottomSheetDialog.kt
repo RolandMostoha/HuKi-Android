@@ -2,11 +2,15 @@ package hu.mostoha.mobile.android.huki.ui.home.oktroutes
 
 import androidx.core.graphics.Insets
 import androidx.core.view.updatePadding
+import androidx.recyclerview.widget.SimpleItemAnimator
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.databinding.LayoutBottomSheetOktRoutesBinding
+import hu.mostoha.mobile.android.huki.extensions.gone
 import hu.mostoha.mobile.android.huki.extensions.openUrl
 import hu.mostoha.mobile.android.huki.extensions.postMain
 import hu.mostoha.mobile.android.huki.extensions.postMainDelayed
+import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.model.domain.OktType
 import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.service.AnalyticsService
@@ -20,6 +24,21 @@ class OktRoutesBottomSheetDialog(
 ) : BottomSheetDialog(binding) {
 
     private var oktRoutesAdapter: OktRoutesAdapter? = null
+    private var onDismiss: (() -> Unit)? = null
+    private var isDraggedByUser = false
+
+    init {
+        addStateListener { state ->
+            when (state) {
+                BottomSheetBehavior.STATE_DRAGGING -> isDraggedByUser = true
+                BottomSheetBehavior.STATE_HIDDEN -> {
+                    if (isDraggedByUser) onDismiss?.invoke()
+                    isDraggedByUser = false
+                }
+                BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_EXPANDED -> isDraggedByUser = false
+            }
+        }
+    }
 
     override fun updateInset(insets: Insets) {
         binding.oktRoutesList.updatePadding(
@@ -32,18 +51,24 @@ class OktRoutesBottomSheetDialog(
         oktRoutes: List<OktRouteUiModel>,
         selectedOktId: String,
         onRouteClick: (String) -> Unit,
-        onEdgePointClick: (GeoPoint) -> Unit,
+        onStartClick: (String) -> Unit,
+        onReverseClick: (String) -> Unit,
+        onStampClick: (GeoPoint) -> Unit,
         onCloseClick: () -> Unit,
+        onDismiss: () -> Unit,
     ) {
+        this.onDismiss = onDismiss
+
         postMain {
             with(binding) {
-                oktRoutesHeaderContainer.headerImage.setImageResource(
-                    when (oktType) {
-                        OktType.OKT -> R.drawable.ic_okt_okt
-                        OktType.RPDDK -> R.drawable.ic_okt_rpddk
-                        OktType.AKT -> R.drawable.ic_okt_akt
-                    }
-                )
+                oktRoutesHeaderContainer.headerImage.gone()
+                oktRoutesHeaderContainer.headerStartButton.visible()
+                oktRoutesHeaderContainer.headerStartButton.contentDescription =
+                    context.getString(R.string.okt_routes_menu_action_start)
+                oktRoutesHeaderContainer.headerStartButton.setOnClickListener {
+                    analyticsService.oktRouteStartClicked(selectedOktId)
+                    onStartClick.invoke(selectedOktId)
+                }
                 oktRoutesHeaderContainer.headerTitle.text = when (oktType) {
                     OktType.OKT -> context.getString(R.string.okt_okt_title)
                     OktType.RPDDK -> context.getString(R.string.okt_rpddk_title)
@@ -66,12 +91,21 @@ class OktRoutesBottomSheetDialog(
                             analyticsService.oktRouteLinkClicked(oktId)
                             context.openUrl(link)
                         },
-                        onEdgePointClick = { oktId, geoPoint ->
-                            analyticsService.oktRouteEdgePointClicked(oktId)
-                            onEdgePointClick.invoke(geoPoint)
-                        }
+                        onStartClick = { oktId ->
+                            analyticsService.oktRouteStartClicked(oktId)
+                            onStartClick.invoke(oktId)
+                        },
+                        onReverseClick = { oktId ->
+                            analyticsService.oktRouteReverseClicked(oktId)
+                            onReverseClick.invoke(oktId)
+                        },
+                        onStampClick = { oktId, stamp ->
+                            analyticsService.oktStampClicked(oktId)
+                            onStampClick.invoke(stamp.geoPoint)
+                        },
                     )
                     oktRoutesList.setHasFixedSize(true)
+                    (oktRoutesList.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
                     oktRoutesList.adapter = oktRoutesAdapter
                 }
             }
@@ -82,6 +116,23 @@ class OktRoutesBottomSheetDialog(
 
             postMainDelayed(RECYCLERVIEW_SCROLL_DELAY) {
                 scrollTo(selectedOktId)
+            }
+        }
+    }
+
+    fun selectStamp(oktId: String, geoPoint: GeoPoint) {
+        val index = oktRoutesAdapter?.indexOf(oktId) ?: return
+        val viewHolder = binding.oktRoutesList.findViewHolderForAdapterPosition(index)
+            as? OktRoutesAdapter.ViewHolderItem
+
+        if (viewHolder != null) {
+            viewHolder.selectStamp(geoPoint)
+        } else {
+            binding.oktRoutesList.scrollToPosition(index)
+            postMainDelayed(RECYCLERVIEW_SCROLL_DELAY) {
+                val scrolledViewHolder = binding.oktRoutesList.findViewHolderForAdapterPosition(index)
+                    as? OktRoutesAdapter.ViewHolderItem
+                scrolledViewHolder?.selectStamp(geoPoint)
             }
         }
     }

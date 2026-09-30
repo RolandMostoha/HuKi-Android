@@ -35,7 +35,10 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_OKT = "select_okt"
         private const val EVENT_SELECT_OKT_ROUTE = "select_okt_route"
         private const val EVENT_SELECT_OKT_ROUTE_LINK = "select_okt_link"
-        private const val EVENT_SELECT_OKT_ROUTE_EDGE_POINT = "select_okt_edge_point"
+        private const val EVENT_SELECT_OKT_ROUTE_START = "select_okt_start"
+        private const val EVENT_SELECT_OKT_ROUTE_REVERSE = "select_okt_reverse"
+        private const val EVENT_SELECT_OKT_ROUTE_STOP = "select_okt_stop"
+        private const val EVENT_SELECT_OKT_STAMP = "select_okt_stamp"
         private const val EVENT_SELECT_OKT_WAYPOINT = "select_okt_waypoint"
         private const val EVENT_OKT_GPX_IMPORTED = "okt_gpx_imported"
         private const val EVENT_SELECT_HIKE_RECOMMENDATION_TEMPLATE = "select_%s"
@@ -414,8 +417,20 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         }
     }
 
-    override fun oktRouteEdgePointClicked(oktId: String) {
-        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_ROUTE_EDGE_POINT) {
+    override fun oktRouteStartClicked(oktId: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_ROUTE_START) {
+            param(PARAM_OKT_ID, oktId)
+        }
+    }
+
+    override fun oktRouteReverseClicked(oktId: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_ROUTE_REVERSE) {
+            param(PARAM_OKT_ID, oktId)
+        }
+    }
+
+    override fun oktRouteStopClicked(oktId: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_ROUTE_STOP) {
             param(PARAM_OKT_ID, oktId)
         }
     }
@@ -428,6 +443,12 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun oktWaypointClicked() {
         firebaseAnalytics.logEvent(EVENT_SELECT_OKT_WAYPOINT, null)
+    }
+
+    override fun oktStampClicked(oktId: String) {
+        firebaseAnalytics.logEvent(EVENT_SELECT_OKT_STAMP) {
+            param(PARAM_OKT_ID, oktId)
+        }
     }
 
     override fun myLocationPlaceRequested() {

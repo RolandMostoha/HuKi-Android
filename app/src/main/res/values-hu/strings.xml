@@ -14,6 +14,8 @@
     <string name="error_refresh_button">Frissítés</string>
 
     <string name="default_distance_template_m">%s m</string>
+    <string name="default_travel_time_template_hours_minutes">%1$dó %2$dp</string>
+    <string name="default_travel_time_template_minutes">%1$dp</string>
     <string name="default_distance_template_km">%s km</string>
     <string name="default_date_today">Ma</string>
     <string name="default_date_yesterday">Tegnap</string>
@@ -40,6 +42,7 @@
     <string name="accessibility_home_zoom_in">Zoom be</string>
     <string name="accessibility_home_zoom_out">Zoom ki</string>
     <string name="accessibility_okt_routes_action_button">%s menü gomb</string>
+    <string name="accessibility_okt_routes_stop_button">%s leállítása</string>
 
     <string name="search_bar_hint">Keresés helységek között</string>
 
@@ -194,10 +197,17 @@
     <string name="place_history_menu_action_favourite">Kedvenc</string>
     <string name="place_history_menu_action_delete">Törlés</string>
 
-    <string name="okt_routes_menu_action_details">Részletek és GPX</string>
-    <string name="okt_routes_menu_action_start_point">Kezdőpont betöltése</string>
-    <string name="okt_routes_menu_action_end_point">Végpont betöltése</string>
+    <string name="okt_routes_menu_action_details">Hivatalos weboldal</string>
+    <string name="okt_routes_menu_action_details_subtitle">Hasznos infók és GPX</string>
+    <string name="okt_routes_menu_action_start">Szakasz kezdése</string>
+    <string name="okt_routes_menu_action_start_subtitle">%1$s kezdése</string>
+    <string name="okt_routes_menu_action_reverse">Irány megfordítása</string>
+    <string name="accessibility_okt_routes_reversed_title">%1$s, fordított irány</string>
+    <string name="okt_routes_menu_action_reverse_subtitle">Pecsételőhelyek fordított sorrendben</string>
     <string name="okt_routes_item_prefix">OKT</string>
+    <string name="okt_routes_stamp_info_window_title_template">%s bélyegzőhely</string>
+    <string name="okt_routes_start_info_window_title_template">%s (kezdőpont)</string>
+    <string name="okt_routes_end_info_window_title_template">%s (végpont)</string>
     <string name="okt_routes_accessibility_action_button">%s action button</string>
 
     <string name="support_title">Támogatás</string>
@@ -235,7 +245,7 @@
     <string name="place_area_distance_template">%s-es körzetében</string>
 
     <string name="place_category_hike_recommendations_header_title">Túraajánlók</string>
-    <string name="place_category_hike_recommendations_info">A túraajánlókból letöltött GPX útvonalak megnyithatóak az alkalmazással.\n\nEzek a személyes kedvenceim, de nem fűz hozzájuk semmilyen érdekeltség.\n\nA HuKi a weboldalak tartalmait semmilyen formában nem használja fel, csak egy navigációs linket nyújt, ami külső böngészőben nyílik meg. \n\nA weboldalakon elérhető tartalom felhasználásához az adott oldal feltételei érvényesek.</string>
+    <string name="place_category_hike_recommendations_info">Az alábbi túragyűjtemények a személyes kedvenceim, amelyekből letöltött GPX útvonalak megnyithatóak az alkalmazással.\n\nA HuKi a weboldalak tartalmát nem használja fel, csak egy navigációs linket nyújt, ami külső böngészőben nyílik meg.\n\nA weboldalakon elérhető tartalom felhasználásához az adott oldal feltételei érvényesek.</string>
     <string name="place_category_national_routes_chip_title">Túraútvonalak</string>
 
     <string name="place_category_group_travel">Közlekedés</string>

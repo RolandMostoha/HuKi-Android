@@ -16,7 +16,7 @@
         android:layout_weight="1"
         android:paddingHorizontal="@dimen/space_extra_large"
         android:paddingVertical="@dimen/space_large"
-        android:textAppearance="@style/DefaultTextAppearance.SemiBold.Medium"
+        android:textAppearance="@style/DefaultTextAppearance.Bold.Medium"
         tools:text="Google Maps Navigation" />
 
     <!-- Close button -->

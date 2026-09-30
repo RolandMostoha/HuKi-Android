@@ -28,6 +28,52 @@ class LocationUtilsTest {
     }
 
     @Test
+    fun `Given track and off-track points, when trackBetween, then track part ordered from the first point returns`() {
+        val track = listOf(
+            Location(47.0, 19.0),
+            Location(47.01, 19.0),
+            Location(47.02, 19.0),
+            Location(47.03, 19.0),
+        )
+
+        val trackPart = track.trackBetween(Location(47.02, 19.0001), Location(47.0, 18.9999))
+
+        assertThat(trackPart).containsExactly(track[2], track[1], track[0]).inOrder()
+    }
+
+    @Test
+    fun `Given track and points, when calculateLegDistances, then on-track distances from previous point return`() {
+        val track = listOf(
+            Location(47.0, 19.0),
+            Location(47.01, 19.0),
+            Location(47.02, 19.0),
+            Location(47.03, 19.0),
+        )
+        val points = listOf(
+            Location(47.0, 19.0001),
+            Location(47.02, 19.0001),
+            Location(47.02, 18.9999),
+            Location(47.03, 19.0),
+        )
+
+        val legDistances = track.calculateLegDistances(points)
+
+        assertThat(legDistances).containsExactly(
+            0,
+            track[0].distanceBetween(track[1]) + track[1].distanceBetween(track[2]),
+            0,
+            track[2].distanceBetween(track[3]),
+        ).inOrder()
+    }
+
+    @Test
+    fun `Given empty track, when calculateLegDistances, then zero distances return`() {
+        val legDistances = emptyList<Location>().calculateLegDistances(listOf(Location(47.0, 19.0)))
+
+        assertThat(legDistances).containsExactly(0)
+    }
+
+    @Test
     fun `Given list of locations, when calculateCenter, then the center location returns`() {
         val location1 = Location(47.123, 19.234)
         val location2 = Location(46.567, 19.345)

@@ -86,6 +86,7 @@ import hu.mostoha.mobile.android.huki.extensions.toDrawable
 import hu.mostoha.mobile.android.huki.extensions.toggleInfoWindows
 import hu.mostoha.mobile.android.huki.extensions.updateOverlayVisibility
 import hu.mostoha.mobile.android.huki.extensions.updateOverlayVisibilityBy
+import hu.mostoha.mobile.android.huki.extensions.setTextOrGone
 import hu.mostoha.mobile.android.huki.extensions.visible
 import hu.mostoha.mobile.android.huki.extensions.visibleOrGone
 import hu.mostoha.mobile.android.huki.extensions.withOffset
@@ -116,6 +117,7 @@ import hu.mostoha.mobile.android.huki.model.ui.LandscapeDetailsUiModel
 import hu.mostoha.mobile.android.huki.model.ui.LandscapeMapUiModel
 import hu.mostoha.mobile.android.huki.model.ui.Message
 import hu.mostoha.mobile.android.huki.model.ui.OffsetType
+import hu.mostoha.mobile.android.huki.model.ui.OktRouteUiModel
 import hu.mostoha.mobile.android.huki.model.ui.OktRoutesUiModel
 import hu.mostoha.mobile.android.huki.model.ui.PermissionResult
 import hu.mostoha.mobile.android.huki.model.ui.PlaceArea
@@ -349,6 +351,12 @@ class HomeActivity : AppCompatActivity() {
                 )
             }
             homeFabContainer.updatePadding(bottom = insets.bottom)
+            binding.homeOktMenuFab.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                updateMargins(
+                    left = insets.left + resources.getDimensionPixelSize(R.dimen.home_horizontal_margin),
+                    bottom = insets.bottom + resources.getDimensionPixelSize(R.dimen.home_okt_menu_fab_bottom_margin),
+                )
+            }
             bottomSheets.forEach { it.updateInset(insets) }
 
             homeMapView.replaceOverlay(OsmLicencesOverlay(this, analyticsService, insets), OverlayComparator)
@@ -969,6 +977,12 @@ class HomeActivity : AppCompatActivity() {
                 .collect { initOktRoutes(it) }
         }
         lifecycleScope.launch {
+            homeViewModel.oktDistanceFromMe
+                .flowWithLifecycle(lifecycle)
+                .filterNotNull()
+                .collect { homeMapView.showOktMarkerDistance(it) }
+        }
+        lifecycleScope.launch {
             homeViewModel.errorMessage
                 .flowWithLifecycle(lifecycle)
                 .collect { errorMessage ->
@@ -1050,14 +1064,17 @@ class HomeActivity : AppCompatActivity() {
                 .combine(homeViewModel.hikeModeUiModel) { waypointItems, hikeModeUiModel ->
                     Pair(waypointItems.isNotEmpty(), hikeModeUiModel.isHikeModeEnabled)
                 }
+                .combine(homeViewModel.oktRoutes.map { it != null }) { (isRoutePlannerOn, isHikeModeOn), isOktOpen ->
+                    Triple(isRoutePlannerOn, isHikeModeOn, isOktOpen)
+                }
                 .distinctUntilChanged()
                 .flowWithLifecycle(lifecycle)
-                .collect { (isRoutePlannerEnabled, isHikeModeEnabled) ->
+                .collect { (isRoutePlannerEnabled, isHikeModeEnabled, isOktOpen) ->
                     postMain {
                         when {
                             !isHikeModeEnabled && !isRoutePlannerEnabled -> {
-                                homeHikeModeHeaderGroup.visible()
                                 homeRoutePlannerHeaderGroup.visible()
+                                homeHikeModeHeaderGroup.visibleOrGone(!isOktOpen)
                                 homeHikeModeFab.show()
                                 homeRoutePlannerFab.show()
                             }
@@ -1692,6 +1709,7 @@ class HomeActivity : AppCompatActivity() {
             InfoWindow.closeAllInfoWindowsOn(homeMapView)
             homeMapView.removeOverlays(listOf(OverlayType.OKT_ROUTES, OverlayType.OKT_ROUTES_BASE))
             oktRoutesBottomSheet.hide()
+            binding.homeOktMenuFab.gone()
             return
         }
 
@@ -1711,27 +1729,62 @@ class HomeActivity : AppCompatActivity() {
 
         val offsetBoundingBox = BoundingBox
             .fromGeoPoints(selectedRoute.geoPoints)
-            .withOffset(homeMapView, OffsetType.OKT_ROUTES)
+            .withOffset(
+                homeMapView,
+                if (selectedRoute.isStarted) OffsetType.OKT_ROUTES_STARTED else OffsetType.OKT_ROUTES
+            )
 
         homeMapView.addOktRoute(
             overlayId = selectedRoute.oktId,
             oktRouteUiModel = selectedRoute,
             onRouteClick = {
                 InfoWindow.closeAllInfoWindowsOn(homeMapView)
-                initOktRoutesBottomSheet(oktRoutes.oktType, oktRoutes, selectedRoute.oktId)
+                if (!selectedRoute.isStarted) {
+                    initOktRoutesBottomSheet(oktRoutes.oktType, oktRoutes, selectedRoute.oktId)
+                }
                 homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
             },
             onWaypointClick = {
                 analyticsService.oktWaypointClicked()
+            },
+            onStampClick = { geoPoint ->
+                oktRoutesBottomSheet.selectStamp(selectedRoute.oktId, geoPoint)
+            },
+            onWaypointInfoWindowOpen = { geoPoint ->
+                homeViewModel.loadOktDistanceFromMe(geoPoint)
             },
             onWaypointNavigationClick = { geoPoint ->
                 homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, OKT_WAYPOINT)
             }
         )
 
-        initOktRoutesBottomSheet(oktRoutes.oktType, oktRoutes, selectedRoute.oktId)
+        if (selectedRoute.isStarted) {
+            oktRoutesBottomSheet.hide()
+            initOktMenuFab(selectedRoute)
+        } else {
+            binding.homeOktMenuFab.gone()
+            initOktRoutesBottomSheet(oktRoutes.oktType, oktRoutes, selectedRoute.oktId)
+        }
 
-        homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+        if (!homeViewModel.myLocationConfigUiModel.value.isFollowLocationEnabled) {
+            homeMapView.zoomToBoundingBox(offsetBoundingBox, true)
+        }
+    }
+
+    private fun initOktMenuFab(startedRoute: OktRouteUiModel) {
+        with(binding) {
+            homeOktMenuFabPrefix.text = startedRoute.oktId.split("-").firstOrNull()
+            homeOktMenuFabNumber.setTextOrGone(startedRoute.routeNumber.ifBlank { null })
+            homeOktMenuFab.contentDescription = getString(
+                R.string.accessibility_okt_routes_stop_button,
+                startedRoute.oktId
+            )
+            homeOktMenuFab.setOnClickListener {
+                analyticsService.oktRouteStopClicked(startedRoute.oktId)
+                homeViewModel.stopOktRoute()
+            }
+            homeOktMenuFab.visible()
+        }
     }
 
     private fun initPlaceCategories(placesByCategories: Map<PlaceCategory, List<PlaceUiModel>>) {
@@ -1800,11 +1853,21 @@ class HomeActivity : AppCompatActivity() {
                 InfoWindow.closeAllInfoWindowsOn(homeMapView)
                 homeViewModel.selectOktRoute(oktId)
             },
-            onEdgePointClick = { geoPoint ->
-                homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, OKT_WAYPOINT)
+            onStartClick = { oktId ->
+                InfoWindow.closeAllInfoWindowsOn(homeMapView)
+                homeViewModel.startOktRoute(oktId)
+            },
+            onReverseClick = { oktId ->
+                homeViewModel.reverseOktRoute(oktId)
+            },
+            onStampClick = { geoPoint ->
+                homeMapView.showOktMarkerInfoWindow(geoPoint)
             },
             onCloseClick = {
                 homeViewModel.clearOktRoutes()
+            },
+            onDismiss = {
+                homeViewModel.startOktRoute(selectedId)
             }
         )
         bottomSheets.showOnly(oktRoutesBottomSheet)

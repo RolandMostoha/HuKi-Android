@@ -4,7 +4,6 @@ import android.net.Uri
 import com.google.common.truth.Truth.assertThat
 import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.extensions.formatFriendlyDate
-import hu.mostoha.mobile.android.huki.extensions.formatHoursAndMinutes
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistory
 import hu.mostoha.mobile.android.huki.model.domain.GpxHistoryItem
 import hu.mostoha.mobile.android.huki.model.domain.GpxType
@@ -22,15 +21,16 @@ import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_LONGITUDE
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_NAME
 import hu.mostoha.mobile.android.huki.testdata.DEFAULT_NODE_OSM_ID
 import hu.mostoha.mobile.android.huki.ui.formatter.DistanceFormatter
+import hu.mostoha.mobile.android.huki.ui.formatter.TravelTimeFormatter
 import hu.mostoha.mobile.android.huki.ui.home.history.gpx.GpxHistoryAdapterModel
 import hu.mostoha.mobile.android.huki.ui.home.history.place.PlaceHistoryAdapterModel
 import hu.mostoha.mobile.android.huki.util.DEFAULT_LOCAL_DATE
 import io.mockk.mockk
-import org.junit.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
+import org.junit.Test
 
 class HistoryUiModelMapperTest {
 
@@ -125,7 +125,7 @@ class HistoryUiModelMapperTest {
                         name = "route_plan_HuKi938.gpx",
                         gpxType = GpxType.ROUTE_PLANNER,
                         fileUri = DEFAULT_ROUTE_PLANNER_GPX_FILE_URI,
-                        travelTimeText = 5.hours.formatHoursAndMinutes().toMessage(),
+                        travelTimeText = TravelTimeFormatter.formatHoursAndMinutes(5.hours).toMessage(),
                         distanceText = DistanceFormatter.format(10000),
                         inclineText = DistanceFormatter.format(1000),
                         declineText = DistanceFormatter.format(1000),
