@@ -1,4 +1,5 @@
-- New app icon
-- Long-pressing on my location switches to hike mode
-- Android platform maintenance
-- Important bug fixes
+Blue Trail improvements:
+- Clearer OKT map
+- Distance and travel time for stamp locations
+- Stamp location cards in the OKT panel
+- OKT, RPDDK, AKT route updates
