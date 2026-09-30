@@ -318,7 +318,7 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun onLayerSelected(layerType: LayerType) {
         firebaseAnalytics.logEvent(
-            EVENT_LAYER_SELECTED_TEMPLATE.format(EVENT_LAYER_SELECTED_TEMPLATE, layerType.name.lowercase()),
+            EVENT_LAYER_SELECTED_TEMPLATE.format(layerType.name.lowercase()),
             null
         )
     }
