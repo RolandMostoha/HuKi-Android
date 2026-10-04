@@ -1753,6 +1753,9 @@ class HomeActivity : AppCompatActivity() {
             onWaypointInfoWindowOpen = { geoPoint ->
                 homeViewModel.loadOktDistanceFromMe(geoPoint)
             },
+            onWaypointInfoWindowClose = { geoPoint ->
+                homeViewModel.clearOktDistanceFromMe(geoPoint)
+            },
             onWaypointNavigationClick = { geoPoint ->
                 homeViewModel.loadPlaceDetailsWithGeocoding(geoPoint, OKT_WAYPOINT)
             }

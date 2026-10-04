@@ -10,11 +10,16 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import dagger.hilt.android.qualifiers.ApplicationContext
+import hu.mostoha.mobile.android.huki.di.module.ApplicationScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.retryWhen
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider
@@ -27,7 +32,8 @@ import kotlin.coroutines.resume
  * and provides the location updates via coroutines and [Flow].
  */
 class FusedLocationProvider @Inject constructor(
-    @ApplicationContext val context: Context
+    @ApplicationContext val context: Context,
+    @ApplicationScope applicationScope: CoroutineScope,
 ) : AsyncMyLocationProvider {
 
     companion object {
@@ -40,8 +46,7 @@ class FusedLocationProvider @Inject constructor(
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-    private var fusedLocationCallback: LocationCallback? = null
-
+    // A single GPS subscription shared by all collectors, replaying the latest fix until the last one leaves
     @SuppressLint("MissingPermission")
     private val _locationFlow = callbackFlow {
         Timber.d("Requesting location updates")
@@ -49,8 +54,6 @@ class FusedLocationProvider @Inject constructor(
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val lastLocation = locationResult.lastLocation ?: return
-
-                myLocationConsumer?.onLocationChanged(lastLocation, this@FusedLocationProvider)
 
                 trySend(lastLocation)
 
@@ -67,7 +70,6 @@ class FusedLocationProvider @Inject constructor(
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
             .addOnSuccessListener {
                 Timber.d("Starting location updates")
-                fusedLocationCallback = locationCallback
             }
             .addOnFailureListener { exception ->
                 Timber.d(exception, "Failure on requesting location updates")
@@ -82,7 +84,9 @@ class FusedLocationProvider @Inject constructor(
         Timber.w(cause, "Location stream failed, re-subscribing")
         delay(LOCATION_STREAM_RETRY_DELAY_MS)
         true
-    }
+    }.onEach { location ->
+        myLocationConsumer?.onLocationChanged(location, this@FusedLocationProvider)
+    }.shareIn(applicationScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), replay = 1)
 
     override fun startLocationProvider(myLocationConsumer: IMyLocationConsumer): Boolean {
         this.myLocationConsumer = myLocationConsumer
@@ -105,16 +109,12 @@ class FusedLocationProvider @Inject constructor(
     override fun getLocationFlow(): Flow<Location> = _locationFlow
 
     override fun stopLocationProvider() {
-        Timber.d("Stopping location monitoring")
-        fusedLocationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
-        fusedLocationCallback = null
+        Timber.d("Stopping location consumer")
         myLocationConsumer = null
     }
 
     override fun destroy() {
-        Timber.d("Destroying location provider, stopping location monitoring")
-        fusedLocationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
-        fusedLocationCallback = null
+        Timber.d("Destroying location provider")
         myLocationConsumer = null
     }
 

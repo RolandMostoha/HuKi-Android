@@ -69,6 +69,8 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
@@ -103,6 +105,7 @@ class HomeViewModelTest {
         dateTimeProvider.answerDefaults()
         every { exceptionLogger.recordException(any()) } returns Unit
         coEvery { myLocationProvider.getLastKnownLocationCoroutine() } returns null
+        every { myLocationProvider.getLocationFlow() } returns emptyFlow()
         coEvery { placeHistoryRepository.getPlaces() } returns flow { emptyList<Place>() }
         coEvery { placeHistoryRepository.savePlace(any(), any()) } returns Unit
         coEvery { placeHistoryRepository.clearOldPlaces() } returns Unit
@@ -380,6 +383,65 @@ class HomeViewModelTest {
                 )
             }
         }
+
+    @Test
+    fun `Given distance from me is shown, when my location changes, then distance from me is updated`() =
+        runTestDefault {
+            val track = DEFAULT_OKT_ROUTES.locations
+            val locationFlow = MutableSharedFlow<AndroidLocation>()
+            every { myLocationProvider.getLocationFlow() } returns locationFlow
+            viewModel.updateMyLocationConfig(isLocationPermissionEnabled = true)
+            val target = track.last().toGeoPoint()
+            val trackWithAlt = track.map { Location(it.latitude, it.longitude, it.altitude ?: 0.0) }
+
+            viewModel.oktDistanceFromMe.test {
+                viewModel.loadOktRoutes(OktType.OKT)
+                advanceUntilIdle()
+
+                viewModel.loadOktDistanceFromMe(target)
+                advanceUntilIdle()
+                locationFlow.emit(track.first().toAndroidLocation())
+                locationFlow.emit(track[1].toAndroidLocation())
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isEqualTo(
+                    oktRoutesMapper.mapDistanceFromMe(trackWithAlt, track.first(), target)
+                )
+                assertThat(awaitItem()).isEqualTo(
+                    oktRoutesMapper.mapDistanceFromMe(trackWithAlt, track[1], target)
+                )
+            }
+        }
+
+    @Test
+    fun `Given distance from me is shown, when clearOktDistanceFromMe, then distance from me is cleared`() =
+        runTestDefault {
+            val track = DEFAULT_OKT_ROUTES.locations
+            coEvery { myLocationProvider.getLastKnownLocationCoroutine() } returns track.first().toAndroidLocation()
+            viewModel.updateMyLocationConfig(isLocationPermissionEnabled = true)
+            val target = track.last().toGeoPoint()
+
+            viewModel.oktDistanceFromMe.test {
+                viewModel.loadOktRoutes(OktType.OKT)
+                advanceUntilIdle()
+
+                viewModel.loadOktDistanceFromMe(target)
+                advanceUntilIdle()
+                viewModel.clearOktDistanceFromMe(target)
+
+                assertThat(awaitItem()).isNull()
+                assertThat(awaitItem()).isNotNull()
+                assertThat(awaitItem()).isNull()
+            }
+        }
+
+    private fun Location.toAndroidLocation(): AndroidLocation {
+        val location = this
+        return mockk {
+            every { latitude } returns location.latitude
+            every { longitude } returns location.longitude
+        }
+    }
 
     @Test
     fun `Given location permission is denied, when loadOktDistanceFromMe, then distance from me is not emitted`() =

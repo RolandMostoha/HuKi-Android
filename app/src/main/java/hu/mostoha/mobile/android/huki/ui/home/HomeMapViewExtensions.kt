@@ -593,6 +593,7 @@ fun MapView.addOktRoute(
     onWaypointClick: () -> Unit,
     onStampClick: (GeoPoint) -> Unit,
     onWaypointInfoWindowOpen: (GeoPoint) -> Unit,
+    onWaypointInfoWindowClose: (GeoPoint) -> Unit,
     onWaypointNavigationClick: (GeoPoint) -> Unit,
 ) {
     if (oktRouteUiModel.oktId != OKT_ID_FULL_ROUTE) {
@@ -638,6 +639,7 @@ fun MapView.addOktRoute(
                 onStampClick.invoke(stamp.geoPoint)
             },
             onInfoWindowOpen = { onWaypointInfoWindowOpen.invoke(stamp.geoPoint) },
+            onInfoWindowClose = { onWaypointInfoWindowClose.invoke(stamp.geoPoint) },
             onInfoWindowNavigationClick = { onWaypointNavigationClick.invoke(stamp.geoPoint) },
         )
     }
@@ -676,6 +678,7 @@ fun MapView.addOktRoute(
             infoWindowTitle = context.getString(titleTemplate, oktRouteUiModel.routeName),
             onMarkerClick = onWaypointClick,
             onInfoWindowOpen = { onWaypointInfoWindowOpen.invoke(geoPoint) },
+            onInfoWindowClose = { onWaypointInfoWindowClose.invoke(geoPoint) },
             onInfoWindowNavigationClick = { onWaypointNavigationClick.invoke(geoPoint) },
         )
     }
@@ -690,6 +693,7 @@ fun MapView.addOktMarker(
     infoWindowDescription: String? = null,
     onMarkerClick: () -> Unit,
     onInfoWindowOpen: () -> Unit,
+    onInfoWindowClose: () -> Unit,
     onInfoWindowNavigationClick: (GeoPoint) -> Unit,
 ) {
     val marker = OktMarker(this).apply {
@@ -705,7 +709,10 @@ fun MapView.addOktMarker(
                 selectedIconDrawable?.let { updateIcon(it) }
                 onInfoWindowOpen.invoke()
             },
-            onClosed = selectedIconDrawable?.let { { updateIcon(iconDrawable) } },
+            onClosed = {
+                if (selectedIconDrawable != null) updateIcon(iconDrawable)
+                onInfoWindowClose.invoke()
+            },
         )
         setOnMarkerClickListener { marker, mapView ->
             onMarkerClick.invoke()

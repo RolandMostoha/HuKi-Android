@@ -52,6 +52,8 @@ import hu.mostoha.mobile.android.huki.util.WhileViewSubscribed
 import hu.mostoha.mobile.android.huki.util.distanceBetween
 import hu.mostoha.mobile.android.huki.di.module.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -59,6 +61,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
@@ -71,6 +76,7 @@ import org.osmdroid.util.GeoPoint
 import timber.log.Timber
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -136,8 +142,10 @@ class HomeViewModel @Inject constructor(
         .onEach { savedStateHandle[SAVED_STATE_OKT_ROUTES] = it?.let(oktRoutesMapper::mapSavedState) }
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
-    private val _oktDistanceFromMe = MutableStateFlow<OktDistanceFromMeUiModel?>(null)
-    val oktDistanceFromMe: StateFlow<OktDistanceFromMeUiModel?> = _oktDistanceFromMe
+    private val oktDistanceTarget = MutableStateFlow<GeoPoint?>(null)
+    val oktDistanceFromMe: StateFlow<OktDistanceFromMeUiModel?> = oktDistanceTarget
+        .flatMapLatest { target -> oktDistanceFromMeFlow(target) }
+        .flowOn(defaultDispatcher)
         .stateIn(viewModelScope, WhileViewSubscribed, null)
 
     private val _isLoading = MutableSharedFlow<Boolean>()
@@ -485,19 +493,25 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadOktDistanceFromMe(geoPoint: GeoPoint) {
-        viewModelScope.launch {
-            val oktRoutes = _oktRoutes.value ?: return@launch
-            if (!_myLocationConfigUiModel.value.isLocationPermissionEnabled) return@launch
-            val myLocation = myLocationProvider.getLastKnownLocationCoroutine()?.toLocation() ?: return@launch
+        oktDistanceTarget.value = geoPoint
+    }
 
-            _oktDistanceFromMe.value = withContext(defaultDispatcher) {
-                oktRoutesMapper.mapDistanceFromMe(
-                    track = oktRoutes.mapGeoPoints.toLocationsWithAlt(),
-                    myLocation = myLocation,
-                    target = geoPoint,
-                )
-            }
+    fun clearOktDistanceFromMe(geoPoint: GeoPoint) {
+        oktDistanceTarget.update { target -> if (target == geoPoint) null else target }
+    }
+
+    private fun oktDistanceFromMeFlow(target: GeoPoint?): Flow<OktDistanceFromMeUiModel?> {
+        val oktRoutes = _oktRoutes.value
+        if (target == null || oktRoutes == null || !_myLocationConfigUiModel.value.isLocationPermissionEnabled) {
+            return flowOf(null)
         }
+        val track = oktRoutes.mapGeoPoints.toLocationsWithAlt()
+
+        return myLocationProvider.getLocationFlow()
+            .onStart { myLocationProvider.getLastKnownLocationCoroutine()?.let { emit(it) } }
+            .map { myLocation ->
+                oktRoutesMapper.mapDistanceFromMe(track = track, myLocation = myLocation.toLocation(), target = target)
+            }
     }
 
     fun selectOktRoute(geoPoint: GeoPoint) {
@@ -630,7 +644,7 @@ class HomeViewModel @Inject constructor(
 
     fun clearOktRoutes() {
         _oktRoutes.value = null
-        _oktDistanceFromMe.value = null
+        oktDistanceTarget.value = null
     }
 
     fun clearFollowLocation() {
