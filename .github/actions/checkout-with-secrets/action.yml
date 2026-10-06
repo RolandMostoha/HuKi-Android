@@ -16,6 +16,9 @@ inputs:
   location-iq-api-key:
     description: "The Location IQ API key"
     required: true
+  huki-routing-api-key:
+    description: "The HuKi-Routing API key"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -58,3 +61,7 @@ runs:
     - name: Copy Location IQ API key to local.properties
       shell: bash
       run: echo LOCATION_IQ_API_KEY=\"${{ inputs.location-iq-api-key }}\" >> ./local.properties
+
+    - name: Copy HuKi-Routing API key to local.properties
+      shell: bash
+      run: echo HUKI_ROUTING_API_KEY=\"${{ inputs.huki-routing-api-key }}\" >> ./local.properties

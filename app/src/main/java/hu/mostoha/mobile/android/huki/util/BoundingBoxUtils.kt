@@ -20,6 +20,10 @@ fun BoundingBox.extendByDistance(distanceKm: Int): BoundingBox {
     )
 }
 
+fun BoundingBox.contains(location: Location): Boolean {
+    return location.latitude in south..north && location.longitude in west..east
+}
+
 fun BoundingBox.areaDistance(): Int {
     return Location(east, north).distanceBetween(Location(west, south)) / 2
 }

@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.network.GraphhopperService
+import hu.mostoha.mobile.android.huki.network.HukiRoutingService
 import hu.mostoha.mobile.android.huki.network.LocationIqService
 import hu.mostoha.mobile.android.huki.network.NetworkConfig
 import hu.mostoha.mobile.android.huki.network.OverpassService
@@ -33,6 +34,7 @@ class NetworkModule {
             .addInterceptor(TimeoutInterceptor())
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
+                    redactHeader(HukiRoutingService.HEADER_API_KEY)
                     level = if (BuildConfig.DEBUG) {
                         HttpLoggingInterceptor.Level.BODY
                     } else {
@@ -92,6 +94,17 @@ class NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(GraphhopperService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideHukiRoutingService(okHttpClient: OkHttpClient, moshi: Moshi): HukiRoutingService {
+        return Retrofit.Builder()
+            .baseUrl(NetworkConfig.BASE_URL_HUKI_ROUTING)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(HukiRoutingService::class.java)
     }
 
 }

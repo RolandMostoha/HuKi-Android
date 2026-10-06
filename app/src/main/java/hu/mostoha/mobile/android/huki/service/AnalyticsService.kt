@@ -56,6 +56,16 @@ interface AnalyticsService {
 
     fun routePlannerLimitReached()
 
+    fun routePlannerReserveReached()
+
+    fun routePlannerGraphhopperLimitHit()
+
+    fun routePlannerServedByHukiRouting()
+
+    fun routePlannerHukiRoutingFailed()
+
+    fun routePlannerGraphhopperAfterHukiRoutingFailure()
+
     fun googleMapsClicked()
 
     fun gpxImportClicked()

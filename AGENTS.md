@@ -77,6 +77,17 @@ commit-message convention.
     - `ci(CI): cancel previous in-progress GitHub workflows`
     - `release(v1.1): update store content, versioning`
 
+## Route Planner backends
+
+GraphHopper (hosted, global) is primary; the self-hosted **HuKi-Routing** (Hungary only) takes over
+near or after the daily GraphHopper limit. Logic lives in `RoutePlannerRepository.getRoutePlan`, the
+limit state in `GraphhopperLimitRepository` (DataStore).
+
+- Keys in `local.properties`: `GRAPHHOPPER_API_KEY`, `LOCATION_IQ_API_KEY`, `HUKI_ROUTING_API_KEY`
+  (`gcloud secrets versions access latest --secret huki-routing-api-key --project huki-c8bc7`).
+- To try a backend on a debug build, set `FeatureFlags.DEBUG_ROUTING_MODE` (`util/FeatureFlags.kt`):
+  `GRAPHHOPPER_ONLY`, `HUKI_ROUTING_ONLY`. Release builds always use `AUTO`.
+
 ## Billing / Supporters
 
 One-time support products are consumed right after purchase so they can be re-bought, so Play

@@ -35,6 +35,7 @@ android {
 
         buildConfigField("String", "GRAPHHOPPER_API_KEY", getApiKey("GRAPHHOPPER_API_KEY"))
         buildConfigField("String", "LOCATION_IQ_API_KEY", getApiKey("LOCATION_IQ_API_KEY"))
+        buildConfigField("String", "HUKI_ROUTING_API_KEY", getApiKey("HUKI_ROUTING_API_KEY"))
         buildConfigField("String", "BUILD_DATE", "\"$buildDate\"")
 
         testInstrumentationRunner = "hu.mostoha.mobile.android.huki.HiltTestRunner"
@@ -237,5 +238,7 @@ fun getApiKey(key: String): String {
         .asText
         .get()
     val props = Properties().apply { load(localProperties.reader()) }
-    return props[key] as String
+    val value = props.getProperty(key)
+    require(!value.isNullOrBlank() && value.trim('"').isNotBlank()) { "$key is missing from local.properties" }
+    return value
 }

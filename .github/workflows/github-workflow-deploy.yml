@@ -18,6 +18,7 @@ jobs:
           google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
           graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
           location-iq-api-key: ${{ secrets.LOCATION_IQ_API_KEY }}
+          huki-routing-api-key: ${{ secrets.HUKI_ROUTING_API_KEY }}
 
       - name: Static code analysis
         run: ./gradlew lint detekt
@@ -34,6 +35,7 @@ jobs:
           google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
           graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
           location-iq-api-key: ${{ secrets.LOCATION_IQ_API_KEY }}
+          huki-routing-api-key: ${{ secrets.HUKI_ROUTING_API_KEY }}
 
       - name: Unit tests
         run: ./gradlew testDebugUnitTest
@@ -50,6 +52,7 @@ jobs:
           google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
           graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
           location-iq-api-key: ${{ secrets.LOCATION_IQ_API_KEY }}
+          huki-routing-api-key: ${{ secrets.HUKI_ROUTING_API_KEY }}
 
       - name: Verify debug build
         run: ./gradlew assembleDebug
@@ -67,6 +70,7 @@ jobs:
           google-services: ${{ secrets.GOOGLE_SERVICES_JSON }}
           graphhopper-api-key: ${{ secrets.GRAPHHOPPER_API_KEY }}
           location-iq-api-key: ${{ secrets.LOCATION_IQ_API_KEY }}
+          huki-routing-api-key: ${{ secrets.HUKI_ROUTING_API_KEY }}
 
       - name: Generate Release Bundle AAB
         run: ./gradlew app:bundleRelease

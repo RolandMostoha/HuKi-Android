@@ -3,6 +3,7 @@ package hu.mostoha.mobile.android.huki.repository
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 
@@ -26,6 +27,11 @@ object DataStoreConstants {
 
     object NewFeatures {
         val NEW_FEATURES_SEEN_VERSION = stringPreferencesKey("new_features_seen_version")
+    }
+
+    object RoutePlanner {
+        val GRAPHHOPPER_RESERVE_REACHED_UNTIL = longPreferencesKey("route_planner_graphhopper_reserve_reached_until")
+        val GRAPHHOPPER_BLOCKED_UNTIL = longPreferencesKey("route_planner_graphhopper_blocked_until")
     }
 
     object Support {

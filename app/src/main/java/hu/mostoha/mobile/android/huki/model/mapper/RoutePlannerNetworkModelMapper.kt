@@ -83,6 +83,20 @@ class RoutePlannerNetworkModelMapper @Inject constructor() {
         }
     }
 
+    /**
+     * HuKi-Routing has the trail bias baked into the hike_huki profile, so no custom model is sent.
+     */
+    fun createHukiRoutingRouteRequest(planType: RoutePlanType, waypoints: List<Location>): RouteRequest {
+        val routeRequest = createRouteRequest(planType, waypoints)
+
+        return when (planType) {
+            is RoutePlanType.Hike, is RoutePlanType.RoundTrip -> {
+                routeRequest.copy(profile = Profile.HIKE_HUKI, customModel = null)
+            }
+            is RoutePlanType.Foot, is RoutePlanType.Bike -> routeRequest
+        }
+    }
+
     fun mapRouteResponse(planType: RoutePlanType, routeResponse: RouteResponse): RoutePlan {
         val path = routeResponse.paths.first()
         val waypoints = path.snappedWaypoints.coordinates.toLocationsFromDoubles()

@@ -55,6 +55,11 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
         private const val EVENT_SELECT_ROUTE_PLANNER_COMMENT_DONE = "select_route_planner_comment_done"
         private const val EVENT_SELECT_ROUTE_PLANNER_HIKE_TYPE_TEMPLATE = "select_route_planner_%s"
         private const val EVENT_ROUTE_PLANNER_LIMIT_REACHED = "route_planner_limit_reached"
+        private const val EVENT_ROUTE_PLANNER_RESERVE_REACHED = "routing_gh_reserve_reached"
+        private const val EVENT_ROUTE_PLANNER_GRAPHHOPPER_LIMIT_HIT = "routing_gh_limit_hit"
+        private const val EVENT_ROUTE_PLANNER_HUKI_ROUTING_SERVED = "routing_huki_served"
+        private const val EVENT_ROUTE_PLANNER_HUKI_ROUTING_FAILED = "routing_huki_failed"
+        private const val EVENT_ROUTE_PLANNER_GRAPHHOPPER_AFTER_HUKI_ROUTING_FAILURE = "routing_gh_after_huki_failure"
         private const val EVENT_SELECT_MAPS_DIRECTIONS = "select_maps_directions"
         private const val EVENT_GPX_IMPORT_CLICKED = "gpx_import_clicked"
         private const val EVENT_GPX_IMPORTED = "gpx_imported"
@@ -260,6 +265,26 @@ class FirebaseAnalyticsService @Inject constructor() : AnalyticsService {
 
     override fun routePlannerLimitReached() {
         firebaseAnalytics.logEvent(EVENT_ROUTE_PLANNER_LIMIT_REACHED, null)
+    }
+
+    override fun routePlannerReserveReached() {
+        firebaseAnalytics.logEvent(EVENT_ROUTE_PLANNER_RESERVE_REACHED, null)
+    }
+
+    override fun routePlannerGraphhopperLimitHit() {
+        firebaseAnalytics.logEvent(EVENT_ROUTE_PLANNER_GRAPHHOPPER_LIMIT_HIT, null)
+    }
+
+    override fun routePlannerServedByHukiRouting() {
+        firebaseAnalytics.logEvent(EVENT_ROUTE_PLANNER_HUKI_ROUTING_SERVED, null)
+    }
+
+    override fun routePlannerHukiRoutingFailed() {
+        firebaseAnalytics.logEvent(EVENT_ROUTE_PLANNER_HUKI_ROUTING_FAILED, null)
+    }
+
+    override fun routePlannerGraphhopperAfterHukiRoutingFailure() {
+        firebaseAnalytics.logEvent(EVENT_ROUTE_PLANNER_GRAPHHOPPER_AFTER_HUKI_ROUTING_FAILURE, null)
     }
 
     override fun googleMapsClicked() {

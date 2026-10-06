@@ -7,6 +7,9 @@ enum class Profile {
     @Json(name = "hike")
     HIKE,
 
+    @Json(name = "hike_huki")
+    HIKE_HUKI,
+
     @Json(name = "foot")
     FOOT,
 

@@ -27,25 +27,6 @@
 |--------|-------|----------------------------------------------------------|
 | `[ ]`  | GPX   | BUG: GPX roundtrip distance to my location not displayed |
 
-### FEATURE: OKT
-
-| Status | Scope | Task                                                                                                                                                                                                                                                  |
-|--------|-------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `[x]`  | OKT   | Add stamp locations to the selected OKT section. Its a horizontally scrollable list with stamp cards. Follow the design. Hardcode the distances first.                                                                                                |
-| `[x]`  | OKT   | Don't add stamp locations if the selected route is the whole OKT, only is a sub-section is selected.                                                                                                                                                  |
-| `[x]`  | OKT   | On the stamp card click, move the camera cener to the stamp location, and open its info window. Do not zoom in, keep the previous zoom.                                                                                                               |
-| `[x]`  | OKT   | If a stamp card is clicked, the stamp markers should be in front of the START,END icons to make them visible.                                                                                                                                         |
-| `[x]`  | OKT   | Update the "..." actions icon design to match the design. (light blue circle outlined)                                                                                                                                                                |
-| `[x]`  | OKT   | When one of OKT feature opens. Hide the top floating actions from the map, as we do in HIKE_MODE state: keep only settings fab and layers fab, other actions in the top is hidden. (e.g. searchbar, support, discover, etc)                           |
-| `[x]`  | OKT   | Use a bubble indicator in the bottom of info windows                                                                                                                                                                                                  |
-| `[x]`  | OKT   | Calculate the stamp locations distances relative to each other, along the section route (not as the crow files).                                                                                                                                      |
-| `[x]`  | OKT   | Add a reverse action to stamp locations                                                                                                                                                                                                               |
-| `[x]`  | OKT   | Add a new row to the info window: Distance from my location which is calculated by my actual location along the route (not as the crow flies). Also display the estimated time along the route. Do not display it if you are far away from the route. |
-| `[x]`  | OKT   | Create a Start section button in actions which sets STARTED state to the OKT section.                                                                                                                                                                 |
-| `[x]`  | OKT   | When STARTED state: Sheet becomes hidden. OKT FAB is shown with the selected OKT tag.                                                                                                                                                                 
-| `[x]`  | OKT   | Increase the base size of the OKT sheet to have more space to browse. Adjust the OKT map offset if necessary.                                                                                                                                         |
-| `[x]`  | OKT   | The selected OKT route should be restored on app kill, so if somebody goes away to e.g. to camera app, OS kills the app and restores it, it should be opened again.                                                                                   |
-
 ### FEATURE: Map
 
 | Status | Scope | Task                                          |
@@ -64,6 +45,25 @@
 | Status | Scope        | Task                                              |
 |--------|--------------|---------------------------------------------------|
 | `[ ]`  | RoutePlanner | Update Route Planner settings icon for visibility |
+
+### FEATURE: RoutePlanner: HuKi-Routing follow-up
+
+After the "A Kéktúra napja" weekend, once HuKi-KMP has the fallback and most Android users updated,
+decide by the weekend analytics:
+
+- **A: HuKi-first in Hungary**, GraphHopper fallback (if HuKi-Routing proved reliable)
+- **B: Drop the reserve**: GraphHopper → on 429: HuKi in Hungary
+
+| Status | Scope        | Task                                                                                                                                                            |
+|--------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `[ ]`  | Analytics    | Review weekend events: `routing_huki_served`, `routing_huki_failed`, `routing_gh_limit_hit`, `route_planner_limit_reached`                                      |
+| `[ ]`  | HuKi-KMP     | Port the HuKi-Routing fallback to HuKi-KMP (iOS)                                                                                                                |
+| `[ ]`  | RoutePlanner | Decide A or B                                                                                                                                                   |
+| `[ ]`  | RoutePlanner | Remove `GRAPHHOPPER_RESERVE_CREDITS`, `updateReserveReached` and the reserve branch in `RoutePlannerRepository`                                                 |
+| `[ ]`  | RoutePlanner | `GraphhopperLimitRepository`: drop `reserveReachedUntil` + `GRAPHHOPPER_RESERVE_REACHED_UNTIL` key, replace `GraphhopperLimitState` with `isBlocked(nowMillis)` |
+| `[ ]`  | Analytics    | Remove `routing_gh_reserve_reached`, `routing_gh_after_huki_failure` (B) or rename the latter to GraphHopper-after-HuKi fallback (A)                            |
+| `[ ]`  | RoutePlanner | A only: HuKi-first in Hungary, GraphHopper fallback; consider "Powered by" text for HuKi-served routes                                                          |
+| `[ ]`  | RoutePlanner | Update unit tests, `GraphhopperLimitRepositoryTest`, AGENTS.md "Route Planner backends"                                                                         |
 
 ### FEATURE: HikingRoutes
 

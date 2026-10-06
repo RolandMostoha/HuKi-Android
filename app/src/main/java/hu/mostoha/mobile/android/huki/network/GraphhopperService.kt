@@ -4,6 +4,7 @@ import hu.mostoha.mobile.android.huki.BuildConfig
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.GeocodingResponse
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.RouteRequest
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.RouteResponse
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -15,7 +16,7 @@ interface GraphhopperService {
     suspend fun getRoute(
         @Body routeRequest: RouteRequest,
         @Query("key") key: String = BuildConfig.GRAPHHOPPER_API_KEY
-    ): RouteResponse
+    ): Response<RouteResponse>
 
     @GET("geocode")
     suspend fun reverseGeocode(

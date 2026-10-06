@@ -1,9 +1,11 @@
 package hu.mostoha.mobile.android.huki.model.mapper
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.moshi.Moshi
 import hu.mostoha.mobile.android.huki.model.domain.Location
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlan
 import hu.mostoha.mobile.android.huki.model.domain.RoutePlanType
+import hu.mostoha.mobile.android.huki.model.network.graphhopper.Algorithm
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.CustomModel
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.Hints
 import hu.mostoha.mobile.android.huki.model.network.graphhopper.Info
@@ -54,6 +56,80 @@ class RoutePlannerNetworkModelMapperTest {
                 ),
             )
         )
+    }
+
+    @Test
+    fun `Given hike, when createHukiRoutingRouteRequest, then hike_huki profile without custom model returns`() {
+        val waypoints = listOf(DEFAULT_WAYPOINT_1, DEFAULT_WAYPOINT_2)
+
+        val routeRequest = mapper.createHukiRoutingRouteRequest(RoutePlanType.Hike, waypoints)
+
+        assertThat(routeRequest).isEqualTo(
+            RouteRequest(
+                profile = Profile.HIKE_HUKI,
+                pointsEncoded = false,
+                elevation = true,
+                instructions = false,
+                points = listOf(
+                    listOf(DEFAULT_ROUTE_PLAN_WAYPOINT_1_LONGITUDE, DEFAULT_ROUTE_PLAN_WAYPOINT_1_LATITUDE),
+                    listOf(DEFAULT_ROUTE_PLAN_WAYPOINT_2_LONGITUDE, DEFAULT_ROUTE_PLAN_WAYPOINT_2_LATITUDE),
+                ),
+                chDisabled = true,
+                customModel = null,
+            )
+        )
+    }
+
+    @Test
+    fun `Given round trip, when createHukiRoutingRouteRequest, then hike_huki round trip with ch disabled returns`() {
+        val waypoints = listOf(DEFAULT_WAYPOINT_1)
+
+        val routeRequest = mapper.createHukiRoutingRouteRequest(RoutePlanType.RoundTrip(10_000), waypoints)
+
+        assertThat(routeRequest.profile).isEqualTo(Profile.HIKE_HUKI)
+        assertThat(routeRequest.customModel).isNull()
+        assertThat(routeRequest.chDisabled).isTrue()
+        assertThat(routeRequest.algorithm).isEqualTo(Algorithm.ROUND_TRIP)
+        assertThat(routeRequest.roundTripDistance).isEqualTo(10_000)
+    }
+
+    @Test
+    fun `Given foot, when createHukiRoutingRouteRequest, then hike profile returns`() {
+        val waypoints = listOf(DEFAULT_WAYPOINT_1, DEFAULT_WAYPOINT_2)
+
+        val routeRequest = mapper.createHukiRoutingRouteRequest(RoutePlanType.Foot, waypoints)
+
+        assertThat(routeRequest.profile).isEqualTo(Profile.HIKE)
+        assertThat(routeRequest.customModel).isNull()
+    }
+
+    @Test
+    fun `Given bike, when createHukiRoutingRouteRequest, then bike profile returns`() {
+        val waypoints = listOf(DEFAULT_WAYPOINT_1, DEFAULT_WAYPOINT_2)
+
+        val routeRequest = mapper.createHukiRoutingRouteRequest(RoutePlanType.Bike, waypoints)
+
+        assertThat(routeRequest.profile).isEqualTo(Profile.BIKE)
+        assertThat(routeRequest.customModel).isNull()
+    }
+
+    @Test
+    fun `Given real HuKi-Routing response, when mapRouteResponse, then route plan returns`() {
+        val json = javaClass.classLoader!!.getResource("huki_routing_route_response.json").readText()
+        val routeResponse = Moshi.Builder().build().adapter(RouteResponse::class.java).fromJson(json)!!
+
+        val routePlan = mapper.mapRouteResponse(RoutePlanType.Hike, routeResponse)
+
+        assertThat(routePlan.wayPoints).containsExactly(
+            Location(47.4979, 19.0402, 123.0),
+            Location(47.519965, 18.999946, 151.63),
+        ).inOrder()
+        assertThat(routePlan.locations).hasSize(90)
+        assertThat(routePlan.distance).isEqualTo(4789)
+        assertThat(routePlan.altitudeRange).isEqualTo(122 to 151)
+        assertThat(routePlan.incline).isEqualTo(89)
+        assertThat(routePlan.decline).isEqualTo(61)
+        assertThat(routePlan.isClosed).isFalse()
     }
 
     @Test

@@ -4,5 +4,5 @@ import hu.mostoha.mobile.android.huki.R
 import hu.mostoha.mobile.android.huki.model.ui.toMessage
 
 data class RoutePlannerLimitReachedException(
-    val throwable: Throwable
+    val throwable: Throwable? = null
 ) : DomainException(R.string.route_planner_error_daily_limit_reached.toMessage(), throwable)
